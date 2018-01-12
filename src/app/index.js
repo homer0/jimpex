@@ -41,7 +41,11 @@ class Jimpex extends Jimple {
         loadFromEnvironment: true,
         filenameFormat: '[app-name].[configuration-name].config.js',
       },
-      staticsFolder: 'statics',
+      statics: {
+        enabled: true,
+        onHome: true,
+        folder: 'statics',
+      },
       filesizeLimit: '15MB',
       locations: {
         home,
@@ -61,7 +65,7 @@ class Jimpex extends Jimple {
       },
     }, options);
     this.instance = null;
-    this._mountQueue = [];
+    this.mountQueue = [];
 
     this._setupCoreServices();
     this._setupExpress();
@@ -80,11 +84,7 @@ class Jimpex extends Jimple {
   mount(point, controller) {
     this.mountQueue.push(
       (server) => controller.connect(this, point).forEach(
-        (routes) => {
-          if (routes.length) {
-            server.use(point, routes);
-          }
-        }
+        (route) => server.use(point, route)
       )
     );
   }
@@ -99,7 +99,7 @@ class Jimpex extends Jimple {
   }
 
   start(fn = () => {}) {
-    const config = this.get('config');
+    const config = this.get('appConfiguration');
     const port = config.get('port');
     this.emitEvent('beforeStart');
     this.instance = this.express.listen(port, () => {
@@ -145,7 +145,7 @@ class Jimpex extends Jimple {
   _setupExpress() {
     this.express = express();
     const {
-      staticsFolder,
+      statics,
       filesizeLimit,
       express: expressOptions,
     } = this.options;
@@ -162,9 +162,11 @@ class Jimpex extends Jimple {
       this.express.use(compression());
     }
 
-    if (staticsFolder) {
-      const staticsFolderPath = this.get('pathUtils').joinFrom('app', staticsFolder);
-      this.express.use(`/${staticsFolder}`, express.static(staticsFolderPath));
+    if (statics.enabled) {
+      const { onHome, folder } = statics;
+      const joinFrom = onHome ? 'home' : 'app';
+      const staticsFolderPath = this.get('pathUtils').joinFrom(joinFrom, folder);
+      this.express.use(`/${folder}`, express.static(staticsFolderPath));
     }
 
     if (expressOptions.bodyParser) {
@@ -232,8 +234,12 @@ class Jimpex extends Jimple {
     ));
 
     if (options.loadFromEnvironment) {
-      this.get('appConfig').loadFromEnvironment();
+      this.get('appConfiguration').loadFromEnvironment();
     }
+  }
+
+  _mountResources() {
+    this.mountQueue.forEach((mountFn) => mountFn(this.express));
   }
 }
 

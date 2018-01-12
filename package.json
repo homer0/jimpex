@@ -42,7 +42,7 @@
     },
     "scripts": {
       "install-hooks": "./utils/hooks/install",
-      "test": "",
+      "test": "./utils/scripts/test",
       "lint": "./utils/scripts/lint",
       "lint:full": "./utils/scripts/lint-full"
     }

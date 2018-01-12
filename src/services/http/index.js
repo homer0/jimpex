@@ -1,5 +1,5 @@
 const { http } = require('./http');
-const { responsesBuilder } = require('./responses');
+const { responsesBuilder } = require('./responsesBuilder');
 const { provider } = require('../../utils/wrappers');
 
 module.exports = {

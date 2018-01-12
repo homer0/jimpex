@@ -1,0 +1,14 @@
+{
+  "extends": ["../.eslintrc"],
+  "env": {
+    "jest": true,
+  },
+  "rules": {
+    "import/no-unresolved": "off",
+    "import/no-absolute-path": "off",
+    "node/no-missing-require": "off"
+  },
+  "globals": {
+    "spyOn": true
+  }
+}
