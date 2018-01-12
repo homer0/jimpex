@@ -14,7 +14,7 @@ class RootStaticsController {
 
   serveFile(file) {
     if (!this.files[file]) {
-      throw new Error(`The required static file doesn't exists (${file})`);
+      throw new Error(`The required static file doesn't exist (${file})`);
     }
 
     return (req, res, next) => {

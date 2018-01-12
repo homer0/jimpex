@@ -17,33 +17,32 @@ class ErrorHandler {
           message: 'Oops! Something went wrong, please try again',
         };
 
-        let status = statuses['Internal Server error'];
+        let status = statuses['Internal Server Error'];
         const knownError = err instanceof this.AppError;
 
         if (this.showErrors || knownError) {
           data.message = err.message;
           if (knownError) {
-            if (err.extras.response) {
+            if (err.extras && err.extras.response) {
               data = Object.assign(data, err.extras.response);
             }
 
-            status = err.extras.status || statuses['Bad Request'];
+            status = (err.extras && err.extras.status) || statuses['Bad Request'];
           }
         }
 
-        const stack = err.stack.split('\n').map((line) => line.trim());
-
         if (this.showErrors) {
+          const stack = err.stack.split('\n').map((line) => line.trim());
           data.stack = stack;
           stack.splice(0, 1);
           this.appLogger.error(`ERROR: ${err.message}`);
           this.appLogger.info(stack);
         }
 
-        return this.responsesBuilder.json(res, data, status);
+        this.responsesBuilder.json(res, data, status);
+      } else {
+        next();
       }
-
-      return next();
     };
   }
 }

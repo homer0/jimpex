@@ -24,9 +24,9 @@ class ShowHTML {
         .catch((error) => {
           next(error);
         });
+      } else {
+        this._sendHTML(res, next);
       }
-
-      this._sendHTML(res, next);
     };
   }
 

@@ -35,15 +35,15 @@ class FastHTML {
         .catch((error) => {
           next(error);
         });
+      } else {
+        this._sendHTML(res, next);
       }
-
-      return this._sendHTML(res, next);
     };
   }
 
   _sendHTML(res, next) {
     res.setHeader('Content-Type', mime.getType('html'));
-    return this.sendFile(res, this.file, next);
+    this.sendFile(res, this.file, next);
   }
 }
 

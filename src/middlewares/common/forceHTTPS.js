@@ -13,10 +13,10 @@ class ForceHTTPS {
         !this.ignoredRoutes.some((expression) => expression.test(req.originalUrl))
       ) {
         const host = req.get('Host');
-        return res.redirect(`https://${host}${req.url}`);
+        res.redirect(`https://${host}${req.url}`);
+      } else {
+        next();
       }
-
-      return next();
     };
   }
 }
