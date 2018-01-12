@@ -14,7 +14,7 @@ class ConfigurationController {
 
   showConfiguration() {
     return (req, res) => {
-      this.getConfigResponse(res);
+      this.getConfigurationResponse(res);
     };
   }
 
@@ -27,9 +27,9 @@ class ConfigurationController {
         } catch (error) {
           next(error);
         }
+      } else {
+        next();
       }
-
-      next();
     };
   }
 }
