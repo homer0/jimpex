@@ -1,14 +1,14 @@
 const extend = require('extend');
-const deferred = require('wootils/shared/deferred');
+const { deferred } = require('wootils/shared');
 const { provider } = require('../../utils/wrappers');
 
 class HTMLGenerator {
   constructor(
     options,
-    valuesService,
     appConfiguration,
     appLogger,
-    frontendFs
+    frontendFs,
+    valuesService = null
   ) {
     this.options = extend({
       template: 'index.tpl.html',
@@ -19,14 +19,18 @@ class HTMLGenerator {
       configurationKeys: ['features', 'version', 'postMessagesPrefix'],
     }, options);
 
+    if (options.configurationKeys) {
+      this.options.configurationKeys = options.configurationKeys.slice();
+    }
+
     if (valuesService && typeof valuesService.getValues !== 'function') {
       throw new Error('The HTMLGenerator values service must have a `getValues` method');
     }
 
-    this.valuesService = valuesService;
     this.appConfiguration = appConfiguration;
     this.appLogger = appLogger;
     this.frontendFs = frontendFs;
+    this.valuesService = valuesService;
 
     this._fileReady = false;
     this._fileDeferred = deferred();
@@ -61,7 +65,7 @@ class HTMLGenerator {
     const {
       template,
       deleteTemplateAfter,
-      replaceKey,
+      replacePlaceholder,
       variable,
       file,
     } = this.options;
@@ -76,7 +80,7 @@ class HTMLGenerator {
       const htmlObject = JSON.stringify(values);
       const html = templateContents
       .replace(
-        replaceKey,
+        replacePlaceholder,
         `window.${variable} = ${htmlObject}`
       );
 
@@ -84,7 +88,7 @@ class HTMLGenerator {
     })
     .then(() => {
       this.appLogger.success(`The HTML was successfully generated (${file})`);
-      return deleteTemplateAfter ? this.frontendFs.delete(`/${template}`) : {};
+      return deleteTemplateAfter ? this.frontendFs.delete(`./${template}`) : {};
     })
     .then(() => {
       if (deleteTemplateAfter) {
@@ -96,15 +100,15 @@ class HTMLGenerator {
     })
     .catch((error) => {
       this.appLogger.error('There was an error while generating the HTML');
-      this.appLogger.error(error);
+      return Promise.reject(error);
     });
   }
 }
 
 const htmlGeneratorCustom = (
-  options,
-  valuesServiceName,
-  serviceName = 'htmlGenerator'
+  serviceName = 'htmlGenerator',
+  options = {},
+  valuesServiceName = null
 ) => provider((app) => {
   app.set(serviceName, () => {
     let valuesService = null;
@@ -113,17 +117,16 @@ const htmlGeneratorCustom = (
     }
 
     return new HTMLGenerator(
-      options || {},
-      valuesService,
+      options,
       app.get('appConfiguration'),
       app.get('appLogger'),
-      app.get('frontendFs')
+      app.get('frontendFs'),
+      valuesService
     );
   });
 
-  app.get('events').once('afterStart', () => {
-    app.get(serviceName).generateHTML();
-  });
+  app.get('events')
+  .once('afterStart', () => app.get(serviceName).generateHTML());
 });
 
 const htmlGenerator = htmlGeneratorCustom();

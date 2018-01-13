@@ -1,5 +1,5 @@
 const { configurationController } = require('./configuration');
-const { healthController } = require('./heath');
+const { healthController } = require('./health');
 const {
   rootStaticsController,
   rootStaticsControllerCustom,

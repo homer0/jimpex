@@ -12,12 +12,12 @@ class EnsureBearerAuthentication {
       const { headers: { authorization } } = req;
       if (authorization && this.bearerRegex.test(authorization)) {
         req.bearerToken = authorization.trim().split(' ').pop();
-        return next();
+        next();
+      } else {
+        next(new this.AppError('Unauthorized', {
+          status: statuses.Unauthorized,
+        }));
       }
-
-      return next(new this.AppError('Unauthorized', {
-        status: statuses.Unauthorized,
-      }));
     };
   }
 }

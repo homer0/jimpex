@@ -56,11 +56,15 @@ class HTTP {
       );
     }
 
-    fetchOptions.headers = Object.assign(
+    const headers = Object.assign(
       {},
       defaultHeaders,
       (options.headers || {})
     );
+
+    if (Object.keys(headers).length) {
+      fetchOptions.headers = headers;
+    }
 
     if (this.logRequests) {
       this._logRequest(fetchURL, fetchOptions);
@@ -115,7 +119,7 @@ class HTTP {
 const http = provider((app) => {
   app.set('http', () => {
     const debugging = app.get('appConfiguration').get('debug');
-    const logRequests = debugging && debugging.logRequests === true;
+    const logRequests = !!(debugging && debugging.logRequests === true);
     return new HTTP(logRequests, app.get('appLogger'));
   });
 });

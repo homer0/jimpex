@@ -17,25 +17,25 @@ class VersionValidator {
         reqVersion === 'latest' ||
         reqVersion === this.appConfiguration.get('version')
       ) {
-        return next();
+        next();
       } else if (isPopup) {
-        return this.responsesBuilder.htmlPostMessage(
+        this.responsesBuilder.htmlPostMessage(
           res,
           'Conflict',
           'api:conflict',
           statuses.conflict
         );
+      } else {
+        next(new this.AppError(
+          'The API version and the client version are different',
+          {
+            status: statuses.conflict,
+            response: {
+              api: true,
+            },
+          }
+        ));
       }
-
-      return next(new this.AppError(
-        'The API version and the client version are different',
-        {
-          status: statuses.conflict,
-          response: {
-            api: true,
-          },
-        }
-      ));
     };
   }
 }
