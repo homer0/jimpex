@@ -409,7 +409,7 @@ describe('services/html:htmlGenerator', () => {
     .then(() => {
       // Then
       expect(serviceName).toBe(name);
-      expect(eventName).toBe('afterStart');
+      expect(eventName).toBe('after-start');
       expect(frontendFs.read).toHaveBeenCalledTimes(1);
       expect(frontendFs.read).toHaveBeenCalledWith(`./${sut.options.template}`);
       expect(appConfiguration.get).toHaveBeenCalledTimes(1);
@@ -469,7 +469,7 @@ describe('services/html:htmlGenerator', () => {
     let eventName = null;
     let eventFn = null;
     const expectedGets = Object.keys(services);
-    const expectedEventName = 'afterStart';
+    const expectedEventName = 'after-start';
     // When
     htmlGeneratorCustom(name, {}, myValuesServiceName)(app);
     [[serviceName, serviceFn]] = app.set.mock.calls;

@@ -592,12 +592,12 @@ describe('app:Jimpex', () => {
     JimpleMock.service('appLogger', appLogger);
     let sut = null;
     const expectedEvents = [
-      'beforeStart',
+      'before-start',
       'start',
-      'afterStart',
-      'afterStartCallback',
-      'beforeStop',
-      'afterStop',
+      'after-start',
+      'after-start-callback',
+      'before-stop',
+      'after-stop',
     ];
     // When
     sut = new Sut();

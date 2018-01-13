@@ -126,7 +126,7 @@ const htmlGeneratorCustom = (
   });
 
   app.get('events')
-  .once('afterStart', () => app.get(serviceName).generateHTML());
+  .once('after-start', () => app.get(serviceName).generateHTML());
 });
 
 const htmlGenerator = htmlGeneratorCustom();

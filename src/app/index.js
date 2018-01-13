@@ -101,14 +101,14 @@ class Jimpex extends Jimple {
   start(fn = () => {}) {
     const config = this.get('appConfiguration');
     const port = config.get('port');
-    this.emitEvent('beforeStart');
+    this.emitEvent('before-start');
     this.instance = this.express.listen(port, () => {
       this.emitEvent('start');
       this._mountResources();
       this.get('appLogger').success(`Starting on port ${port}`);
-      this.emitEvent('afterStart');
+      this.emitEvent('after-start');
       const result = fn(config);
-      this.emitEvent('afterStartCallback');
+      this.emitEvent('after-start-callback');
       return result;
     });
 
@@ -127,10 +127,10 @@ class Jimpex extends Jimple {
 
   stop() {
     if (this.instance) {
-      this.emitEvent('beforeStop');
+      this.emitEvent('before-stop');
       this.instance.close();
       this.instance = null;
-      this.emitEvent('afterStop');
+      this.emitEvent('after-stop');
     }
   }
 
