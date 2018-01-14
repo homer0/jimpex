@@ -37,7 +37,7 @@ class Jimpex extends Jimple {
         name: 'app',
         path: 'config/',
         hasFolder: false,
-        environmentVariable: 'APP_CONFIG',
+        environmentVariable: 'CONFIG',
         loadFromEnvironment: true,
         filenameFormat: '[app-name].[configuration-name].config.js',
       },
