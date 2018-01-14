@@ -477,7 +477,7 @@ describe('app:Jimpex', () => {
     // When
     sut = new Sut(true, {
       configuration: {
-        defaultConfiguration,
+        default: defaultConfiguration,
       },
     });
     // Then
@@ -514,7 +514,7 @@ describe('app:Jimpex', () => {
     // When
     sut = new Sut(true, {
       configuration: {
-        defaultConfiguration,
+        default: defaultConfiguration,
         loadFromEnvironment: false,
       },
     });

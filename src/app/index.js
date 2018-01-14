@@ -216,8 +216,8 @@ class Jimpex extends Jimple {
     .replace(/\[configuration-name\]/ig, '[name]');
 
     let defaultConfig = {};
-    if (options.defaultConfiguration) {
-      defaultConfig = options.defaultConfiguration;
+    if (options.default) {
+      defaultConfig = options.default;
     } else {
       const defaultConfigPath = `${configsPath}${options.name}.config.js`;
       defaultConfig = this.get('rootRequire')(defaultConfigPath);
