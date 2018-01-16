@@ -1,7 +1,7 @@
 {
     "name": "jimpex",
     "description": "I swear I'll write a description soon",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "repository": "homer0/jimpex",
     "author": "Leonardo Apiwan (@homer0) <me@homer0.com>",
     "license": "MIT",
@@ -36,10 +36,6 @@
       "npm": ">=3.0.0"
     },
     "main": "src/index.js",
-    "bin": {
-      "woopack": "./src/bin/woopack",
-      "woopack-cli": "./src/bin/woopack-cli"
-    },
     "scripts": {
       "install-hooks": "./utils/hooks/install",
       "test": "./utils/scripts/test",
