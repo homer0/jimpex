@@ -36,7 +36,7 @@ class Jimpex extends Jimple {
         default: null,
         name: 'app',
         path: 'config/',
-        hasFolder: false,
+        hasFolder: true,
         environmentVariable: 'CONFIG',
         loadFromEnvironment: true,
         filenameFormat: '[app-name].[configuration-name].config.js',
@@ -183,7 +183,7 @@ class Jimpex extends Jimple {
       this.express.use(multer().any());
     }
 
-    this.set('router', this.factory(() => express.router()));
+    this.set('router', this.factory(() => express.Router()));
   }
 
   _setupDefaultServices() {
