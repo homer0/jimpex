@@ -58,8 +58,10 @@ describe('app:Jimpex', () => {
     };
     const rootRequire = jest.fn(() => defaultConfig);
     JimpleMock.service('rootRequire', rootRequire);
+    const version = 'latest';
     const appConfiguration = {
       loadFromEnvironment: jest.fn(),
+      get: jest.fn(() => version),
     };
     JimpleMock.service('appConfiguration', appConfiguration);
     let sut = null;
@@ -127,7 +129,7 @@ describe('app:Jimpex', () => {
     expect(wootilsMock.appConfiguration).toHaveBeenCalledTimes(1);
     expect(wootilsMock.appConfiguration).toHaveBeenCalledWith(
       sut.options.configuration.name,
-      Object.assign({}, defaultConfig, { version: sut.options.version }),
+      defaultConfig,
       {
         environmentVariable: sut.options.configuration.environmentVariable,
         path: `${sut.options.configuration.path}${sut.options.configuration.name}/`,
@@ -136,6 +138,8 @@ describe('app:Jimpex', () => {
     );
     expect(pathUtils.joinFrom).toHaveBeenCalledTimes(1);
     expect(pathUtils.joinFrom).toHaveBeenCalledWith('home', sut.options.statics.folder);
+    expect(appConfiguration.get).toHaveBeenCalledTimes(1);
+    expect(appConfiguration.get).toHaveBeenCalledWith('version');
   });
 
   it('should throw an error if `boot` is not overwritten', () => {
@@ -150,6 +154,7 @@ describe('app:Jimpex', () => {
     JimpleMock.service('rootRequire', rootRequire);
     const appConfiguration = {
       loadFromEnvironment: jest.fn(),
+      get: jest.fn(),
     };
     JimpleMock.service('appConfiguration', appConfiguration);
     // When/Then
@@ -174,6 +179,7 @@ describe('app:Jimpex', () => {
     JimpleMock.service('rootRequire', rootRequire);
     const appConfiguration = {
       loadFromEnvironment: jest.fn(),
+      get: jest.fn(),
     };
     JimpleMock.service('appConfiguration', appConfiguration);
     // When
@@ -197,6 +203,7 @@ describe('app:Jimpex', () => {
     JimpleMock.service('rootRequire', rootRequire);
     const appConfiguration = {
       loadFromEnvironment: jest.fn(),
+      get: jest.fn(),
     };
     JimpleMock.service('appConfiguration', appConfiguration);
     // When
@@ -224,6 +231,7 @@ describe('app:Jimpex', () => {
     JimpleMock.service('rootRequire', rootRequire);
     const appConfiguration = {
       loadFromEnvironment: jest.fn(),
+      get: jest.fn(),
     };
     JimpleMock.service('appConfiguration', appConfiguration);
     // When
@@ -251,6 +259,7 @@ describe('app:Jimpex', () => {
     JimpleMock.service('rootRequire', rootRequire);
     const appConfiguration = {
       loadFromEnvironment: jest.fn(),
+      get: jest.fn(),
     };
     JimpleMock.service('appConfiguration', appConfiguration);
     // When
@@ -278,6 +287,7 @@ describe('app:Jimpex', () => {
     JimpleMock.service('rootRequire', rootRequire);
     const appConfiguration = {
       loadFromEnvironment: jest.fn(),
+      get: jest.fn(),
     };
     JimpleMock.service('appConfiguration', appConfiguration);
     // When
@@ -306,6 +316,7 @@ describe('app:Jimpex', () => {
     JimpleMock.service('rootRequire', rootRequire);
     const appConfiguration = {
       loadFromEnvironment: jest.fn(),
+      get: jest.fn(),
     };
     JimpleMock.service('appConfiguration', appConfiguration);
     // When
@@ -334,6 +345,7 @@ describe('app:Jimpex', () => {
     JimpleMock.service('rootRequire', rootRequire);
     const appConfiguration = {
       loadFromEnvironment: jest.fn(),
+      get: jest.fn(),
     };
     JimpleMock.service('appConfiguration', appConfiguration);
     // When
@@ -365,6 +377,7 @@ describe('app:Jimpex', () => {
     JimpleMock.service('rootRequire', rootRequire);
     const appConfiguration = {
       loadFromEnvironment: jest.fn(),
+      get: jest.fn(),
     };
     JimpleMock.service('appConfiguration', appConfiguration);
     let sut = null;
@@ -394,6 +407,7 @@ describe('app:Jimpex', () => {
     JimpleMock.service('rootRequire', rootRequire);
     const appConfiguration = {
       loadFromEnvironment: jest.fn(),
+      get: jest.fn(),
     };
     JimpleMock.service('appConfiguration', appConfiguration);
     let sut = null;
@@ -432,8 +446,10 @@ describe('app:Jimpex', () => {
     const defaultConfig = {};
     const rootRequire = jest.fn(() => defaultConfig);
     JimpleMock.service('rootRequire', rootRequire);
+    const version = 'version-on-file';
     const appConfiguration = {
       loadFromEnvironment: jest.fn(),
+      get: jest.fn(() => version),
     };
     JimpleMock.service('appConfiguration', appConfiguration);
     let sut = null;
@@ -447,7 +463,49 @@ describe('app:Jimpex', () => {
     expect(wootilsMock.appConfiguration).toHaveBeenCalledTimes(1);
     expect(wootilsMock.appConfiguration).toHaveBeenCalledWith(
       sut.options.configuration.name,
-      Object.assign({}, defaultConfig, { version: sut.options.version }),
+      defaultConfig,
+      {
+        environmentVariable: sut.options.configuration.environmentVariable,
+        path: sut.options.configuration.path,
+        filenameFormat: `${sut.options.configuration.name}.[name].config.js`,
+      }
+    );
+    expect(appConfiguration.loadFromEnvironment).toHaveBeenCalledTimes(1);
+    expect(sut.options.version).toBe(version);
+  });
+
+  it('should inject the app version on the default configuration', () => {
+    // Given
+    class Sut extends Jimpex {
+      boot() {}
+    }
+    const pathUtils = {
+      joinFrom: jest.fn((from, rest) => path.join(from, rest)),
+    };
+    JimpleMock.service('pathUtils', pathUtils);
+    const defaultConfig = {};
+    const rootRequire = jest.fn(() => defaultConfig);
+    JimpleMock.service('rootRequire', rootRequire);
+    const version = 'some-version';
+    const appConfiguration = {
+      loadFromEnvironment: jest.fn(),
+      get: jest.fn(),
+    };
+    JimpleMock.service('appConfiguration', appConfiguration);
+    let sut = null;
+    // When
+    sut = new Sut(true, {
+      version,
+      configuration: {
+        hasFolder: false,
+        loadVersionFromConfiguration: false,
+      },
+    });
+    // Then
+    expect(wootilsMock.appConfiguration).toHaveBeenCalledTimes(1);
+    expect(wootilsMock.appConfiguration).toHaveBeenCalledWith(
+      sut.options.configuration.name,
+      Object.assign({}, defaultConfig, { version }),
       {
         environmentVariable: sut.options.configuration.environmentVariable,
         path: sut.options.configuration.path,
@@ -466,8 +524,10 @@ describe('app:Jimpex', () => {
       joinFrom: jest.fn((from, rest) => path.join(from, rest)),
     };
     JimpleMock.service('pathUtils', pathUtils);
+    const version = 'version-on-file';
     const appConfiguration = {
       loadFromEnvironment: jest.fn(),
+      get: jest.fn(() => version),
     };
     JimpleMock.service('appConfiguration', appConfiguration);
     const defaultConfiguration = {
@@ -484,7 +544,7 @@ describe('app:Jimpex', () => {
     expect(wootilsMock.appConfiguration).toHaveBeenCalledTimes(1);
     expect(wootilsMock.appConfiguration).toHaveBeenCalledWith(
       sut.options.configuration.name,
-      Object.assign({}, defaultConfiguration, { version: sut.options.version }),
+      defaultConfiguration,
       {
         environmentVariable: sut.options.configuration.environmentVariable,
         path: `${sut.options.configuration.path}${sut.options.configuration.name}/`,
@@ -492,6 +552,7 @@ describe('app:Jimpex', () => {
       }
     );
     expect(appConfiguration.loadFromEnvironment).toHaveBeenCalledTimes(1);
+    expect(sut.options.version).toBe(version);
   });
 
   it('shouldn\'t load the configuration based on an env var if the option is disabled', () => {
@@ -503,8 +564,10 @@ describe('app:Jimpex', () => {
       joinFrom: jest.fn((from, rest) => path.join(from, rest)),
     };
     JimpleMock.service('pathUtils', pathUtils);
+    const version = 'some-version';
     const appConfiguration = {
       loadFromEnvironment: jest.fn(),
+      get: jest.fn(() => version),
     };
     JimpleMock.service('appConfiguration', appConfiguration);
     const defaultConfiguration = {
@@ -522,7 +585,7 @@ describe('app:Jimpex', () => {
     expect(wootilsMock.appConfiguration).toHaveBeenCalledTimes(1);
     expect(wootilsMock.appConfiguration).toHaveBeenCalledWith(
       sut.options.configuration.name,
-      Object.assign({}, defaultConfiguration, { version: sut.options.version }),
+      defaultConfiguration,
       {
         environmentVariable: sut.options.configuration.environmentVariable,
         path: `${sut.options.configuration.path}${sut.options.configuration.name}/`,
@@ -530,6 +593,7 @@ describe('app:Jimpex', () => {
       }
     );
     expect(appConfiguration.loadFromEnvironment).toHaveBeenCalledTimes(0);
+    expect(sut.options.version).toBe(version);
   });
 
   it('should disable TL validation', () => {
@@ -546,6 +610,7 @@ describe('app:Jimpex', () => {
     JimpleMock.service('rootRequire', rootRequire);
     const appConfiguration = {
       loadFromEnvironment: jest.fn(),
+      get: jest.fn(),
     };
     JimpleMock.service('appConfiguration', appConfiguration);
     const appLogger = {

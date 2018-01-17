@@ -39,6 +39,7 @@ class Jimpex extends Jimple {
         hasFolder: true,
         environmentVariable: 'CONFIG',
         loadFromEnvironment: true,
+        loadVersionFromConfiguration: true,
         filenameFormat: '[app-name].[configuration-name].config.js',
       },
       statics: {
@@ -206,7 +207,11 @@ class Jimpex extends Jimple {
 
   _setupConfiguration() {
     const { version, configuration: options } = this.options;
-    const { name, environmentVariable } = options;
+    const {
+      name,
+      environmentVariable,
+      loadVersionFromConfiguration,
+    } = options;
     let configsPath = options.path;
     if (options.hasFolder) {
       configsPath += `${options.name}/`;
@@ -223,9 +228,13 @@ class Jimpex extends Jimple {
       defaultConfig = this.get('rootRequire')(defaultConfigPath);
     }
 
+    if (!loadVersionFromConfiguration) {
+      defaultConfig = Object.assign({ version }, defaultConfig);
+    }
+
     this.register(appConfiguration(
       name,
-      Object.assign({ version }, defaultConfig),
+      defaultConfig,
       {
         environmentVariable,
         path: configsPath,
@@ -235,6 +244,10 @@ class Jimpex extends Jimple {
 
     if (options.loadFromEnvironment) {
       this.get('appConfiguration').loadFromEnvironment();
+    }
+
+    if (loadVersionFromConfiguration) {
+      this.options.version = this.get('appConfiguration').get('version');
     }
   }
 
