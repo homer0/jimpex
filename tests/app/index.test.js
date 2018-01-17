@@ -130,7 +130,7 @@ describe('app:Jimpex', () => {
       Object.assign({}, defaultConfig, { version: sut.options.version }),
       {
         environmentVariable: sut.options.configuration.environmentVariable,
-        path: sut.options.configuration.path,
+        path: `${sut.options.configuration.path}${sut.options.configuration.name}/`,
         filenameFormat: `${sut.options.configuration.name}.[name].config.js`,
       }
     );
@@ -420,7 +420,7 @@ describe('app:Jimpex', () => {
     });
   });
 
-  it('should be able to look for configurations inside a folder with the app name', () => {
+  it('should be able to look for configurations', () => {
     // Given
     class Sut extends Jimpex {
       boot() {}
@@ -440,7 +440,7 @@ describe('app:Jimpex', () => {
     // When
     sut = new Sut(true, {
       configuration: {
-        hasFolder: true,
+        hasFolder: false,
       },
     });
     // Then
@@ -450,7 +450,7 @@ describe('app:Jimpex', () => {
       Object.assign({}, defaultConfig, { version: sut.options.version }),
       {
         environmentVariable: sut.options.configuration.environmentVariable,
-        path: `${sut.options.configuration.path}${sut.options.configuration.name}/`,
+        path: sut.options.configuration.path,
         filenameFormat: `${sut.options.configuration.name}.[name].config.js`,
       }
     );
@@ -487,7 +487,7 @@ describe('app:Jimpex', () => {
       Object.assign({}, defaultConfiguration, { version: sut.options.version }),
       {
         environmentVariable: sut.options.configuration.environmentVariable,
-        path: sut.options.configuration.path,
+        path: `${sut.options.configuration.path}${sut.options.configuration.name}/`,
         filenameFormat: `${sut.options.configuration.name}.[name].config.js`,
       }
     );
@@ -525,7 +525,7 @@ describe('app:Jimpex', () => {
       Object.assign({}, defaultConfiguration, { version: sut.options.version }),
       {
         environmentVariable: sut.options.configuration.environmentVariable,
-        path: sut.options.configuration.path,
+        path: `${sut.options.configuration.path}${sut.options.configuration.name}/`,
         filenameFormat: `${sut.options.configuration.name}.[name].config.js`,
       }
     );

@@ -13,4 +13,7 @@ new JestExRunner('./.jestrc.json', {
 })
 .run()
 .then(() => logger.success('Yay! all the unit tests passed!'))
-.catch(() => logger.error('Damn... something went wrong with the unit tests'));
+.catch(() => {
+  logger.error('Damn... something went wrong with the unit tests');
+  process.exit(1);
+});

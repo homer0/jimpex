@@ -16,7 +16,7 @@ const mocks = {
 const expressMock = jest.fn(() => mocks);
 expressMock.mocks = mocks;
 expressMock.static = mocks.static;
-expressMock.router = mocks.router;
+expressMock.Router = mocks.router;
 expressMock.reset = () => {
   expressMock.mockClear();
   Object.keys(mocks).forEach((name) => {
