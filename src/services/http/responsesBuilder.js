@@ -1,11 +1,56 @@
 const statuses = require('statuses');
 const { provider } = require('../../utils/wrappers');
+/**
+ * @typedef {Object} ResponsesBuilderPostMessageOptions It allows customization of a post message
+ *                                                      HTML template
+ * @property {?number}  [status=statuses.ok]             The HTTP status. Jimpex uses the
+ *                                                       `statuses` package to reference HTTP
+ *                                                       statuses, that's why the default is
+ *                                                       `statuses.ok`(200).
+ * @property {?string}  [options.target='window.opener'] The target that will emit the
+ *                                                       `postMessage`.
+ * @property {?Boolean} [options.close=true]             Whether or not to do a `window.close`
+ *                                                       after sending the message.
+ * @property {?number}  [options.closeDelay=700]         How many ms should it wait before closing
+ *                                                       the window, if `options.close` is `true`.
+ */
 
+/**
+ * A utility service to build server responses.
+ */
 class ResponsesBuilder {
+  /**
+   * Class constructor.
+   * @param {AppConfiguration} appConfiguration To get the app version.
+   */
   constructor(appConfiguration) {
+    /**
+     * A local reference for the `appConfiguration` service.
+     * @type {AppConfiguration}
+     */
     this.appConfiguration = appConfiguration;
   }
-
+  /**
+   * Generates and sends a JSON response.
+   * The generated looks like this:
+   * ```
+   * {
+   *   metadata: {
+   *     version: '[app-version]',
+   *     status: [http-status],
+   *   },
+   *   data: [...],
+   * }
+   * ```
+   * @param {ExpressResponse} res                  The Express response object necessary to write
+   *                                               the JSON.
+   * @param {Object}          data                 The information for the `data` key.
+   * @param {number}          [status=statuses.ok] The HTTP status. Jimpex uses the `statuses`
+   *                                               package to reference HTTP statuses, that's why
+   *                                               the default is `statuses.ok`(200).
+   * @param {Object}          [metadata={}]        Extra information to include on the `metadata`
+   *                                               key.
+   */
   json(res, data, status = statuses.ok, metadata = {}) {
     res
     .status(status)
@@ -18,7 +63,23 @@ class ResponsesBuilder {
     })
     .end();
   }
-
+  /**
+   * Generates and send an HTML response that emits a post message.
+   * The post message will be prefixed with the value of the configuration setting
+   * `postMessagesPrefix`.
+   * @param {ExpressResponse}                   res                  The Express response object
+   *                                                                 necessary to write the HTML.
+   * @param {string}                            title                The title for the HTML.
+   * @param {string}                            message              The contents of the post
+   *                                                                 message.
+   * @param {number}                            [status=statuses.ok] The HTTP status. Jimpex uses
+   *                                                                 the `statuses` package to
+   *                                                                 reference HTTP statuses,
+   *                                                                 that's why the default is
+   *                                                                 `statuses.ok`(200). Custom
+   *                                                                 options for the HTML.
+   * @param {ResponsesBuilderPostMessageOptions} [options={}]        Options to customize the HTML.
+   */
   htmlPostMessage(
     res,
     title,
@@ -49,7 +110,14 @@ class ResponsesBuilder {
     res.write(html);
     res.end();
   }
-
+  /**
+   * Generates a basic HTML template for other services to use.
+   * @param {string} title The HTML `<title />` attribute.
+   * @param {string} code  Javascript code to be wrapped on a `<script />` tag.
+   * @return {string}
+   * @ignore
+   * @access protected
+   */
   _htmlTemplate(title, code) {
     return `
       <!DOCTYPE html>
@@ -69,7 +137,16 @@ class ResponsesBuilder {
     `;
   }
 }
-
+/**
+ * The service provider that once registered on the app container will set an instance of
+ * `ResponsesBuilder` as the `responsesBuilder` service.
+ * @example
+ * // Register it on the container
+ * container.register(responsesBuilder);
+ * // Getting access to the service instance
+ * const responsesBuilder = container.get('responsesBuilder');
+ * @type {Provider}
+ */
 const responsesBuilder = provider((app) => {
   app.set('responsesBuilder', () => new ResponsesBuilder(
     app.get('appConfiguration')
