@@ -45,6 +45,7 @@
       "test": "./utils/scripts/test",
       "lint": "./utils/scripts/lint",
       "lint:full": "./utils/scripts/lint-full",
+      "predocs": "./utils/scripts/docs-index",
       "docs": "./utils/scripts/docs",
       "todo": "./utils/scripts/todo"
     }
