@@ -7,6 +7,10 @@
  */
 
 /**
+ * @external {APIClientEndpoints} https://github.com/homer0/wootils
+ */
+
+/**
  * @external {PathUtils} https://github.com/homer0/wootils
  */
 

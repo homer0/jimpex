@@ -9,14 +9,14 @@ const { provider } = require('../../utils/wrappers');
 class APIClient extends APIClientBase {
   /**
    * Class constructor.
-   * @param {Object} apiConfig           The configuration for the API the client will make
-   *                                     requests to.
-   * @param {string} apiConfig.url       The API entry point.
-   * @param {Object} apiConfig.endpoints A dictionary of named endpoints relative to the API
-   *                                     entry point.
-   * @param {HTTP}   http                To get the `fetch` function for this service to use on all
-   *                                     the requests.
-   * @param {Class} AppError             To format the received errors.
+   * @param {Object}             apiConfig           The configuration for the API the client will
+   *                                                 make requests to.
+   * @param {string}             apiConfig.url       The API entry point.
+   * @param {APIClientEndpoints} apiConfig.endpoints A dictionary of named endpoints relative to
+   *                                                 the API entry point.
+   * @param {HTTP}               http                To get the `fetch` function for this service
+   *                                                 to use on all the requests.
+   * @param {Class}              AppError            To format the received errors.
    */
   constructor(apiConfig, http, AppError) {
     super(apiConfig.url, apiConfig.endpoints, http.fetch);
