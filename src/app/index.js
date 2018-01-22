@@ -23,6 +23,7 @@ const httpServices = require('../services/http');
  * Express, one of the most popular web frameworks for Node.
  * @extends {Jimple}
  * @interface
+ * @todo Implement `helmet`
  */
 class Jimpex extends Jimple {
   /**

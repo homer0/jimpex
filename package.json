@@ -31,6 +31,7 @@
       "esdoc": "1.0.4",
       "esdoc-standard-plugin": "1.0.0",
       "esdoc-node": "homer0/esdoc-node",
+      "leasot": "4.13.0",
       "coveralls": "3.0.0"
     },
     "engine-strict": true,
@@ -44,6 +45,7 @@
       "test": "./utils/scripts/test",
       "lint": "./utils/scripts/lint",
       "lint:full": "./utils/scripts/lint-full",
-      "docs": "./utils/scripts/docs"
+      "docs": "./utils/scripts/docs",
+      "todo": "./utils/scripts/todo"
     }
 }
