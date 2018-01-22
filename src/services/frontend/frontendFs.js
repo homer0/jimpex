@@ -7,7 +7,7 @@ const { provider } = require('../../utils/wrappers');
  * why this service exists. The service can be extended/overwritten to accommodate any
  * requirements and avoid having to update or add `if`s to every `fs` call the app does.
  * Another _'feature'_ of this service is that all the paths are relative to the directory where
- * the app executable is located, so all you don't have to remember the relative path from the place
+ * the app executable is located, so you don't have to remember the relative path from the place
  * you are accessing a file to the place where it's located.
  */
 class FrontendFs {

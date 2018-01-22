@@ -3,10 +3,6 @@ const { provider } = require('../../utils/wrappers');
 /**
  * @typedef {Object} ResponsesBuilderPostMessageOptions It allows customization of a post message
  *                                                      HTML template
- * @property {?number}  [status=statuses.ok]             The HTTP status. Jimpex uses the
- *                                                       `statuses` package to reference HTTP
- *                                                       statuses, that's why the default is
- *                                                       `statuses.ok`(200).
  * @property {?string}  [options.target='window.opener'] The target that will emit the
  *                                                       `postMessage`.
  * @property {?Boolean} [options.close=true]             Whether or not to do a `window.close`

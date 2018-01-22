@@ -19,7 +19,7 @@ const apiServices = require('../services/api');
 const commonServices = require('../services/common');
 const httpServices = require('../services/http');
 /**
- * Jimpex is a mix of Jimple, a Javascript port of Pimple Dependency Injection container, and
+ * Jimpex is a mix of Jimple, a Javascript port of Pimple dependency injection container, and
  * Express, one of the most popular web frameworks for Node.
  * @extends {Jimple}
  * @interface

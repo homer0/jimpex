@@ -238,6 +238,8 @@ class HTMLGenerator {
  *                                                              the values that will be injected in
  *                                                              the generated file.
  * @return {Provider}
+ * @todo Move `serviceName` as the second parameter in case the implementation wants to change just
+ *       the options.
  */
 const htmlGeneratorCustom = (
   serviceName = 'htmlGenerator',
