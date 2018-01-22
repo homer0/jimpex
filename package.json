@@ -1,6 +1,6 @@
 {
     "name": "jimpex",
-    "description": "I swear I'll write a description soon",
+    "description": "Express as dependency injection container.",
     "version": "0.0.5",
     "repository": "homer0/jimpex",
     "author": "Leonardo Apiwan (@homer0) <me@homer0.com>",
