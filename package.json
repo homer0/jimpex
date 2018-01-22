@@ -6,11 +6,10 @@
     "author": "Leonardo Apiwan (@homer0) <me@homer0.com>",
     "license": "MIT",
     "dependencies": {
-      "wootils": "^0.0.4",
+      "wootils": "^1.0.2",
       "jimple": "homer0/jimple",
       "express": "4.16.2",
       "body-parser": "1.18.2",
-      "helmet": "3.9.0",
       "compression": "1.7.1",
       "extend": "3.0.1",
       "node-fetch": "1.7.3",
@@ -31,7 +30,8 @@
       "jasmine-expect": "3.8.1",
       "esdoc": "1.0.4",
       "esdoc-standard-plugin": "1.0.0",
-      "esdoc-node": "homer0/esdoc-node"
+      "esdoc-node": "homer0/esdoc-node",
+      "coveralls": "3.0.0"
     },
     "engine-strict": true,
     "engines": {
