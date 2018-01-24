@@ -2763,7 +2763,7 @@ jest-worker@^22.0.3, jest-worker@^22.1.0:
   dependencies:
     merge-stream "^1.0.1"
 
-jimple@homer0/jimple:
+"jimple@github:homer0/jimple", jimple@homer0/jimple:
   version "1.4.6"
   resolved "https://codeload.github.com/homer0/jimple/tar.gz/1f123c2ba1f0aef14de159747455f877f70e0c9d"
 
@@ -4457,9 +4457,9 @@ window-size@0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/window-size/-/window-size-0.1.0.tgz#5438cd2ea93b202efa3a19fe8887aee7c94f9c9d"
 
-wootils@^1.0.2:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/wootils/-/wootils-1.0.2.tgz#70de151c3c14ef2bb1abbed75c5fb822ca0c30ef"
+wootils@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/wootils/-/wootils-1.0.4.tgz#c98137526f08046855d776118254db94311bfa15"
   dependencies:
     colors "1.1.2"
     fs-extra "5.0.0"
