@@ -1,33 +1,41 @@
 /**
- * @external {AppConfiguration} https://github.com/homer0/wootils
+ * @external {AppConfiguration}
+ * https://homer0.github.io/wootils/class/wootils/node/appConfiguration.js~AppConfiguration.html
  */
 
 /**
- * @external {APIClientBase} https://github.com/homer0/wootils
+ * @external {APIClientBase}
+ * https://homer0.github.io/wootils/class/wootils/shared/apiClient.js~APIClient.html
  */
 
 /**
- * @external {APIClientEndpoints} https://github.com/homer0/wootils
+ * @external {APIClientEndpoints}
+ * https://homer0.github.io/wootils/typedef/index.html#static-typedef-APIClientEndpoints
  */
 
 /**
- * @external {PathUtils} https://github.com/homer0/wootils
+ * @external {PathUtils}
+ * https://homer0.github.io/wootils/class/wootils/node/pathUtils.js~PathUtils.html
  */
 
 /**
- * @external {Logger} https://github.com/homer0/wootils
+ * @external {Logger}
+ * https://homer0.github.io/wootils/class/wootils/node/logger.js~Logger.html
  */
 
 /**
- * @external {EnvironmentUtils} https://github.com/homer0/wootils
+ * @external {EnvironmentUtils}
+ * https://homer0.github.io/wootils/class/wootils/node/environmentUtils.js~EnvironmentUtils.html
  */
 
 /**
- * @external {ErrorHandler} https://github.com/homer0/wootils
+ * @external {ErrorHandler}
+ * https://homer0.github.io/wootils/class/wootils/node/errorHandler.js~ErrorHandler.html
  */
 
 /**
- * @external {RootRequire} https://github.com/homer0/wootils
+ * @external {RootRequire}
+ * https://homer0.github.io/wootils/function/index.html#static-function-rootRequire
  */
 
 /**
