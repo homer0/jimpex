@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../">
+  <title data-ice="title">Manual | jimpex</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="Express as dependency injection container."><meta property="twitter:card" content="summary"><meta property="twitter:title" content="jimpex"><meta property="twitter:description" content="Express as dependency injection container."></head>
+<body class="layout-container manual-root" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  <a href="./manual/index.html" data-ice="manualHeaderLink">Manual</a>
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+<a style="position:relative; top:3px;" href="https://github.com/homer0/jimpex"><img width="20px" src="./image/github.png"></a></header>
+
+<nav class="navigation" data-ice="nav"><div class="manual-toc-root">
+  
+<div data-ice="manual">
+    <ul class="manual-toc">
+      
+    <li data-ice="manualNav" class="indent-h1" data-link="manual/options.html"><a href="manual/options.html" data-ice="link">Jimpex Options</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/options.html"><a href="manual/options.html#configuration" data-ice="link">Configuration</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/options.html"><a href="manual/options.html#statics" data-ice="link">Statics</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/options.html"><a href="manual/options.html#express" data-ice="link">Express</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/options.html"><a href="manual/options.html#default-services" data-ice="link">Default services</a></li>
+</ul>
+  </div>
+<div data-ice="manual">
+    <ul class="manual-toc">
+      
+    <li data-ice="manualNav" class="indent-h1" data-link="manual/controllers.html"><a href="manual/controllers.html" data-ice="link">Built-in Controllers</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/controllers.html"><a href="manual/controllers.html#version-validator" data-ice="link">Version validator</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/controllers.html"><a href="manual/controllers.html#configuration" data-ice="link">Configuration</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/controllers.html"><a href="manual/controllers.html#health" data-ice="link">Health</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/controllers.html"><a href="manual/controllers.html#root-statics" data-ice="link">Root Statics</a></li>
+</ul>
+  </div>
+<div data-ice="manual">
+    <ul class="manual-toc">
+      
+    <li data-ice="manualNav" class="indent-h1" data-link="manual/middlewares.html"><a href="manual/middlewares.html" data-ice="link">Built-in Middlewares</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/middlewares.html"><a href="manual/middlewares.html#error-handler" data-ice="link">Error Handler</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/middlewares.html"><a href="manual/middlewares.html#force-https" data-ice="link">Force HTTPS</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/middlewares.html"><a href="manual/middlewares.html#fast-html" data-ice="link">Fast HTML</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/middlewares.html"><a href="manual/middlewares.html#show-html" data-ice="link">Show HTML</a></li>
+</ul>
+  </div>
+<div data-ice="manual">
+    <ul class="manual-toc">
+      
+    <li data-ice="manualNav" class="indent-h1" data-link="manual/services.html"><a href="manual/services.html" data-ice="link">Built-in Services</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/services.html"><a href="manual/services.html#api-client" data-ice="link">API Client</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/services.html"><a href="manual/services.html#ensure-bearer-authentication" data-ice="link">Ensure bearer authentication</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/services.html"><a href="manual/services.html#version-validator" data-ice="link">Version validator</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/services.html"><a href="manual/services.html#error" data-ice="link">Error</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/services.html"><a href="manual/services.html#send-file" data-ice="link">Send File</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/services.html"><a href="manual/services.html#frontend-fs" data-ice="link">Frontend Fs</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/services.html"><a href="manual/services.html#html-generator" data-ice="link">HTML Generator</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/services.html"><a href="manual/services.html#http" data-ice="link">HTTP</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/services.html"><a href="manual/services.html#responses-builder" data-ice="link">Responses builder</a></li>
+</ul>
+  </div>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><div class="github-markdown" data-ice="content"><h1 id="jimpex-options">Jimpex Options</h1><p>The options the second parameter of the class constructor and it allows you to customize almost every aspect of Jimpex.</p>
+<p>This is what the options object looks like:</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">{
+  // The version of the app
+  version: &apos;0.0.0&apos;,
+
+  // The size limit for the requests payload.
+  filesizeLimit: &apos;15MB&apos;,
+
+  // The options to customize how the app configuration is loaded (details on its section).
+  configuration: ...,
+
+  // The options for the static middleware (details on its section).
+  statics: ...,
+
+  // The options to customize the express instance and default middlewares (details on its section).
+  express: ...,
+
+  // Which built-in services to register (details on its section).
+  defaultServices: ...
+}</code>
+</code></pre>
+<p>Besides the first two, which default values and descriptions are pretty clear, I&apos;ll go in detail for all the others.</p>
+<h2 id="configuration">Configuration</h2><p>This set of options allows you to customize every aspect of how the configuration service is created. Remember that the app requires a valid configuration with a <code>port</code> setting to be started:</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">{
+  // The default configuration. If the value is null, it will load [app-name].config.js
+  default: null,
+
+  // The name of the app, to be used on the configurations directory and filenames.
+  name: &apos;app&apos;,
+
+  // The path relative to the root directory where the configurations are located.
+  path: &apos;config/&apos;,
+
+  // If `true`, the path to the configuration will add a folder with the name of the app.
+  hasFolder: true,
+
+  // The environment variable the app will check for a configuration name.
+  environmentVariable: &apos;CONFIG&apos;,
+
+  // Whether or not to check for the environment variable.
+  loadFromEnvironment: true,
+
+  // If `true`, the version of the app will be copied from the loaded configuration.
+  loadVersionFromConfiguration: true,
+
+  // The name format of the configuration files.
+  filenameFormat: &apos;[app-name].[configuration-name].config.js&apos;,
+}</code>
+</code></pre>
+<p>As you can see, if you don&apos;t want to depend on environment variables or just have one single configuration for your app, you can use the <code>default</code> option and turn <code>loadFromEnvironment</code> to <code>false</code>.</p>
+<p>The configuration service is an implementation of <a href="https://github.com/homer0/wootils/blob/master/documents/node/appConfiguration.md">wootils AppConfiguration</a>, so you can check its API in its oficial configuration.</p>
+<h2 id="statics">Statics</h2><p>These options are specifically for the Express <a href="https://github.com/expressjs/serve-static"><code>static</code></a> middleware:</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">{
+  // Whether or not to enable the middleware to serve statics files.
+  enabled: true,
+
+  // If true, the statics folder should be relative to the project root directory, otherwise,
+  // it should be relative to the app executable.
+  onHome: true,
+
+  // The name of your static files folder.
+  folder: &apos;statics&apos;,
+}</code>
+</code></pre>
+<h2 id="express">Express</h2><p>These are options for miscellaneous things you can add to the Express server:</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">{
+  // Whether or not to enable the `trust proxy` option.
+  trustProxy: true,
+
+  // Whether or not to remove the `x-powered-by` header.
+  disableXPoweredBy: true,
+
+  // Whether or not to add the `compression` middleware.
+  compression: true,
+
+  // Whether or not to add the `body-parser` middleware.
+  bodyParser: true,
+
+  // Whether or not to add the `multer` middleware.
+  multer: true,
+}</code>
+</code></pre>
+<h2 id="default-services">Default services</h2><p>These options allow you to register some of the built-in service that I consider useful enough to be added on any app.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">{
+  // These services include:
+  // - Error handler
+  // - Send File
+  common: true,
+
+  // These services include:
+  // - HTTP
+  // - Responses builder
+  http: true,
+
+  // These services include:
+  // - API client
+  // - Ensure bearer authentication
+  // - Version validator
+  api: true,
+}</code>
+</code></pre>
+<p>For more information about these services, check the document about <strong>Built-in Services</strong>.</p>
+</div>
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.0.4)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

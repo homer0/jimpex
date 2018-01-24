@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl">
+  <title data-ice="title">Home | jimpex</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="Express as dependency injection container."><meta property="twitter:card" content="summary"><meta property="twitter:title" content="jimpex"><meta property="twitter:description" content="Express as dependency injection container."></head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  <a href="./manual/index.html" data-ice="manualHeaderLink">Manual</a>
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+<a style="position:relative; top:3px;" href="https://github.com/homer0/jimpex"><img width="20px" src="./image/github.png"></a></header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-Controller">Controller</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-ExpressNext">ExpressNext</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-Middleware">Middleware</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-Provider">Provider</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="https://homer0.github.io/wootils/class/wootils/shared/apiClient.js~APIClient.html">APIClientBase</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="https://homer0.github.io/wootils/typedef/index.html#static-typedef-APIClientEndpoints">APIClientEndpoints</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="https://homer0.github.io/wootils/class/wootils/node/appConfiguration.js~AppConfiguration.html">AppConfiguration</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="https://homer0.github.io/wootils/class/wootils/node/environmentUtils.js~EnvironmentUtils.html">EnvironmentUtils</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="https://homer0.github.io/wootils/class/wootils/node/errorHandler.js~ErrorHandler.html">ErrorHandler</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="https://expressjs.com/en/4x/api.html">Express</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://expressjs.com/en/guide/using-middleware.html">ExpressMiddleware</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="https://expressjs.com/en/4x/api.html#req">ExpressRequest</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="https://expressjs.com/en/4x/api.html#res">ExpressResponse</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="https://expressjs.com/en/4x/api.html#res">ExpressResponse</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="https://homer0.github.io/wootils/class/wootils/node/logger.js~Logger.html">Logger</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="https://homer0.github.io/wootils/class/wootils/node/pathUtils.js~PathUtils.html">PathUtils</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="https://homer0.github.io/wootils/function/index.html#static-function-rootRequire">RootRequire</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#app">app</a><span data-ice="kind" class="kind-interface">I</span><span data-ice="name"><span><a href="class/src/app/index.js~Jimpex.html">Jimpex</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-JimpexConfigurationOptions">JimpexConfigurationOptions</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-JimpexDefaultServicesOptions">JimpexDefaultServicesOptions</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-JimpexExpressOptions">JimpexExpressOptions</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-JimpexOptions">JimpexOptions</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-JimpexStaticsOptions">JimpexStaticsOptions</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="https://yarnpkg.com/en/package/jimple">Jimple</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#controllers-api">controllers/api</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/controllers/api/versionValidator.js~VersionValidatorController.html">VersionValidatorController</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-versionValidatorController">versionValidatorController</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#controllers-common">controllers/common</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/controllers/common/configuration.js~ConfigurationController.html">ConfigurationController</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/controllers/common/health.js~HealthController.html">HealthController</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/controllers/common/rootStatics.js~RootStaticsController.html">RootStaticsController</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-rootStaticsControllerCustom">rootStaticsControllerCustom</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-configurationController">configurationController</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-healthController">healthController</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-rootStaticsController">rootStaticsController</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#middlewares-common">middlewares/common</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/middlewares/common/errorHandler.js~ErrorHandler.html">ErrorHandler</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/middlewares/common/forceHTTPS.js~ForceHTTPS.html">ForceHTTPS</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-forceHTTPSCustom">forceHTTPSCustom</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-errorHandler">errorHandler</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-forceHTTPS">forceHTTPS</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#middlewares-html">middlewares/html</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/middlewares/html/fastHTML.js~FastHTML.html">FastHTML</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/middlewares/html/showHTML.js~ShowHTML.html">ShowHTML</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-fastHTMLCustom">fastHTMLCustom</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-showHTMLCustom">showHTMLCustom</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-fastHTML">fastHTML</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-showHTML">showHTML</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#services-api">services/api</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/services/api/client.js~APIClient.html">APIClient</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/services/api/ensureBearerAuthentication.js~EnsureBearerAuthentication.html">EnsureBearerAuthentication</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/services/api/versionValidator.js~VersionValidator.html">VersionValidator</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-apiClientCustom">apiClientCustom</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-apiClient">apiClient</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-ensureBearerAuthentication">ensureBearerAuthentication</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-all">all</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-versionValidator">versionValidator</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#services-common">services/common</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/services/common/error.js~AppError.html">AppError</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-sendFile">sendFile</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-appError">appError</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-all">all</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-sendFileProvider">sendFileProvider</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-SendFile">SendFile</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#services-frontend">services/frontend</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/services/frontend/frontendFs.js~FrontendFs.html">FrontendFs</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-frontendFs">frontendFs</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#services-html">services/html</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/services/html/htmlGenerator.js~HTMLGenerator.html">HTMLGenerator</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-htmlGeneratorCustom">htmlGeneratorCustom</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-htmlGenerator">htmlGenerator</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-HTMLGeneratorOptions">HTMLGeneratorOptions</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-HTMLGeneratorValuesService">HTMLGeneratorValuesService</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#services-http">services/http</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/services/http/http.js~HTTP.html">HTTP</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/services/http/responsesBuilder.js~ResponsesBuilder.html">ResponsesBuilder</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-http">http</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-all">all</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-responsesBuilder">responsesBuilder</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-HTTPFetchOptions">HTTPFetchOptions</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-ResponsesBuilderPostMessageOptions">ResponsesBuilderPostMessageOptions</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Headers">Headers</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#utils">utils</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-controller">controller</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-middleware">middleware</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><div data-ice="index" class="github-markdown"><h1 id="jimpex">Jimpex</h1><p>Express as dependency injection container.</p>
+<p>Jimpex is an implementation of <a href="https://expressjs.com">Express</a>, one of the most popular web frameworks for Node, using <a href="https://github.com/fjorgemota/jimple">Jimple</a>, a Javascript port of <a href="https://pimple.symfony.com/">Pimple</a> dependency injection container.</p>
+<h2 id="motivation-introduction">Motivation/Introduction</h2><p>A friend who&apos;s also web developer brought the idea of start using a dependency injection container on Node, and how Jimple was a great tool for it, and from that moment on I can&apos;t think of starting an app without using it. It not only allows you to implement dependency injection on a simple and clean way but it also kind of forces you to have a really good organization of your code.</p>
+<p>A couple of months after that, the same friend told me that we should do something similar to <a href="https://silex.symfony.com/">Silex</a>, which is based on Pimple, with Express. I ran with the idea and... this project is what I think a mix of Jimple and Express would look like. To be clear, <strong>this is not a port of Silex</strong>.</p>
+<p>Thanks <code>[name]</code>!!! (I&apos;ll ask permission later to publish his name :P)</p>
+<h2 id="information">Information</h2><table>
+<thead>
+<tr>
+<th>-</th>
+<th>-</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Package</td>
+<td>jimpex</td>
+</tr>
+<tr>
+<td>Description</td>
+<td>Express as dependency injection container.</td>
+</tr>
+<tr>
+<td>Node Version</td>
+<td>&gt;= v6.10.0</td>
+</tr>
+</tbody>
+</table>
+<h2 id="usage">Usage</h2><h3 id="creating-your-app">Creating your app</h3><p>To create a Jimpex app you would require the <code>Jimpex</code> class from the package, extend it and define all your services, controllers and middlewares on its <code>boot</code> method:</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">const { Jimpex } = require(&apos;jimpex&apos;);
+
+class MyApp extends Jimpex {
+  boot() {
+    // Do all your custom stuff...
+  }
+}</code>
+</code></pre>
+<p>The class constructor has two parameters:</p>
+<ol>
+<li><code>boot</code> (<code>true</code>): Whether or not to call the <code>boot</code> method after initializing the instance.</li>
+<li><code>options</code> (<code>{}</code>): A set of options to customize the app.</li>
+</ol>
+<p>There are a lot of options to customize an app, so I would recommend you to read the <a href="manual/options.html">Jimpex Options documentation</a>.</p>
+<h4 id="app-configuration">App configuration</h4><p>Jimpex, by default, depends on external configuration files and as a base configuration it will try to load <code>./config/app/app.config.js</code>. Of course this is extremely configurable through the <a href="manual/options.html">Jimpex Options</a>.</p>
+<p>A configuration file is just a Javascript file that exports an Object, for example:</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">module.exports = {
+  port: 2509,
+};</code>
+</code></pre>
+<blockquote>
+<p>If that&apos;s who you default configuration file looks like, the app will run on the port <code>2509</code>.</p>
+</blockquote>
+<p>To access the app configuration, you just call the <code>appConfiguration</code> service:</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">const config = app.get(&apos;appConfiguration&apos;);</code>
+</code></pre>
+<p>Then you can read its values using <code>.get(setting)</code>:</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">console.log(config.get(&apos;port&apos;));
+// Will log 2509</code>
+</code></pre>
+<p>To more information about how the <code>appConfiguration</code> service works, you can check <a href="https://github.com/homer0/wootils/blob/master/documents/node/appConfiguration.md">its documentation on the wootils repository</a>.</p>
+<h4 id="starting-the-app">Starting the app</h4><p>To start the app you need a valid configuration file with a valid <code>port</code> setting. Check the previous section to more information about it.</p>
+<p>Now, Starting the app is as easy as calling <code>start()</code>:</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">app.start(() =&gt; {
+  console.log(&apos;The app is running!&apos;);
+});</code>
+</code></pre>
+<blockquote>
+<p>And like Express, you can send a callback to be executed after the server starts.</p>
+</blockquote>
+<p>You can also stop the app by calling <code>stop()</code>:</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">app.stop();
+// Done, the app is not longer running.</code>
+</code></pre>
+<h3 id="defining-a-service">Defining a service</h3><p>To define a service and its provider, you would write your service as a <code>class</code> or a <code>function</code> and then wrap it on the <code>provider</code> function Jimpex provides:</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">const { provider } = require(&apos;jimpex&apos;);
+
+// Create your service
+class MyService {
+  constructor(depOne, depTwo);
+}
+
+// Define the provider
+const myService = provider((app) =&gt; {
+  app.set(&apos;myService&apos;, () =&gt; new MyService(
+    app.get(&apos;depOne&apos;),
+    app.get(&apos;depTwo&apos;)
+  ));
+});
+
+// Export the service and its provider
+module.exports = {
+  MyService,
+  myService,
+};</code>
+</code></pre>
+<blockquote>
+<p>You could export just export the provider, but I believe is a good practice to export both in case another part of your app wants to extend the class and overwrite the service on the container.</p>
+</blockquote>
+<p>Then, on you app, you would simple <code>register</code> the provider:</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">const { Jimpex } = require(&apos;jimpex&apos;);
+const { myService } = require(&apos;...&apos;);
+
+class MyApp extends Jimpex {
+  boot() {
+    ...
+    this.register(myService);
+  }
+}</code>
+</code></pre>
+<p>Done, your service is now available.</p>
+<h3 id="adding-a-controller">Adding a controller</h3><p>To add controller you need to use the <code>controller</code> function and return a list of routes:</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">const { controller } = require(&apos;jimpex&apos;);
+
+// (Optional) Define a class to organize your route handlers.
+class HealthController {
+  health() {
+    return (req, res) =&gt; {
+      res.write(&apos;Everything works!&apos;);
+    };
+  }
+}
+
+// Define the controller
+const healthController = controller((app) =&gt; {
+  const ctrl = new HealthController();
+  // Get the router service
+  const router = app.get(&apos;router&apos;);
+  // Return the list of routes this controller will handle
+  return [
+    router.get(&apos;/&apos;, ctrl.health()),
+  ];
+});
+
+// Export the controller class and the controller itself
+module.exports = {
+  HealthController,
+  healthController,
+};</code>
+</code></pre>
+<blockquote>
+<ul>
+<li>You could export just export the controller, but I believe is a good practice to export both in case another part of your app wants to extend the class and mount a new route withs its inherit functionalities.</li>
+<li>The function inside the <code>controller</code> wrapper won&apos;t be called until the app is started. In case you are wondering about the lazy loading of the services that you may inject.</li>
+</ul>
+</blockquote>
+<p>Then, on you app, you would <code>mount</code> the controller:</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">const { Jimpex } = require(&apos;jimpex&apos;);
+const { healthController } = require(&apos;...&apos;);
+
+class MyApp extends Jimpex {
+  boot() {
+    ...
+    this.mount(&apos;/health&apos;, healthController);
+  }
+}</code>
+</code></pre>
+<h3 id="adding-a-middleware">Adding a middleware</h3><p>To add a new middleware you need to use the <code>middleware</code> function and return a function:</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">const { middlware } = require(&apos;jimpex&apos;);
+
+// Define your middleware function (or class if it gets more complex)
+const greetingsMiddleware = () =&gt; (req, res, next) =&gt; {
+  console.log(&apos;Hello!&apos;);
+};
+
+// Define the middleware
+const greetings = middleware(() =&gt; greetingsMiddleware());
+
+// Export the function and the middleware
+module.exports = {
+  greetingsMiddleware,
+  greetings,
+};</code>
+</code></pre>
+<blockquote>
+<p>You could export just export the provider, but I believe is a good practice to export both in case another part of your app wants to extend the class or use the function.</p>
+</blockquote>
+<p>Then, on you app, you would <code>use</code> the controller:</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">const { Jimpex } = require(&apos;jimpex&apos;);
+const { greetings } = require(&apos;...&apos;);
+
+class MyApp extends Jimpex {
+  boot() {
+    ...
+    this.use(greetings);
+  }
+}</code>
+</code></pre>
+<h2 id="built-in-features">Built-in features</h2><p>Jimpex comes with a few services, middlewares and controllers that you can import and use on your app, some of them <a href="manual/options.html">are activated by default on the options</a>, but others you have to implement manually:</p>
+<h3 id="controllers">Controllers</h3><ul>
+<li><strong>Version validator:</strong> If you mount it on a route it will generate a <code>409</code> error if the request doesn&apos;t have a version parameter with the same version as the one on the configuration file.</li>
+<li><strong>Configuration:</strong> Allows you to see and switch the current configuration. It can be enabled or disabled by using a setting on the configuration.</li>
+<li><strong>Health:</strong> Shows the version and name of the configuration, just to check the app is running.</li>
+<li><strong>Root statics:</strong> It allows your app to server static files from the root directory, without having to use the <code>static</code> middleware on that directory.</li>
+</ul>
+<p><a href="manual/controllers.html">Read more about the built-in controllers</a></p>
+<h3 id="middlewares">Middlewares</h3><ul>
+<li><strong>Error handler:</strong> Allows you to generate responses for errors and potentially hide uncaught exceptions under a generic message, unless it&apos;s disabled via configuration settings.</li>
+<li><strong>Force HTTPS:</strong> Redirect all incoming traffic from HTTP to HTTPS. It also allows you to set routes to ignore the redirection.</li>
+<li><strong>Fast HTML:</strong> Allows you to specify which routes will be handled and in case there are no controllers for a requested route, it sends out and HTML file, thus preventing the request to be unnecessarily processed by the middlewares.</li>
+<li><strong>Show HTML:</strong> A really simple middleware to serve an HTML file. Its true feature is that it can be hooked up to the <strong>HTML Generator</strong> service.</li>
+</ul>
+<p><a href="manual/middlewares.html">Read more about the built-in controllers</a></p>
+<h3 id="services">Services</h3><ul>
+<li><strong>API client:</strong> An implementation of the <a href="https://github.com/homer0/wootils/blob/master/documents/shared/APIClient.md">wootils API Client</a> but that is connected to the HTTP service, to allow logging and forwarding of the headers.</li>
+<li><strong>Ensure bearer authentication:</strong> A service-middleware that allows you to validate the incoming requests <code>Authorization</code> header.</li>
+<li><strong>Version validator:</strong> A service-middleware to validate a <code>version</code> parameter against the configuration <code>version</code> setting. It&apos;s what the version validator middleware internally uses.</li>
+<li><strong>Error:</strong> A very simple subclass of <code>Error</code> to inject extra information on the errors so they can customize the error handler responses.</li>
+<li><strong>Send File:</strong> It allows you to send a file on a response with a path relative to the app executable.</li>
+<li><strong>Frontend Fs:</strong> Useful for when your app has a bundled frontend, it allows you to read, write and delete files with paths relative to the app executable.</li>
+<li><strong>HTML Generator:</strong> A service that allows you to generate an HTML file when the app gets started and inject contents of the configuration as a <code>window</code> variable.</li>
+<li><strong>HTTP:</strong> A set of utilities to work with HTTP requests and responses.</li>
+<li><strong>Responses builder:</strong> A service that generates JSON and HTML responses.</li>
+</ul>
+<p><a href="manual/services.html">Read more about the built-in services</a></p>
+<p>The service also implements a few other services from the <a href="https://github.com/homer0/wootils">wootils</a> as core utilities:</p>
+<ul>
+<li><a href="https://github.com/homer0/wootils/blob/master/documents/node/logger.md"><code>appLogger</code></a>: The logger service.</li>
+<li><a href="https://github.com/homer0/wootils/blob/master/documents/node/environmentUtils.md"><code>environmentUtils</code></a>: The service that reads the environment variables.</li>
+<li><a href="https://github.com/homer0/wootils/blob/master/documents/node/packageInfo.md"><code>packageInfo</code></a>: The app package.json information.</li>
+<li><a href="https://github.com/homer0/wootils/blob/master/documents/node/pathUtils.md"><code>pathUtils</code></a>: The service to build paths relative to the project root directory.</li>
+<li><a href="https://github.com/homer0/wootils/blob/master/documents/node/rootRequire.md"><code>rootRequire</code></a>: The service to make requires relatives to the project root directory.</li>
+<li><a href="https://github.com/homer0/wootils/blob/master/documents/shared/eventsHub.md"><code>events</code></a>: To handle the app events.</li>
+</ul>
+<h2 id="development">Development</h2><p>Before doing anything, install the repository hooks:</p>
+<pre><code class="lang-bash"><code class="source-code prettyprint"># You can either use npm or yarn, it doesn&apos;t matter
+npm run install-hooks</code>
+</code></pre>
+<h3 id="npm-yarn-tasks">NPM/Yarn Tasks</h3><table>
+<thead>
+<tr>
+<th>Task</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>npm run install-hooks</code></td>
+<td>Install the GIT repository hooks.</td>
+</tr>
+<tr>
+<td><code>npm test</code></td>
+<td>Run the project unit tests.</td>
+</tr>
+<tr>
+<td><code>npm run lint</code></td>
+<td>Lint the modified files.</td>
+</tr>
+<tr>
+<td><code>npm run lint:full</code></td>
+<td>Lint the project code.</td>
+</tr>
+<tr>
+<td><code>npm run docs</code></td>
+<td>Generate the project documentation.</td>
+</tr>
+<tr>
+<td><code>npm run todo</code></td>
+<td>List all the pending to-do&apos;s.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="testing">Testing</h3><p>I use <a href="https://facebook.github.io/jest/">Jest</a> with <a href="https://yarnpkg.com/en/package/jest-ex">Jest-Ex</a> to test the project. The configuration file is on <code>./.jestrc</code>, the tests and mocks are on <code>./tests</code> and the script that runs it is on <code>./utils/scripts/test</code>.</p>
+<h3 id="linting">Linting</h3><p>I use <a href="http://eslint.org">ESlint</a> to validate all our JS code. The configuration file for the project code is on <code>./.eslintrc</code> and for the tests on <code>./tests/.eslintrc</code> (which inherits from the one on the root), there&apos;s also an <code>./.eslintignore</code> to ignore some files on the process, and the script that runs it is on <code>./utils/scripts/lint</code>.</p>
+<h3 id="documentation">Documentation</h3><p>I use <a href="http://esdoc.org">ESDoc</a> to generate HTML documentation for the project. The configuration file is on <code>./.esdocrc</code> and the script that runs it is on <code>./utils/scripts/docs</code>.</p>
+<h3 id="to-dos">To-Dos</h3><p>I use <code>@todo</code> comments to write all the pending improvements and fixes, and <a href="https://yarnpkg.com/en/package/leasot">Leasot</a> to generate a report. The script that runs it is on <code>./utils/scripts/todo</code>.</p>
+</div>
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.0.4)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

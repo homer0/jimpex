@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../">
+  <title data-ice="title">Manual | jimpex</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="Express as dependency injection container."><meta property="twitter:card" content="summary"><meta property="twitter:title" content="jimpex"><meta property="twitter:description" content="Express as dependency injection container."></head>
+<body class="layout-container manual-root" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  <a href="./manual/index.html" data-ice="manualHeaderLink">Manual</a>
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+<a style="position:relative; top:3px;" href="https://github.com/homer0/jimpex"><img width="20px" src="./image/github.png"></a></header>
+
+<nav class="navigation" data-ice="nav"><div class="manual-toc-root">
+  
+<div data-ice="manual">
+    <ul class="manual-toc">
+      
+    <li data-ice="manualNav" class="indent-h1" data-link="manual/options.html"><a href="manual/options.html" data-ice="link">Jimpex Options</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/options.html"><a href="manual/options.html#configuration" data-ice="link">Configuration</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/options.html"><a href="manual/options.html#statics" data-ice="link">Statics</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/options.html"><a href="manual/options.html#express" data-ice="link">Express</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/options.html"><a href="manual/options.html#default-services" data-ice="link">Default services</a></li>
+</ul>
+  </div>
+<div data-ice="manual">
+    <ul class="manual-toc">
+      
+    <li data-ice="manualNav" class="indent-h1" data-link="manual/controllers.html"><a href="manual/controllers.html" data-ice="link">Built-in Controllers</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/controllers.html"><a href="manual/controllers.html#version-validator" data-ice="link">Version validator</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/controllers.html"><a href="manual/controllers.html#configuration" data-ice="link">Configuration</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/controllers.html"><a href="manual/controllers.html#health" data-ice="link">Health</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/controllers.html"><a href="manual/controllers.html#root-statics" data-ice="link">Root Statics</a></li>
+</ul>
+  </div>
+<div data-ice="manual">
+    <ul class="manual-toc">
+      
+    <li data-ice="manualNav" class="indent-h1" data-link="manual/middlewares.html"><a href="manual/middlewares.html" data-ice="link">Built-in Middlewares</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/middlewares.html"><a href="manual/middlewares.html#error-handler" data-ice="link">Error Handler</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/middlewares.html"><a href="manual/middlewares.html#force-https" data-ice="link">Force HTTPS</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/middlewares.html"><a href="manual/middlewares.html#fast-html" data-ice="link">Fast HTML</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/middlewares.html"><a href="manual/middlewares.html#show-html" data-ice="link">Show HTML</a></li>
+</ul>
+  </div>
+<div data-ice="manual">
+    <ul class="manual-toc">
+      
+    <li data-ice="manualNav" class="indent-h1" data-link="manual/services.html"><a href="manual/services.html" data-ice="link">Built-in Services</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/services.html"><a href="manual/services.html#api-client" data-ice="link">API Client</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/services.html"><a href="manual/services.html#ensure-bearer-authentication" data-ice="link">Ensure bearer authentication</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/services.html"><a href="manual/services.html#version-validator" data-ice="link">Version validator</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/services.html"><a href="manual/services.html#error" data-ice="link">Error</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/services.html"><a href="manual/services.html#send-file" data-ice="link">Send File</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/services.html"><a href="manual/services.html#frontend-fs" data-ice="link">Frontend Fs</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/services.html"><a href="manual/services.html#html-generator" data-ice="link">HTML Generator</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/services.html"><a href="manual/services.html#http" data-ice="link">HTTP</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/services.html"><a href="manual/services.html#responses-builder" data-ice="link">Responses builder</a></li>
+</ul>
+  </div>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><div class="github-markdown" data-ice="content"><h1 id="built-in-controllers">Built-in Controllers</h1><p>All of these controllers are available on the Jimpex package and can be easily required and implemented.</p>
+<h2 id="version-validator">Version validator</h2><p>If you mount it on a route it will generate a <code>409</code> error if the request doesn&apos;t have a version parameter with the same version as the one on the configuration file.</p>
+<ul>
+<li>Module: <code>api</code></li>
+<li>Requires: <code>versionValidator</code></li>
+</ul>
+<pre><code class="lang-js"><code class="source-code prettyprint">const {
+  Jimpex,
+  services: {
+    api: { versionValidator },
+  },
+  controllers: {
+    api: { versionValidatorController },
+  },
+};
+
+class App extends Jimpex {
+  boot() {
+    // Register the dependencies...
+    this.register(versionValidator);
+
+    // Add the controller.
+    this.mount(&apos;/api&apos;, versionValidatorController);
+  }
+}</code>
+</code></pre>
+<p>The controller will mount one route:</p>
+<ul>
+<li><code>* /:version/*</code>: To validate and protect any sub route.</li>
+</ul>
+<p>You can mount other routes on <code>/api/:version/...</code> and they&apos;ll be <em>&quot;protected&quot;</em> by the version check.</p>
+<h2 id="configuration">Configuration</h2><p>Allows you to see and switch the current configuration. It can be enabled or disabled by using a setting on the configuration.</p>
+<ul>
+<li>Module: <code>common</code></li>
+<li>Requires: <code>responsesBuilder</code></li>
+</ul>
+<pre><code class="lang-js"><code class="source-code prettyprint">const {
+  Jimpex,
+  services: {
+    http: { responsesBuilder },
+  },
+  controllers: {
+    common: { configurationController },
+  },
+};
+
+class App extends Jimpex {
+  boot() {
+    // Register the dependencies...
+    this.register(responsesBuilder);
+
+    // Add the controller.
+    this.mount(&apos;/config&apos;, configurationController);
+  }
+}</code>
+</code></pre>
+<p>Now, there are two rules behind this controller:</p>
+<ol>
+<li>Your configuration must have a setting <code>debug.configurationController</code> with the value of <code>true</code>.</li>
+<li>To be able to switch configurations, the default configuration and/or the first configuration loaded must have a setting <code>allowConfigurationSwitch</code> set to <code>true</code>.</li>
+</ol>
+<p>The reason for those rules is that this controller is development purposes as you wouldn&apos;t want to make public the settings of your app.</p>
+<p>The controller then will mount two routes:</p>
+<ul>
+<li><code>GET /</code>: It will show the current configuration.</li>
+<li><code>GET /switch/:name</code>: It will, if allowed, switch to an specified configuration.</li>
+</ul>
+<h2 id="health">Health</h2><p>Shows the version and name of the configuration, just to check the app is running.</p>
+<ul>
+<li>Module: <code>common</code></li>
+<li>Requires: <code>responsesBuilder</code></li>
+</ul>
+<pre><code class="lang-js"><code class="source-code prettyprint">const {
+  Jimpex,
+  services: {
+    http: { responsesBuilder },
+  },
+  controllers: {
+    common: { healthController },
+  },
+};
+
+class App extends Jimpex {
+  boot() {
+    // Register the dependencies...
+    this.register(responsesBuilder);
+
+    // Add the controller.
+    this.mount(&apos;/health&apos;, healthController);
+  }
+}</code>
+</code></pre>
+<p>That&apos;s all there is, the controller mounts only one route:</p>
+<ul>
+<li><code>GET /</code>: Shows the information.</li>
+</ul>
+<h2 id="root-statics">Root Statics</h2><p>It allows your app to server static files from the root directory, without having to use the <code>static</code> middleware on that directory.</p>
+<ul>
+<li>Module: <code>common</code></li>
+<li>Requires: <code>sendFile</code></li>
+</ul>
+<pre><code class="lang-js"><code class="source-code prettyprint">const {
+  Jimpex,
+  services: {
+    common: { sendFile },
+  },
+  controllers: {
+    common: { healthController },
+  },
+};
+
+class App extends Jimpex {
+  boot() {
+    // Register the dependencies...
+    this.register(sendFile);
+
+    // Add the controller.
+    this.mount(&apos;/&apos;, rootStaticsController);
+  }
+}</code>
+</code></pre>
+<p>By default, it serves an <code>index.html</code> and a <code>favicon.ico</code>, but you can use the <em>&quot;controller generator&quot;</em> <code>rootStaticsControllerCustom</code> to modify those values:</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">const {
+  Jimpex,
+  services: {
+    common: { sendFile },
+  },
+  controllers: {
+    common: { rootStaticsControllerCustom },
+  },
+};
+
+class App extends Jimpex {
+  boot() {
+    // Register the dependencies...
+    this.register(sendFile);
+
+    // Add the controller.
+    this.mount(&apos;/&apos;, rootStaticsControllerCustom([
+      &apos;my-file-one.html&apos;,
+      &apos;favicon.icon&apos;,
+      &apos;index.html&apos;,
+      &apos;some-other.html&apos;,
+    ]));
+  }
+}</code>
+</code></pre>
+<p>The controller mounts a <code>GET</code> route for each one of those files.</p>
+</div>
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.0.4)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

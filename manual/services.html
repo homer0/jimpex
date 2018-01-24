@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../">
+  <title data-ice="title">Manual | jimpex</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="Express as dependency injection container."><meta property="twitter:card" content="summary"><meta property="twitter:title" content="jimpex"><meta property="twitter:description" content="Express as dependency injection container."></head>
+<body class="layout-container manual-root" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  <a href="./manual/index.html" data-ice="manualHeaderLink">Manual</a>
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+<a style="position:relative; top:3px;" href="https://github.com/homer0/jimpex"><img width="20px" src="./image/github.png"></a></header>
+
+<nav class="navigation" data-ice="nav"><div class="manual-toc-root">
+  
+<div data-ice="manual">
+    <ul class="manual-toc">
+      
+    <li data-ice="manualNav" class="indent-h1" data-link="manual/options.html"><a href="manual/options.html" data-ice="link">Jimpex Options</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/options.html"><a href="manual/options.html#configuration" data-ice="link">Configuration</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/options.html"><a href="manual/options.html#statics" data-ice="link">Statics</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/options.html"><a href="manual/options.html#express" data-ice="link">Express</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/options.html"><a href="manual/options.html#default-services" data-ice="link">Default services</a></li>
+</ul>
+  </div>
+<div data-ice="manual">
+    <ul class="manual-toc">
+      
+    <li data-ice="manualNav" class="indent-h1" data-link="manual/controllers.html"><a href="manual/controllers.html" data-ice="link">Built-in Controllers</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/controllers.html"><a href="manual/controllers.html#version-validator" data-ice="link">Version validator</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/controllers.html"><a href="manual/controllers.html#configuration" data-ice="link">Configuration</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/controllers.html"><a href="manual/controllers.html#health" data-ice="link">Health</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/controllers.html"><a href="manual/controllers.html#root-statics" data-ice="link">Root Statics</a></li>
+</ul>
+  </div>
+<div data-ice="manual">
+    <ul class="manual-toc">
+      
+    <li data-ice="manualNav" class="indent-h1" data-link="manual/middlewares.html"><a href="manual/middlewares.html" data-ice="link">Built-in Middlewares</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/middlewares.html"><a href="manual/middlewares.html#error-handler" data-ice="link">Error Handler</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/middlewares.html"><a href="manual/middlewares.html#force-https" data-ice="link">Force HTTPS</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/middlewares.html"><a href="manual/middlewares.html#fast-html" data-ice="link">Fast HTML</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/middlewares.html"><a href="manual/middlewares.html#show-html" data-ice="link">Show HTML</a></li>
+</ul>
+  </div>
+<div data-ice="manual">
+    <ul class="manual-toc">
+      
+    <li data-ice="manualNav" class="indent-h1" data-link="manual/services.html"><a href="manual/services.html" data-ice="link">Built-in Services</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/services.html"><a href="manual/services.html#api-client" data-ice="link">API Client</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/services.html"><a href="manual/services.html#ensure-bearer-authentication" data-ice="link">Ensure bearer authentication</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/services.html"><a href="manual/services.html#version-validator" data-ice="link">Version validator</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/services.html"><a href="manual/services.html#error" data-ice="link">Error</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/services.html"><a href="manual/services.html#send-file" data-ice="link">Send File</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/services.html"><a href="manual/services.html#frontend-fs" data-ice="link">Frontend Fs</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/services.html"><a href="manual/services.html#html-generator" data-ice="link">HTML Generator</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/services.html"><a href="manual/services.html#http" data-ice="link">HTTP</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/services.html"><a href="manual/services.html#responses-builder" data-ice="link">Responses builder</a></li>
+</ul>
+  </div>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><div class="github-markdown" data-ice="content"><h1 id="built-in-services">Built-in Services</h1><p>All of these controllers are available on the Jimpex package and can be easily required and implemented.</p>
+<p>In the case of the services from the modules <code>api</code>, <code>http</code> and <code>common</code>, you can register them when the app starts by using the <code>defaultService</code> option (Check the options document for more information).</p>
+<h2 id="api-client">API Client</h2><p>An implementation of the <a href="https://github.com/homer0/wootils/blob/master/documents/shared/APIClient.md">wootils API Client</a> but that is connected to the HTTP service, to allow logging and forwarding of the headers.</p>
+<ul>
+<li>Module: <code>api</code></li>
+<li>Requires: <code>http</code> and <code>appError</code></li>
+</ul>
+<pre><code class="lang-js"><code class="source-code prettyprint">const {
+  Jimpex,
+  services: {
+    api: { apiClient },
+    common: { appError },
+    http: { http },
+  },
+};
+
+class App extends Jimpex {
+  boot() {
+    // Register the dependencies...
+    this.register(http);
+    this.register(appError);
+
+    // Register the client
+    this.register(apiClient);
+  }
+}</code>
+</code></pre>
+<p>By default, the service is registered with the name <code>apiClient</code>, the API entry point is taken from the configuration setting <code>api.url</code> and the endpoints from <code>api.endpoints</code>, but you can use the <em>&quot;service generator&quot;</em> <code>apiClientCustom</code> to modify those options:</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">const {
+  Jimpex,
+  services: {
+    api: { apiClientCustom },
+    common: { appError },
+    http: { http },
+  },
+};
+
+class App extends Jimpex {
+  boot() {
+    // Register the dependencies...
+    this.register(http);
+    this.register(appError);
+
+    // Register the client
+    this.register({
+      &apos;myCustomAPIService&apos;,
+      &apos;myapi&apos;
+    });
+  }
+}</code>
+</code></pre>
+<p>The first parameter is the name used to register the server and the second one is the setting key that has a <code>url</code> and an <code>endpoints</code> dictionary.</p>
+<h2 id="ensure-bearer-authentication">Ensure bearer authentication</h2><p>A service-middleware that allows you to validate the incoming requests <code>Authorization</code> header.</p>
+<p>It&apos;s a <em>&quot;service-middleware&quot;</em> because when you access the service, it doesn&apos;t return a class instance, but a middleware function for you to use on your controller routes.</p>
+<ul>
+<li>Module: <code>api</code></li>
+<li>Requires: <code>appError</code></li>
+</ul>
+<pre><code class="lang-js"><code class="source-code prettyprint">const {
+  Jimpex,
+  services: {
+    api: { ensureBearerAuthentication },
+    common: { appError },
+  },
+};
+
+class App extends Jimpex {
+  boot() {
+    // Register the dependencies...
+    this.register(appError);
+
+    // Register the service
+    this.register(apiClient);
+  }
+}</code>
+</code></pre>
+<p>Now, if the token process a request an detects a valid token, it will set that token on the request <code>bearerToken</code> property:</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">const myCtrl = controller((app) =&gt; {
+  const router = app.get(&apos;router&apos;);
+  const ensureAuthentication = app.get(&apos;ensureBearerAuthentication&apos;);
+  return [router.get(&apos;/something&apos;, [
+    ensureAuthentication,
+    (req, res, next) =&gt; {
+      console.log(&apos;Token:&apos;, req.bearerToken);
+      next();
+    },
+  ])];
+});</code>
+</code></pre>
+<h2 id="version-validator">Version validator</h2><p>A service-middleware to validate a <code>version</code> parameter against the configuration <code>version</code> setting. It&apos;s what the version validator middleware internally uses.</p>
+<p>It&apos;s a <em>&quot;service-middleware&quot;</em> because when you access the service, it doesn&apos;t return a class instance, but a middleware function for you to use on your controller routes.</p>
+<ul>
+<li>Module: <code>api</code></li>
+<li>Requires: <code>responsesBuilder</code> and <code>appError</code></li>
+</ul>
+<pre><code class="lang-js"><code class="source-code prettyprint">const {
+  Jimpex,
+  services: {
+    api: { versionValidator },
+    common: { appError },
+    http: { responsesBuilder },
+  },
+};
+
+class App extends Jimpex {
+  boot() {
+    // Register the dependencies...
+    this.register(appError);
+    this.register(responsesBuilder);
+
+    // Register the service
+    this.register(versionValidator);
+  }
+}</code>
+</code></pre>
+<p>Now you can use it on your controllers routes to validate that the version being used is the same as the one the app is running on:</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">const myCtrl = controller((app) =&gt; {
+  const router = app.get(&apos;router&apos;);
+  const versionValidator = app.get(&apos;versionValidator&apos;);
+  return [router.get(&apos;/:version/something&apos;, [
+    versionValidator,
+    (req, res, next) =&gt; {
+      console.log(&apos;The version is valid!&apos;);
+      next();
+    },
+  ])];
+});</code>
+</code></pre>
+<h2 id="error">Error</h2><p>A very simple subclass the <code>Error</code> to inject extra information on the errors so they can customize the error handler responses.</p>
+<p>Something important to remember is that the <code>appError</code> service doesn&apos;t return an instance of the service but the class so you can construct an error.</p>
+<ul>
+<li>Module: <code>common</code></li>
+</ul>
+<pre><code class="lang-js"><code class="source-code prettyprint">const {
+  Jimpex,
+  services: {
+    common: { appError },
+  },
+};
+
+class App extends Jimpex {
+  boot() {        
+    // Register the service
+    this.register(appError);
+  }
+}</code>
+</code></pre>
+<p>That&apos;s all, now you can do <code>get(&apos;appError&apos;)</code>, inject <code>AppError</code> and generate your custom errors:</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">new Error(&apos;Something happened&apos;, {
+  someProp: &apos;someValue&apos;,
+}):</code>
+</code></pre>
+<p>This is useful if you are building a app with multiple known exceptions, you can use the extra settings to send context information.</p>
+<h2 id="send-file">Send File</h2><p>It allows you to send a file on a response with a path relative to the app executable.</p>
+<p>The <code>sendFile</code> doesn&apos;t return a class service instance but just a function.</p>
+<ul>
+<li>Module: <code>common</code></li>
+</ul>
+<pre><code class="lang-js"><code class="source-code prettyprint">const {
+  Jimpex,
+  services: {
+    common: { sendFile },
+  },
+};
+
+class App extends Jimpex {
+  boot() {        
+    // Register the service
+    this.register(sendFile);
+  }
+}</code>
+</code></pre>
+<p>Done, you can now use it on your middlewares and/or controllers routes to send files as responses:</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">const myCtrl = controller((app) =&gt; {
+  const router = app.get(&apos;router&apos;);
+  const sendFile = app.get(&apos;sendFile&apos;);
+  return [router.get(&apos;/something&apos;, [
+    (req, res, next) =&gt; {
+      sendFile(res, &apos;./something.html&apos;, next);
+    },
+  ])];
+});</code>
+</code></pre>
+<p>By default, the path of the file is relative to the directory where the app executable is located, but you can change the location (<a href="https://github.com/homer0/wootils/blob/master/documents/node/pathUtils.md#multiple-locations">Check <code>PathUtils</code> locations</a>) by adding an extra parameter:</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">const myCtrl = controller((app) =&gt; {
+  const router = app.get(&apos;router&apos;);
+  const sendFile = app.get(&apos;sendFile&apos;);
+  return [router.get(&apos;/something&apos;, [
+    (req, res, next) =&gt; {
+      sendFile(res, &apos;./something.html&apos;, next, &apos;home&apos;);
+    },
+  ])];
+});</code>
+</code></pre>
+<p>In this last example, the path to the file is relative to the project root directory.</p>
+<h2 id="frontend-fs">Frontend Fs</h2><p>This service allows the app to easily read static files. The idea behind centralizing this functionalities into a service is that is pretty common to have bundling tools to generate the frontend, and on that process files can have different paths or not even be generated all, that&apos;s why this service exists.</p>
+<p> The service can be extended/overwritten to accommodate any requirements and avoid having to update or add <code>if</code>s to every <code>fs</code> call the app does. Another <em>&apos;feature&apos;</em> of this service is that all the paths are relative to the directory where the app executable is located, so you don&apos;t have to remember the relative path from the place you are accessing a file to the place where it&apos;s located.</p>
+<ul>
+<li>Module: <code>common</code></li>
+</ul>
+<pre><code class="lang-js"><code class="source-code prettyprint">const {
+  Jimpex,
+  services: {
+    frontend: { frontendFs },
+  },
+};
+
+class App extends Jimpex {
+  boot() {        
+    // Register the service
+    this.register(frontendFs);
+  }
+}</code>
+</code></pre>
+<p>Now, whenever you are reading/writing/deleting a file that was generated/belongs to the frontend, you can use this service methods:</p>
+<ul>
+<li><code>.read(filepath, [encoding=&apos;utf-8&apos;])</code></li>
+<li><code>.write(filepath, data)</code></li>
+<li><code>.delete(filepath)</code></li>
+</ul>
+<h2 id="html-generator">HTML Generator</h2><p>A service that allows you to generate an HTML file when the app gets started and inject contents of the configuration as a <code>window</code> variable.</p>
+<ul>
+<li>Module: <code>html</code></li>
+<li>Requires: <code>frontendFs</code></li>
+</ul>
+<pre><code class="lang-js"><code class="source-code prettyprint">const {
+  Jimpex,
+  services: {
+    frontend: { frontendFs },
+    html: { htmlGenerator },
+  },
+};
+
+class App extends Jimpex {
+  boot() {
+    // Register the dependencies...
+    this.register(frontendFs);
+
+    // Register the service
+    this.register(htmlGenerator);
+  }
+}</code>
+</code></pre>
+<p>The service, after registering, it also hooks itself to the app event that gets fired when it starts so it can create the file automatically.</p>
+<p>Now, this service has a few default options, so instead of explaining which are, we&apos;ll see each option on detail:</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">{
+  // The name of the file it should use as template.
+  template: &apos;index.tpl.html&apos;,
+
+  // The name of the generated file.
+  file: &apos;index.html&apos;,
+
+  // Whether or not to delete the tempalte after generating the file.
+  deleteTemplateAfter: true,
+
+  // The placeholder string where the information will be written.
+  replacePlaceholder: &apos;{{appConfiguration}}&apos;,
+
+  // The name of the variable that will have the information on the file.
+  variable: &apos;appConfiguration&apos;,
+
+  // A list of settings from the app configuration that will be used as the
+  // information to inject on the file.
+  configurationKeys: [&apos;features&apos;, &apos;version&apos;, &apos;postMessagesPrefix&apos;],
+}</code>
+</code></pre>
+<p>It also supports a custom service with a <code>getValues</code> method to obtain the information to inject instead of taking it from the configuration.</p>
+<p>To modify the options, you need to use the <em>&quot;service generator&quot;</em> <code>htmlGeneratorCustom</code>:</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">const {
+  Jimpex,
+  services: {
+    frontend: { frontendFs },
+    html: { htmlGeneratorCustom },
+  },
+};
+
+class App extends Jimpex {
+  boot() {
+    // Register the dependencies...
+    this.register(frontendFs);
+
+    // Register the service
+    this.register(htmlGeneratorCustom(
+      &apos;my-html-generator&apos;,
+      {
+        template: &apos;template.tpl&apos;,
+        file: &apos;my-index.html&apos;,
+        ...
+      }
+    ));
+  }
+}</code>
+</code></pre>
+<p>The first parameter is the name of the service and the second the options to customize it. In case you want to use another service to get the values, you can send the name of that service as the third parameter.</p>
+<h2 id="http">HTTP</h2><p>A set of utilities to work with HTTP requests and responses.</p>
+<ul>
+<li>Module: <code>http</code></li>
+</ul>
+<pre><code class="lang-js"><code class="source-code prettyprint">const {
+  Jimpex,
+  services: {
+    http: { http },
+  },
+};
+
+class App extends Jimpex {
+  boot() {
+    // Register the service
+    this.register(http);
+  }
+}</code>
+</code></pre>
+<p>The <code>http</code> service has three methods:</p>
+<ul>
+<li><code>getIPFromRequest(req)</code>: It allows you to get the IP address from an app request.</li>
+<li><code>getCustomHeadersFromRequest(req)</code>: It returns a dictionary with all the custom headers a request may have, except for <code>x-forwarded-for</code>.</li>
+<li><code>fetch(url, options)</code>: Probably the most important as is the one the app uses to make requests to external services. This service supports the same signature as the native <code>fetch</code> function, with the addition that you can send a request object as <code>req</code> on the options and the method will include the <code>x-forwarded-for</code> method with the request IP address (<code>getIPFromRequest</code>) and all the request custom headers (<code>getCustomHeadersFromRequest</code>).</li>
+</ul>
+<p>Also, if you have a configuration setting named <code>debug.logRequests</code> with the value of <code>true</code>, it will log information of all the outgoing requests and their responses on the console.</p>
+<h2 id="responses-builder">Responses builder</h2><p>A service that generates JSON and HTML responses.</p>
+<ul>
+<li>Module: <code>http</code></li>
+</ul>
+<pre><code class="lang-js"><code class="source-code prettyprint">const {
+  Jimpex,
+  services: {
+    http: { responsesBuilder },
+  },
+};
+
+class App extends Jimpex {
+  boot() {
+    // Register the service
+    this.register(responsesBuilder);
+  }
+}</code>
+</code></pre>
+<p>This service has only two methods:</p>
+<ul>
+<li><code>json(res, data, status = 200, metadata = {})</code>: To write regular JSON responses.</li>
+<li><code>htmlPostMessage(res, title, message, status = 200, options = {})</code>: To write an HTML response that sends a post message. Very useful for when the app opened the route using a popup. The last parameter allows you to customize the HTML response:</li>
+</ul>
+<pre><code class="lang-js"><code class="source-code prettyprint">{
+  // The target that will emit the `postMessage`.
+  target: &apos;window.opener&apos;,
+
+  //  Whether or not to do a `window.close` after sending the message.
+  close: true,
+
+  // How many ms should it wait before closing the window, if `options.close` is `true`.
+  closeDelay: 700,  
+}</code>
+</code></pre>
+</div>
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.0.4)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

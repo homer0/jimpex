@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../">
+  <title data-ice="title">Manual | jimpex</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="Express as dependency injection container."><meta property="twitter:card" content="summary"><meta property="twitter:title" content="jimpex"><meta property="twitter:description" content="Express as dependency injection container."></head>
+<body class="layout-container manual-root" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  <a href="./manual/index.html" data-ice="manualHeaderLink">Manual</a>
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+<a style="position:relative; top:3px;" href="https://github.com/homer0/jimpex"><img width="20px" src="./image/github.png"></a></header>
+
+<nav class="navigation" data-ice="nav"><div class="manual-toc-root">
+  
+<div data-ice="manual">
+    <ul class="manual-toc">
+      
+    <li data-ice="manualNav" class="indent-h1" data-link="manual/options.html"><a href="manual/options.html" data-ice="link">Jimpex Options</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/options.html"><a href="manual/options.html#configuration" data-ice="link">Configuration</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/options.html"><a href="manual/options.html#statics" data-ice="link">Statics</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/options.html"><a href="manual/options.html#express" data-ice="link">Express</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/options.html"><a href="manual/options.html#default-services" data-ice="link">Default services</a></li>
+</ul>
+  </div>
+<div data-ice="manual">
+    <ul class="manual-toc">
+      
+    <li data-ice="manualNav" class="indent-h1" data-link="manual/controllers.html"><a href="manual/controllers.html" data-ice="link">Built-in Controllers</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/controllers.html"><a href="manual/controllers.html#version-validator" data-ice="link">Version validator</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/controllers.html"><a href="manual/controllers.html#configuration" data-ice="link">Configuration</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/controllers.html"><a href="manual/controllers.html#health" data-ice="link">Health</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/controllers.html"><a href="manual/controllers.html#root-statics" data-ice="link">Root Statics</a></li>
+</ul>
+  </div>
+<div data-ice="manual">
+    <ul class="manual-toc">
+      
+    <li data-ice="manualNav" class="indent-h1" data-link="manual/middlewares.html"><a href="manual/middlewares.html" data-ice="link">Built-in Middlewares</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/middlewares.html"><a href="manual/middlewares.html#error-handler" data-ice="link">Error Handler</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/middlewares.html"><a href="manual/middlewares.html#force-https" data-ice="link">Force HTTPS</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/middlewares.html"><a href="manual/middlewares.html#fast-html" data-ice="link">Fast HTML</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/middlewares.html"><a href="manual/middlewares.html#show-html" data-ice="link">Show HTML</a></li>
+</ul>
+  </div>
+<div data-ice="manual">
+    <ul class="manual-toc">
+      
+    <li data-ice="manualNav" class="indent-h1" data-link="manual/services.html"><a href="manual/services.html" data-ice="link">Built-in Services</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/services.html"><a href="manual/services.html#api-client" data-ice="link">API Client</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/services.html"><a href="manual/services.html#ensure-bearer-authentication" data-ice="link">Ensure bearer authentication</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/services.html"><a href="manual/services.html#version-validator" data-ice="link">Version validator</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/services.html"><a href="manual/services.html#error" data-ice="link">Error</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/services.html"><a href="manual/services.html#send-file" data-ice="link">Send File</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/services.html"><a href="manual/services.html#frontend-fs" data-ice="link">Frontend Fs</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/services.html"><a href="manual/services.html#html-generator" data-ice="link">HTML Generator</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/services.html"><a href="manual/services.html#http" data-ice="link">HTTP</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/services.html"><a href="manual/services.html#responses-builder" data-ice="link">Responses builder</a></li>
+</ul>
+  </div>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><div class="github-markdown" data-ice="content"><h1 id="built-in-middlewares">Built-in Middlewares</h1><p>All of these controllers are available on the Jimpex package and can be easily required and implemented.</p>
+<h2 id="error-handler">Error Handler</h2><p>Allows you to generate responses for errors and potentially hide uncaught exceptions under a generic message, unless it&apos;s disabled via configuration settings.</p>
+<ul>
+<li>Module: <code>common</code></li>
+<li>Requires: <code>responsesBuilder</code> and <code>appError</code></li>
+</ul>
+<pre><code class="lang-js"><code class="source-code prettyprint">const {
+  Jimpex,
+  services: {
+    http: { responsesBuilder },
+    common: { appError },
+  },
+  middlewares: {
+    common: { errorHandler },
+  },
+};
+
+class App extends Jimpex {
+  boot() {
+    // Register the dependencies...
+    this.register(responsesBuilder);
+    this.register(appError);
+
+    ...
+
+    // Add the middleware at the end.
+    this.use(errorHandler);
+  }
+}</code>
+</code></pre>
+<p>Now, there&apos;s a configuration setting for this controller: <code>debug.showErrors</code>. By enabling the setting, the middleware will show the message and the stack information of all kind of errors.</p>
+<p>If the configuration setting is disabled (or not present), the errors stack will never be visible, and if the error is not an instance of the <code>appError</code> service, it will show a generic message: <em>&quot;Oops! Something went wrong, please try again&quot;</em>.</p>
+<p>Now, when using errors of the type <code>appError</code>, you can add the following extra data:</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">// Assuming `AppError` is the injected `appError` and you are on the context of a middleware
+next(new AppError(&apos;Something went wrong&apos;, {
+  status: someHTTPStatus,
+  response: someObject,
+}));</code>
+</code></pre>
+<ul>
+<li><code>status</code> will replace the error responses HTTP status.</li>
+<li><code>response</code> will be merged into the error response <code>data</code> key.</li>
+</ul>
+<h2 id="force-https">Force HTTPS</h2><p>Redirect all incoming traffic from HTTP to HTTPS. It also allows you to set routes to ignore the redirection.</p>
+<ul>
+<li>Module: <code>common</code></li>
+</ul>
+<pre><code class="lang-js"><code class="source-code prettyprint">const {
+  Jimpex,
+  middlewares: {
+    common: { forceHTTPS },
+  },
+};
+
+class App extends Jimpex {
+  boot() {
+    // Add the middleware first.
+    this.use(errorHandler);
+  }
+}</code>
+</code></pre>
+<p>By default, it redirects all the URLs that don&apos;t start with <code>/service/</code> from HTTP to HTTPs, but you can use the <em>&quot;middleware generator&quot;</em> <code>forceHTTPSCustom</code> to modify the rules:</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">const {
+  Jimpex,
+  middlewares: {
+    common: { forceHTTPSCustom },
+  },
+};
+
+class App extends Jimpex {
+  boot() {
+    // Add the middleware first.
+    this.use(forceHTTPSCustom([
+      /^\/service\//,
+      /^\/api\//,
+    ]));
+  }
+}</code>
+</code></pre>
+<p><strong>VERY IMPORTANT:</strong> The forced redirection will only happen if your configuration has a setting named <code>forceHTTPS</code> with a value of <code>true</code>.</p>
+<h2 id="fast-html">Fast HTML</h2><p>Allows you to specify which routes will be handled and in case there are no controllers for a requested route, it sends out and HTML file, thus preventing the request to be unnecessarily processed by the middlewares.</p>
+<ul>
+<li>Module: <code>html</code></li>
+<li>Requires: <code>sendFile</code> and, optionally, an <code>HTMLGenerator</code> service.</li>
+</ul>
+<pre><code class="lang-js"><code class="source-code prettyprint">const {
+  Jimpex,
+  services: {
+    common: { sendFile },
+  },
+  middlewares: {
+    html: { fastHTML },
+  },
+};
+
+class App extends Jimpex {
+  boot() {
+    // Register the dependencies...
+    this.register(sendFile);
+
+    // Add the middleware on one of the first positions.
+    this.use(fastHTML);
+  }
+}</code>
+</code></pre>
+<p>By default, if the requested URL doesn&apos;t match <code>/^\/api\//</code> or <code>/\.ico$/</code> it serves an <code>index.html</code>, but you can use the <em>&quot;middleware generator&quot;</em> <code>fastHTMLCustom</code> to modify those options:</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">const {
+  Jimpex,
+  services: {
+    common: { sendFile },
+  },
+  middlewares: {
+    html: { fastHTMLCustom },
+  },
+};
+
+class App extends Jimpex {
+  boot() {
+    // Register the dependencies...
+    this.register(sendFile);
+
+    // Add the middleware on one of the first positions.
+    this.use(fastHTMLCustom(
+      &apos;my-custom-index.html&apos;,
+      [`/^\/service\//`]
+    ));
+  }
+}</code>
+</code></pre>
+<p>Now, as mentioned on the requirements, you can optionally use the <code>htmlGenerator</code> or an <code>HTMLGenerator</code> service to serve a generated file.</p>
+<p>The default implementation checks if there&apos;s an <code>htmlGenerator</code> service registered on the app and uses that file; and in the case of <code>fastHTMLCustom</code>, you can specify a third parameter with the name of the <code>HTMLGenerator</code> service name you want to use.</p>
+<h2 id="show-html">Show HTML</h2><p>A really simple middleware to serve an HTML file. Its true feature is that it can be hooked up to the <strong>HTML Generator</strong> service.</p>
+<ul>
+<li>Module: <code>html</code></li>
+<li>Requires: <code>sendFile</code> and, optionally, an <code>HTMLGenerator</code> service.</li>
+</ul>
+<pre><code class="lang-js"><code class="source-code prettyprint">const {
+  Jimpex,
+  services: {
+    common: { sendFile },
+  },
+  middlewares: {
+    html: { showHTML },
+  },
+};
+
+class App extends Jimpex {
+  boot() {
+    // Register the dependencies...
+    this.register(sendFile);
+
+    // Add the middleware at the end.
+    this.use(showHTML);
+  }
+}</code>
+</code></pre>
+<p>By default, if the middleware is reached, it will show an <code>index.html</code>, but you can use the <em>&quot;middleware generator&quot;</em> <code>showHTMLCustom</code> to modify the filename:</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">const {
+  Jimpex,
+  services: {
+    common: { sendFile },
+  },
+  middlewares: {
+    html: { showHTMLCustom },
+  },
+};
+
+class App extends Jimpex {
+  boot() {
+    // Register the dependencies...
+    this.register(sendFile);
+
+    // Add the middleware at the end.
+    this.use(showHTMLCustom(&apos;my-file.html&apos;));
+  }
+}</code>
+</code></pre>
+<p>Now, as mentioned on the requirements, you can optionally use the <code>htmlGenerator</code> or an <code>HTMLGenerator</code> service to show the generated file.</p>
+<p>The default implementation checks if there&apos;s an <code>htmlGenerator</code> service registered on the app and uses that file; and in the case of <code>showHTMLCustom</code>, you can specify a second parameter with the name of the <code>HTMLGenerator</code> service name you want to use.</p>
+</div>
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.0.4)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>
