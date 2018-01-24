@@ -8,19 +8,19 @@ This is what the options object looks like:
 {
   // The version of the app
   version: '0.0.0',
-  
+
   // The size limit for the requests payload.
-  filesizeLimit: '15MB,
-  
+  filesizeLimit: '15MB',
+
   // The options to customize how the app configuration is loaded (details on its section).
   configuration: ...,
-  
+
   // The options for the static middleware (details on its section).
   statics: ...,
-  
+
   // The options to customize the express instance and default middlewares (details on its section).
   express: ...,
-  
+
   // Which built-in services to register (details on its section).
   defaultServices: ...
 }
@@ -116,7 +116,7 @@ These options allow you to register some of the built-in service that I consider
   // - Send File
   common: true,
 
-  // These services include: 
+  // These services include:
   // - HTTP
   // - Responses builder
   http: true,
