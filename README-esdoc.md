@@ -265,7 +265,7 @@ Jimpex comes with a few services, middlewares and controllers that you can impor
 
 The service also implements a few other services from the [wootils](https://github.com/homer0/wootils) as core utilities:
 
-- [`appLogger`](https://github.com/homer0/wootils/blob/master/documents/node/appLogger.md): The logger service.
+- [`appLogger`](https://github.com/homer0/wootils/blob/master/documents/node/logger.md): The logger service.
 - [`environmentUtils`](https://github.com/homer0/wootils/blob/master/documents/node/environmentUtils.md): The service that reads the environment variables.
 - [`packageInfo`](https://github.com/homer0/wootils/blob/master/documents/node/packageInfo.md): The app package.json information.
 - [`pathUtils`](https://github.com/homer0/wootils/blob/master/documents/node/pathUtils.md): The service to build paths relative to the project root directory.
