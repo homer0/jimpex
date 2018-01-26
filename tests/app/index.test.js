@@ -99,8 +99,8 @@ describe('app:Jimpex', () => {
     expectedServices.forEach((service) => {
       expect(sut.register).toHaveBeenCalledWith(service);
     });
-    expect(expressMock.mocks.set).toHaveBeenCalledTimes(1);
-    expect(expressMock.mocks.set).toHaveBeenCalledWith('trust proxy');
+    expect(expressMock.mocks.enable).toHaveBeenCalledTimes(1);
+    expect(expressMock.mocks.enable).toHaveBeenCalledWith('trust proxy');
     expect(expressMock.mocks.disable).toHaveBeenCalledTimes(1);
     expect(expressMock.mocks.disable).toHaveBeenCalledWith('x-powered-by');
     expect(expressMock.mocks.use).toHaveBeenCalledTimes(expectedMiddlewares.length);
@@ -214,7 +214,7 @@ describe('app:Jimpex', () => {
       },
     });
     // Then
-    expect(expressMock.mocks.set).toHaveBeenCalledTimes(0);
+    expect(expressMock.mocks.enable).toHaveBeenCalledTimes(0);
   });
 
   it('shouldn\'t remove the \'x-powered-by\' if its flag is `false`', () => {

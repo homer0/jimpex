@@ -217,7 +217,7 @@ class Jimpex extends Jimple {
       express: expressOptions,
     } = this.options;
     if (expressOptions.trustProxy) {
-      this.express.set('trust proxy');
+      this.express.enable('trust proxy');
     }
 
     if (expressOptions.disableXPoweredBy) {

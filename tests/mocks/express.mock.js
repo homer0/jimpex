@@ -1,5 +1,6 @@
 const mocks = {
   set: jest.fn(),
+  enable: jest.fn(),
   disable: jest.fn(),
   use: jest.fn(),
   static: jest.fn((staticsPath) => staticsPath),
