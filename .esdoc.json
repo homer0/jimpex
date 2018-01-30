@@ -16,6 +16,6 @@
           }
         }
       },
-        {"name": "esdoc-node"}
+      {"name": "esdoc-node"}
     ]
 }

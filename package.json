@@ -7,7 +7,7 @@
     "author": "Leonardo Apiwan (@homer0) <me@homer0.com>",
     "license": "MIT",
     "dependencies": {
-      "wootils": "^1.0.4",
+      "wootils": "^1.0.5",
       "jimple": "homer0/jimple",
       "express": "4.16.2",
       "body-parser": "1.18.2",
@@ -18,20 +18,20 @@
       "statuses": "1.4.0",
       "fs-extra": "5.0.0",
       "multer": "1.3.0",
-      "mime": "2.1.0"
+      "mime": "2.2.0"
     },
     "devDependencies": {
-      "eslint": "4.14.0",
+      "eslint": "4.16.0",
       "eslint-config-airbnb-base": "12.1.0",
       "eslint-plugin-import": "2.8.0",
       "eslint-plugin-node": "5.2.1",
       "babel-preset-env": "1.6.1",
       "jest-ex": "4.0.0",
-      "jest-cli": "22.0.4",
-      "jasmine-expect": "3.8.1",
+      "jest-cli": "22.1.4",
+      "jasmine-expect": "3.8.3",
       "esdoc": "1.0.4",
       "esdoc-standard-plugin": "1.0.0",
-      "esdoc-node": "homer0/esdoc-node",
+      "esdoc-node": "1.0.3",
       "leasot": "4.13.0",
       "coveralls": "3.0.0"
     },
