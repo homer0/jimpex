@@ -50,13 +50,12 @@ class HTMLGenerator {
    *                                                           configuration, they'll be retrieved
    *                                                           from this service `getValues` method.
    * @throws {Error} if `valuesService` is specified but it doesn't have a `getValues` method.
-   * @todo Move `options` to the before last parameter as it's optional
    */
   constructor(
-    options,
     appConfiguration,
     appLogger,
     frontendFs,
+    options,
     valuesService = null
   ) {
     /**
@@ -204,9 +203,8 @@ class HTMLGenerator {
       /**
        * If the template needs to be deleted, return the call to the `delete` method, otherwise,
        * just an empty object to continue the promise chain.
-       * @todo Change it to a short circuit evaluation.
        */
-      return deleteTemplateAfter ? this.frontendFs.delete(`./${template}`) : {};
+      return deleteTemplateAfter && this.frontendFs.delete(`./${template}`);
     })
     .then(() => {
       // If the template was deleted, log a message informing it.
@@ -238,12 +236,10 @@ class HTMLGenerator {
  *                                                              the values that will be injected in
  *                                                              the generated file.
  * @return {Provider}
- * @todo Move `serviceName` as the second parameter in case the implementation wants to change just
- *       the options.
  */
 const htmlGeneratorCustom = (
-  serviceName = 'htmlGenerator',
   options = {},
+  serviceName = 'htmlGenerator',
   valuesServiceName = null
 ) => provider((app) => {
   app.set(serviceName, () => {
@@ -253,10 +249,10 @@ const htmlGeneratorCustom = (
     }
 
     return new HTMLGenerator(
-      options,
       app.get('appConfiguration'),
       app.get('appLogger'),
       app.get('frontendFs'),
+      options,
       valuesService
     );
   });
