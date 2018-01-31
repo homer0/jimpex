@@ -36,7 +36,6 @@ const { provider } = require('../../utils/wrappers');
 class HTMLGenerator {
   /**
    * Class constructor.
-   * @param {HTMLGeneratorOptions}        [options]            To customize the service.
    * @param {AppConfiguration}            appConfiguration     To read the values of the settings
    *                                                           that are going to be send to the
    *                                                           file.
@@ -45,6 +44,7 @@ class HTMLGenerator {
    *                                                           removed, and if it happens, when
    *                                                           an error is thrown.
    * @param {FrontendFs}                  frontendFs           To read the contents of the template.
+   * @param {HTMLGeneratorOptions}        [options]            To customize the service.
    * @param {?HTMLGeneratorValuesService} [valuesService=null] If specified, instead of getting
    *                                                           the values from the app
    *                                                           configuration, they'll be retrieved
@@ -229,9 +229,9 @@ class HTMLGenerator {
  * Generates an `HTMLGenerator` service provider with customized options and that automatically
  * hooks itself to the `after-start` event of the app server in order to trigger the generation of
  * the html file when the server starts.
+ * @param {HTMLGeneratorOptions}  [options={}]                  Options to customize the service.
  * @param {string}                [serviceName='htmlGenerator'] The name of the service that will
  *                                                              be register into the app.
- * @param {HTMLGeneratorOptions}  [options={}]                  Options to customize the service.
  * @param {?string}               [valuesServiceName=null]      The name of a service used to read
  *                                                              the values that will be injected in
  *                                                              the generated file.
