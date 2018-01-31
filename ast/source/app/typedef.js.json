@@ -1,28 +1,28 @@
 {
   "type": "File",
   "start": 0,
-  "end": 4938,
+  "end": 5302,
   "loc": {
     "start": {
       "line": 1,
       "column": 0
     },
     "end": {
-      "line": 74,
+      "line": 78,
       "column": 0
     }
   },
   "program": {
     "type": "Program",
     "start": 0,
-    "end": 4938,
+    "end": 5302,
     "loc": {
       "start": {
         "line": 1,
         "column": 0
       },
       "end": {
-        "line": 74,
+        "line": 78,
         "column": 0
       }
     },
@@ -49,7 +49,7 @@
       },
       {
         "type": "CommentBlock",
-        "value": "*\n * @typedef {Object} JimpexConfigurationOptions\n * @property {Object}  [default=null]                      The app default configuration.\n * @property {string}  [name='app']                        The name of the app, used for the\n *                                                         configuration files.\n * @property {string}  [path='config/']                    The path to the configuration files\n *                                                         directory, relative to the project root\n *                                                         directory.\n * @property {Boolean} [hasFolder=true]                    Whether the configurations are inside a\n *                                                         sub directory or not. If `true`, a\n *                                                         configuration path would be\n *                                                         `config/[app-name]/[file]`.\n * @property {string}  [environmentVariable='CONFIG']      The name of the environment variable\n *                                                         that will be used to set the active\n *                                                         configuration.\n * @property {Boolean} [loadFromEnvironment=true]          Whether or not to check for the\n *                                                         environment variable and load a\n *                                                         configuration based on its value.\n * @property {Boolean} [loadVersionFromConfiguration=true] If `true`, the app `version` will be\n *                                                         taken from the loaded configuration,\n *                                                         otherwise, when a configuration is\n *                                                         loaded, the app will copy the version it\n *                                                         has into the configuration.\n * @property {string} [filenameFormat='[app-name].[configuration-name].config.js'] The name format\n *                                                                                 the configuration\n *                                                                                 files have.\n ",
+        "value": "*\n * @typedef {Object} JimpexConfigurationOptions\n * @property {Object}  [default=null]                      The app default configuration.\n * @property {string}  [name='app']                        The name of the app, used for the\n *                                                         configuration files.\n * @property {string}  [path='config/']                    The path to the configuration files\n *                                                         directory, relative to the project root\n *                                                         directory.\n * @property {boolean} [hasFolder=true]                    Whether the configurations are inside a\n *                                                         sub directory or not. If `true`, a\n *                                                         configuration path would be\n *                                                         `config/[app-name]/[file]`.\n * @property {string}  [environmentVariable='CONFIG']      The name of the environment variable\n *                                                         that will be used to set the active\n *                                                         configuration.\n * @property {boolean} [loadFromEnvironment=true]          Whether or not to check for the\n *                                                         environment variable and load a\n *                                                         configuration based on its value.\n * @property {boolean} [loadVersionFromConfiguration=true] If `true`, the app `version` will be\n *                                                         taken from the loaded configuration,\n *                                                         otherwise, when a configuration is\n *                                                         loaded, the app will copy the version it\n *                                                         has into the configuration.\n * @property {string} [filenameFormat='[app-name].[configuration-name].config.js'] The name format\n *                                                                                 the configuration\n *                                                                                 files have.\n ",
         "start": 69,
         "end": 2326,
         "loc": {
@@ -65,48 +65,48 @@
       },
       {
         "type": "CommentBlock",
-        "value": "*\n * @typedef {Object} JimpexStaticsOptions\n * @property {Boolean} [enabled=true]    Whether or not to include the middleware for static files.\n * @property {Boolean} [onHome=true]     If `true`, the path to the statics folder will be relative\n *                                       to the project root directory, otherwise, it will be\n *                                       relative to the directory where the app executable file is\n *                                       located.\n * @property {string}  [folder='static'] The name of the folder for static files.\n ",
+        "value": "*\n * @typedef {Object} JimpexStaticsOptions\n * @property {boolean} [enabled=true]    Whether or not to include the middleware for static files.\n * @property {boolean} [onHome=false]    If `true`, the path to the statics folder will be relative\n *                                       to the project root directory, otherwise, it will be\n *                                       relative to the directory where the app executable file is\n *                                       located.\n * @property {string}  [route='static']  The name of both the route and the folder, relative to\n *                                       whatever you defined with the `onHome` option.\n * @property {string}  [folder='']       By default, the folder will be the same as the `route`,\n *                                       but you can use this option to define a relative path that\n *                                       won't affect the route.\n ",
         "start": 2328,
-        "end": 2903,
+        "end": 3267,
         "loc": {
           "start": {
             "line": 33,
             "column": 0
           },
           "end": {
-            "line": 41,
+            "line": 45,
             "column": 3
           }
         }
       },
       {
         "type": "CommentBlock",
-        "value": "*\n * @typedef {Object} JimpexExpressOptions\n * @property {Boolean} [trustProxy=true]        Whether or not to enable the `trust proxy` option.\n * @property {Boolean} [disableXPoweredBy=true] Whether or not to remove the `x-powered-by` header.\n * @property {Boolean} [compression=true]       Whether or not to add the `compression` middleware.\n * @property {Boolean} [bodyParser=true]        Whether or not to add the `body-parser` middleware.\n * @property {Boolean} [multer=true]            Whether or not to add the `multer` middleware.\n ",
-        "start": 2905,
-        "end": 3448,
+        "value": "*\n * @typedef {Object} JimpexExpressOptions\n * @property {boolean} [trustProxy=true]        Whether or not to enable the `trust proxy` option.\n * @property {boolean} [disableXPoweredBy=true] Whether or not to remove the `x-powered-by` header.\n * @property {boolean} [compression=true]       Whether or not to add the `compression` middleware.\n * @property {boolean} [bodyParser=true]        Whether or not to add the `body-parser` middleware.\n * @property {boolean} [multer=true]            Whether or not to add the `multer` middleware.\n ",
+        "start": 3269,
+        "end": 3812,
         "loc": {
           "start": {
-            "line": 43,
+            "line": 47,
             "column": 0
           },
           "end": {
-            "line": 50,
+            "line": 54,
             "column": 3
           }
         }
       },
       {
         "type": "CommentBlock",
-        "value": "*\n * @typedef {Object} JimpexDefaultServicesOptions\n * @property {Boolean} [common=true] Whether or not to register all the `common` service providers.\n * @property {Boolean} [http=true]   Whether or not to register all the `http` service providers.\n * @property {Boolean} [api=true]    Whether or not to register all the `api` service providers.\n ",
-        "start": 3450,
-        "end": 3802,
+        "value": "*\n * @typedef {Object} JimpexDefaultServicesOptions\n * @property {boolean} [common=true] Whether or not to register all the `common` service providers.\n * @property {boolean} [http=true]   Whether or not to register all the `http` service providers.\n * @property {boolean} [api=true]    Whether or not to register all the `api` service providers.\n ",
+        "start": 3814,
+        "end": 4166,
         "loc": {
           "start": {
-            "line": 52,
+            "line": 56,
             "column": 0
           },
           "end": {
-            "line": 57,
+            "line": 61,
             "column": 3
           }
         }
@@ -114,15 +114,15 @@
       {
         "type": "CommentBlock",
         "value": "*\n * @typedef {Object} JimpexOptions\n * @property {string}                       [version='0.0.0']      The app version. To be used on\n *                                                                 the configuration.\n * @property {JimpexConfigurationOptions}   [configuration]        The options for the app\n *                                                                 configuration service.\n * @property {JimpexStaticsOptions}         [statics]              The options for the app static\n *                                                                 `middleware`.\n * @property {string}                       [filesizeLimit='15MB'] The size limit for the requests\n *                                                                 payload.\n * @property {JimpexExpressOptions}         [express]              The options for the Express app.\n * @property {JimpexDefaultServicesOptions} [defaultServices]      To tell the app which services\n *                                                                 should be registered when\n *                                                                 instantiated.\n ",
-        "start": 3804,
-        "end": 4937,
+        "start": 4168,
+        "end": 5301,
         "loc": {
           "start": {
-            "line": 59,
+            "line": 63,
             "column": 0
           },
           "end": {
-            "line": 73,
+            "line": 77,
             "column": 3
           }
         }
@@ -148,7 +148,7 @@
     },
     {
       "type": "CommentBlock",
-      "value": "*\n * @typedef {Object} JimpexConfigurationOptions\n * @property {Object}  [default=null]                      The app default configuration.\n * @property {string}  [name='app']                        The name of the app, used for the\n *                                                         configuration files.\n * @property {string}  [path='config/']                    The path to the configuration files\n *                                                         directory, relative to the project root\n *                                                         directory.\n * @property {Boolean} [hasFolder=true]                    Whether the configurations are inside a\n *                                                         sub directory or not. If `true`, a\n *                                                         configuration path would be\n *                                                         `config/[app-name]/[file]`.\n * @property {string}  [environmentVariable='CONFIG']      The name of the environment variable\n *                                                         that will be used to set the active\n *                                                         configuration.\n * @property {Boolean} [loadFromEnvironment=true]          Whether or not to check for the\n *                                                         environment variable and load a\n *                                                         configuration based on its value.\n * @property {Boolean} [loadVersionFromConfiguration=true] If `true`, the app `version` will be\n *                                                         taken from the loaded configuration,\n *                                                         otherwise, when a configuration is\n *                                                         loaded, the app will copy the version it\n *                                                         has into the configuration.\n * @property {string} [filenameFormat='[app-name].[configuration-name].config.js'] The name format\n *                                                                                 the configuration\n *                                                                                 files have.\n ",
+      "value": "*\n * @typedef {Object} JimpexConfigurationOptions\n * @property {Object}  [default=null]                      The app default configuration.\n * @property {string}  [name='app']                        The name of the app, used for the\n *                                                         configuration files.\n * @property {string}  [path='config/']                    The path to the configuration files\n *                                                         directory, relative to the project root\n *                                                         directory.\n * @property {boolean} [hasFolder=true]                    Whether the configurations are inside a\n *                                                         sub directory or not. If `true`, a\n *                                                         configuration path would be\n *                                                         `config/[app-name]/[file]`.\n * @property {string}  [environmentVariable='CONFIG']      The name of the environment variable\n *                                                         that will be used to set the active\n *                                                         configuration.\n * @property {boolean} [loadFromEnvironment=true]          Whether or not to check for the\n *                                                         environment variable and load a\n *                                                         configuration based on its value.\n * @property {boolean} [loadVersionFromConfiguration=true] If `true`, the app `version` will be\n *                                                         taken from the loaded configuration,\n *                                                         otherwise, when a configuration is\n *                                                         loaded, the app will copy the version it\n *                                                         has into the configuration.\n * @property {string} [filenameFormat='[app-name].[configuration-name].config.js'] The name format\n *                                                                                 the configuration\n *                                                                                 files have.\n ",
       "start": 69,
       "end": 2326,
       "loc": {
@@ -164,48 +164,48 @@
     },
     {
       "type": "CommentBlock",
-      "value": "*\n * @typedef {Object} JimpexStaticsOptions\n * @property {Boolean} [enabled=true]    Whether or not to include the middleware for static files.\n * @property {Boolean} [onHome=true]     If `true`, the path to the statics folder will be relative\n *                                       to the project root directory, otherwise, it will be\n *                                       relative to the directory where the app executable file is\n *                                       located.\n * @property {string}  [folder='static'] The name of the folder for static files.\n ",
+      "value": "*\n * @typedef {Object} JimpexStaticsOptions\n * @property {boolean} [enabled=true]    Whether or not to include the middleware for static files.\n * @property {boolean} [onHome=false]    If `true`, the path to the statics folder will be relative\n *                                       to the project root directory, otherwise, it will be\n *                                       relative to the directory where the app executable file is\n *                                       located.\n * @property {string}  [route='static']  The name of both the route and the folder, relative to\n *                                       whatever you defined with the `onHome` option.\n * @property {string}  [folder='']       By default, the folder will be the same as the `route`,\n *                                       but you can use this option to define a relative path that\n *                                       won't affect the route.\n ",
       "start": 2328,
-      "end": 2903,
+      "end": 3267,
       "loc": {
         "start": {
           "line": 33,
           "column": 0
         },
         "end": {
-          "line": 41,
+          "line": 45,
           "column": 3
         }
       }
     },
     {
       "type": "CommentBlock",
-      "value": "*\n * @typedef {Object} JimpexExpressOptions\n * @property {Boolean} [trustProxy=true]        Whether or not to enable the `trust proxy` option.\n * @property {Boolean} [disableXPoweredBy=true] Whether or not to remove the `x-powered-by` header.\n * @property {Boolean} [compression=true]       Whether or not to add the `compression` middleware.\n * @property {Boolean} [bodyParser=true]        Whether or not to add the `body-parser` middleware.\n * @property {Boolean} [multer=true]            Whether or not to add the `multer` middleware.\n ",
-      "start": 2905,
-      "end": 3448,
+      "value": "*\n * @typedef {Object} JimpexExpressOptions\n * @property {boolean} [trustProxy=true]        Whether or not to enable the `trust proxy` option.\n * @property {boolean} [disableXPoweredBy=true] Whether or not to remove the `x-powered-by` header.\n * @property {boolean} [compression=true]       Whether or not to add the `compression` middleware.\n * @property {boolean} [bodyParser=true]        Whether or not to add the `body-parser` middleware.\n * @property {boolean} [multer=true]            Whether or not to add the `multer` middleware.\n ",
+      "start": 3269,
+      "end": 3812,
       "loc": {
         "start": {
-          "line": 43,
+          "line": 47,
           "column": 0
         },
         "end": {
-          "line": 50,
+          "line": 54,
           "column": 3
         }
       }
     },
     {
       "type": "CommentBlock",
-      "value": "*\n * @typedef {Object} JimpexDefaultServicesOptions\n * @property {Boolean} [common=true] Whether or not to register all the `common` service providers.\n * @property {Boolean} [http=true]   Whether or not to register all the `http` service providers.\n * @property {Boolean} [api=true]    Whether or not to register all the `api` service providers.\n ",
-      "start": 3450,
-      "end": 3802,
+      "value": "*\n * @typedef {Object} JimpexDefaultServicesOptions\n * @property {boolean} [common=true] Whether or not to register all the `common` service providers.\n * @property {boolean} [http=true]   Whether or not to register all the `http` service providers.\n * @property {boolean} [api=true]    Whether or not to register all the `api` service providers.\n ",
+      "start": 3814,
+      "end": 4166,
       "loc": {
         "start": {
-          "line": 52,
+          "line": 56,
           "column": 0
         },
         "end": {
-          "line": 57,
+          "line": 61,
           "column": 3
         }
       }
@@ -213,15 +213,15 @@
     {
       "type": "CommentBlock",
       "value": "*\n * @typedef {Object} JimpexOptions\n * @property {string}                       [version='0.0.0']      The app version. To be used on\n *                                                                 the configuration.\n * @property {JimpexConfigurationOptions}   [configuration]        The options for the app\n *                                                                 configuration service.\n * @property {JimpexStaticsOptions}         [statics]              The options for the app static\n *                                                                 `middleware`.\n * @property {string}                       [filesizeLimit='15MB'] The size limit for the requests\n *                                                                 payload.\n * @property {JimpexExpressOptions}         [express]              The options for the Express app.\n * @property {JimpexDefaultServicesOptions} [defaultServices]      To tell the app which services\n *                                                                 should be registered when\n *                                                                 instantiated.\n ",
-      "start": 3804,
-      "end": 4937,
+      "start": 4168,
+      "end": 5301,
       "loc": {
         "start": {
-          "line": 59,
+          "line": 63,
           "column": 0
         },
         "end": {
-          "line": 73,
+          "line": 77,
           "column": 3
         }
       }
@@ -246,7 +246,7 @@
     },
     {
       "type": "CommentBlock",
-      "value": "*\n * @typedef {Object} JimpexConfigurationOptions\n * @property {Object}  [default=null]                      The app default configuration.\n * @property {string}  [name='app']                        The name of the app, used for the\n *                                                         configuration files.\n * @property {string}  [path='config/']                    The path to the configuration files\n *                                                         directory, relative to the project root\n *                                                         directory.\n * @property {Boolean} [hasFolder=true]                    Whether the configurations are inside a\n *                                                         sub directory or not. If `true`, a\n *                                                         configuration path would be\n *                                                         `config/[app-name]/[file]`.\n * @property {string}  [environmentVariable='CONFIG']      The name of the environment variable\n *                                                         that will be used to set the active\n *                                                         configuration.\n * @property {Boolean} [loadFromEnvironment=true]          Whether or not to check for the\n *                                                         environment variable and load a\n *                                                         configuration based on its value.\n * @property {Boolean} [loadVersionFromConfiguration=true] If `true`, the app `version` will be\n *                                                         taken from the loaded configuration,\n *                                                         otherwise, when a configuration is\n *                                                         loaded, the app will copy the version it\n *                                                         has into the configuration.\n * @property {string} [filenameFormat='[app-name].[configuration-name].config.js'] The name format\n *                                                                                 the configuration\n *                                                                                 files have.\n ",
+      "value": "*\n * @typedef {Object} JimpexConfigurationOptions\n * @property {Object}  [default=null]                      The app default configuration.\n * @property {string}  [name='app']                        The name of the app, used for the\n *                                                         configuration files.\n * @property {string}  [path='config/']                    The path to the configuration files\n *                                                         directory, relative to the project root\n *                                                         directory.\n * @property {boolean} [hasFolder=true]                    Whether the configurations are inside a\n *                                                         sub directory or not. If `true`, a\n *                                                         configuration path would be\n *                                                         `config/[app-name]/[file]`.\n * @property {string}  [environmentVariable='CONFIG']      The name of the environment variable\n *                                                         that will be used to set the active\n *                                                         configuration.\n * @property {boolean} [loadFromEnvironment=true]          Whether or not to check for the\n *                                                         environment variable and load a\n *                                                         configuration based on its value.\n * @property {boolean} [loadVersionFromConfiguration=true] If `true`, the app `version` will be\n *                                                         taken from the loaded configuration,\n *                                                         otherwise, when a configuration is\n *                                                         loaded, the app will copy the version it\n *                                                         has into the configuration.\n * @property {string} [filenameFormat='[app-name].[configuration-name].config.js'] The name format\n *                                                                                 the configuration\n *                                                                                 files have.\n ",
       "start": 69,
       "end": 2326,
       "loc": {
@@ -262,48 +262,48 @@
     },
     {
       "type": "CommentBlock",
-      "value": "*\n * @typedef {Object} JimpexStaticsOptions\n * @property {Boolean} [enabled=true]    Whether or not to include the middleware for static files.\n * @property {Boolean} [onHome=true]     If `true`, the path to the statics folder will be relative\n *                                       to the project root directory, otherwise, it will be\n *                                       relative to the directory where the app executable file is\n *                                       located.\n * @property {string}  [folder='static'] The name of the folder for static files.\n ",
+      "value": "*\n * @typedef {Object} JimpexStaticsOptions\n * @property {boolean} [enabled=true]    Whether or not to include the middleware for static files.\n * @property {boolean} [onHome=false]    If `true`, the path to the statics folder will be relative\n *                                       to the project root directory, otherwise, it will be\n *                                       relative to the directory where the app executable file is\n *                                       located.\n * @property {string}  [route='static']  The name of both the route and the folder, relative to\n *                                       whatever you defined with the `onHome` option.\n * @property {string}  [folder='']       By default, the folder will be the same as the `route`,\n *                                       but you can use this option to define a relative path that\n *                                       won't affect the route.\n ",
       "start": 2328,
-      "end": 2903,
+      "end": 3267,
       "loc": {
         "start": {
           "line": 33,
           "column": 0
         },
         "end": {
-          "line": 41,
+          "line": 45,
           "column": 3
         }
       }
     },
     {
       "type": "CommentBlock",
-      "value": "*\n * @typedef {Object} JimpexExpressOptions\n * @property {Boolean} [trustProxy=true]        Whether or not to enable the `trust proxy` option.\n * @property {Boolean} [disableXPoweredBy=true] Whether or not to remove the `x-powered-by` header.\n * @property {Boolean} [compression=true]       Whether or not to add the `compression` middleware.\n * @property {Boolean} [bodyParser=true]        Whether or not to add the `body-parser` middleware.\n * @property {Boolean} [multer=true]            Whether or not to add the `multer` middleware.\n ",
-      "start": 2905,
-      "end": 3448,
+      "value": "*\n * @typedef {Object} JimpexExpressOptions\n * @property {boolean} [trustProxy=true]        Whether or not to enable the `trust proxy` option.\n * @property {boolean} [disableXPoweredBy=true] Whether or not to remove the `x-powered-by` header.\n * @property {boolean} [compression=true]       Whether or not to add the `compression` middleware.\n * @property {boolean} [bodyParser=true]        Whether or not to add the `body-parser` middleware.\n * @property {boolean} [multer=true]            Whether or not to add the `multer` middleware.\n ",
+      "start": 3269,
+      "end": 3812,
       "loc": {
         "start": {
-          "line": 43,
+          "line": 47,
           "column": 0
         },
         "end": {
-          "line": 50,
+          "line": 54,
           "column": 3
         }
       }
     },
     {
       "type": "CommentBlock",
-      "value": "*\n * @typedef {Object} JimpexDefaultServicesOptions\n * @property {Boolean} [common=true] Whether or not to register all the `common` service providers.\n * @property {Boolean} [http=true]   Whether or not to register all the `http` service providers.\n * @property {Boolean} [api=true]    Whether or not to register all the `api` service providers.\n ",
-      "start": 3450,
-      "end": 3802,
+      "value": "*\n * @typedef {Object} JimpexDefaultServicesOptions\n * @property {boolean} [common=true] Whether or not to register all the `common` service providers.\n * @property {boolean} [http=true]   Whether or not to register all the `http` service providers.\n * @property {boolean} [api=true]    Whether or not to register all the `api` service providers.\n ",
+      "start": 3814,
+      "end": 4166,
       "loc": {
         "start": {
-          "line": 52,
+          "line": 56,
           "column": 0
         },
         "end": {
-          "line": 57,
+          "line": 61,
           "column": 3
         }
       }
@@ -311,15 +311,15 @@
     {
       "type": "CommentBlock",
       "value": "*\n * @typedef {Object} JimpexOptions\n * @property {string}                       [version='0.0.0']      The app version. To be used on\n *                                                                 the configuration.\n * @property {JimpexConfigurationOptions}   [configuration]        The options for the app\n *                                                                 configuration service.\n * @property {JimpexStaticsOptions}         [statics]              The options for the app static\n *                                                                 `middleware`.\n * @property {string}                       [filesizeLimit='15MB'] The size limit for the requests\n *                                                                 payload.\n * @property {JimpexExpressOptions}         [express]              The options for the Express app.\n * @property {JimpexDefaultServicesOptions} [defaultServices]      To tell the app which services\n *                                                                 should be registered when\n *                                                                 instantiated.\n ",
-      "start": 3804,
-      "end": 4937,
+      "start": 4168,
+      "end": 5301,
       "loc": {
         "start": {
-          "line": 59,
+          "line": 63,
           "column": 0
         },
         "end": {
-          "line": 73,
+          "line": 77,
           "column": 3
         }
       }
@@ -337,15 +337,15 @@
         "binop": null,
         "updateContext": null
       },
-      "start": 4938,
-      "end": 4938,
+      "start": 5302,
+      "end": 5302,
       "loc": {
         "start": {
-          "line": 74,
+          "line": 78,
           "column": 0
         },
         "end": {
-          "line": 74,
+          "line": 78,
           "column": 0
         }
       }

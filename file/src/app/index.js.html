@@ -161,6 +161,7 @@ class Jimpex extends Jimple {
      */
     this.options = extend(true, {
       version: &apos;0.0.0&apos;,
+      filesizeLimit: &apos;15MB&apos;,
       configuration: {
         default: null,
         name: &apos;app&apos;,
@@ -173,10 +174,10 @@ class Jimpex extends Jimple {
       },
       statics: {
         enabled: true,
-        onHome: true,
-        folder: &apos;statics&apos;,
+        onHome: false,
+        route: &apos;statics&apos;,
+        folder: &apos;&apos;,
       },
-      filesizeLimit: &apos;15MB&apos;,
       express: {
         trustProxy: true,
         disableXPoweredBy: true,
@@ -328,7 +329,7 @@ class Jimpex extends Jimple {
       express: expressOptions,
     } = this.options;
     if (expressOptions.trustProxy) {
-      this.express.set(&apos;trust proxy&apos;);
+      this.express.enable(&apos;trust proxy&apos;);
     }
 
     if (expressOptions.disableXPoweredBy) {
@@ -340,10 +341,11 @@ class Jimpex extends Jimple {
     }
 
     if (statics.enabled) {
-      const { onHome, folder } = statics;
+      const { onHome, route, folder } = statics;
       const joinFrom = onHome ? &apos;home&apos; : &apos;app&apos;;
-      const staticsFolderPath = this.get(&apos;pathUtils&apos;).joinFrom(joinFrom, folder);
-      this.express.use(`/${folder}`, express.static(staticsFolderPath));
+      const staticsRoute = route.startsWith(&apos;/&apos;) ? route.substr(1) : route;
+      const staticsFolderPath = this.get(&apos;pathUtils&apos;).joinFrom(joinFrom, folder || staticsRoute);
+      this.express.use(`/${staticsRoute}`, express.static(staticsFolderPath));
     }
 
     if (expressOptions.bodyParser) {

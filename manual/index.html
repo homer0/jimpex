@@ -133,12 +133,17 @@
   // Whether or not to enable the middleware to serve statics files.
   enabled: true,
 
-  // If true, the statics folder should be relative to the project root directory, otherwise,
-  // it should be relative to the app executable.
-  onHome: true,
+  // If true, the statics folder would be relative to the project root directory, otherwise,
+  // it would be relative to the app executable.
+  onHome: false,
 
-  // The name of your static files folder.
-  folder: &apos;statics&apos;,
+  // The name of both the route and the folder, relative to whatever you defined with the
+  // `onHome` option.
+  route: &apos;statics&apos;,
+
+  // By default, the folder will be the same as the `route`, but you can use this option
+  // to define a relative path that won&apos;t affect the route.
+  folder: &apos;&apos;,
 }</code>
 </code></pre><h2>Express</h2><p>These are options for miscellaneous things you can add to the Express server:</p><pre><code class="lang-js"><code class="source-code prettyprint">{
   // Whether or not to enable the `trust proxy` option.
@@ -668,7 +673,7 @@ class App extends Jimpex {
   // The name of the generated file.
   file: &apos;index.html&apos;,
 
-  // Whether or not to delete the tempalte after generating the file.
+  // Whether or not to delete the template after generating the file.
   deleteTemplateAfter: true,
 
   // The placeholder string where the information will be written.
@@ -695,14 +700,11 @@ class App extends Jimpex {
     this.register(frontendFs);
 
     // Register the service
-    this.register(htmlGeneratorCustom(
-      &apos;my-html-generator&apos;,
-      {
-        template: &apos;template.tpl&apos;,
-        file: &apos;my-index.html&apos;,
-        ...
-      }
-    ));
+    this.register(htmlGeneratorCustom({
+      template: &apos;template.tpl&apos;,
+      file: &apos;my-index.html&apos;,
+      ...
+    }));
   }
 }</code>
 </code></pre><p>The first parameter is the name of the service and the second the options to customize it. In case you want to use another service to get the values, you can send the name of that service as the third parameter.</p><h2>HTTP</h2><p>A set of utilities to work with HTTP requests and responses.</p><ul>

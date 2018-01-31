@@ -121,17 +121,17 @@
  * @property {string}  [path=&apos;config/&apos;]                    The path to the configuration files
  *                                                         directory, relative to the project root
  *                                                         directory.
- * @property {Boolean} [hasFolder=true]                    Whether the configurations are inside a
+ * @property {boolean} [hasFolder=true]                    Whether the configurations are inside a
  *                                                         sub directory or not. If `true`, a
  *                                                         configuration path would be
  *                                                         `config/[app-name]/[file]`.
  * @property {string}  [environmentVariable=&apos;CONFIG&apos;]      The name of the environment variable
  *                                                         that will be used to set the active
  *                                                         configuration.
- * @property {Boolean} [loadFromEnvironment=true]          Whether or not to check for the
+ * @property {boolean} [loadFromEnvironment=true]          Whether or not to check for the
  *                                                         environment variable and load a
  *                                                         configuration based on its value.
- * @property {Boolean} [loadVersionFromConfiguration=true] If `true`, the app `version` will be
+ * @property {boolean} [loadVersionFromConfiguration=true] If `true`, the app `version` will be
  *                                                         taken from the loaded configuration,
  *                                                         otherwise, when a configuration is
  *                                                         loaded, the app will copy the version it
@@ -143,28 +143,32 @@
 
 /**
  * @typedef {Object} JimpexStaticsOptions
- * @property {Boolean} [enabled=true]    Whether or not to include the middleware for static files.
- * @property {Boolean} [onHome=true]     If `true`, the path to the statics folder will be relative
+ * @property {boolean} [enabled=true]    Whether or not to include the middleware for static files.
+ * @property {boolean} [onHome=false]    If `true`, the path to the statics folder will be relative
  *                                       to the project root directory, otherwise, it will be
  *                                       relative to the directory where the app executable file is
  *                                       located.
- * @property {string}  [folder=&apos;static&apos;] The name of the folder for static files.
+ * @property {string}  [route=&apos;static&apos;]  The name of both the route and the folder, relative to
+ *                                       whatever you defined with the `onHome` option.
+ * @property {string}  [folder=&apos;&apos;]       By default, the folder will be the same as the `route`,
+ *                                       but you can use this option to define a relative path that
+ *                                       won&apos;t affect the route.
  */
 
 /**
  * @typedef {Object} JimpexExpressOptions
- * @property {Boolean} [trustProxy=true]        Whether or not to enable the `trust proxy` option.
- * @property {Boolean} [disableXPoweredBy=true] Whether or not to remove the `x-powered-by` header.
- * @property {Boolean} [compression=true]       Whether or not to add the `compression` middleware.
- * @property {Boolean} [bodyParser=true]        Whether or not to add the `body-parser` middleware.
- * @property {Boolean} [multer=true]            Whether or not to add the `multer` middleware.
+ * @property {boolean} [trustProxy=true]        Whether or not to enable the `trust proxy` option.
+ * @property {boolean} [disableXPoweredBy=true] Whether or not to remove the `x-powered-by` header.
+ * @property {boolean} [compression=true]       Whether or not to add the `compression` middleware.
+ * @property {boolean} [bodyParser=true]        Whether or not to add the `body-parser` middleware.
+ * @property {boolean} [multer=true]            Whether or not to add the `multer` middleware.
  */
 
 /**
  * @typedef {Object} JimpexDefaultServicesOptions
- * @property {Boolean} [common=true] Whether or not to register all the `common` service providers.
- * @property {Boolean} [http=true]   Whether or not to register all the `http` service providers.
- * @property {Boolean} [api=true]    Whether or not to register all the `api` service providers.
+ * @property {boolean} [common=true] Whether or not to register all the `common` service providers.
+ * @property {boolean} [http=true]   Whether or not to register all the `http` service providers.
+ * @property {boolean} [api=true]    Whether or not to register all the `api` service providers.
  */
 
 /**

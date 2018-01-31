@@ -243,7 +243,7 @@
           
           
           
-          <span class="code" data-ice="name"><span><a href="function/index.html#static-function-htmlGeneratorCustom">htmlGeneratorCustom</a></span></span><span class="code" data-ice="signature">(serviceName: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, options: <span><a href="typedef/index.html#static-typedef-HTMLGeneratorOptions">HTMLGeneratorOptions</a></span>, valuesServiceName: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>): <span><a href="typedef/index.html#static-typedef-Provider">Provider</a></span></span>
+          <span class="code" data-ice="name"><span><a href="function/index.html#static-function-htmlGeneratorCustom">htmlGeneratorCustom</a></span></span><span class="code" data-ice="signature">(options: <span><a href="typedef/index.html#static-typedef-HTMLGeneratorOptions">HTMLGeneratorOptions</a></span>, serviceName: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, valuesServiceName: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>): <span><a href="typedef/index.html#static-typedef-Provider">Provider</a></span></span>
         </p>
       </div>
       <div>
@@ -729,15 +729,15 @@ different APIs.</p>
     
     
     
-    <span class="code" data-ice="name">htmlGeneratorCustom</span><span class="code" data-ice="signature">(serviceName: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, options: <span><a href="typedef/index.html#static-typedef-HTMLGeneratorOptions">HTMLGeneratorOptions</a></span>, valuesServiceName: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>): <span><a href="typedef/index.html#static-typedef-Provider">Provider</a></span></span>
+    <span class="code" data-ice="name">htmlGeneratorCustom</span><span class="code" data-ice="signature">(options: <span><a href="typedef/index.html#static-typedef-HTMLGeneratorOptions">HTMLGeneratorOptions</a></span>, serviceName: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, valuesServiceName: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>): <span><a href="typedef/index.html#static-typedef-Provider">Provider</a></span></span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/services/html/htmlGenerator.js.html#lineNumber244">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/services/html/htmlGenerator.js.html#lineNumber240">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {htmlGeneratorCustom} from &apos;<span><a href="file/src/services/html/htmlGenerator.js.html#lineNumber244">jimpex/src/services/html/htmlGenerator.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {htmlGeneratorCustom} from &apos;<span><a href="file/src/services/html/htmlGenerator.js.html#lineNumber240">jimpex/src/services/html/htmlGenerator.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Generates an <code>HTMLGenerator</code> service provider with customized options and that automatically
@@ -756,20 +756,20 @@ the html file when the server starts.</p>
     <tbody>
     
     <tr data-ice="property" data-depth="0">
+      <td data-ice="name" class="code" data-depth="0">options</td>
+      <td data-ice="type" class="code"><span><a href="typedef/index.html#static-typedef-HTMLGeneratorOptions">HTMLGeneratorOptions</a></span></td>
+      <td data-ice="appendix"><ul><li>optional</li>
+<li>default: {}</li></ul></td>
+      <td data-ice="description"><p>Options to customize the service.</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="0">
       <td data-ice="name" class="code" data-depth="0">serviceName</td>
       <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></td>
       <td data-ice="appendix"><ul><li>optional</li>
 <li>default: &apos;htmlGenerator&apos;</li></ul></td>
       <td data-ice="description"><p>The name of the service that will
                                                              be register into the app.</p>
-</td>
-    </tr>
-<tr data-ice="property" data-depth="0">
-      <td data-ice="name" class="code" data-depth="0">options</td>
-      <td data-ice="type" class="code"><span><a href="typedef/index.html#static-typedef-HTMLGeneratorOptions">HTMLGeneratorOptions</a></span></td>
-      <td data-ice="appendix"><ul><li>optional</li>
-<li>default: {}</li></ul></td>
-      <td data-ice="description"><p>Options to customize the service.</p>
 </td>
     </tr>
 <tr data-ice="property" data-depth="0">
@@ -815,8 +815,7 @@ the html file when the server starts.</p>
   
 
   
-  <div data-ice="todo"><h4>TODO:</h4><ul><li><span>Move `serviceName` as the second parameter in case the implementation wants to change just
-      the options.</span></li></ul></div>
+  
 </div>
 <div class="detail" data-ice="detail">
   <h3 data-ice="anchor" id="static-function-middleware">

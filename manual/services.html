@@ -328,7 +328,7 @@ class App extends Jimpex {
   // The name of the generated file.
   file: &apos;index.html&apos;,
 
-  // Whether or not to delete the tempalte after generating the file.
+  // Whether or not to delete the template after generating the file.
   deleteTemplateAfter: true,
 
   // The placeholder string where the information will be written.
@@ -358,14 +358,11 @@ class App extends Jimpex {
     this.register(frontendFs);
 
     // Register the service
-    this.register(htmlGeneratorCustom(
-      &apos;my-html-generator&apos;,
-      {
-        template: &apos;template.tpl&apos;,
-        file: &apos;my-index.html&apos;,
-        ...
-      }
-    ));
+    this.register(htmlGeneratorCustom({
+      template: &apos;template.tpl&apos;,
+      file: &apos;my-index.html&apos;,
+      ...
+    }));
   }
 }</code>
 </code></pre>

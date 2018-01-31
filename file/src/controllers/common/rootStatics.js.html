@@ -120,17 +120,17 @@ const { controller } = require(&apos;../../utils/wrappers&apos;);
 class RootStaticsController {
   /**
    * Class constructor.
-   * @param {SendFile} sendFile                              To be able to send the files as
-   *                                                         responses.
-   * @param {Array}   [files=[&apos;index.html&apos;, &apos;favicon.icon&apos;]] The list of files to serve. Each item
-   *                                                         can be a `string` or an `Object` with
-   *                                                         the keys `origin` for the file route,
-   *                                                         `output` for the file location
-   *                                                         relative to the root, and `headers`
-   *                                                         with the file custom headers for the
-   *                                                         response.
+   * @param {SendFile} sendFile                             To be able to send the files as
+   *                                                        responses.
+   * @param {Array}   [files=[&apos;index.html&apos;, &apos;favicon.ico&apos;]] The list of files to serve. Each item
+   *                                                        can be a `string` or an `Object` with
+   *                                                        the keys `origin` for the file route,
+   *                                                        `output` for the file location
+   *                                                        relative to the root, and `headers`
+   *                                                        with the file custom headers for the
+   *                                                        response.
    */
-  constructor(sendFile, files = [&apos;index.html&apos;, &apos;favicon.icon&apos;]) {
+  constructor(sendFile, files = [&apos;index.html&apos;, &apos;favicon.ico&apos;]) {
     /**
      * A local reference for the `sendFile` service.
      * @type {SendFile}
