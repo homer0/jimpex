@@ -36,7 +36,6 @@ const { provider } = require('../../utils/wrappers');
 class HTMLGenerator {
   /**
    * Class constructor.
-   * @param {HTMLGeneratorOptions}        [options]            To customize the service.
    * @param {AppConfiguration}            appConfiguration     To read the values of the settings
    *                                                           that are going to be send to the
    *                                                           file.
@@ -45,18 +44,18 @@ class HTMLGenerator {
    *                                                           removed, and if it happens, when
    *                                                           an error is thrown.
    * @param {FrontendFs}                  frontendFs           To read the contents of the template.
+   * @param {HTMLGeneratorOptions}        [options]            To customize the service.
    * @param {?HTMLGeneratorValuesService} [valuesService=null] If specified, instead of getting
    *                                                           the values from the app
    *                                                           configuration, they'll be retrieved
    *                                                           from this service `getValues` method.
    * @throws {Error} if `valuesService` is specified but it doesn't have a `getValues` method.
-   * @todo Move `options` to the before last parameter as it's optional
    */
   constructor(
-    options,
     appConfiguration,
     appLogger,
     frontendFs,
+    options,
     valuesService = null
   ) {
     /**
@@ -204,9 +203,8 @@ class HTMLGenerator {
       /**
        * If the template needs to be deleted, return the call to the `delete` method, otherwise,
        * just an empty object to continue the promise chain.
-       * @todo Change it to a short circuit evaluation.
        */
-      return deleteTemplateAfter ? this.frontendFs.delete(`./${template}`) : {};
+      return deleteTemplateAfter && this.frontendFs.delete(`./${template}`);
     })
     .then(() => {
       // If the template was deleted, log a message informing it.
@@ -231,19 +229,17 @@ class HTMLGenerator {
  * Generates an `HTMLGenerator` service provider with customized options and that automatically
  * hooks itself to the `after-start` event of the app server in order to trigger the generation of
  * the html file when the server starts.
+ * @param {HTMLGeneratorOptions}  [options={}]                  Options to customize the service.
  * @param {string}                [serviceName='htmlGenerator'] The name of the service that will
  *                                                              be register into the app.
- * @param {HTMLGeneratorOptions}  [options={}]                  Options to customize the service.
  * @param {?string}               [valuesServiceName=null]      The name of a service used to read
  *                                                              the values that will be injected in
  *                                                              the generated file.
  * @return {Provider}
- * @todo Move `serviceName` as the second parameter in case the implementation wants to change just
- *       the options.
  */
 const htmlGeneratorCustom = (
-  serviceName = 'htmlGenerator',
   options = {},
+  serviceName = 'htmlGenerator',
   valuesServiceName = null
 ) => provider((app) => {
   app.set(serviceName, () => {
@@ -253,10 +249,10 @@ const htmlGeneratorCustom = (
     }
 
     return new HTMLGenerator(
-      options,
       app.get('appConfiguration'),
       app.get('appLogger'),
       app.get('frontendFs'),
+      options,
       valuesService
     );
   });

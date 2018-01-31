@@ -9,17 +9,17 @@ const { controller } = require('../../utils/wrappers');
 class RootStaticsController {
   /**
    * Class constructor.
-   * @param {SendFile} sendFile                              To be able to send the files as
-   *                                                         responses.
-   * @param {Array}   [files=['index.html', 'favicon.icon']] The list of files to serve. Each item
-   *                                                         can be a `string` or an `Object` with
-   *                                                         the keys `origin` for the file route,
-   *                                                         `output` for the file location
-   *                                                         relative to the root, and `headers`
-   *                                                         with the file custom headers for the
-   *                                                         response.
+   * @param {SendFile} sendFile                             To be able to send the files as
+   *                                                        responses.
+   * @param {Array}   [files=['index.html', 'favicon.ico']] The list of files to serve. Each item
+   *                                                        can be a `string` or an `Object` with
+   *                                                        the keys `origin` for the file route,
+   *                                                        `output` for the file location
+   *                                                        relative to the root, and `headers`
+   *                                                        with the file custom headers for the
+   *                                                        response.
    */
-  constructor(sendFile, files = ['index.html', 'favicon.icon']) {
+  constructor(sendFile, files = ['index.html', 'favicon.ico']) {
     /**
      * A local reference for the `sendFile` service.
      * @type {SendFile}

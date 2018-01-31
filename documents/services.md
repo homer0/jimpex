@@ -311,7 +311,7 @@ Now, this service has a few default options, so instead of explaining which are,
   // The name of the generated file.
   file: 'index.html',
 
-  // Whether or not to delete the tempalte after generating the file.
+  // Whether or not to delete the template after generating the file.
   deleteTemplateAfter: true,
 
   // The placeholder string where the information will be written.
@@ -345,14 +345,11 @@ class App extends Jimpex {
     this.register(frontendFs);
     
     // Register the service
-    this.register(htmlGeneratorCustom(
-      'my-html-generator',
-      {
-        template: 'template.tpl',
-        file: 'my-index.html',
-        ...
-      }
-    ));
+    this.register(htmlGeneratorCustom({
+      template: 'template.tpl',
+      file: 'my-index.html',
+      ...
+    }));
   }
 }
 ```

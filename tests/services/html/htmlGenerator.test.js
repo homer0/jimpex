@@ -26,10 +26,10 @@ describe('services/html:htmlGenerator', () => {
     let sut = null;
     // When
     sut = new HTMLGenerator(
-      options,
       appConfiguration,
       appLogger,
-      frontendFs
+      frontendFs,
+      options
     );
     // Then
     expect(sut).toBeInstanceOf(HTMLGenerator);
@@ -59,10 +59,10 @@ describe('services/html:htmlGenerator', () => {
     let sut = null;
     // When
     sut = new HTMLGenerator(
-      options,
       appConfiguration,
       appLogger,
       frontendFs,
+      options,
       valuesService
     );
     // Then
@@ -83,10 +83,10 @@ describe('services/html:htmlGenerator', () => {
     const valuesService = {};
     // When/Then
     expect(() => new HTMLGenerator(
-      options,
       appConfiguration,
       appLogger,
       frontendFs,
+      options,
       valuesService
     ))
     .toThrow(/The HTMLGenerator values service must have a `getValues` method/i);
@@ -103,10 +103,10 @@ describe('services/html:htmlGenerator', () => {
     let result = null;
     // When
     sut = new HTMLGenerator(
-      options,
       appConfiguration,
       appLogger,
-      frontendFs
+      frontendFs,
+      options
     );
     result = sut.getFile();
     // Then
@@ -125,10 +125,10 @@ describe('services/html:htmlGenerator', () => {
     let sut = null;
     // When
     sut = new HTMLGenerator(
-      options,
       appConfiguration,
       appLogger,
-      frontendFs
+      frontendFs,
+      options
     );
     return sut.getValues()
     .then((result) => {
@@ -155,10 +155,10 @@ describe('services/html:htmlGenerator', () => {
     let sut = null;
     // When
     sut = new HTMLGenerator(
-      options,
       appConfiguration,
       appLogger,
       frontendFs,
+      options,
       valuesService
     );
     return sut.getValues()
@@ -184,10 +184,10 @@ describe('services/html:htmlGenerator', () => {
     let sut = null;
     // When
     sut = new HTMLGenerator(
-      options,
       appConfiguration,
       appLogger,
-      frontendFs
+      frontendFs,
+      options
     );
     return sut.getValues()
     .then((result) => {
@@ -209,10 +209,10 @@ describe('services/html:htmlGenerator', () => {
     let result = null;
     // When
     sut = new HTMLGenerator(
-      options,
       appConfiguration,
       appLogger,
-      frontendFs
+      frontendFs,
+      options
     );
     result = sut.whenReady();
     // Then
@@ -248,10 +248,10 @@ describe('services/html:htmlGenerator', () => {
     const expectedContent = `window.${options.variable} = ${JSON.stringify(values)}`;
     // When
     sut = new HTMLGenerator(
-      options,
       appConfiguration,
       appLogger,
-      frontendFs
+      frontendFs,
+      options
     );
     return sut.generateHTML()
     .then(() => {
@@ -305,10 +305,10 @@ describe('services/html:htmlGenerator', () => {
     const expectedContent = `window.${options.variable} = ${JSON.stringify(values)}`;
     // When
     sut = new HTMLGenerator(
-      options,
       appConfiguration,
       appLogger,
-      frontendFs
+      frontendFs,
+      options
     );
     return sut.generateHTML()
     .then(() => {
@@ -348,10 +348,10 @@ describe('services/html:htmlGenerator', () => {
     let sut = null;
     // When
     sut = new HTMLGenerator(
-      options,
       appConfiguration,
       appLogger,
-      frontendFs
+      frontendFs,
+      options
     );
     return sut.generateHTML()
     .then(() => {
@@ -401,7 +401,7 @@ describe('services/html:htmlGenerator', () => {
     let eventName = null;
     let eventFn = null;
     // When
-    htmlGeneratorCustom(name)(app);
+    htmlGeneratorCustom({}, name)(app);
     [[serviceName, serviceFn]] = app.set.mock.calls;
     [[eventName, eventFn]] = events.once.mock.calls;
     sut = serviceFn();
@@ -471,7 +471,7 @@ describe('services/html:htmlGenerator', () => {
     const expectedGets = Object.keys(services);
     const expectedEventName = 'after-start';
     // When
-    htmlGeneratorCustom(name, {}, myValuesServiceName)(app);
+    htmlGeneratorCustom({}, name, myValuesServiceName)(app);
     [[serviceName, serviceFn]] = app.set.mock.calls;
     [[eventName, eventFn]] = events.once.mock.calls;
     sut = serviceFn();
