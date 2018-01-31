@@ -50,6 +50,7 @@ class Jimpex extends Jimple {
      */
     this.options = extend(true, {
       version: '0.0.0',
+      filesizeLimit: '15MB',
       configuration: {
         default: null,
         name: 'app',
@@ -66,7 +67,6 @@ class Jimpex extends Jimple {
         route: 'statics',
         folder: '',
       },
-      filesizeLimit: '15MB',
       express: {
         trustProxy: true,
         disableXPoweredBy: true,
