@@ -81,7 +81,7 @@ describe('app:Jimpex', () => {
       'router',
       'events',
     ];
-    const expectedStaticsFolder = 'home/statics';
+    const expectedStaticsFolder = 'app/statics';
     const expectedMiddlewares = [
       ['compression-middleware'],
       ['/statics', expectedStaticsFolder],
@@ -137,7 +137,7 @@ describe('app:Jimpex', () => {
       }
     );
     expect(pathUtils.joinFrom).toHaveBeenCalledTimes(1);
-    expect(pathUtils.joinFrom).toHaveBeenCalledWith('home', sut.options.statics.folder);
+    expect(pathUtils.joinFrom).toHaveBeenCalledWith('app', sut.options.statics.route);
     expect(appConfiguration.get).toHaveBeenCalledTimes(1);
     expect(appConfiguration.get).toHaveBeenCalledWith('version');
   });
@@ -359,7 +359,7 @@ describe('app:Jimpex', () => {
     expect(expressMock.static).toHaveBeenCalledTimes(0);
   });
 
-  it('should be able to set the statics folder on the app directory', () => {
+  it('should be able to set the statics route relative to the home directory', () => {
     /**
      * App directory: Where the executable file is located.
      * Home directory: Where the app is executed from (`process.cwd`).
@@ -384,13 +384,63 @@ describe('app:Jimpex', () => {
     // When
     sut = new Sut(true, {
       statics: {
-        onHome: false,
+        onHome: true,
       },
     });
     // Then
     expect(expressMock.static).toHaveBeenCalledTimes(1);
     expect(pathUtils.joinFrom).toHaveBeenCalledTimes(1);
-    expect(pathUtils.joinFrom).toHaveBeenCalledWith('app', sut.options.statics.folder);
+    expect(pathUtils.joinFrom).toHaveBeenCalledWith('home', sut.options.statics.route);
+  });
+
+  it('should be able to set a the statics folder with a path different from the route', () => {
+    /**
+     * App directory: Where the executable file is located.
+     * Home directory: Where the app is executed from (`process.cwd`).
+     */
+    // Given
+    class Sut extends Jimpex {
+      boot() {}
+    }
+    const pathUtils = {
+      joinFrom: jest.fn((from, rest) => path.join(from, rest)),
+    };
+    JimpleMock.service('pathUtils', pathUtils);
+    const defaultConfig = {};
+    const rootRequire = jest.fn(() => defaultConfig);
+    JimpleMock.service('rootRequire', rootRequire);
+    const appConfiguration = {
+      loadFromEnvironment: jest.fn(),
+      get: jest.fn(),
+    };
+    JimpleMock.service('appConfiguration', appConfiguration);
+    const staticsRoute = '/some/statics';
+    const staticsFolder = '../statics';
+    let sut = null;
+    const expectedMiddlewares = [
+      ['compression-middleware'],
+      [staticsRoute, path.join('home', staticsFolder)],
+      ['body-parser-json'],
+      ['body-parser-urlencoded'],
+      ['multer-any'],
+    ];
+    // When
+    sut = new Sut(true, {
+      statics: {
+        onHome: true,
+        route: staticsRoute,
+        folder: staticsFolder,
+      },
+    });
+    // Then
+    expect(sut.options.statics.folder).toBe(staticsFolder);
+    expect(expressMock.static).toHaveBeenCalledTimes(1);
+    expect(pathUtils.joinFrom).toHaveBeenCalledTimes(1);
+    expect(pathUtils.joinFrom).toHaveBeenCalledWith('home', staticsFolder);
+    expect(expressMock.mocks.use).toHaveBeenCalledTimes(expectedMiddlewares.length);
+    expectedMiddlewares.forEach((useCall) => {
+      expect(expressMock.mocks.use).toHaveBeenCalledWith(...useCall);
+    });
   });
 
   it('shouldn\'t add the default services if their flags are `false`', () => {
@@ -792,7 +842,7 @@ describe('app:Jimpex', () => {
       connect: jest.fn(() => routes),
     };
     let sut = null;
-    const expectedStaticsFolder = 'home/statics';
+    const expectedStaticsFolder = 'app/statics';
     const expectedMiddlewares = [
       ['compression-middleware'],
       ['/statics', expectedStaticsFolder],
@@ -848,7 +898,7 @@ describe('app:Jimpex', () => {
       connect: jest.fn(() => middlewareFn),
     };
     let sut = null;
-    const expectedStaticsFolder = 'home/statics';
+    const expectedStaticsFolder = 'app/statics';
     const expectedMiddlewares = [
       ['compression-middleware'],
       ['/statics', expectedStaticsFolder],
@@ -903,7 +953,7 @@ describe('app:Jimpex', () => {
       connect: jest.fn(() => null),
     };
     let sut = null;
-    const expectedStaticsFolder = 'home/statics';
+    const expectedStaticsFolder = 'app/statics';
     const expectedMiddlewares = [
       ['compression-middleware'],
       ['/statics', expectedStaticsFolder],

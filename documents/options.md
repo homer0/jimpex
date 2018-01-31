@@ -73,12 +73,17 @@ These options are specifically for the Express [`static`](https://github.com/exp
   // Whether or not to enable the middleware to serve statics files.
   enabled: true,
 
-  // If true, the statics folder should be relative to the project root directory, otherwise,
-  // it should be relative to the app executable.
-  onHome: true,
+  // If true, the statics folder would be relative to the project root directory, otherwise,
+  // it would be relative to the app executable.
+  onHome: false,
 
-  // The name of your static files folder.
-  folder: 'statics',
+  // The name of both the route and the folder, relative to whatever you defined with the
+  // `onHome` option.
+  route: 'statics',
+  
+  // By default, the folder will be the same as the `route`, but you can use this option
+  // to define a relative path that won't affect the route.
+  folder: '',
 }
 ```
 
