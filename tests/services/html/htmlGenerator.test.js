@@ -38,6 +38,7 @@ describe('services/html:htmlGenerator', () => {
       file: expect.any(String),
       deleteTemplateAfter: expect.any(Boolean),
       replacePlaceholder: expect.any(String),
+      valuesExpression: expect.any(RegExp),
       variable: expect.any(String),
       configurationKeys: expect.any(Array),
     });
@@ -246,6 +247,78 @@ describe('services/html:htmlGenerator', () => {
     };
     let sut = null;
     const expectedContent = `window.${options.variable} = ${JSON.stringify(values)}`;
+    // When
+    sut = new HTMLGenerator(
+      appConfiguration,
+      appLogger,
+      frontendFs,
+      options
+    );
+    return sut.generateHTML()
+    .then(() => {
+      // Then
+      expect(frontendFs.read).toHaveBeenCalledTimes(1);
+      expect(frontendFs.read).toHaveBeenCalledWith(`./${options.template}`);
+      expect(appConfiguration.get).toHaveBeenCalledTimes(1);
+      expect(appConfiguration.get).toHaveBeenCalledWith(options.configurationKeys);
+      expect(frontendFs.write).toHaveBeenCalledTimes(1);
+      expect(frontendFs.write).toHaveBeenCalledWith(options.file, expectedContent);
+      expect(appLogger.success).toHaveBeenCalledTimes(1);
+      expect(appLogger.success).toHaveBeenCalledWith(expect.any(String));
+      expect(wootilsMock.mocks.deferredResolve).toHaveBeenCalledTimes(1);
+      return sut.whenReady();
+    })
+    .then(() => {
+      expect(true).toBeTrue();
+    })
+    .catch(() => {
+      expect(true).toBeFalse();
+    });
+  });
+
+  it('should generate the HTML file and replace values on the template', () => {
+    // Given
+    const placeholder = '{{placeholder}}';
+    const options = {
+      template: 'index.tpl.html',
+      file: 'index.html',
+      deleteTemplateAfter: false,
+      replacePlaceholder: placeholder,
+      variable: 'appConfiguration',
+      configurationKeys: ['features'],
+    };
+    const values = {
+      featureName: {
+        enabled: true,
+        account: {
+          id: 'XYZ',
+        },
+      },
+      something: 'else',
+    };
+    const appConfiguration = {
+      get: jest.fn(() => values),
+    };
+    const appLogger = {
+      success: jest.fn(),
+    };
+    const template = `${placeholder};\n` +
+      'const enabled = {{featureName.enabled}};\n' +
+      'const unknown = {{unknownFeature}};\n' +
+      'const id = \'{{featureName.account.id}}\';\n' +
+      'const name = {{featureName.account.name}};\n' +
+      'const something = \'{{something}}\';';
+    const frontendFs = {
+      read: jest.fn(() => Promise.resolve(template)),
+      write: jest.fn(() => Promise.resolve()),
+    };
+    let sut = null;
+    const expectedContent = `window.${options.variable} = ${JSON.stringify(values)};\n` +
+      `const enabled = ${values.featureName.enabled};\n` +
+      'const unknown = null;\n' +
+      `const id = '${values.featureName.account.id}';\n` +
+      'const name = null;\n' +
+      `const something = '${values.something}';`;
     // When
     sut = new HTMLGenerator(
       appConfiguration,

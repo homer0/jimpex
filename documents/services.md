@@ -26,7 +26,7 @@ class App extends Jimpex {
     // Register the dependencies...
     this.register(http);
     this.register(appError);
-        
+
     // Register the client
     this.register(apiClient);
   }
@@ -50,7 +50,7 @@ class App extends Jimpex {
     // Register the dependencies...
     this.register(http);
     this.register(appError);
-        
+
     // Register the client
     this.register({
       'myCustomAPIService',
@@ -84,7 +84,7 @@ class App extends Jimpex {
   boot() {
     // Register the dependencies...
     this.register(appError);
-        
+
     // Register the service
     this.register(apiClient);
   }
@@ -131,7 +131,7 @@ class App extends Jimpex {
     // Register the dependencies...
     this.register(appError);
     this.register(responsesBuilder);
-        
+
     // Register the service
     this.register(versionValidator);
   }
@@ -292,7 +292,7 @@ class App extends Jimpex {
   boot() {
     // Register the dependencies...
     this.register(frontendFs);
-    
+
     // Register the service
     this.register(htmlGenerator);
   }
@@ -316,6 +316,9 @@ Now, this service has a few default options, so instead of explaining which are,
 
   // The placeholder string where the information will be written.
   replacePlaceholder: '{{appConfiguration}}',
+
+  // A dynamic placeholder to replace single values on the template.
+  valuesExpression: /\{\{(.*?)\}\}/ig,
 
   // The name of the variable that will have the information on the file.
   variable: 'appConfiguration',
@@ -343,7 +346,7 @@ class App extends Jimpex {
   boot() {
     // Register the dependencies...
     this.register(frontendFs);
-    
+
     // Register the service
     this.register(htmlGeneratorCustom({
       template: 'template.tpl',
