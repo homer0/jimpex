@@ -11,6 +11,10 @@ const { provider } = require('../../utils/wrappers');
  *                                                                 file.
  * @property {string}  [replacePlaceholder='{{appConfiguration}}'] The placeholder string where the
  *                                                                 information will be written.
+ * @property {RegExp}  [valuesExpression='{{(.*?)}}']              A regular expression for dynamic
+ *                                                                 placeholders that will be
+ *                                                                 replaced by values when the file
+ *                                                                 is generated.
  * @property {string}  [variable='appConfiguration']               The name of the variable that
  *                                                                 will have the information on
  *                                                                 the file.
@@ -67,6 +71,7 @@ class HTMLGenerator {
       file: 'index.html',
       deleteTemplateAfter: true,
       replacePlaceholder: '{{appConfiguration}}',
+      valuesExpression: /\{\{(.*?)\}\}/ig,
       variable: 'appConfiguration',
       configurationKeys: ['features', 'version', 'postMessagesPrefix'],
     }, options);
@@ -169,8 +174,6 @@ class HTMLGenerator {
     const {
       template,
       deleteTemplateAfter,
-      replacePlaceholder,
-      variable,
       file,
     } = this.options;
     // Define the variable where the template contents will be saved.
@@ -184,17 +187,8 @@ class HTMLGenerator {
       return this.getValues();
     })
     .then((values) => {
-      /**
-       * Encode them on a JSON string so when executed on the browser they'll be interpreted as
-       * an Object.
-       */
-      const htmlObject = JSON.stringify(values);
-      // Replace the placeholder with the definition of the variable.
-      const html = templateContents
-      .replace(
-        replacePlaceholder,
-        `window.${variable} = ${htmlObject}`
-      );
+      // Get the HTML code for the file.
+      const html = this._processHTML(templateContents, values);
       // Write the generated file.
       return this.frontendFs.write(file, html);
     })
@@ -223,6 +217,74 @@ class HTMLGenerator {
       this.appLogger.error('There was an error while generating the HTML');
       return Promise.reject(error);
     });
+  }
+  /**
+   * Creates the code for the HTML file.
+   * @param {string} template The template code where the values are going to be injected.
+   * @param {Object} values   The dictionary of values to inject.
+   * @return {string}
+   * @ignore
+   * @access protected
+   */
+  _processHTML(template, values) {
+    const {
+      replacePlaceholder,
+      valuesExpression,
+      variable,
+    } = this.options;
+    const htmlObject = JSON.stringify(values);
+    let code = template
+    .replace(
+      replacePlaceholder,
+      `window.${variable} = ${htmlObject}`
+    );
+    const matches = [];
+    let match = valuesExpression.exec(code);
+    while (match) {
+      const [string, value] = match;
+      matches.push({
+        string,
+        value,
+      });
+
+      match = valuesExpression.exec(code);
+    }
+
+    matches.forEach((info) => {
+      code = code.replace(info.string, this._getFromValues(values, info.value));
+    });
+
+    return code;
+  }
+  /**
+   * Get a value from an object dictionary using a string _"object path"_ (`prop.sub.otherProp`).
+   * If the property doesn't exist or the path is invalid, it will return `null`.
+   * @param {Object} values    The dictionary from where the value will be read.
+   * @param {string} valuePath The path to the value.
+   * @return {*}
+   * @ignore
+   * @access protected
+   */
+  _getFromValues(values, valuePath) {
+    const pathParts = valuePath.split('.');
+    const first = pathParts.shift();
+    let currentElement = values[first];
+    if (typeof currentElement === 'undefined') {
+      currentElement = null;
+    } else if (pathParts.length) {
+      pathParts.some((currentPart) => {
+        currentElement = currentElement[currentPart];
+        let shouldBreak = false;
+        if (typeof currentElement === 'undefined') {
+          currentElement = null;
+          shouldBreak = true;
+        }
+
+        return shouldBreak;
+      });
+    }
+
+    return currentElement;
   }
 }
 /**
