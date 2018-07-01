@@ -569,7 +569,7 @@
     "name": "src/app/index.js",
     "content": "const Jimple = require('jimple');\nconst extend = require('extend');\nconst express = require('express');\nconst bodyParser = require('body-parser');\nconst compression = require('compression');\nconst multer = require('multer');\n\nconst {\n  appConfiguration,\n  appLogger,\n  environmentUtils,\n  packageInfo,\n  pathUtils,\n  rootRequire,\n} = require('wootils/node/providers');\nconst { EventsHub } = require('wootils/shared');\n\nconst apiServices = require('../services/api');\nconst commonServices = require('../services/common');\nconst httpServices = require('../services/http');\n/**\n * Jimpex is a mix of Jimple, a Javascript port of Pimple dependency injection container, and\n * Express, one of the most popular web frameworks for Node.\n * @extends {Jimple}\n * @interface\n * @todo Implement `helmet`\n */\nclass Jimpex extends Jimple {\n  /**\n   * Class constructor.\n   * @param {Boolean}        [boot=true]  If `true`, after initializing the server, it will\n   *                                      immediately call the `boot` method. This can be used on\n   *                                      a development environment where you would want to\n   *                                      register development services/middlewares/controllers\n   *                                      before the app starts.\n   * @param {JimpexOptions}  [options={}] Preferences to customize the app.\n   * @throws {TypeError} If instantiated directly.\n   */\n  constructor(boot = true, options = {}) {\n    if (new.target === Jimpex) {\n      throw new TypeError(\n        'Jimpex is an abstract class, it can\\'t be instantiated directly'\n      );\n    }\n\n    super();\n    /**\n     * The app options.\n     * @type {JimpexOptions}\n     */\n    this.options = extend(true, {\n      version: '0.0.0',\n      filesizeLimit: '15MB',\n      configuration: {\n        default: null,\n        name: 'app',\n        path: 'config/',\n        hasFolder: true,\n        environmentVariable: 'CONFIG',\n        loadFromEnvironment: true,\n        loadVersionFromConfiguration: true,\n        filenameFormat: '[app-name].[configuration-name].config.js',\n      },\n      statics: {\n        enabled: true,\n        onHome: false,\n        route: 'statics',\n        folder: '',\n      },\n      express: {\n        trustProxy: true,\n        disableXPoweredBy: true,\n        compression: true,\n        bodyParser: true,\n        multer: true,\n      },\n      defaultServices: {\n        api: true,\n        common: true,\n        http: true,\n      },\n    }, options);\n    /**\n     * The Express app.\n     * @type {Express}\n     */\n    this.express = express();\n    /**\n     * When the app starts, this will be running instance.\n     * @type {Object}\n     */\n    this.instance = null;\n    /**\n     * A list of functions that return controllers and middlewares. When the app starts, the\n     * queue will be processed and those controllers and middlewares added to the app.\n     * The reason they are not added directly like with a regular Express implementation is that\n     * services on Jimple use lazy loading, and adding middlewares and controllers as they come\n     * could cause errors if they depend on services that are not yet registered.\n     * @type {Array}\n     */\n    this.mountQueue = [];\n\n    this._setupCoreServices();\n    this._setupExpress();\n    this._setupDefaultServices();\n    this._setupConfiguration();\n\n    if (boot) {\n      this.boot();\n    }\n  }\n  /**\n   * This is where the app would register all its specific services, middlewares and controllers.\n   * @throws {Error} if not overwritten.\n   * @abstract\n   */\n  boot() {\n    throw new Error('This method must to be overwritten');\n  }\n  /**\n   * Mount a controller on a route point.\n   * @param {string}     point      The route for the controller.\n   * @param {Controller} controller The route controller.\n   */\n  mount(point, controller) {\n    this.mountQueue.push(\n      (server) => controller.connect(this, point).forEach(\n        (route) => server.use(point, route)\n      )\n    );\n  }\n  /**\n   * Add a middleware.\n   * @param {Middleware} middleware [description]\n   */\n  use(middleware) {\n    this.mountQueue.push((server) => {\n      const middlewareHandler = middleware.connect(this);\n      if (middlewareHandler) {\n        server.use(middlewareHandler);\n      }\n    });\n  }\n  /**\n   * Start the app server.\n   * @param {function(config:AppConfiguration)} [fn] A callback function to be called when the\n   *                                                 server starts.\n   * @return {Object} The server instance\n   */\n  start(fn = () => {}) {\n    const config = this.get('appConfiguration');\n    const port = config.get('port');\n    this.emitEvent('before-start');\n    this.instance = this.express.listen(port, () => {\n      this.emitEvent('start');\n      this._mountResources();\n      this.get('appLogger').success(`Starting on port ${port}`);\n      this.emitEvent('after-start');\n      const result = fn(config);\n      this.emitEvent('after-start-callback');\n      return result;\n    });\n\n    return this.instance;\n  }\n  /**\n   * Emit an app event with a reference to this class instance.\n   * @param {string} name The name of the event.\n   */\n  emitEvent(name) {\n    this.get('events').emit(name, this);\n  }\n  /**\n   * Disable the server TLS validation.\n   */\n  disableTLSValidation() {\n    // eslint-disable-next-line no-process-env\n    process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';\n    this.get('appLogger').warning('TLS validation has been disabled');\n  }\n  /**\n   * Stops the server instance.\n   */\n  stop() {\n    if (this.instance) {\n      this.emitEvent('before-stop');\n      this.instance.close();\n      this.instance = null;\n      this.emitEvent('after-stop');\n    }\n  }\n  /**\n   * Register the _'core services'_.\n   * @ignore\n   * @access protected\n   */\n  _setupCoreServices() {\n    // The logger service.\n    this.register(appLogger);\n    // The service that reads the environment variables.\n    this.register(environmentUtils);\n    // The app `package.json` information.\n    this.register(packageInfo);\n    // The service to build paths relative to the project root directory.\n    this.register(pathUtils);\n    // The service to make `require`s relatives to the project root directory.\n    this.register(rootRequire);\n  }\n  /**\n   * Create and configure the Express instance.\n   * @ignore\n   * @access protected\n   */\n  _setupExpress() {\n    const {\n      statics,\n      filesizeLimit,\n      express: expressOptions,\n    } = this.options;\n    if (expressOptions.trustProxy) {\n      this.express.enable('trust proxy');\n    }\n\n    if (expressOptions.disableXPoweredBy) {\n      this.express.disable('x-powered-by');\n    }\n\n    if (expressOptions.compression) {\n      this.express.use(compression());\n    }\n\n    if (statics.enabled) {\n      const { onHome, route, folder } = statics;\n      const joinFrom = onHome ? 'home' : 'app';\n      const staticsRoute = route.startsWith('/') ? route.substr(1) : route;\n      const staticsFolderPath = this.get('pathUtils').joinFrom(joinFrom, folder || staticsRoute);\n      this.express.use(`/${staticsRoute}`, express.static(staticsFolderPath));\n    }\n\n    if (expressOptions.bodyParser) {\n      this.express.use(bodyParser.json({\n        limit: filesizeLimit,\n      }));\n      this.express.use(bodyParser.urlencoded({\n        extended: true,\n        limit: filesizeLimit,\n      }));\n    }\n\n    if (expressOptions.multer) {\n      this.express.use(multer().any());\n    }\n\n    this.set('router', this.factory(() => express.Router()));\n  }\n  /**\n   * Based on the constructor received options, register or not the default services.\n   * @ignore\n   * @access protected\n   */\n  _setupDefaultServices() {\n    const { defaultServices } = this.options;\n\n    if (defaultServices.api) {\n      this.register(apiServices.all);\n    }\n\n    if (defaultServices.common) {\n      this.register(commonServices.all);\n    }\n\n    if (defaultServices.http) {\n      this.register(httpServices.all);\n    }\n\n    this.set('events', () => new EventsHub());\n  }\n  /**\n   * Create the configuration service.\n   * @ignore\n   * @access protected\n   */\n  _setupConfiguration() {\n    const { version, configuration: options } = this.options;\n    const {\n      name,\n      environmentVariable,\n      loadVersionFromConfiguration,\n    } = options;\n    let configsPath = options.path;\n    if (options.hasFolder) {\n      configsPath += `${options.name}/`;\n    }\n    const filenameFormat = options.filenameFormat\n    .replace(/\\[app-name\\]/ig, name)\n    .replace(/\\[configuration-name\\]/ig, '[name]');\n\n    let defaultConfig = {};\n    if (options.default) {\n      defaultConfig = options.default;\n    } else {\n      const defaultConfigPath = `${configsPath}${options.name}.config.js`;\n      defaultConfig = this.get('rootRequire')(defaultConfigPath);\n    }\n\n    if (!loadVersionFromConfiguration) {\n      defaultConfig = Object.assign({ version }, defaultConfig);\n    }\n\n    this.register(appConfiguration(\n      name,\n      defaultConfig,\n      {\n        environmentVariable,\n        path: configsPath,\n        filenameFormat,\n      }\n    ));\n\n    if (options.loadFromEnvironment) {\n      this.get('appConfiguration').loadFromEnvironment();\n    }\n\n    if (loadVersionFromConfiguration) {\n      this.options.version = this.get('appConfiguration').get('version');\n    }\n  }\n  /**\n   * Process and mount all the resources on the `mountQueue`.\n   * @ignore\n   * @access protected\n   */\n  _mountResources() {\n    this.mountQueue.forEach((mountFn) => mountFn(this.express));\n    this.mountQueue.length = 0;\n  }\n}\n\nmodule.exports = Jimpex;\n",
     "static": true,
-    "longname": "/Users/homer0/CODE/Node/jimpex/src/app/index.js",
+    "longname": "/Users/homer0/CODE/node/jimpex/src/app/index.js",
     "access": "public",
     "description": null,
     "lineNumber": 1
@@ -979,7 +979,7 @@
     "name": "src/app/typedef.js",
     "content": "/**\n * @external {Jimple} https://yarnpkg.com/en/package/jimple\n */\n\n/**\n * @typedef {Object} JimpexConfigurationOptions\n * @property {Object}  [default=null]                      The app default configuration.\n * @property {string}  [name='app']                        The name of the app, used for the\n *                                                         configuration files.\n * @property {string}  [path='config/']                    The path to the configuration files\n *                                                         directory, relative to the project root\n *                                                         directory.\n * @property {boolean} [hasFolder=true]                    Whether the configurations are inside a\n *                                                         sub directory or not. If `true`, a\n *                                                         configuration path would be\n *                                                         `config/[app-name]/[file]`.\n * @property {string}  [environmentVariable='CONFIG']      The name of the environment variable\n *                                                         that will be used to set the active\n *                                                         configuration.\n * @property {boolean} [loadFromEnvironment=true]          Whether or not to check for the\n *                                                         environment variable and load a\n *                                                         configuration based on its value.\n * @property {boolean} [loadVersionFromConfiguration=true] If `true`, the app `version` will be\n *                                                         taken from the loaded configuration,\n *                                                         otherwise, when a configuration is\n *                                                         loaded, the app will copy the version it\n *                                                         has into the configuration.\n * @property {string} [filenameFormat='[app-name].[configuration-name].config.js'] The name format\n *                                                                                 the configuration\n *                                                                                 files have.\n */\n\n/**\n * @typedef {Object} JimpexStaticsOptions\n * @property {boolean} [enabled=true]    Whether or not to include the middleware for static files.\n * @property {boolean} [onHome=false]    If `true`, the path to the statics folder will be relative\n *                                       to the project root directory, otherwise, it will be\n *                                       relative to the directory where the app executable file is\n *                                       located.\n * @property {string}  [route='static']  The name of both the route and the folder, relative to\n *                                       whatever you defined with the `onHome` option.\n * @property {string}  [folder='']       By default, the folder will be the same as the `route`,\n *                                       but you can use this option to define a relative path that\n *                                       won't affect the route.\n */\n\n/**\n * @typedef {Object} JimpexExpressOptions\n * @property {boolean} [trustProxy=true]        Whether or not to enable the `trust proxy` option.\n * @property {boolean} [disableXPoweredBy=true] Whether or not to remove the `x-powered-by` header.\n * @property {boolean} [compression=true]       Whether or not to add the `compression` middleware.\n * @property {boolean} [bodyParser=true]        Whether or not to add the `body-parser` middleware.\n * @property {boolean} [multer=true]            Whether or not to add the `multer` middleware.\n */\n\n/**\n * @typedef {Object} JimpexDefaultServicesOptions\n * @property {boolean} [common=true] Whether or not to register all the `common` service providers.\n * @property {boolean} [http=true]   Whether or not to register all the `http` service providers.\n * @property {boolean} [api=true]    Whether or not to register all the `api` service providers.\n */\n\n/**\n * @typedef {Object} JimpexOptions\n * @property {string}                       [version='0.0.0']      The app version. To be used on\n *                                                                 the configuration.\n * @property {JimpexConfigurationOptions}   [configuration]        The options for the app\n *                                                                 configuration service.\n * @property {JimpexStaticsOptions}         [statics]              The options for the app static\n *                                                                 `middleware`.\n * @property {string}                       [filesizeLimit='15MB'] The size limit for the requests\n *                                                                 payload.\n * @property {JimpexExpressOptions}         [express]              The options for the Express app.\n * @property {JimpexDefaultServicesOptions} [defaultServices]      To tell the app which services\n *                                                                 should be registered when\n *                                                                 instantiated.\n */\n",
     "static": true,
-    "longname": "/Users/homer0/CODE/Node/jimpex/src/app/typedef.js",
+    "longname": "/Users/homer0/CODE/node/jimpex/src/app/typedef.js",
     "access": "public",
     "description": null,
     "lineNumber": 1
@@ -1400,7 +1400,7 @@
     "name": "src/controllers/api/index.js",
     "content": "const { versionValidatorController } = require('./versionValidator');\n\nmodule.exports = {\n  versionValidatorController,\n};\n",
     "static": true,
-    "longname": "/Users/homer0/CODE/Node/jimpex/src/controllers/api/index.js",
+    "longname": "/Users/homer0/CODE/node/jimpex/src/controllers/api/index.js",
     "access": "public",
     "description": null,
     "lineNumber": 1
@@ -1411,7 +1411,7 @@
     "name": "src/controllers/api/versionValidator.js",
     "content": "const { controller } = require('../../utils/wrappers');\n/**\n * Provides the handler to validate versions on the app routes.\n * The reason this controller exists instead of just using the `versionValidator` middlware is\n * because as a controller, it can mounted on an specific route, otherwise it would have to be\n * implemented on EVERY sub route.\n */\nclass VersionValidatorController {\n  /**\n   * Class constructor.\n   * @param {ExpressMiddleware} versionValidator The validation middleware.\n   */\n  constructor(versionValidator) {\n    /**\n     * A local reference for the `versionValidator` middleware.\n     * @type {ExpressMiddleware}\n     */\n    this.versionValidator = versionValidator;\n  }\n  /**\n   * It just returns the validation middleware.\n   * @return {ExpressMiddleware}\n   */\n  validate() {\n    return this.versionValidator;\n  }\n}\n/**\n * This controller registers implements the `versionValidator` middlware on all the sub routes of\n * the mount point. This way the first path component of all the routes on the mount point should\n * match with the app current version.\n * @type {Controller}\n */\nconst versionValidatorController = controller((app) => {\n  const router = app.get('router');\n  const ctrl = new VersionValidatorController(\n    app.get('versionValidator')\n  );\n\n  return [\n    router.all('/:version/*', ctrl.validate()),\n  ];\n});\n\nmodule.exports = {\n  VersionValidatorController,\n  versionValidatorController,\n};\n",
     "static": true,
-    "longname": "/Users/homer0/CODE/Node/jimpex/src/controllers/api/versionValidator.js",
+    "longname": "/Users/homer0/CODE/node/jimpex/src/controllers/api/versionValidator.js",
     "access": "public",
     "description": null,
     "lineNumber": 1
@@ -1525,7 +1525,7 @@
     "name": "src/controllers/common/configuration.js",
     "content": "const { controller } = require('../../utils/wrappers');\n/**\n * Provides the handlers and middlwares to show and switch configurations.\n */\nclass ConfigurationController {\n  /**\n   * Class constructor.\n   * @param {AppConfiguration} appConfiguration To read the app configuration.\n   * @param {ResponsesBuilder} responsesBuilder To generate the JSON responses.\n   */\n  constructor(appConfiguration, responsesBuilder) {\n    /**\n     * A local reference for the `appConfiguration` service.\n     * @type {AppConfiguration}\n     */\n    this.appConfiguration = appConfiguration;\n    /**\n     * A local reference for the `responsesBuilder` service.\n     * @type {ResponsesBuilder}\n     */\n    this.responsesBuilder = responsesBuilder;\n  }\n  /**\n   * Send a response with the current app configuration as a body.\n   * @param {ExpressResponse} res The server response.\n   */\n  getConfigurationResponse(res) {\n    const name = this.appConfiguration.get('name');\n    const data = Object.assign({ name }, this.appConfiguration.getConfig());\n    return this.responsesBuilder.json(res, data);\n  }\n  /**\n   * Returns the middleware to show the current configuration.\n   * @return {ExpressMiddleware}\n   */\n  showConfiguration() {\n    return (req, res) => {\n      this.getConfigurationResponse(res);\n    };\n  }\n  /**\n   * Returns the middleware to switch the current configuration.\n   * @return {ExpressMiddleware}\n   */\n  switchConfiguration() {\n    return (req, res, next) => {\n      if (this.appConfiguration.canSwitch()) {\n        try {\n          this.appConfiguration.switch(req.params.name);\n          this.getConfigurationResponse(res);\n        } catch (error) {\n          next(error);\n        }\n      } else {\n        next();\n      }\n    };\n  }\n}\n/**\n * This controller is kind of special as it will only mount the routes if the\n * `debug.configurationController` setting of the app configuration is `true`.\n * It provides routes for:\n * - Showing the current configuration.\n * - Switching the configuration, but only if the service allows it.\n * @type {Controller}\n */\nconst configurationController = controller((app) => {\n  const routes = [];\n  const appConfiguration = app.get('appConfiguration');\n  const debugging = appConfiguration.get('debug');\n  if (debugging && debugging.configurationController === true) {\n    const router = app.get('router');\n    const ctrl = new ConfigurationController(\n      appConfiguration,\n      app.get('responsesBuilder')\n    );\n    routes.push(...[\n      router.get('/', ctrl.showConfiguration()),\n      router.get('/switch/:name', ctrl.switchConfiguration()),\n    ]);\n  }\n\n  return routes;\n});\n\nmodule.exports = {\n  ConfigurationController,\n  configurationController,\n};\n",
     "static": true,
-    "longname": "/Users/homer0/CODE/Node/jimpex/src/controllers/common/configuration.js",
+    "longname": "/Users/homer0/CODE/node/jimpex/src/controllers/common/configuration.js",
     "access": "public",
     "description": null,
     "lineNumber": 1
@@ -1720,7 +1720,7 @@
     "name": "src/controllers/common/health.js",
     "content": "const statuses = require('statuses');\nconst { controller } = require('../../utils/wrappers');\n/**\n * Provides the handler to show a some minimal health information about the app:\n * - app version.\n * - configuration name.\n */\nclass HealthController {\n  /**\n   * Class constructor.\n   * @param {AppConfiguration} appConfiguration To read the app version and the configuration name.\n   * @param {ResponsesBuilder} responsesBuilder To generate the JSON response.\n   */\n  constructor(appConfiguration, responsesBuilder) {\n    /**\n     * A local reference for the `appConfiguration` service.\n     * @type {AppConfiguration}\n     */\n    this.appConfiguration = appConfiguration;\n    /**\n     * A local reference for the `responsesBuilder` service.\n     * @type {ResponsesBuilder}\n     */\n    this.responsesBuilder = responsesBuilder;\n  }\n  /**\n   * Returns the middleware that shows the health information.\n   * @return {ExpressMiddleware}\n   */\n  health() {\n    return (req, res) => {\n      const {\n        name: configuration,\n        version,\n      } = this.appConfiguration.get(['name', 'version']);\n      this.responsesBuilder.json(res, {\n        isHealthy: true,\n        status: statuses.ok,\n        configuration,\n        version,\n      });\n    };\n  }\n}\n/**\n * Mounts the health route.\n * @type {Controller}\n */\nconst healthController = controller((app) => {\n  const router = app.get('router');\n  const ctrl = new HealthController(\n    app.get('appConfiguration'),\n    app.get('responsesBuilder')\n  );\n\n  return [\n    router.get('/', ctrl.health()),\n  ];\n});\n\nmodule.exports = {\n  HealthController,\n  healthController,\n};\n",
     "static": true,
-    "longname": "/Users/homer0/CODE/Node/jimpex/src/controllers/common/health.js",
+    "longname": "/Users/homer0/CODE/node/jimpex/src/controllers/common/health.js",
     "access": "public",
     "description": null,
     "lineNumber": 1
@@ -1863,7 +1863,7 @@
     "name": "src/controllers/common/index.js",
     "content": "const { configurationController } = require('./configuration');\nconst { healthController } = require('./health');\nconst {\n  rootStaticsController,\n  rootStaticsControllerCustom,\n} = require('./rootStatics');\n\nmodule.exports = {\n  configurationController,\n  healthController,\n  rootStaticsController,\n  rootStaticsControllerCustom,\n};\n",
     "static": true,
-    "longname": "/Users/homer0/CODE/Node/jimpex/src/controllers/common/index.js",
+    "longname": "/Users/homer0/CODE/node/jimpex/src/controllers/common/index.js",
     "access": "public",
     "description": null,
     "lineNumber": 1
@@ -1874,7 +1874,7 @@
     "name": "src/controllers/common/rootStatics.js",
     "content": "const extend = require('extend');\nconst mime = require('mime');\nconst { controller } = require('../../utils/wrappers');\n/**\n * Since the static files are inside a folder and we can't have the the `static` middleware pointing\n * to the app root directory, this service allows you to serve static files that are on the root\n * directory.\n */\nclass RootStaticsController {\n  /**\n   * Class constructor.\n   * @param {SendFile} sendFile                             To be able to send the files as\n   *                                                        responses.\n   * @param {Array}   [files=['index.html', 'favicon.ico']] The list of files to serve. Each item\n   *                                                        can be a `string` or an `Object` with\n   *                                                        the keys `origin` for the file route,\n   *                                                        `output` for the file location\n   *                                                        relative to the root, and `headers`\n   *                                                        with the file custom headers for the\n   *                                                        response.\n   */\n  constructor(sendFile, files = ['index.html', 'favicon.ico']) {\n    /**\n     * A local reference for the `sendFile` service.\n     * @type {SendFile}\n     */\n    this.sendFile = sendFile;\n    /**\n    * A dictionary with the file names as keys and information about the files as values.\n    * @type {Object}\n    */\n    this.files = this._parseFiles(files);\n  }\n  /**\n   * Gets the list of files the service will serve.\n   * @return {Array}\n   */\n  getFileEntries() {\n    return Object.keys(this.files);\n  }\n  /**\n   * Generates a middleware to serve an specific file.\n   * @param {string} file The name of the file.\n   * @return {ExpressMiddleware}\n   * @throws {Error} If the file wasn't sent on the constructor.\n   */\n  serveFile(file) {\n    if (!this.files[file]) {\n      throw new Error(`The required static file doesn't exist (${file})`);\n    }\n\n    return (req, res, next) => {\n      const item = this.files[file];\n      const extension = item.output.split('.').pop().toLowerCase();\n      const baseHeaders = { 'Content-Type': mime.getType(extension) };\n      const headers = extend(true, baseHeaders, item.headers);\n\n      Object.keys(headers).forEach((headerName) => {\n        res.setHeader(headerName, headers[headerName]);\n      });\n\n      this.sendFile(res, item.output, next);\n    };\n  }\n  /**\n   * Parses and format the list of received files into a dictionary with the names of the files as\n   * keys and the information about them as values.\n   * @param {Array} files The list of files. Each item can be a `string` or an `Object` with the\n   *                      keys `origin` for the file route, `output` for the file location relative\n   *                      to the root, and `headers` with the file custom headers for the response.\n   * @return {Object}\n   */\n  _parseFiles(files) {\n    const formattedFiles = {};\n    files.forEach((file) => {\n      const item = {\n        origin: '',\n        output: '',\n        headers: {},\n      };\n\n      if (typeof file === 'object') {\n        item.origin = file.origin;\n        item.output = file.output;\n        item.headers = file.headers || {};\n      } else {\n        item.origin = file;\n        item.output = file;\n      }\n\n      formattedFiles[item.origin] = item;\n    });\n\n    return formattedFiles;\n  }\n}\n/**\n * Generates a controller with an already defined list of files.\n * The controller will get all the files, add route for each one of them and include a middleware\n * provided by the `RootStaticsController` in order to serve them.\n * @param {Array} files The list of files. Each item can be a `string` or an `Object` with the\n *                      keys `origin` for the file route, `output` for the file location relative\n *                      to the root, and `headers` with the file custom headers for the response.\n * @return {Controller}\n */\nconst rootStaticsControllerCustom = (files) => controller((app) => {\n  const router = app.get('router');\n  const ctrl = new RootStaticsController(app.get('sendFile'), files);\n  return ctrl.getFileEntries()\n  .map((file) => router.all(`/${file}`, ctrl.serveFile(file)));\n});\n/**\n * Mount a controller to serve an `index.html` and `favicon.ico` files from the root directory.\n * @type {Controller}\n */\nconst rootStaticsController = rootStaticsControllerCustom();\n\nmodule.exports = {\n  RootStaticsController,\n  rootStaticsController,\n  rootStaticsControllerCustom,\n};\n",
     "static": true,
-    "longname": "/Users/homer0/CODE/Node/jimpex/src/controllers/common/rootStatics.js",
+    "longname": "/Users/homer0/CODE/node/jimpex/src/controllers/common/rootStatics.js",
     "access": "public",
     "description": null,
     "lineNumber": 1
@@ -2129,7 +2129,7 @@
     "name": "src/controllers/index.js",
     "content": "const api = require('./api');\nconst common = require('./common');\n\nmodule.exports = {\n  api,\n  common,\n};\n",
     "static": true,
-    "longname": "/Users/homer0/CODE/Node/jimpex/src/controllers/index.js",
+    "longname": "/Users/homer0/CODE/node/jimpex/src/controllers/index.js",
     "access": "public",
     "description": null,
     "lineNumber": 1
@@ -2140,7 +2140,7 @@
     "name": "src/index.js",
     "content": "const Jimpex = require('./app');\nconst controllers = require('./controllers');\nconst middlewares = require('./middlewares');\nconst services = require('./services');\nconst {\n  provider,\n  controller,\n  middleware,\n} = require('./utils/wrappers');\n\nmodule.exports = {\n  Jimpex,\n  provider,\n  controllers,\n  middlewares,\n  services,\n  controller,\n  middleware,\n};\n",
     "static": true,
-    "longname": "/Users/homer0/CODE/Node/jimpex/src/index.js",
+    "longname": "/Users/homer0/CODE/node/jimpex/src/index.js",
     "access": "public",
     "description": null,
     "lineNumber": 1
@@ -2151,7 +2151,7 @@
     "name": "src/middlewares/common/errorHandler.js",
     "content": "const statuses = require('statuses');\nconst { middleware } = require('../../utils/wrappers');\n/**\n * Provides the middleware to handle error responses for the app.\n */\nclass ErrorHandler {\n  /**\n   * Class constructor.\n   * @param {Logger}           appLogger        To log the received errors.\n   * @param {ResponsesBuilder} responsesBuilder To generate the JSON response.\n   * @param {Boolean}          showErrors       If `false`, unknown errors will show a generic\n   *                                            message instead of real message. And if `true`, it\n   *                                            will not only show all kind of errors but it will\n   *                                            also show the error stack.\n   * @param {Class}            AppError         To validate if the received errors are known or not.\n   */\n  constructor(appLogger, responsesBuilder, showErrors, AppError) {\n    /**\n     * A local reference for the `appLogger` service.\n     * @type {Logger}\n     */\n    this.appLogger = appLogger;\n    /**\n     * A local reference for the `responsesBuilder` service.\n     * @type {ResponsesBuilder}\n     */\n    this.responsesBuilder = responsesBuilder;\n    /**\n     * Whether or not to show unknown errors real messages.\n     * @type {Boolean}\n     */\n    this.showErrors = showErrors;\n    /**\n     * A local reference for the class the app uses to generate errors.\n     * @type {Class}\n     */\n    this.AppError = AppError;\n  }\n  /**\n   * Returns the Express middleware that shows the errors.\n   * @return {ExpressMiddleware}\n   */\n  middleware() {\n    return (err, req, res, next) => {\n      // If the middleware received an error...\n      if (err) {\n        // Define the error response basic template.\n        let data = {\n          error: true,\n          message: 'Oops! Something went wrong, please try again',\n        };\n        // Define the error response default status.\n        let status = statuses['Internal Server Error'];\n        // Validate if the error is known or not.\n        const knownError = err instanceof this.AppError;\n        // If the `showErrors` flag is enabled or the error is a known error...\n        if (this.showErrors || knownError) {\n          // ...set the error real message on the response.\n          data.message = err.message;\n          // If the error type is known...\n          if (knownError) {\n            // Try to get any extra information that should be included on the response.\n            if (err.extras && err.extras.response) {\n              data = Object.assign(data, err.extras.response);\n            }\n            // Try to obtain the response status from the error\n            status = (err.extras && err.extras.status) || statuses['Bad Request'];\n          }\n          // If the `showErrors` flag is enabled...\n          if (this.showErrors) {\n            // Get the error stack and format it into an `Array`.\n            const stack = err.stack.split('\\n').map((line) => line.trim());\n            //  Add the stack to the response.\n            data.stack = stack;\n            // Remove the first item of the stack, since it's the same as the message.\n            stack.splice(0, 1);\n            // Log the error.\n            this.appLogger.error(`ERROR: ${err.message}`);\n            this.appLogger.info(stack);\n          }\n        }\n        // Send the response.\n        this.responsesBuilder.json(res, data, status);\n      } else {\n        // ...otherwise, move to the next middleware.\n        next();\n      }\n    };\n  }\n}\n/**\n * This middleware generates responses for unhandled errors generated by the app.\n * @type {Middleware}\n */\nconst errorHandler = middleware((app) => {\n  const debugging = app.get('appConfiguration').get('debug');\n  const showErrors = debugging && debugging.showErrors;\n  return new ErrorHandler(\n    app.get('appLogger'),\n    app.get('responsesBuilder'),\n    showErrors,\n    app.get('appError')\n  )\n  .middleware();\n});\n\nmodule.exports = {\n  ErrorHandler,\n  errorHandler,\n};\n",
     "static": true,
-    "longname": "/Users/homer0/CODE/Node/jimpex/src/middlewares/common/errorHandler.js",
+    "longname": "/Users/homer0/CODE/node/jimpex/src/middlewares/common/errorHandler.js",
     "access": "public",
     "description": null,
     "lineNumber": 1
@@ -2352,7 +2352,7 @@
     "name": "src/middlewares/common/forceHTTPS.js",
     "content": "const { middleware } = require('../../utils/wrappers');\n/**\n * Force all the app traffice to be through HTTPS.\n */\nclass ForceHTTPS {\n  /**\n   * Class constructor.\n   * @param {Array} [ignoredRoutes=[/^\\/service\\//]] A list of regular expressions to match routes\n   *                                                 that should be ignored.\n   */\n  constructor(ignoredRoutes = [/^\\/service\\//]) {\n    /**\n     * A list of regular expressions to match routes that should be ignored.\n     * @type {Array}\n     */\n    this.ignoredRoutes = ignoredRoutes;\n  }\n  /**\n   * Returns the Express middleware that forces the redirection to HTTPS.\n   * @return {ExpressMiddleware}\n   */\n  middleware() {\n    return (req, res, next) => {\n      if (\n        !req.secure &&\n        req.get('X-Forwarded-Proto') !== 'https' &&\n        !this.ignoredRoutes.some((expression) => expression.test(req.originalUrl))\n      ) {\n        const host = req.get('Host');\n        res.redirect(`https://${host}${req.url}`);\n      } else {\n        next();\n      }\n    };\n  }\n}\n/**\n * Generates a middleware with an already defined list of ignored routes expressions.\n * @param {Array} ignoredRoutes A list of regular expressions to match routes that should be\n *                              ignored.\n * @return {Middleware}\n */\nconst forceHTTPSCustom = (ignoredRoutes) =>\n  middleware((app) => (\n    app.get('appConfiguration').get('forceHTTPS') ?\n      new ForceHTTPS(ignoredRoutes).middleware() :\n      null\n  ));\n/**\n * A middleware to force HTTPS redirections to all the routes.\n * @type {Middleware}\n */\nconst forceHTTPS = forceHTTPSCustom();\n\nmodule.exports = {\n  ForceHTTPS,\n  forceHTTPS,\n  forceHTTPSCustom,\n};\n",
     "static": true,
-    "longname": "/Users/homer0/CODE/Node/jimpex/src/middlewares/common/forceHTTPS.js",
+    "longname": "/Users/homer0/CODE/node/jimpex/src/middlewares/common/forceHTTPS.js",
     "access": "public",
     "description": null,
     "lineNumber": 1
@@ -2504,7 +2504,7 @@
     "name": "src/middlewares/common/index.js",
     "content": "const { errorHandler } = require('./errorHandler');\nconst { forceHTTPS, forceHTTPSCustom } = require('./forceHTTPS');\n\nmodule.exports = {\n  errorHandler,\n  forceHTTPS,\n  forceHTTPSCustom,\n};\n",
     "static": true,
-    "longname": "/Users/homer0/CODE/Node/jimpex/src/middlewares/common/index.js",
+    "longname": "/Users/homer0/CODE/node/jimpex/src/middlewares/common/index.js",
     "access": "public",
     "description": null,
     "lineNumber": 1
@@ -2515,7 +2515,7 @@
     "name": "src/middlewares/html/fastHTML.js",
     "content": "const mime = require('mime');\nconst { middleware } = require('../../utils/wrappers');\n/**\n * It's common for an app to show an HTML view when no route was able to handle a request, so the\n * idea behind this middleware is to avoid going to every middleware and controller and just\n * specify that if the request is not for a route handled by a controller, just serve the HTML\n * and avoid processing unnecessary data.\n * A simple example: The app has a route `/backend` that the frontend uses to get information.\n * This middleware can be used to only allow the execution of middlewares and controllers when\n * the request route is for `/backend`, thus avoid extra processing.\n * Disclaimer: Managing statics files with Express is not a best practice, but there are scenarios\n * where there is not other choice.\n */\nclass FastHTML {\n  /**\n   * Class constructor.\n   * @param {SendFile}      sendFile                               Necessary to serve the HTML file.\n   * @param {string}        [file='index.html']                    The name of the file it will\n   *                                                               serve. If `htmlGenerator` is\n   *                                                               specified, this will be\n   *                                                               overwritten with the name of\n   *                                                               the file generated by that\n   *                                                               service.\n   * @param {Array}         [ignoredRoutes=[/^\\/api\\//, /\\.ico$/]] A list of regular expressions\n   *                                                               to match requests paths that\n   *                                                               should be ignored.\n   * @param {HTMLGenerator} [htmlGenerator=null]                   If used, the file to serve will\n   *                                                               be the one generated by that\n   *                                                               service.\n   */\n  constructor(\n    sendFile,\n    file = 'index.html',\n    ignoredRoutes = [/^\\/api\\//, /\\.ico$/],\n    htmlGenerator = null\n  ) {\n    /**\n     * A local reference for the `sendFile` service.\n     * @type {SendFile}\n     */\n    this.sendFile = sendFile;\n    /**\n     * The name of the file to serve.\n     * @type {string}\n     */\n    this.file = file;\n    /**\n     * A list of regular expressions to match requests paths that should be ignored.\n     * @type {Array}\n     */\n    this.ignoredRoutes = ignoredRoutes;\n    /**\n     * If specified, a reference for a service that generates HTML files.\n     * @type {HTMLGenerator}\n     */\n    this.htmlGenerator = htmlGenerator;\n    /**\n     * Whether or not the file is ready to be served.\n     * @type {Boolean}\n     * @ignore\n     * @access protected\n     */\n    this._ready = true;\n    // If an `HTMLGenerator` service was specified...\n    if (this.htmlGenerator) {\n      // ...get the name of the file from that service.\n      this.file = this.htmlGenerator.getFile();\n      /**\n       * Mark the `_ready` flag as `false` as this service needs to wait for the generator to\n       * create the file.\n       */\n      this._ready = false;\n    }\n  }\n  /**\n   * Returns the Express middleware that validates the routes and serves the HTML file if necessary.\n   * @return {ExpressMiddleware}\n   */\n  middleware() {\n    return (req, res, next) => {\n      // Validate if the route should be ignored.\n      const shouldIgnore = this.ignoredRoutes\n      .some((expression) => expression.test(req.originalUrl));\n      // If the route should be ignored...\n      if (shouldIgnore) {\n        // ...go to the next middleware.\n        next();\n      } else if (!this._ready) {\n        /**\n         * ...if `_ready` is `false`, it means that it's using the `HTMLGenerator` service, so it\n         * calls the method that will notify this service when the file has been created and is\n         * ready to be loaded.\n         */\n        this.htmlGenerator.whenReady()\n        .then(() => {\n          // The file is ready to use, so mark the `_ready` flag as `true`.\n          this._ready = true;\n          // Serve the file.\n          this._sendHTML(res, next);\n        })\n        .catch((error) => {\n          // Something happened while generating the file, send the error the next middlware.\n          next(error);\n        });\n      } else {\n        /**\n         * If `_ready` is `true` it means that the `HTMLGenerator` has already created the file on\n         * a previous request or it was never specified, so just serve the file.\n         */\n        this._sendHTML(res, next);\n      }\n    };\n  }\n  /**\n   * Serves the file on the response.\n   * @param {ExpressResponse} res  The server response.\n   * @param {ExpressNext}     next The functino to call the next middleware.\n   * @ignore\n   * @access protected\n   */\n  _sendHTML(res, next) {\n    res.setHeader('Content-Type', mime.getType('html'));\n    this.sendFile(res, this.file, next);\n  }\n}\n/**\n * Generates a middleware with customized options.\n * @param {string} [file]                                     The name of the file it will serve.\n *                                                            If the `HTMLGenerator` service\n *                                                            specified is avaialable, this will\n *                                                            be overwritten with the name of the\n *                                                            file generated by that service.\n * @param {Array}  [ignoredRoutes]                            A list of regular expressions to\n *                                                            match requests paths that should be\n *                                                            ignored.\n * @param {string} [htmlGeneratorServiceName='htmlGenerator'] The name of a `HTMLGenerator`\n *                                                            service. If the service is not\n *                                                            registered on the app, it won't throw\n *                                                            an error, but just send `null` to\n *                                                            the service constructor.\n * @return {Middleware}\n */\nconst fastHTMLCustom = (\n  file,\n  ignoredRoutes,\n  htmlGeneratorServiceName = 'htmlGenerator'\n) => middleware((app) => {\n  let htmlGenerator;\n  try {\n    htmlGenerator = app.get(htmlGeneratorServiceName);\n  } catch (ignore) {\n    htmlGenerator = null;\n  }\n\n  return new FastHTML(\n    app.get('sendFile'),\n    file,\n    ignoredRoutes,\n    htmlGenerator\n  ).middleware();\n});\n/**\n * A middleware for filtering routes and serve an HTML file when the requested route doesn't have\n * a controller to handle it.\n * @type {Middleware}\n */\nconst fastHTML = fastHTMLCustom();\n\nmodule.exports = {\n  FastHTML,\n  fastHTML,\n  fastHTMLCustom,\n};\n",
     "static": true,
-    "longname": "/Users/homer0/CODE/Node/jimpex/src/middlewares/html/fastHTML.js",
+    "longname": "/Users/homer0/CODE/node/jimpex/src/middlewares/html/fastHTML.js",
     "access": "public",
     "description": null,
     "lineNumber": 1
@@ -2837,7 +2837,7 @@
     "name": "src/middlewares/html/index.js",
     "content": "const { fastHTML, fastHTMLCustom } = require('./fastHTML');\nconst { showHTML, showHTMLCustom } = require('./showHTML');\n\nmodule.exports = {\n  fastHTML,\n  fastHTMLCustom,\n  showHTML,\n  showHTMLCustom,\n};\n",
     "static": true,
-    "longname": "/Users/homer0/CODE/Node/jimpex/src/middlewares/html/index.js",
+    "longname": "/Users/homer0/CODE/node/jimpex/src/middlewares/html/index.js",
     "access": "public",
     "description": null,
     "lineNumber": 1
@@ -2848,7 +2848,7 @@
     "name": "src/middlewares/html/showHTML.js",
     "content": "const mime = require('mime');\nconst { middleware } = require('../../utils/wrappers');\n/**\n * A very simple middleware service to send an HTML on a server response. The special _'feature'_ of\n * this service is that it can be hooked up to an `HTMLGenerator` service and it will automatically\n * server the file generated by it.\n */\nclass ShowHTML {\n  /**\n   * Class constructor.\n   * @param {SendFile}      sendFile             Necessary to server the HTML file.\n   * @param {string}        [file='index.html']  The name of the file it will serve. If\n   *                                             `htmlGenerator` is specified, this will be\n   *                                             overwritten with the name of the file generated by\n   *                                             that service.\n   * @param {HTMLGenerator} [htmlGenerator=null] If used, the file to server will be the one\n   *                                             generated by that service.\n   */\n  constructor(sendFile, file = 'index.html', htmlGenerator = null) {\n    /**\n     * A local reference for the `sendFile` service.\n     * @type {SendFile}\n     */\n    this.sendFile = sendFile;\n    /**\n     * The name of the file to serve.\n     * @type {string}\n     */\n    this.file = file;\n    /**\n     * If specified, a reference for a service that generates HTML files.\n     * @type {HTMLGenerator}\n     */\n    this.htmlGenerator = htmlGenerator;\n    /**\n     * Whether or not the file is ready to be served.\n     * @type {Boolean}\n     * @ignore\n     * @access protected\n     */\n    this._ready = true;\n    // If an `HTMLGenerator` service was specified...\n    if (this.htmlGenerator) {\n      // ...get the name of the file from that service.\n      this.file = this.htmlGenerator.getFile();\n      /**\n       * Mark the `_ready` flag as `false` as this service needs to wait for the generator to\n       * create the file.\n       */\n      this._ready = false;\n    }\n  }\n  /**\n   * Returns the Express middleware that serves the HTML file.\n   * @return {ExpressMiddleware}\n   */\n  middleware() {\n    return (req, res, next) => {\n      // If `_ready` is `false`\n      if (!this._ready) {\n        /**\n         * It means that it's using the `HTMLGenerator` service, so it\n         * calls the method that will notify this service when the file has been created and is\n         * ready to be loaded.\n         */\n        this.htmlGenerator.whenReady()\n        .then(() => {\n          // The file is ready to use, so mark the `_ready` flag as `true`.\n          this._ready = true;\n          // Serve the file.\n          this._sendHTML(res, next);\n        })\n        .catch((error) => {\n          // Something happened while generating the file, send the error the next middlware.\n          next(error);\n        });\n      } else {\n        /**\n         * If `_ready` is `true` it means that the `HTMLGenerator` has already created the file on\n         * a previous request or it was never specified, so just serve the file.\n         */\n        this._sendHTML(res, next);\n      }\n    };\n  }\n  /**\n   * Serves the file on the response.\n   * @param {ExpressResponse} res  The server response.\n   * @param {ExpressNext}     next The functino to call the next middleware.\n   * @ignore\n   * @access protected\n   */\n  _sendHTML(res, next) {\n    res.setHeader('Content-Type', mime.getType('html'));\n    return this.sendFile(res, this.file, next);\n  }\n}\n/**\n * Generates a middleware with customized options.\n * @param {string} [file]                                     The name of the file it will serve.\n *                                                            If the `HTMLGenerator` service\n *                                                            specified is avaialable, this will\n *                                                            be overwritten with the name of the\n *                                                            file generated by that service.\n * @param {string} [htmlGeneratorServiceName='htmlGenerator'] The name of a `HTMLGenerator`\n *                                                            service. If the service is not\n *                                                            registered on the app, it won't throw\n *                                                            an error, but just send `null` to\n *                                                            the service constructor.\n * @return {Middleware}\n */\nconst showHTMLCustom = (\n  file,\n  htmlGeneratorServiceName = 'htmlGenerator'\n) => middleware((app) => {\n  let htmlGenerator;\n  try {\n    htmlGenerator = app.get(htmlGeneratorServiceName);\n  } catch (ignore) {\n    htmlGenerator = null;\n  }\n\n  return new ShowHTML(\n    app.get('sendFile'),\n    file,\n    htmlGenerator\n  ).middleware();\n});\n/**\n * A middleware for showing an `index.html` file.\n * @type {Middleware}\n */\nconst showHTML = showHTMLCustom();\n\nmodule.exports = {\n  ShowHTML,\n  showHTML,\n  showHTMLCustom,\n};\n",
     "static": true,
-    "longname": "/Users/homer0/CODE/Node/jimpex/src/middlewares/html/showHTML.js",
+    "longname": "/Users/homer0/CODE/node/jimpex/src/middlewares/html/showHTML.js",
     "access": "public",
     "description": null,
     "lineNumber": 1
@@ -3133,7 +3133,7 @@
     "name": "src/middlewares/index.js",
     "content": "const common = require('./common');\nconst html = require('./html');\n\nmodule.exports = {\n  common,\n  html,\n};\n",
     "static": true,
-    "longname": "/Users/homer0/CODE/Node/jimpex/src/middlewares/index.js",
+    "longname": "/Users/homer0/CODE/node/jimpex/src/middlewares/index.js",
     "access": "public",
     "description": null,
     "lineNumber": 1
@@ -3144,7 +3144,7 @@
     "name": "src/services/api/client.js",
     "content": "const APIClientBase = require('wootils/shared/apiClient');\nconst { provider } = require('../../utils/wrappers');\n/**\n * An API client for the app to use. What makes this service special is that its that it formats\n * the received errors using the `AppError` service class and as fetch function it uses the\n * `http` service, allowing the app to to internally handle all the requests and responses.\n * @extends {APIClientBase}\n */\nclass APIClient extends APIClientBase {\n  /**\n   * Class constructor.\n   * @param {Object}             apiConfig           The configuration for the API the client will\n   *                                                 make requests to.\n   * @param {string}             apiConfig.url       The API entry point.\n   * @param {APIClientEndpoints} apiConfig.endpoints A dictionary of named endpoints relative to\n   *                                                 the API entry point.\n   * @param {HTTP}               http                To get the `fetch` function for this service\n   *                                                 to use on all the requests.\n   * @param {Class}              AppError            To format the received errors.\n   */\n  constructor(apiConfig, http, AppError) {\n    super(apiConfig.url, apiConfig.endpoints, http.fetch);\n    /**\n     * The configuration for the API the client will make requests to.\n     * @type {Object}\n     * @property {string} url       The API entry point.\n     * @property {Object} endpoints A dictionary of named endpoints relative to the API\n     *                              entry point.\n     */\n    this.apiConfig = apiConfig;\n    /**\n     * A local reference for the class the app uses to generate errors.\n     * @type {Class}\n     */\n    this.AppError = AppError;\n  }\n  /**\n   * Formats a response error with the App error class.\n   * @param {Object} response A received response from a request.\n   * @param {number} status   The HTTP status of the request.\n   * @return {Error}\n   */\n  error(response, status) {\n    return new this.AppError(response.data.message, { status });\n  }\n}\n/**\n * Generates a provider with customized options. This allows the app to have multiple clients for\n * different APIs.\n * @param {string} [name='apiClient']       The name of the service that will be registered into\n *                                          the app.\n * @param {string} [configurationKey='api'] The name of the app configuration setting that has the\n *                                          API information.\n * @param {Class}  [ClientClass=APIClient]  The Class the service will instantiate.\n * @return {Provider}\n */\nconst apiClientCustom = (\n  name = 'apiClient',\n  configurationKey = 'api',\n  ClientClass = APIClient\n) => provider((app) => {\n  app.set(name, () => new ClientClass(\n    app.get('appConfiguration').get(configurationKey),\n    app.get('http'),\n    app.get('appError')\n  ));\n});\n/**\n * The service provider that once registered on the app container will set an instance of\n * `APIClient` as the `apiClient` service.\n * @example\n * // Register it on the container\n * container.register(apiClient);\n * // Getting access to the service instance\n * const apiClient = container.get('apiClient');\n * @type {Provider}\n */\nconst apiClient = apiClientCustom();\n\nmodule.exports = {\n  APIClient,\n  apiClient,\n  apiClientCustom,\n};\n",
     "static": true,
-    "longname": "/Users/homer0/CODE/Node/jimpex/src/services/api/client.js",
+    "longname": "/Users/homer0/CODE/node/jimpex/src/services/api/client.js",
     "access": "public",
     "description": null,
     "lineNumber": 1
@@ -3428,7 +3428,7 @@
     "name": "src/services/api/ensureBearerAuthentication.js",
     "content": "const statuses = require('statuses');\nconst { provider } = require('../../utils/wrappers');\n/**\n * This service provides a middleware that verifies if a request has a `Authorization` header\n * with a bearer token.\n * If a request has a valid bearer token, the middleware will set it as the `bearerToken` property\n * of the current request object.\n */\nclass EnsureBearerAuthentication {\n  /**\n   * Class constructor.\n   * @param {Class} AppError To format the error caused when the request doesn't havve a valid\n   *                         token.\n   */\n  constructor(AppError) {\n    /**\n     * A local reference for the class the app uses to generate errors.\n     * @type {Class}\n     */\n    this.AppError = AppError;\n    /**\n     * The regular expression used to validate the token.\n     * @type {RegExp}\n     */\n    this.bearerRegex = /bearer .+$/i;\n  }\n  /**\n   * Returns the Express middleware that validates the `Authorization` header.\n   * @return {ExpressMiddleware}\n   * @todo Extract the token with the same RegExp used to validate.\n   */\n  middleware() {\n    return (req, res, next) => {\n      // Get the `Authorization` header.\n      const { headers: { authorization } } = req;\n      // If the header has content the RegExp says it's valid...\n      if (authorization && this.bearerRegex.test(authorization)) {\n        // ...Set the token as the `bearerToken` property of the current request.\n        req.bearerToken = authorization.trim().split(' ').pop();\n        // Move to the next middleware.\n        next();\n      } else {\n        // ...otherwise, send an unauthorized error to the next middleware.\n        next(new this.AppError('Unauthorized', {\n          status: statuses.Unauthorized,\n        }));\n      }\n    };\n  }\n}\n/**\n * The service provider that once registered on the app container will set the\n * `EnsureBearerAuthentication` middleware as the `ensureBearerAuthentication` service.\n * @example\n * // Register it on the container\n * container.register(ensureBearerAuthentication);\n * // Getting access to the middleware\n * const ensureBearerAuthentication = container.get('ensureBearerAuthentication');\n * @type {Provider}\n */\nconst ensureBearerAuthentication = provider((app) => {\n  app.set('ensureBearerAuthentication', () => new EnsureBearerAuthentication(\n    app.get('appError')\n  ).middleware());\n});\n\nmodule.exports = {\n  EnsureBearerAuthentication,\n  ensureBearerAuthentication,\n};\n",
     "static": true,
-    "longname": "/Users/homer0/CODE/Node/jimpex/src/services/api/ensureBearerAuthentication.js",
+    "longname": "/Users/homer0/CODE/node/jimpex/src/services/api/ensureBearerAuthentication.js",
     "access": "public",
     "description": null,
     "lineNumber": 1
@@ -3567,7 +3567,7 @@
     "name": "src/services/api/index.js",
     "content": "const { apiClient, apiClientCustom } = require('./client');\nconst { ensureBearerAuthentication } = require('./ensureBearerAuthentication');\nconst { versionValidator } = require('./versionValidator');\nconst { provider } = require('../../utils/wrappers');\n/**\n * A single service provider that once registered on the app container will take care of\n * registering the providers for the `apiClient`, 'ensureBearerAuthentication' and\n * `versionValidator` services.\n * @type {Provider}\n */\nconst all = provider((app) => {\n  app.register(apiClient);\n  app.register(ensureBearerAuthentication);\n  app.register(versionValidator);\n});\n\nmodule.exports = {\n  apiClient,\n  apiClientCustom,\n  ensureBearerAuthentication,\n  versionValidator,\n  all,\n};\n",
     "static": true,
-    "longname": "/Users/homer0/CODE/Node/jimpex/src/services/api/index.js",
+    "longname": "/Users/homer0/CODE/node/jimpex/src/services/api/index.js",
     "access": "public",
     "description": null,
     "lineNumber": 1
@@ -3600,7 +3600,7 @@
     "name": "src/services/api/versionValidator.js",
     "content": "const statuses = require('statuses');\nconst { provider } = require('../../utils/wrappers');\n/**\n * This service provides a middleware to validate a `version` parameter on a route request by\n * comparing it with the app version.\n * This can be used to prevent frontend applications running with a different version of a Jimpex\n * server.\n * If the request includes a query string parameter named `popup` with the value of `true`, instead\n * of sending an error to the next middleware, it will respond with an HTML post message saying\n * `api:conflict`.\n * @todo change the post message and make it configurable.\n */\nclass VersionValidator {\n  /**\n   * Class constructor.\n   * @param {AppConfiguration} appConfiguration To get the app version.\n   * @param {ResponsesBuilder} responsesBuilder To generate the responses in case the received\n   *                                            version is invalid.\n   * @param {Class}            AppError         To generate the error in case the received version\n   *                                            is invalid.\n   */\n  constructor(appConfiguration, responsesBuilder, AppError) {\n    /**\n     * A local reference for the `appConfiguration` service.\n     * @type {AppConfiguration}\n     */\n    this.appConfiguration = appConfiguration;\n    /**\n     * A local reference for the `responsesBuilder` service.\n     * @type {ResponsesBuilder}\n     */\n    this.responsesBuilder = responsesBuilder;\n    /**\n     * A local reference for the class the app uses to generate errors.\n     * @type {Class}\n     */\n    this.AppError = AppError;\n  }\n  /**\n   * Returns the Express middleware that validates the `version` parameter on a route.\n   * @return {ExpressMiddleware}\n   */\n  middleware() {\n    return (req, res, next) => {\n      // Get the `version` parameter from the request.\n      const reqVersion = req.params.version;\n      // Get the `popup` parameter query string.\n      const { popup } = req.query;\n      // Check whether the response should be on an HTML, for a popup, or not.\n      const isPopup = popup && popup === 'true';\n      // If the version matches the one on the configuration, or the value is `latest`...\n      if (\n        reqVersion === 'latest' ||\n        reqVersion === this.appConfiguration.get('version')\n      ) {\n        // ...move to the next middleware.\n        next();\n      } else if (isPopup) {\n        // ...if it doesn't match but it's a popup, then respond with a post message.\n        this.responsesBuilder.htmlPostMessage(\n          res,\n          'Conflict',\n          'api:conflict',\n          statuses.conflict\n        );\n      } else {\n        // ...and if it doesn't match but it's not a popup, send an error to the next middleware.\n        next(new this.AppError(\n          'The API version and the client version are different',\n          {\n            status: statuses.conflict,\n            response: {\n              api: true,\n            },\n          }\n        ));\n      }\n    };\n  }\n}\n/**\n * The service provider that once registered on the app container will set the\n * `VersionValidator` middleware as the `versionValidator` service.\n * @example\n * // Register it on the container\n * container.register(versionValidator);\n * // Getting access to the middleware\n * const versionValidator = container.get('versionValidator');\n * @type {Provider}\n */\nconst versionValidator = provider((app) => {\n  app.set('versionValidator', () => new VersionValidator(\n    app.get('appConfiguration'),\n    app.get('responsesBuilder'),\n    app.get('appError')\n  ).middleware());\n});\n\nmodule.exports = {\n  VersionValidator,\n  versionValidator,\n};\n",
     "static": true,
-    "longname": "/Users/homer0/CODE/Node/jimpex/src/services/api/versionValidator.js",
+    "longname": "/Users/homer0/CODE/node/jimpex/src/services/api/versionValidator.js",
     "access": "public",
     "description": null,
     "lineNumber": 1
@@ -3778,7 +3778,7 @@
     "name": "src/services/common/error.js",
     "content": "const { provider } = require('../../utils/wrappers');\n/**\n * A simple subclass of `Error` that supports extra properties.\n * @extends {Error}\n */\nclass AppError extends Error {\n  /**\n   * Class constructor.\n   * @param {string} message     The error message.\n   * @param {Object} [extras={}] Extra properties for the app. This can be used to send and HTTP\n   *                             status when the error is generated by a request, or any other\n   *                             context information the app can use.\n   */\n  constructor(message, extras = {}) {\n    super(message);\n    /**\n     * Overwrite the name of the `Error` with the one from the class.\n     * @ignore\n     */\n    this.name = this.constructor.name;\n    /**\n     * The extra properties sent on the constructor.\n     * @type {Object}\n     */\n    this.extras = extras;\n  }\n}\n/**\n * A service provider that instead of returning an instance of a service, returns the class itself.\n * Once registered, it will set `AppError` as a service with the same name.\n * @example\n * // Register it on the container\n * container.register(appError);\n * // Getting access to the class.\n * const AppError = container.get('AppError');\n * @type {Provider}\n */\nconst appError = provider((app) => {\n  app.set('appError', () => AppError);\n});\n\nmodule.exports = {\n  AppError,\n  appError,\n};\n",
     "static": true,
-    "longname": "/Users/homer0/CODE/Node/jimpex/src/services/common/error.js",
+    "longname": "/Users/homer0/CODE/node/jimpex/src/services/common/error.js",
     "access": "public",
     "description": null,
     "lineNumber": 1
@@ -3905,7 +3905,7 @@
     "name": "src/services/common/index.js",
     "content": "const { appError } = require('./error');\nconst { sendFileProvider } = require('./sendFile');\nconst { provider } = require('../../utils/wrappers');\n/**\n * A single service provider that once registered on the app container will take care of\n * registering the providers for the `appError` and `sendFileProvider` services.\n * @type {Provider}\n */\nconst all = provider((app) => {\n  app.register(appError);\n  app.register(sendFileProvider);\n});\n\nmodule.exports = {\n  appError,\n  sendFile: sendFileProvider,\n  all,\n};\n",
     "static": true,
-    "longname": "/Users/homer0/CODE/Node/jimpex/src/services/common/index.js",
+    "longname": "/Users/homer0/CODE/node/jimpex/src/services/common/index.js",
     "access": "public",
     "description": null,
     "lineNumber": 1
@@ -3938,7 +3938,7 @@
     "name": "src/services/common/sendFile.js",
     "content": "const { provider } = require('../../utils/wrappers');\n\n/**\n * @typedef {function} SendFile\n * @param {ExpressResponse} res          Necessary to write the file.\n * @param {String}          filepath     The path to the file relative to where the app executable\n *                                       is located.\n * @param {ExpressNext}     next         To call the send out the error if anything happens.\n * @param {String}          [from='app'] The location it uses to build the relative path. It can be\n *                                       `app` for the directory where the app executable is\n *                                       located, or `home` for the project root directory.\n */\n\n/**\n * Generates a function to send files with path relatives to the app executable file is located.\n * @example\n * // Let's say this is inside an Express middleware.\n * // Get the function\n * const send = sendFile(pathUtils);\n * send(res, 'some-file.html', next);\n * // If your app is on `/app/index.js`, this will send `/app/some-file.html`.\n *\n * @param  {PathUtils} pathUtils To generate the relative paths.\n * @return {SendFile}\n */\nconst sendFile = (pathUtils) => (res, filepath, next = () => {}, from = 'app') => {\n  res.sendFile(pathUtils.joinFrom(from, filepath), (error) => {\n    if (error) {\n      next(error);\n    } else {\n      res.end();\n    }\n  });\n};\n/**\n * The service provider that once registered on the app container will set the result of\n * `sendFile(pathUtils)` as the `sendFile` service.\n * @example\n * // Register it on the container\n * container.register(sendFileProvider);\n * // Getting access to the service instance\n * const sendFile = container.get('sendFile');\n * @type {Provider}\n */\nconst sendFileProvider = provider((app) => {\n  app.set('sendFile', () => sendFile(app.get('pathUtils')));\n});\n\nmodule.exports = {\n  sendFile,\n  sendFileProvider,\n};\n",
     "static": true,
-    "longname": "/Users/homer0/CODE/Node/jimpex/src/services/common/sendFile.js",
+    "longname": "/Users/homer0/CODE/node/jimpex/src/services/common/sendFile.js",
     "access": "public",
     "description": null,
     "lineNumber": 1
@@ -4074,7 +4074,7 @@
     "name": "src/services/frontend/frontendFs.js",
     "content": "const fs = require('fs-extra');\nconst { provider } = require('../../utils/wrappers');\n/**\n * This service allows the app to easily read static files. The idea behind centralizing this\n * functionalities into a service is that is pretty common to have bundling tools to generate the\n * frontend, and on that process files can have different paths or not even be generated all, that's\n * why this service exists. The service can be extended/overwritten to accommodate any\n * requirements and avoid having to update or add `if`s to every `fs` call the app does.\n * Another _'feature'_ of this service is that all the paths are relative to the directory where\n * the app executable is located, so you don't have to remember the relative path from the place\n * you are accessing a file to the place where it's located.\n */\nclass FrontendFs {\n  /**\n   * Class constructor.\n   * @param {PathUtils} pathUtils To generate the relative paths.\n   */\n  constructor(pathUtils) {\n    /**\n     * A local reference for the `pathUtils` service.\n     * @type {PathUtils}\n     */\n    this.pathUtils = pathUtils;\n  }\n  /**\n   * Read a file from the file system.\n   * @param {string} filepath           The path to the file.\n   * @param {string} [encoding='utf-8'] The text encoding in which the file should be read.\n   * @return {Promise<string,Error>}\n   */\n  read(filepath, encoding = 'utf-8') {\n    return fs.readFile(this.pathUtils.joinFrom('app', filepath), encoding);\n  }\n  /**\n   * Write a file on the file system.\n   * @param {string} filepath The path to the file.\n   * @param {string} data     The contents of the file.\n   * @return {Promise<undefined,Error>}\n   */\n  write(filepath, data) {\n    return fs.writeFile(this.pathUtils.joinFrom('app', filepath), data);\n  }\n  /**\n   * Delete a file from the file system.\n   * @param {string} filepath The path to the file.\n   * @return {Promise<undefined,Error>}\n   */\n  delete(filepath) {\n    return fs.unlink(this.pathUtils.joinFrom('app', filepath));\n  }\n}\n/**\n * The service provider that once registered on the app container will set an instance of\n * `FrontendFs` as the `frontendFs` service.\n * @example\n * // Register it on the container\n * container.register(frontendFs);\n * // Getting access to the service instance\n * const frontendFs = container.get('frontendFs');\n * @type {Provider}\n */\nconst frontendFs = provider((app) => {\n  app.set('frontendFs', () => new FrontendFs(app.get('pathUtils')));\n});\n\nmodule.exports = {\n  FrontendFs,\n  frontendFs,\n};\n",
     "static": true,
-    "longname": "/Users/homer0/CODE/Node/jimpex/src/services/frontend/frontendFs.js",
+    "longname": "/Users/homer0/CODE/node/jimpex/src/services/frontend/frontendFs.js",
     "access": "public",
     "description": null,
     "lineNumber": 1
@@ -4290,7 +4290,7 @@
     "name": "src/services/frontend/index.js",
     "content": "const { frontendFs } = require('./frontendFs');\n\nmodule.exports = {\n  frontendFs,\n};\n",
     "static": true,
-    "longname": "/Users/homer0/CODE/Node/jimpex/src/services/frontend/index.js",
+    "longname": "/Users/homer0/CODE/node/jimpex/src/services/frontend/index.js",
     "access": "public",
     "description": null,
     "lineNumber": 1
@@ -4299,9 +4299,9 @@
     "__docId__": 206,
     "kind": "file",
     "name": "src/services/html/htmlGenerator.js",
-    "content": "const extend = require('extend');\nconst { deferred } = require('wootils/shared');\nconst { provider } = require('../../utils/wrappers');\n/**\n * @typedef {Object} HTMLGeneratorOptions The options to customize the an `HTMLGenerator` service.\n * @property {string}  [template='index.tpl.html']                 The name of the file it should\n *                                                                 use as template.\n * @property {string}  [file='index.html']                         The name of the generated file.\n * @property {Boolean} [deleteTemplateAfter=true]                  Whether or not to delete the\n *                                                                 tempalte after generating the\n *                                                                 file.\n * @property {string}  [replacePlaceholder='{{appConfiguration}}'] The placeholder string where the\n *                                                                 information will be written.\n * @property {string}  [variable='appConfiguration']               The name of the variable that\n *                                                                 will have the information on\n *                                                                 the file.\n * @property {Array} [configurationKeys=['features', 'version', 'postMessagesPrefix']] A list of\n * settings from the app configuration that will be used as the information to inject on\n * the file.\n */\n\n/**\n * @typedef {Object} HTMLGeneratorValuesService A service to provide the information value to an\n *                                              `HTMLGenerator` service to use on the generated\n *                                              file.\n * @property {function():Promise<Object,Error>} getValues This is the method an `HTMLGenerator`\n *                                                        service will call in order to retrieve\n *                                                        the values that should be injected on\n *                                                        the generated file.\n */\n\n/**\n * This is a utility sever that generates an HTML file with custom information when the app server\n * is started.\n */\nclass HTMLGenerator {\n  /**\n   * Class constructor.\n   * @param {AppConfiguration}            appConfiguration     To read the values of the settings\n   *                                                           that are going to be send to the\n   *                                                           file.\n   * @param {Logger}                      appLogger            To log messages when the file is\n   *                                                           generated, when the template is\n   *                                                           removed, and if it happens, when\n   *                                                           an error is thrown.\n   * @param {FrontendFs}                  frontendFs           To read the contents of the template.\n   * @param {HTMLGeneratorOptions}        [options]            To customize the service.\n   * @param {?HTMLGeneratorValuesService} [valuesService=null] If specified, instead of getting\n   *                                                           the values from the app\n   *                                                           configuration, they'll be retrieved\n   *                                                           from this service `getValues` method.\n   * @throws {Error} if `valuesService` is specified but it doesn't have a `getValues` method.\n   */\n  constructor(\n    appConfiguration,\n    appLogger,\n    frontendFs,\n    options,\n    valuesService = null\n  ) {\n    /**\n     * The service options.\n     * @type {HTMLGeneratorOptions}\n     */\n    this.options = extend({\n      template: 'index.tpl.html',\n      file: 'index.html',\n      deleteTemplateAfter: true,\n      replacePlaceholder: '{{appConfiguration}}',\n      variable: 'appConfiguration',\n      configurationKeys: ['features', 'version', 'postMessagesPrefix'],\n    }, options);\n    /**\n     * This check is to completely overwrite the `configurationKeys` if they were specified on\n     * the received `options` parameters. The reason it's being made after the `extend` it's because\n     * `extend` mergers the array, so if you have `['a', 'b', 'c']` and merge it with `['d', 'e']`\n     * you end up with `['d', 'e', 'c']`, and in this case, that's not very useful.\n     */\n    if (options.configurationKeys) {\n      this.options.configurationKeys = options.configurationKeys.slice();\n    }\n    // If `valuesService` was specified, check if it has a `getValues` method.\n    if (valuesService && typeof valuesService.getValues !== 'function') {\n      throw new Error('The HTMLGenerator values service must have a `getValues` method');\n    }\n    /**\n     * A local reference for the `appConfiguration` service.\n     * @type {AppConfiguration}\n     */\n    this.appConfiguration = appConfiguration;\n    /**\n     * A local reference for the `appLogger` service.\n     * @type {Logger}\n     */\n    this.appLogger = appLogger;\n    /**\n     * A local reference for the `frontendFs` service.\n     * @type {FrontendFs}\n     */\n    this.frontendFs = frontendFs;\n    /**\n     * A local reference for the recieved `valuesService` service.\n     * @type {?HTMLGeneratorValuesService}\n     */\n    this.valuesService = valuesService;\n    /**\n     * Whether or not the file has been generated.\n     * @type {Boolean}\n     * @ignore\n     * @access protected\n     */\n    this._fileReady = false;\n    /**\n     * A deferred promise to return when another service asks if the file has been generated. Once\n     * this sevice finishes generating the file, the promise will be resolved.\n     * @type {Object}\n     * @ignore\n     * @access protected\n     */\n    this._fileDeferred = deferred();\n  }\n  /**\n   * Returns a promise that will be resolved when the file has been generated.\n   * @return {Promise<undefined,undefined>}\n   */\n  whenReady() {\n    return this._fileReady ?\n      Promise.resolve() :\n      this._fileDeferred.promise;\n  }\n  /**\n   * Get the name of the file the service generates.\n   * @return {string}\n   */\n  getFile() {\n    return this.options.file;\n  }\n  /**\n   * Get the values that are going to be injected on the file.\n   * @return {Promise<Object,?Error>}\n   */\n  getValues() {\n    let valuesPromise;\n    // If an `HTMLGeneratorValuesService` was specified...\n    if (this.valuesService) {\n      // ...get the values from there.\n      valuesPromise = this.valuesService.getValues();\n    } else if (this.options.configurationKeys.length) {\n      /**\n       * ...if there are configuration keys to be copied, set to return an already resolved\n       * promise with the settings from the configuration.\n       */\n      valuesPromise = Promise.resolve(\n        this.appConfiguration.get(this.options.configurationKeys)\n      );\n    } else {\n      // ...otherwsie, return an already resolved promise with an empty object.\n      valuesPromise = Promise.resolve({});\n    }\n\n    return valuesPromise;\n  }\n  /**\n   * Generate the HTML file.\n   * @return {Promise<undefined,Error>}\n   */\n  generateHTML() {\n    // Get the service options.\n    const {\n      template,\n      deleteTemplateAfter,\n      replacePlaceholder,\n      variable,\n      file,\n    } = this.options;\n    // Define the variable where the template contents will be saved.\n    let templateContents = '';\n    // Read the template file.\n    return this.frontendFs.read(`./${template}`)\n    .then((contents) => {\n      // Save the template contents.\n      templateContents = contents;\n      // Get the values to inject.\n      return this.getValues();\n    })\n    .then((values) => {\n      /**\n       * Encode them on a JSON string so when executed on the browser they'll be interpreted as\n       * an Object.\n       */\n      const htmlObject = JSON.stringify(values);\n      // Replace the placeholder with the definition of the variable.\n      const html = templateContents\n      .replace(\n        replacePlaceholder,\n        `window.${variable} = ${htmlObject}`\n      );\n      // Write the generated file.\n      return this.frontendFs.write(file, html);\n    })\n    .then(() => {\n      this.appLogger.success(`The HTML was successfully generated (${file})`);\n      /**\n       * If the template needs to be deleted, return the call to the `delete` method, otherwise,\n       * just an empty object to continue the promise chain.\n       */\n      return deleteTemplateAfter && this.frontendFs.delete(`./${template}`);\n    })\n    .then(() => {\n      // If the template was deleted, log a message informing it.\n      if (deleteTemplateAfter) {\n        this.appLogger.info(`The HTML template was successfully removed (${template})`);\n      }\n      /**\n       * Mark the `_fileReady` flag as `true` so the next calls to `whenReady` won't get the\n       * deferred promise.\n       */\n      this._fileReady = true;\n      // Resolve the deferred promise.\n      this._fileDeferred.resolve();\n    })\n    .catch((error) => {\n      this.appLogger.error('There was an error while generating the HTML');\n      return Promise.reject(error);\n    });\n  }\n}\n/**\n * Generates an `HTMLGenerator` service provider with customized options and that automatically\n * hooks itself to the `after-start` event of the app server in order to trigger the generation of\n * the html file when the server starts.\n * @param {HTMLGeneratorOptions}  [options={}]                  Options to customize the service.\n * @param {string}                [serviceName='htmlGenerator'] The name of the service that will\n *                                                              be register into the app.\n * @param {?string}               [valuesServiceName=null]      The name of a service used to read\n *                                                              the values that will be injected in\n *                                                              the generated file.\n * @return {Provider}\n */\nconst htmlGeneratorCustom = (\n  options = {},\n  serviceName = 'htmlGenerator',\n  valuesServiceName = null\n) => provider((app) => {\n  app.set(serviceName, () => {\n    let valuesService = null;\n    if (valuesServiceName) {\n      valuesService = app.get(valuesServiceName);\n    }\n\n    return new HTMLGenerator(\n      app.get('appConfiguration'),\n      app.get('appLogger'),\n      app.get('frontendFs'),\n      options,\n      valuesService\n    );\n  });\n\n  app.get('events')\n  .once('after-start', () => app.get(serviceName).generateHTML());\n});\n/**\n * The service provider that once registered on the app container will set an instance of\n * `HTMLGenerator` as the `htmlGenerator` service. It also hooks itself to the `after-start`\n * event of the app server in order to trigger the generation of\n * the html file when the server starts.\n * @example\n * // Register it on the container\n * container.register(htmlGenerator);\n * // Getting access to the service instance\n * const htmlGenerator = container.get('htmlGenerator');\n * @type {Provider}\n */\nconst htmlGenerator = htmlGeneratorCustom();\n\nmodule.exports = {\n  HTMLGenerator,\n  htmlGenerator,\n  htmlGeneratorCustom,\n};\n",
+    "content": "const extend = require('extend');\nconst { deferred } = require('wootils/shared');\nconst { provider } = require('../../utils/wrappers');\n/**\n * @typedef {Object} HTMLGeneratorOptions The options to customize the an `HTMLGenerator` service.\n * @property {string}  [template='index.tpl.html']                 The name of the file it should\n *                                                                 use as template.\n * @property {string}  [file='index.html']                         The name of the generated file.\n * @property {Boolean} [deleteTemplateAfter=true]                  Whether or not to delete the\n *                                                                 tempalte after generating the\n *                                                                 file.\n * @property {string}  [replacePlaceholder='{{appConfiguration}}'] The placeholder string where the\n *                                                                 information will be written.\n * @property {RegExp}  [valuesExpression='{{(.*?)}}']              A regular expression for dynamic\n *                                                                 placeholders that will be\n *                                                                 replaced by values when the file\n *                                                                 is generated.\n * @property {string}  [variable='appConfiguration']               The name of the variable that\n *                                                                 will have the information on\n *                                                                 the file.\n * @property {Array} [configurationKeys=['features', 'version', 'postMessagesPrefix']] A list of\n * settings from the app configuration that will be used as the information to inject on\n * the file.\n */\n\n/**\n * @typedef {Object} HTMLGeneratorValuesService A service to provide the information value to an\n *                                              `HTMLGenerator` service to use on the generated\n *                                              file.\n * @property {function():Promise<Object,Error>} getValues This is the method an `HTMLGenerator`\n *                                                        service will call in order to retrieve\n *                                                        the values that should be injected on\n *                                                        the generated file.\n */\n\n/**\n * This is a utility sever that generates an HTML file with custom information when the app server\n * is started.\n */\nclass HTMLGenerator {\n  /**\n   * Class constructor.\n   * @param {AppConfiguration}            appConfiguration     To read the values of the settings\n   *                                                           that are going to be send to the\n   *                                                           file.\n   * @param {Logger}                      appLogger            To log messages when the file is\n   *                                                           generated, when the template is\n   *                                                           removed, and if it happens, when\n   *                                                           an error is thrown.\n   * @param {FrontendFs}                  frontendFs           To read the contents of the template.\n   * @param {HTMLGeneratorOptions}        [options]            To customize the service.\n   * @param {?HTMLGeneratorValuesService} [valuesService=null] If specified, instead of getting\n   *                                                           the values from the app\n   *                                                           configuration, they'll be retrieved\n   *                                                           from this service `getValues` method.\n   * @throws {Error} if `valuesService` is specified but it doesn't have a `getValues` method.\n   */\n  constructor(\n    appConfiguration,\n    appLogger,\n    frontendFs,\n    options,\n    valuesService = null\n  ) {\n    /**\n     * The service options.\n     * @type {HTMLGeneratorOptions}\n     */\n    this.options = extend({\n      template: 'index.tpl.html',\n      file: 'index.html',\n      deleteTemplateAfter: true,\n      replacePlaceholder: '{{appConfiguration}}',\n      valuesExpression: /\\{\\{(.*?)\\}\\}/ig,\n      variable: 'appConfiguration',\n      configurationKeys: ['features', 'version', 'postMessagesPrefix'],\n    }, options);\n    /**\n     * This check is to completely overwrite the `configurationKeys` if they were specified on\n     * the received `options` parameters. The reason it's being made after the `extend` it's because\n     * `extend` mergers the array, so if you have `['a', 'b', 'c']` and merge it with `['d', 'e']`\n     * you end up with `['d', 'e', 'c']`, and in this case, that's not very useful.\n     */\n    if (options.configurationKeys) {\n      this.options.configurationKeys = options.configurationKeys.slice();\n    }\n    // If `valuesService` was specified, check if it has a `getValues` method.\n    if (valuesService && typeof valuesService.getValues !== 'function') {\n      throw new Error('The HTMLGenerator values service must have a `getValues` method');\n    }\n    /**\n     * A local reference for the `appConfiguration` service.\n     * @type {AppConfiguration}\n     */\n    this.appConfiguration = appConfiguration;\n    /**\n     * A local reference for the `appLogger` service.\n     * @type {Logger}\n     */\n    this.appLogger = appLogger;\n    /**\n     * A local reference for the `frontendFs` service.\n     * @type {FrontendFs}\n     */\n    this.frontendFs = frontendFs;\n    /**\n     * A local reference for the recieved `valuesService` service.\n     * @type {?HTMLGeneratorValuesService}\n     */\n    this.valuesService = valuesService;\n    /**\n     * Whether or not the file has been generated.\n     * @type {Boolean}\n     * @ignore\n     * @access protected\n     */\n    this._fileReady = false;\n    /**\n     * A deferred promise to return when another service asks if the file has been generated. Once\n     * this sevice finishes generating the file, the promise will be resolved.\n     * @type {Object}\n     * @ignore\n     * @access protected\n     */\n    this._fileDeferred = deferred();\n  }\n  /**\n   * Returns a promise that will be resolved when the file has been generated.\n   * @return {Promise<undefined,undefined>}\n   */\n  whenReady() {\n    return this._fileReady ?\n      Promise.resolve() :\n      this._fileDeferred.promise;\n  }\n  /**\n   * Get the name of the file the service generates.\n   * @return {string}\n   */\n  getFile() {\n    return this.options.file;\n  }\n  /**\n   * Get the values that are going to be injected on the file.\n   * @return {Promise<Object,?Error>}\n   */\n  getValues() {\n    let valuesPromise;\n    // If an `HTMLGeneratorValuesService` was specified...\n    if (this.valuesService) {\n      // ...get the values from there.\n      valuesPromise = this.valuesService.getValues();\n    } else if (this.options.configurationKeys.length) {\n      /**\n       * ...if there are configuration keys to be copied, set to return an already resolved\n       * promise with the settings from the configuration.\n       */\n      valuesPromise = Promise.resolve(\n        this.appConfiguration.get(this.options.configurationKeys)\n      );\n    } else {\n      // ...otherwsie, return an already resolved promise with an empty object.\n      valuesPromise = Promise.resolve({});\n    }\n\n    return valuesPromise;\n  }\n  /**\n   * Generate the HTML file.\n   * @return {Promise<undefined,Error>}\n   */\n  generateHTML() {\n    // Get the service options.\n    const {\n      template,\n      deleteTemplateAfter,\n      file,\n    } = this.options;\n    // Define the variable where the template contents will be saved.\n    let templateContents = '';\n    // Read the template file.\n    return this.frontendFs.read(`./${template}`)\n    .then((contents) => {\n      // Save the template contents.\n      templateContents = contents;\n      // Get the values to inject.\n      return this.getValues();\n    })\n    .then((values) => {\n      // Get the HTML code for the file.\n      const html = this._processHTML(templateContents, values);\n      // Write the generated file.\n      return this.frontendFs.write(file, html);\n    })\n    .then(() => {\n      this.appLogger.success(`The HTML was successfully generated (${file})`);\n      /**\n       * If the template needs to be deleted, return the call to the `delete` method, otherwise,\n       * just an empty object to continue the promise chain.\n       */\n      return deleteTemplateAfter && this.frontendFs.delete(`./${template}`);\n    })\n    .then(() => {\n      // If the template was deleted, log a message informing it.\n      if (deleteTemplateAfter) {\n        this.appLogger.info(`The HTML template was successfully removed (${template})`);\n      }\n      /**\n       * Mark the `_fileReady` flag as `true` so the next calls to `whenReady` won't get the\n       * deferred promise.\n       */\n      this._fileReady = true;\n      // Resolve the deferred promise.\n      this._fileDeferred.resolve();\n    })\n    .catch((error) => {\n      this.appLogger.error('There was an error while generating the HTML');\n      return Promise.reject(error);\n    });\n  }\n  /**\n   * Creates the code for the HTML file.\n   * @param {string} template The template code where the values are going to be injected.\n   * @param {Object} values   The dictionary of values to inject.\n   * @return {string}\n   * @ignore\n   * @access protected\n   */\n  _processHTML(template, values) {\n    const {\n      replacePlaceholder,\n      valuesExpression,\n      variable,\n    } = this.options;\n    const htmlObject = JSON.stringify(values);\n    let code = template\n    .replace(\n      replacePlaceholder,\n      `window.${variable} = ${htmlObject}`\n    );\n    const matches = [];\n    let match = valuesExpression.exec(code);\n    while (match) {\n      const [string, value] = match;\n      matches.push({\n        string,\n        value,\n      });\n\n      match = valuesExpression.exec(code);\n    }\n\n    matches.forEach((info) => {\n      code = code.replace(info.string, this._getFromValues(values, info.value));\n    });\n\n    return code;\n  }\n  /**\n   * Get a value from an object dictionary using a string _\"object path\"_ (`prop.sub.otherProp`).\n   * If the property doesn't exist or the path is invalid, it will return `null`.\n   * @param {Object} values    The dictionary from where the value will be read.\n   * @param {string} valuePath The path to the value.\n   * @return {*}\n   * @ignore\n   * @access protected\n   */\n  _getFromValues(values, valuePath) {\n    const pathParts = valuePath.split('.');\n    const first = pathParts.shift();\n    let currentElement = values[first];\n    if (typeof currentElement === 'undefined') {\n      currentElement = null;\n    } else if (pathParts.length) {\n      pathParts.some((currentPart) => {\n        currentElement = currentElement[currentPart];\n        let shouldBreak = false;\n        if (typeof currentElement === 'undefined') {\n          currentElement = null;\n          shouldBreak = true;\n        }\n\n        return shouldBreak;\n      });\n    }\n\n    return currentElement;\n  }\n}\n/**\n * Generates an `HTMLGenerator` service provider with customized options and that automatically\n * hooks itself to the `after-start` event of the app server in order to trigger the generation of\n * the html file when the server starts.\n * @param {HTMLGeneratorOptions}  [options={}]                  Options to customize the service.\n * @param {string}                [serviceName='htmlGenerator'] The name of the service that will\n *                                                              be register into the app.\n * @param {?string}               [valuesServiceName=null]      The name of a service used to read\n *                                                              the values that will be injected in\n *                                                              the generated file.\n * @return {Provider}\n */\nconst htmlGeneratorCustom = (\n  options = {},\n  serviceName = 'htmlGenerator',\n  valuesServiceName = null\n) => provider((app) => {\n  app.set(serviceName, () => {\n    let valuesService = null;\n    if (valuesServiceName) {\n      valuesService = app.get(valuesServiceName);\n    }\n\n    return new HTMLGenerator(\n      app.get('appConfiguration'),\n      app.get('appLogger'),\n      app.get('frontendFs'),\n      options,\n      valuesService\n    );\n  });\n\n  app.get('events')\n  .once('after-start', () => app.get(serviceName).generateHTML());\n});\n/**\n * The service provider that once registered on the app container will set an instance of\n * `HTMLGenerator` as the `htmlGenerator` service. It also hooks itself to the `after-start`\n * event of the app server in order to trigger the generation of\n * the html file when the server starts.\n * @example\n * // Register it on the container\n * container.register(htmlGenerator);\n * // Getting access to the service instance\n * const htmlGenerator = container.get('htmlGenerator');\n * @type {Provider}\n */\nconst htmlGenerator = htmlGeneratorCustom();\n\nmodule.exports = {\n  HTMLGenerator,\n  htmlGenerator,\n  htmlGeneratorCustom,\n};\n",
     "static": true,
-    "longname": "/Users/homer0/CODE/Node/jimpex/src/services/html/htmlGenerator.js",
+    "longname": "/Users/homer0/CODE/node/jimpex/src/services/html/htmlGenerator.js",
     "access": "public",
     "description": null,
     "lineNumber": 1
@@ -4363,6 +4363,18 @@
         "defaultRaw": "'{{appConfiguration}}'",
         "name": "replacePlaceholder",
         "description": "The placeholder string where the\n                                                                information will be written."
+      },
+      {
+        "nullable": null,
+        "types": [
+          "RegExp"
+        ],
+        "spread": false,
+        "optional": true,
+        "defaultValue": "'{{(.*?)}}'",
+        "defaultRaw": "'{{(.*?)}}'",
+        "name": "valuesExpression",
+        "description": "A regular expression for dynamic\n                                                                placeholders that will be\n                                                                replaced by values when the file\n                                                                is generated."
       },
       {
         "nullable": null,
@@ -4438,7 +4450,7 @@
     "importPath": "jimpex/src/services/html/htmlGenerator.js",
     "importStyle": "{HTMLGenerator}",
     "description": "This is a utility sever that generates an HTML file with custom information when the app server\nis started.",
-    "lineNumber": 36,
+    "lineNumber": 40,
     "interface": false
   },
   {
@@ -4452,7 +4464,7 @@
     "longname": "src/services/html/htmlGenerator.js~HTMLGenerator#constructor",
     "access": "public",
     "description": "Class constructor.",
-    "lineNumber": 54,
+    "lineNumber": 58,
     "params": [
       {
         "nullable": null,
@@ -4525,7 +4537,7 @@
     "longname": "src/services/html/htmlGenerator.js~HTMLGenerator#options",
     "access": "public",
     "description": "The service options.",
-    "lineNumber": 65,
+    "lineNumber": 69,
     "type": {
       "nullable": null,
       "types": [
@@ -4544,7 +4556,7 @@
     "longname": "src/services/html/htmlGenerator.js~HTMLGenerator#appConfiguration",
     "access": "public",
     "description": "A local reference for the `appConfiguration` service.",
-    "lineNumber": 90,
+    "lineNumber": 95,
     "type": {
       "nullable": null,
       "types": [
@@ -4563,7 +4575,7 @@
     "longname": "src/services/html/htmlGenerator.js~HTMLGenerator#appLogger",
     "access": "public",
     "description": "A local reference for the `appLogger` service.",
-    "lineNumber": 95,
+    "lineNumber": 100,
     "type": {
       "nullable": null,
       "types": [
@@ -4582,7 +4594,7 @@
     "longname": "src/services/html/htmlGenerator.js~HTMLGenerator#frontendFs",
     "access": "public",
     "description": "A local reference for the `frontendFs` service.",
-    "lineNumber": 100,
+    "lineNumber": 105,
     "type": {
       "nullable": null,
       "types": [
@@ -4601,7 +4613,7 @@
     "longname": "src/services/html/htmlGenerator.js~HTMLGenerator#valuesService",
     "access": "public",
     "description": "A local reference for the recieved `valuesService` service.",
-    "lineNumber": 105,
+    "lineNumber": 110,
     "type": {
       "nullable": true,
       "types": [
@@ -4620,7 +4632,7 @@
     "longname": "src/services/html/htmlGenerator.js~HTMLGenerator#_fileReady",
     "access": "protected",
     "description": "Whether or not the file has been generated.",
-    "lineNumber": 112,
+    "lineNumber": 117,
     "ignore": true,
     "type": {
       "nullable": null,
@@ -4640,7 +4652,7 @@
     "longname": "src/services/html/htmlGenerator.js~HTMLGenerator#_fileDeferred",
     "access": "protected",
     "description": "A deferred promise to return when another service asks if the file has been generated. Once\nthis sevice finishes generating the file, the promise will be resolved.",
-    "lineNumber": 120,
+    "lineNumber": 125,
     "ignore": true,
     "type": {
       "nullable": null,
@@ -4662,7 +4674,7 @@
     "longname": "src/services/html/htmlGenerator.js~HTMLGenerator#whenReady",
     "access": "public",
     "description": "Returns a promise that will be resolved when the file has been generated.",
-    "lineNumber": 126,
+    "lineNumber": 131,
     "return": {
       "nullable": null,
       "types": [
@@ -4684,7 +4696,7 @@
     "longname": "src/services/html/htmlGenerator.js~HTMLGenerator#getFile",
     "access": "public",
     "description": "Get the name of the file the service generates.",
-    "lineNumber": 135,
+    "lineNumber": 140,
     "return": {
       "nullable": null,
       "types": [
@@ -4706,7 +4718,7 @@
     "longname": "src/services/html/htmlGenerator.js~HTMLGenerator#getValues",
     "access": "public",
     "description": "Get the values that are going to be injected on the file.",
-    "lineNumber": 142,
+    "lineNumber": 147,
     "return": {
       "nullable": null,
       "types": [
@@ -4728,7 +4740,7 @@
     "longname": "src/services/html/htmlGenerator.js~HTMLGenerator#generateHTML",
     "access": "public",
     "description": "Generate the HTML file.",
-    "lineNumber": 167,
+    "lineNumber": 172,
     "return": {
       "nullable": null,
       "types": [
@@ -4741,6 +4753,94 @@
   },
   {
     "__docId__": 223,
+    "kind": "method",
+    "name": "_processHTML",
+    "memberof": "src/services/html/htmlGenerator.js~HTMLGenerator",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/services/html/htmlGenerator.js~HTMLGenerator#_processHTML",
+    "access": "protected",
+    "description": "Creates the code for the HTML file.",
+    "lineNumber": 229,
+    "ignore": true,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "template",
+        "description": "The template code where the values are going to be injected."
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Object"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "values",
+        "description": "The dictionary of values to inject."
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "string"
+      ],
+      "spread": false,
+      "description": ""
+    }
+  },
+  {
+    "__docId__": 224,
+    "kind": "method",
+    "name": "_getFromValues",
+    "memberof": "src/services/html/htmlGenerator.js~HTMLGenerator",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/services/html/htmlGenerator.js~HTMLGenerator#_getFromValues",
+    "access": "protected",
+    "description": "Get a value from an object dictionary using a string _\"object path\"_ (`prop.sub.otherProp`).\nIf the property doesn't exist or the path is invalid, it will return `null`.",
+    "lineNumber": 268,
+    "ignore": true,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "Object"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "values",
+        "description": "The dictionary from where the value will be read."
+      },
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "valuePath",
+        "description": "The path to the value."
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "*"
+      ],
+      "spread": false,
+      "description": ""
+    }
+  },
+  {
+    "__docId__": 225,
     "kind": "variable",
     "name": "htmlGenerator",
     "memberof": "src/services/html/htmlGenerator.js",
@@ -4754,7 +4854,7 @@
     "examples": [
       "// Register it on the container\ncontainer.register(htmlGenerator);\n// Getting access to the service instance\nconst htmlGenerator = container.get('htmlGenerator');"
     ],
-    "lineNumber": 275,
+    "lineNumber": 337,
     "type": {
       "nullable": null,
       "types": [
@@ -4765,7 +4865,7 @@
     }
   },
   {
-    "__docId__": 224,
+    "__docId__": 226,
     "kind": "function",
     "name": "htmlGeneratorCustom",
     "memberof": "src/services/html/htmlGenerator.js",
@@ -4778,7 +4878,7 @@
     "importPath": "jimpex/src/services/html/htmlGenerator.js",
     "importStyle": "{htmlGeneratorCustom}",
     "description": "Generates an `HTMLGenerator` service provider with customized options and that automatically\nhooks itself to the `after-start` event of the app server in order to trigger the generation of\nthe html file when the server starts.",
-    "lineNumber": 240,
+    "lineNumber": 302,
     "params": [
       {
         "nullable": null,
@@ -4827,29 +4927,29 @@
     }
   },
   {
-    "__docId__": 225,
+    "__docId__": 227,
     "kind": "file",
     "name": "src/services/html/index.js",
     "content": "const { htmlGenerator, htmlGeneratorCustom } = require('./htmlGenerator');\n\nmodule.exports = {\n  htmlGenerator,\n  htmlGeneratorCustom,\n};\n",
     "static": true,
-    "longname": "/Users/homer0/CODE/Node/jimpex/src/services/html/index.js",
+    "longname": "/Users/homer0/CODE/node/jimpex/src/services/html/index.js",
     "access": "public",
     "description": null,
     "lineNumber": 1
   },
   {
-    "__docId__": 226,
+    "__docId__": 228,
     "kind": "file",
     "name": "src/services/http/http.js",
     "content": "const fetch = require('node-fetch');\nconst urijs = require('urijs');\nconst { provider } = require('../../utils/wrappers');\n/**\n * @typedef {Object} HTTPFetchOptions\n * @property {?string}         method  The request method.\n * @property {?Object}         headers The request headers.\n * @property {?string}         body    The request body.\n * @property {?Object}         qs      The request query string parameters.\n * @property {?ExpressRequest} req     An Express request object used to get extra infromation\n *                                     (like headers and the IP.)\n */\n/**\n * @external {Headers} https://developer.mozilla.org/en-US/docs/Web/API/Headers\n */\n/**\n * A set of utilities to work with HTTP requests and responses.\n */\nclass HTTP {\n  /**\n   * Class constructor.\n   * @param {Boolean} logRequests Whether or not to log the requests and their responses.\n   * @param {Logger}  appLogger   If `logRequests` is `true`, this will be used to log the requests\n   *                              and responses information.\n   */\n  constructor(logRequests, appLogger) {\n    /**\n     * Whether or not to log the requests and their responses.\n     * @type {Boolean}\n     */\n    this.logRequests = logRequests;\n    /**\n     * A local reference for the `appLogger` service.\n     * @type {AppLogger}\n     */\n    this.appLogger = appLogger;\n    /**\n     * So it can be sent to other services as a reference.\n     * @ignore\n     */\n    this.fetch = this.fetch.bind(this);\n  }\n  /**\n   * Try to get the IP from a given request.\n   * @param {ExpressRequest} req The request from which it will try to obtain the IP address.\n   * @return {?string}\n   */\n  getIPFromRequest(req) {\n    return req.headers['x-forwarded-for'] ||\n      req.connection.remoteAddress ||\n      req.socket.remoteAddress ||\n      req.connection.socket.remoteAddress;\n  }\n  /**\n   * Get a dictionary with all the custom headers a request has. By custom header it means all the\n   * headers which name start with `x-`.\n   * This method doesn't copy `x-forwarded-for` as the `fetch` method generates it by calling\n   * `getIPFromRequest`.\n   * @param {ExpressRequest} req The request from which it will try to get the headers.\n   * @return {Object}\n   */\n  getCustomHeadersFromRequest(req) {\n    const headers = {};\n    Object.keys(req.headers).forEach((headerName) => {\n      if (headerName.startsWith('x-') && !headerName.startsWith('x-forwarded-for')) {\n        headers[headerName] = req.headers[headerName];\n      }\n    });\n\n    return headers;\n  }\n  /**\n   * Make a request.\n   * @param {string}           url          The request URL.\n   * @param {HTTPFetchOptions} [options={}] The request options.\n   * @return {Promise<Object,Error>}\n   */\n  fetch(url, options = {}) {\n    // Get a mutable reference for the URL.\n    let fetchURL = url;\n    // If there are query string parameters...\n    if (options.qs) {\n      // ...use `urijs` to inject them on the URL reference.\n      fetchURL = urijs(url).addSearch(options.qs).toString();\n    }\n    // Define an object that will hold the new set of options.\n    const fetchOptions = {\n      // Set the request method and make it fallback to `GET` if it wasn't set.\n      method: (options.method || 'get').toUpperCase(),\n    };\n    // If there's a body, add it to the new options.\n    if (options.body) {\n      fetchOptions.body = options.body;\n    }\n    // Define the base headers for the request.\n    let defaultHeaders = {};\n    // If there's an Express request object on the `options`...\n    if (options.req) {\n      /**\n       * Overwrite the base headers with the request original IP as `x-forwarded-for` and all the\n       * received custom headers that request may have.\n       */\n      defaultHeaders = Object.assign(\n        {\n          'x-forwarded-for': this.getIPFromRequest(options.req),\n        },\n        this.getCustomHeadersFromRequest(options.req)\n      );\n    }\n    // Merge the base headers with the ones received on the `options`.\n    const headers = Object.assign(\n      {},\n      defaultHeaders,\n      (options.headers || {})\n    );\n    /**\n     * If there's at least one header on the dictionary, add it to the new options. This check is\n     * to avoid sending an empty object.\n     */\n    if (Object.keys(headers).length) {\n      fetchOptions.headers = headers;\n    }\n    // If the `logRequests` flag is `true`, call the method to log the request.\n    if (this.logRequests) {\n      this._logRequest(fetchURL, fetchOptions);\n    }\n    // Make the request.\n    let result = fetch(fetchURL, fetchOptions);\n    // If the `logRequests` flag is `true`...\n    if (this.logRequests) {\n      // Add an extra step on the promise chain to log the response.\n      result = result.then((response) => {\n        this._logResponse(response);\n        return response;\n      });\n    }\n    // Return the request promise.\n    return result;\n  }\n  /**\n   * Log a a request information using the `appLogger` service.\n   * @param {string}  url            The request URL.\n   * @param {Object}  options        The options generated by the `fetch` method.\n   * @param {string}  options.method The request method.\n   * @param {?Object} options.header The request headers.\n   * @param {?string} options.body   The request body.\n   */\n  _logRequest(url, options) {\n    const prefix = 'REQUEST> ';\n    const lines = [\n      '--->>',\n      `${prefix}${options.method} ${url}`,\n    ];\n    if (options.headers) {\n      Object.keys(options.headers).forEach((header) => {\n        lines.push(`${prefix}${header}: ${options.headers[header]}`);\n      });\n    }\n\n    if (options.body) {\n      lines.push(`${prefix}body: \"${options.body}\"`);\n    }\n\n    this.appLogger.info(lines);\n  }\n  /**\n   * Log a a response information using the `appLogger` service.\n   * @param {Object}  response         The response object returned by `node-fetch`.\n   * @param {string}  response.url     The requested URL.\n   * @param {number}  response.status  The response HTTP status.\n   * @param {Headers} response.headers The response headers dictionary.\n   */\n  _logResponse(response) {\n    const prefix = 'RESPONSE> ';\n    const lines = [\n      '<<---',\n      `${prefix}${response.url}`,\n      `${prefix}status: ${response.status}`,\n    ];\n\n    response.headers.forEach((value, header) => {\n      lines.push(`${prefix}${header}: ${value}`);\n    });\n\n    this.appLogger.info(lines);\n  }\n}\n/**\n * The service provider that once registered on the app container will set an instance of\n * `HTTP` as the `http` service. The provider also checks the `debug.logRequests` setting on\n * the app configuration in order to enable or not the logging of requests.\n * @example\n * // Register it on the container\n * container.register(http);\n * // Getting access to the service instance\n * const http = container.get('http');\n * @type {Provider}\n */\nconst http = provider((app) => {\n  app.set('http', () => {\n    const debugging = app.get('appConfiguration').get('debug');\n    const logRequests = !!(debugging && debugging.logRequests === true);\n    return new HTTP(logRequests, app.get('appLogger'));\n  });\n});\n\nmodule.exports = {\n  HTTP,\n  http,\n};\n",
     "static": true,
-    "longname": "/Users/homer0/CODE/Node/jimpex/src/services/http/http.js",
+    "longname": "/Users/homer0/CODE/node/jimpex/src/services/http/http.js",
     "access": "public",
     "description": null,
     "lineNumber": 1
   },
   {
-    "__docId__": 227,
+    "__docId__": 229,
     "kind": "typedef",
     "name": "HTTPFetchOptions",
     "memberof": "src/services/http/http.js",
@@ -4918,7 +5018,7 @@
     }
   },
   {
-    "__docId__": 228,
+    "__docId__": 230,
     "kind": "external",
     "name": "Headers",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/Headers",
@@ -4929,7 +5029,7 @@
     "description": ""
   },
   {
-    "__docId__": 229,
+    "__docId__": 231,
     "kind": "class",
     "name": "HTTP",
     "memberof": "src/services/http/http.js",
@@ -4944,7 +5044,7 @@
     "interface": false
   },
   {
-    "__docId__": 230,
+    "__docId__": 232,
     "kind": "constructor",
     "name": "constructor",
     "memberof": "src/services/http/http.js~HTTP",
@@ -4979,7 +5079,7 @@
     ]
   },
   {
-    "__docId__": 231,
+    "__docId__": 233,
     "kind": "member",
     "name": "logRequests",
     "memberof": "src/services/http/http.js~HTTP",
@@ -4998,7 +5098,7 @@
     }
   },
   {
-    "__docId__": 232,
+    "__docId__": 234,
     "kind": "member",
     "name": "appLogger",
     "memberof": "src/services/http/http.js~HTTP",
@@ -5017,7 +5117,7 @@
     }
   },
   {
-    "__docId__": 234,
+    "__docId__": 236,
     "kind": "method",
     "name": "getIPFromRequest",
     "memberof": "src/services/http/http.js~HTTP",
@@ -5050,7 +5150,7 @@
     }
   },
   {
-    "__docId__": 235,
+    "__docId__": 237,
     "kind": "method",
     "name": "getCustomHeadersFromRequest",
     "memberof": "src/services/http/http.js~HTTP",
@@ -5083,7 +5183,7 @@
     }
   },
   {
-    "__docId__": 236,
+    "__docId__": 238,
     "kind": "method",
     "name": "fetch",
     "memberof": "src/services/http/http.js~HTTP",
@@ -5128,7 +5228,7 @@
     }
   },
   {
-    "__docId__": 237,
+    "__docId__": 239,
     "kind": "method",
     "name": "_logRequest",
     "memberof": "src/services/http/http.js~HTTP",
@@ -5194,7 +5294,7 @@
     "return": null
   },
   {
-    "__docId__": 238,
+    "__docId__": 240,
     "kind": "method",
     "name": "_logResponse",
     "memberof": "src/services/http/http.js~HTTP",
@@ -5250,7 +5350,7 @@
     "return": null
   },
   {
-    "__docId__": 239,
+    "__docId__": 241,
     "kind": "variable",
     "name": "http",
     "memberof": "src/services/http/http.js",
@@ -5275,18 +5375,18 @@
     }
   },
   {
-    "__docId__": 240,
+    "__docId__": 242,
     "kind": "file",
     "name": "src/services/http/index.js",
     "content": "const { http } = require('./http');\nconst { responsesBuilder } = require('./responsesBuilder');\nconst { provider } = require('../../utils/wrappers');\n/**\n * A single service provider that once registered on the app container will take care of\n * registering the providers for the `http` and 'responsesBuilder' services.\n * @type {Provider}\n */\nconst all = provider((app) => {\n  app.register(http);\n  app.register(responsesBuilder);\n});\n\nmodule.exports = {\n  http,\n  responsesBuilder,\n  all,\n};\n",
     "static": true,
-    "longname": "/Users/homer0/CODE/Node/jimpex/src/services/http/index.js",
+    "longname": "/Users/homer0/CODE/node/jimpex/src/services/http/index.js",
     "access": "public",
     "description": null,
     "lineNumber": 1
   },
   {
-    "__docId__": 241,
+    "__docId__": 243,
     "kind": "variable",
     "name": "all",
     "memberof": "src/services/http/index.js",
@@ -5308,18 +5408,18 @@
     }
   },
   {
-    "__docId__": 242,
+    "__docId__": 244,
     "kind": "file",
     "name": "src/services/http/responsesBuilder.js",
     "content": "const statuses = require('statuses');\nconst { provider } = require('../../utils/wrappers');\n/**\n * @typedef {Object} ResponsesBuilderPostMessageOptions It allows customization of a post message\n *                                                      HTML template\n * @property {?string}  [options.target='window.opener'] The target that will emit the\n *                                                       `postMessage`.\n * @property {?Boolean} [options.close=true]             Whether or not to do a `window.close`\n *                                                       after sending the message.\n * @property {?number}  [options.closeDelay=700]         How many ms should it wait before closing\n *                                                       the window, if `options.close` is `true`.\n */\n\n/**\n * A utility service to build server responses.\n */\nclass ResponsesBuilder {\n  /**\n   * Class constructor.\n   * @param {AppConfiguration} appConfiguration To get the app version.\n   */\n  constructor(appConfiguration) {\n    /**\n     * A local reference for the `appConfiguration` service.\n     * @type {AppConfiguration}\n     */\n    this.appConfiguration = appConfiguration;\n  }\n  /**\n   * Generates and sends a JSON response.\n   * The generated looks like this:\n   * ```\n   * {\n   *   metadata: {\n   *     version: '[app-version]',\n   *     status: [http-status],\n   *   },\n   *   data: [...],\n   * }\n   * ```\n   * @param {ExpressResponse} res                  The Express response object necessary to write\n   *                                               the JSON.\n   * @param {Object}          data                 The information for the `data` key.\n   * @param {number}          [status=statuses.ok] The HTTP status. Jimpex uses the `statuses`\n   *                                               package to reference HTTP statuses, that's why\n   *                                               the default is `statuses.ok`(200).\n   * @param {Object}          [metadata={}]        Extra information to include on the `metadata`\n   *                                               key.\n   */\n  json(res, data, status = statuses.ok, metadata = {}) {\n    res\n    .status(status)\n    .json({\n      metadata: Object.assign({\n        version: this.appConfiguration.get('version'),\n        status,\n      }, metadata),\n      data,\n    })\n    .end();\n  }\n  /**\n   * Generates and send an HTML response that emits a post message.\n   * The post message will be prefixed with the value of the configuration setting\n   * `postMessagesPrefix`.\n   * @param {ExpressResponse}                   res                  The Express response object\n   *                                                                 necessary to write the HTML.\n   * @param {string}                            title                The title for the HTML.\n   * @param {string}                            message              The contents of the post\n   *                                                                 message.\n   * @param {number}                            [status=statuses.ok] The HTTP status. Jimpex uses\n   *                                                                 the `statuses` package to\n   *                                                                 reference HTTP statuses,\n   *                                                                 that's why the default is\n   *                                                                 `statuses.ok`(200). Custom\n   *                                                                 options for the HTML.\n   * @param {ResponsesBuilderPostMessageOptions} [options={}]        Options to customize the HTML.\n   */\n  htmlPostMessage(\n    res,\n    title,\n    message,\n    status = statuses.ok,\n    options = {}\n  ) {\n    const prefix = this.appConfiguration.get('postMessagesPrefix') || '';\n    const target = options.target || 'window.opener';\n    const close = typeof options.close !== 'undefined' ? options.close : true;\n    const defaultCloseDelay = 700;\n    const closeDelay = options.closeDelay || defaultCloseDelay;\n    const closeCode = close ?\n      `setTimeout(function() { window.close(); }, ${closeDelay});` :\n      '';\n    const html = this._htmlTemplate(title, `\n      (function() {\n        if (${target}) {\n          ${target}.postMessage('${prefix}${message}', '*');\n          ${closeCode}\n        }\n      })();\n      `);\n\n    res.setHeader('Content-Type', 'text/html');\n    res.setHeader('Cache-Control', 'no-cache, max-age=0, must-revalidate, no-store');\n    res.status(status);\n    res.write(html);\n    res.end();\n  }\n  /**\n   * Generates a basic HTML template for other services to use.\n   * @param {string} title The HTML `<title />` attribute.\n   * @param {string} code  Javascript code to be wrapped on a `<script />` tag.\n   * @return {string}\n   * @ignore\n   * @access protected\n   */\n  _htmlTemplate(title, code) {\n    return `\n      <!DOCTYPE html>\n      <html>\n        <head>\n          <meta charset=\"utf-8\" />\n          <meta http-equiv=\"x-ua-compatible\" content=\"ie=edge\" />\n          <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />\n          <title>${title}</title>\n        </head>\n        <body>\n          <script type=\"text/javascript\">\n          ${code}\n        </script>\n      </body>\n    </html>\n    `;\n  }\n}\n/**\n * The service provider that once registered on the app container will set an instance of\n * `ResponsesBuilder` as the `responsesBuilder` service.\n * @example\n * // Register it on the container\n * container.register(responsesBuilder);\n * // Getting access to the service instance\n * const responsesBuilder = container.get('responsesBuilder');\n * @type {Provider}\n */\nconst responsesBuilder = provider((app) => {\n  app.set('responsesBuilder', () => new ResponsesBuilder(\n    app.get('appConfiguration')\n  ));\n});\n\nmodule.exports = {\n  ResponsesBuilder,\n  responsesBuilder,\n};\n",
     "static": true,
-    "longname": "/Users/homer0/CODE/Node/jimpex/src/services/http/responsesBuilder.js",
+    "longname": "/Users/homer0/CODE/node/jimpex/src/services/http/responsesBuilder.js",
     "access": "public",
     "description": null,
     "lineNumber": 1
   },
   {
-    "__docId__": 243,
+    "__docId__": 245,
     "kind": "typedef",
     "name": "ResponsesBuilderPostMessageOptions",
     "memberof": "src/services/http/responsesBuilder.js",
@@ -5374,7 +5474,7 @@
     }
   },
   {
-    "__docId__": 244,
+    "__docId__": 246,
     "kind": "class",
     "name": "ResponsesBuilder",
     "memberof": "src/services/http/responsesBuilder.js",
@@ -5389,7 +5489,7 @@
     "interface": false
   },
   {
-    "__docId__": 245,
+    "__docId__": 247,
     "kind": "constructor",
     "name": "constructor",
     "memberof": "src/services/http/responsesBuilder.js~ResponsesBuilder",
@@ -5414,7 +5514,7 @@
     ]
   },
   {
-    "__docId__": 246,
+    "__docId__": 248,
     "kind": "member",
     "name": "appConfiguration",
     "memberof": "src/services/http/responsesBuilder.js~ResponsesBuilder",
@@ -5433,7 +5533,7 @@
     }
   },
   {
-    "__docId__": 247,
+    "__docId__": 249,
     "kind": "method",
     "name": "json",
     "memberof": "src/services/http/responsesBuilder.js~ResponsesBuilder",
@@ -5493,7 +5593,7 @@
     "return": null
   },
   {
-    "__docId__": 248,
+    "__docId__": 250,
     "kind": "method",
     "name": "htmlPostMessage",
     "memberof": "src/services/http/responsesBuilder.js~ResponsesBuilder",
@@ -5563,7 +5663,7 @@
     "return": null
   },
   {
-    "__docId__": 249,
+    "__docId__": 251,
     "kind": "method",
     "name": "_htmlTemplate",
     "memberof": "src/services/http/responsesBuilder.js~ResponsesBuilder",
@@ -5607,7 +5707,7 @@
     }
   },
   {
-    "__docId__": 250,
+    "__docId__": 252,
     "kind": "variable",
     "name": "responsesBuilder",
     "memberof": "src/services/http/responsesBuilder.js",
@@ -5632,29 +5732,29 @@
     }
   },
   {
-    "__docId__": 251,
+    "__docId__": 253,
     "kind": "file",
     "name": "src/services/index.js",
     "content": "const api = require('./api');\nconst common = require('./common');\nconst frontend = require('./frontend');\nconst html = require('./html');\nconst http = require('./http');\n\nmodule.exports = {\n  api,\n  common,\n  frontend,\n  html,\n  http,\n};\n",
     "static": true,
-    "longname": "/Users/homer0/CODE/Node/jimpex/src/services/index.js",
+    "longname": "/Users/homer0/CODE/node/jimpex/src/services/index.js",
     "access": "public",
     "description": null,
     "lineNumber": 1
   },
   {
-    "__docId__": 252,
+    "__docId__": 254,
     "kind": "file",
     "name": "src/typedef.js",
     "content": "/**\n * @external {AppConfiguration}\n * https://homer0.github.io/wootils/class/wootils/node/appConfiguration.js~AppConfiguration.html\n */\n\n/**\n * @external {APIClientBase}\n * https://homer0.github.io/wootils/class/wootils/shared/apiClient.js~APIClient.html\n */\n\n/**\n * @external {APIClientEndpoints}\n * https://homer0.github.io/wootils/typedef/index.html#static-typedef-APIClientEndpoints\n */\n\n/**\n * @external {PathUtils}\n * https://homer0.github.io/wootils/class/wootils/node/pathUtils.js~PathUtils.html\n */\n\n/**\n * @external {Logger}\n * https://homer0.github.io/wootils/class/wootils/node/logger.js~Logger.html\n */\n\n/**\n * @external {EnvironmentUtils}\n * https://homer0.github.io/wootils/class/wootils/node/environmentUtils.js~EnvironmentUtils.html\n */\n\n/**\n * @external {ErrorHandler}\n * https://homer0.github.io/wootils/class/wootils/node/errorHandler.js~ErrorHandler.html\n */\n\n/**\n * @external {RootRequire}\n * https://homer0.github.io/wootils/function/index.html#static-function-rootRequire\n */\n\n/**\n * @external {Express} https://expressjs.com/en/4x/api.html\n */\n\n/**\n * @external {ExpressMiddleware} http://expressjs.com/en/guide/using-middleware.html\n */\n\n/**\n * @external {ExpressRequest} https://expressjs.com/en/4x/api.html#req\n */\n\n/**\n * @external {ExpressResponse} https://expressjs.com/en/4x/api.html#res\n */\n\n/**\n * @external {ExpressResponse} https://expressjs.com/en/4x/api.html#res\n */\n\n/**\n * @typedef {function(err:?Error)} ExpressNext A function to call the next middleware. If an\n *                                            argument is specified, it will be handled as an error\n *                                            and sent to the `errorHandler` service.\n */\n\n/**\n * @typedef {Object} Provider An object that when registered on Jimpex will take care of setting up\n *                            services and/or configuring the app.\n *                            The method Jimpex uses to register a provider is `register(provider)`\n *                            and is inherit from Jimple.\n * @property {function(app:Jimpex)} register The method that gets called by Jimpex when registering\n *                                           the provider.\n */\n\n/**\n * @typedef {Object} Controller An object that when mounted on Jimpex will return a list of routes\n *                              to handle an specific point.\n *                              The method Jimpex uses to mount a controller is\n *                              `mount(point, controller)`.\n * @property {function(app:Jimpex,point:String):Array} connect The method that gets called by\n *                                                             Jimpex when the controller is\n *                                                             mounted. It should return a list\n *                                                             of routes.\n */\n\n/**\n * @typedef {Object} Middleware An object that when mounted on Jimpex will return an Express\n *                              middleware for the app to use.\n *                              The method Jimpex uses to mount a controller is `use(middleware)`.\n * @property {function(app:Jimpex):?ExpressMiddleware} connect The method that gets called by Jimpex\n *                                                             when the middleware is mounted. It\n *                                                             should return an Express middleware.\n */\n",
     "static": true,
-    "longname": "/Users/homer0/CODE/Node/jimpex/src/typedef.js",
+    "longname": "/Users/homer0/CODE/node/jimpex/src/typedef.js",
     "access": "public",
     "description": null,
     "lineNumber": 1
   },
   {
-    "__docId__": 253,
+    "__docId__": 255,
     "kind": "external",
     "name": "AppConfiguration",
     "externalLink": "https://homer0.github.io/wootils/class/wootils/node/appConfiguration.js~AppConfiguration.html",
@@ -5665,7 +5765,7 @@
     "description": ""
   },
   {
-    "__docId__": 254,
+    "__docId__": 256,
     "kind": "external",
     "name": "APIClientBase",
     "externalLink": "https://homer0.github.io/wootils/class/wootils/shared/apiClient.js~APIClient.html",
@@ -5676,7 +5776,7 @@
     "description": ""
   },
   {
-    "__docId__": 255,
+    "__docId__": 257,
     "kind": "external",
     "name": "APIClientEndpoints",
     "externalLink": "https://homer0.github.io/wootils/typedef/index.html#static-typedef-APIClientEndpoints",
@@ -5687,7 +5787,7 @@
     "description": ""
   },
   {
-    "__docId__": 256,
+    "__docId__": 258,
     "kind": "external",
     "name": "PathUtils",
     "externalLink": "https://homer0.github.io/wootils/class/wootils/node/pathUtils.js~PathUtils.html",
@@ -5698,7 +5798,7 @@
     "description": ""
   },
   {
-    "__docId__": 257,
+    "__docId__": 259,
     "kind": "external",
     "name": "Logger",
     "externalLink": "https://homer0.github.io/wootils/class/wootils/node/logger.js~Logger.html",
@@ -5709,7 +5809,7 @@
     "description": ""
   },
   {
-    "__docId__": 258,
+    "__docId__": 260,
     "kind": "external",
     "name": "EnvironmentUtils",
     "externalLink": "https://homer0.github.io/wootils/class/wootils/node/environmentUtils.js~EnvironmentUtils.html",
@@ -5720,7 +5820,7 @@
     "description": ""
   },
   {
-    "__docId__": 259,
+    "__docId__": 261,
     "kind": "external",
     "name": "ErrorHandler",
     "externalLink": "https://homer0.github.io/wootils/class/wootils/node/errorHandler.js~ErrorHandler.html",
@@ -5731,7 +5831,7 @@
     "description": ""
   },
   {
-    "__docId__": 260,
+    "__docId__": 262,
     "kind": "external",
     "name": "RootRequire",
     "externalLink": "https://homer0.github.io/wootils/function/index.html#static-function-rootRequire",
@@ -5742,7 +5842,7 @@
     "description": ""
   },
   {
-    "__docId__": 261,
+    "__docId__": 263,
     "kind": "external",
     "name": "Express",
     "externalLink": "https://expressjs.com/en/4x/api.html",
@@ -5753,7 +5853,7 @@
     "description": ""
   },
   {
-    "__docId__": 262,
+    "__docId__": 264,
     "kind": "external",
     "name": "ExpressMiddleware",
     "externalLink": "http://expressjs.com/en/guide/using-middleware.html",
@@ -5764,7 +5864,7 @@
     "description": ""
   },
   {
-    "__docId__": 263,
+    "__docId__": 265,
     "kind": "external",
     "name": "ExpressRequest",
     "externalLink": "https://expressjs.com/en/4x/api.html#req",
@@ -5775,29 +5875,29 @@
     "description": ""
   },
   {
-    "__docId__": 264,
-    "kind": "external",
-    "name": "ExpressResponse",
-    "externalLink": "https://expressjs.com/en/4x/api.html#res",
-    "memberof": "src/typedef.js",
-    "static": true,
-    "longname": "src/typedef.js~ExpressResponse",
-    "access": "public",
-    "description": ""
-  },
-  {
-    "__docId__": 265,
-    "kind": "external",
-    "name": "ExpressResponse",
-    "externalLink": "https://expressjs.com/en/4x/api.html#res",
-    "memberof": "src/typedef.js",
-    "static": true,
-    "longname": "src/typedef.js~ExpressResponse",
-    "access": "public",
-    "description": ""
-  },
-  {
     "__docId__": 266,
+    "kind": "external",
+    "name": "ExpressResponse",
+    "externalLink": "https://expressjs.com/en/4x/api.html#res",
+    "memberof": "src/typedef.js",
+    "static": true,
+    "longname": "src/typedef.js~ExpressResponse",
+    "access": "public",
+    "description": ""
+  },
+  {
+    "__docId__": 267,
+    "kind": "external",
+    "name": "ExpressResponse",
+    "externalLink": "https://expressjs.com/en/4x/api.html#res",
+    "memberof": "src/typedef.js",
+    "static": true,
+    "longname": "src/typedef.js~ExpressResponse",
+    "access": "public",
+    "description": ""
+  },
+  {
+    "__docId__": 268,
     "kind": "typedef",
     "name": "ExpressNext",
     "memberof": "src/typedef.js",
@@ -5814,7 +5914,7 @@
     }
   },
   {
-    "__docId__": 267,
+    "__docId__": 269,
     "kind": "typedef",
     "name": "Provider",
     "memberof": "src/typedef.js",
@@ -5843,7 +5943,7 @@
     }
   },
   {
-    "__docId__": 268,
+    "__docId__": 270,
     "kind": "typedef",
     "name": "Controller",
     "memberof": "src/typedef.js",
@@ -5872,7 +5972,7 @@
     }
   },
   {
-    "__docId__": 269,
+    "__docId__": 271,
     "kind": "typedef",
     "name": "Middleware",
     "memberof": "src/typedef.js",
@@ -5901,18 +6001,18 @@
     }
   },
   {
-    "__docId__": 270,
+    "__docId__": 272,
     "kind": "file",
     "name": "src/utils/wrappers.js",
     "content": "const { provider } = require('jimple');\n/**\n * Generates a controller for the app container to mount.\n * @param {function(app:Jimpex):Array} connect A function that will be called the moment the app\n *                                             mounts the controller. It should return a list\n *                                             of routes.\n * @return {Controller}\n */\nconst controller = (connect) => ({ connect });\n/**\n * Generates a middleware for the app container to use.\n * @param {function(app:Jimpex):?ExpressMiddleware} connect A function that will be called the\n *                                                          moment the app mounts the middleware.\n *                                                          It should return an Express middleware.\n * @return {Middleware}\n */\nconst middleware = (connect) => ({ connect });\n\nmodule.exports = {\n  provider,\n  controller,\n  middleware,\n};\n",
     "static": true,
-    "longname": "/Users/homer0/CODE/Node/jimpex/src/utils/wrappers.js",
+    "longname": "/Users/homer0/CODE/node/jimpex/src/utils/wrappers.js",
     "access": "public",
     "description": null,
     "lineNumber": 1
   },
   {
-    "__docId__": 271,
+    "__docId__": 273,
     "kind": "function",
     "name": "controller",
     "memberof": "src/utils/wrappers.js",
@@ -5948,7 +6048,7 @@
     }
   },
   {
-    "__docId__": 272,
+    "__docId__": 274,
     "kind": "function",
     "name": "middleware",
     "memberof": "src/utils/wrappers.js",
@@ -5986,15 +6086,15 @@
   {
     "kind": "index",
     "content": "# Jimpex\n\nExpress as dependency injection container.\n\nJimpex is an implementation of [Express](https://expressjs.com), one of the most popular web frameworks for Node, using [Jimple](https://github.com/fjorgemota/jimple), a Javascript port of [Pimple](https://pimple.symfony.com/) dependency injection container.\n\n## Motivation/Introduction\n\nA friend who's also web developer brought the idea of start using a dependency injection container on Node, and how Jimple was a great tool for it, and from that moment on I can't think of starting an app without using it. It not only allows you to implement dependency injection on a simple and clean way but it also kind of forces you to have a really good organization of your code.\n\nA couple of months after that, the same friend told me that we should do something similar to [Silex](https://silex.symfony.com/), which is based on Pimple, with Express. I ran with the idea and... this project is what I think a mix of Jimple and Express would look like. To be clear, **this is not a port of Silex**.\n\nThanks `[name]`!!! (I'll ask permission later to publish his name :P)\n\n## Information\n\n| -            | -                                                                  |\n|--------------|--------------------------------------------------------------------|\n| Package      | jimpex                                                             |\n| Description  | Express as dependency injection container.                         |\n| Node Version | >= v6.10.0                                                         |\n\n## Usage\n\n### Creating your app\n\nTo create a Jimpex app you would require the `Jimpex` class from the package, extend it and define all your services, controllers and middlewares on its `boot` method:\n\n```js\nconst { Jimpex } = require('jimpex');\n\nclass MyApp extends Jimpex {\n  boot() {\n    // Do all your custom stuff...\n  }\n}\n```\n\nThe class constructor has two parameters:\n\n1. `boot` (`true`): Whether or not to call the `boot` method after initializing the instance.\n2. `options` (`{}`): A set of options to customize the app.\n\nThere are a lot of options to customize an app, so I would recommend you to read the [Jimpex Options documentation](manual/options.html).\n\n#### App configuration\n\nJimpex, by default, depends on external configuration files and as a base configuration it will try to load `./config/app/app.config.js`. Of course this is extremely configurable through the [Jimpex Options](manual/options.html).\n\nA configuration file is just a Javascript file that exports an Object, for example:\n\n```js\nmodule.exports = {\n  port: 2509,\n};\n```\n\n> If that's who you default configuration file looks like, the app will run on the port `2509`.\n\nTo access the app configuration, you just call the `appConfiguration` service:\n\n```js\nconst config = app.get('appConfiguration');\n```\n\nThen you can read its values using `.get(setting)`:\n\n```js\nconsole.log(config.get('port'));\n// Will log 2509\n```\n\nTo more information about how the `appConfiguration` service works, you can check [its documentation on the wootils repository](https://github.com/homer0/wootils/blob/master/documents/node/appConfiguration.md).\n\n#### Starting the app\n\nTo start the app you need a valid configuration file with a valid `port` setting. Check the previous section to more information about it.\n\nNow, Starting the app is as easy as calling `start()`:\n\n```js\napp.start(() => {\n  console.log('The app is running!');\n});\n```\n\n> And like Express, you can send a callback to be executed after the server starts.\n\nYou can also stop the app by calling `stop()`:\n\n```js\napp.stop();\n// Done, the app is not longer running.\n```\n\n### Defining a service\n\nTo define a service and its provider, you would write your service as a `class` or a `function` and then wrap it on the `provider` function Jimpex provides:\n\n```js\nconst { provider } = require('jimpex');\n\n// Create your service\nclass MyService {\n  constructor(depOne, depTwo);\n}\n\n// Define the provider\nconst myService = provider((app) => {\n  app.set('myService', () => new MyService(\n    app.get('depOne'),\n    app.get('depTwo')\n  ));\n});\n\n// Export the service and its provider\nmodule.exports = {\n  MyService,\n  myService,\n};\n```\n\n> You could export just export the provider, but I believe is a good practice to export both in case another part of your app wants to extend the class and overwrite the service on the container.\n\nThen, on you app, you would simple `register` the provider:\n\n```js\nconst { Jimpex } = require('jimpex');\nconst { myService } = require('...');\n\nclass MyApp extends Jimpex {\n  boot() {\n    ...\n    this.register(myService);\n  }\n}\n```\n\nDone, your service is now available.\n\n### Adding a controller\n\nTo add controller you need to use the `controller` function and return a list of routes:\n\n```js\nconst { controller } = require('jimpex');\n\n// (Optional) Define a class to organize your route handlers.\nclass HealthController {\n  health() {\n    return (req, res) => {\n      res.write('Everything works!');\n    };\n  }\n}\n\n// Define the controller\nconst healthController = controller((app) => {\n  const ctrl = new HealthController();\n  // Get the router service\n  const router = app.get('router');\n  // Return the list of routes this controller will handle\n  return [\n    router.get('/', ctrl.health()),\n  ];\n});\n\n// Export the controller class and the controller itself\nmodule.exports = {\n  HealthController,\n  healthController,\n};\n```\n\n> - You could export just export the controller, but I believe is a good practice to export both in case another part of your app wants to extend the class and mount a new route withs its inherit functionalities.\n> - The function inside the `controller` wrapper won't be called until the app is started. In case you are wondering about the lazy loading of the services that you may inject.\n\nThen, on you app, you would `mount` the controller:\n\n```js\nconst { Jimpex } = require('jimpex');\nconst { healthController } = require('...');\n\nclass MyApp extends Jimpex {\n  boot() {\n    ...\n    this.mount('/health', healthController);\n  }\n}\n```\n\n### Adding a middleware\n\nTo add a new middleware you need to use the `middleware` function and return a function:\n\n```js\nconst { middlware } = require('jimpex');\n\n// Define your middleware function (or class if it gets more complex)\nconst greetingsMiddleware = () => (req, res, next) => {\n  console.log('Hello!');\n};\n\n// Define the middleware\nconst greetings = middleware(() => greetingsMiddleware());\n\n// Export the function and the middleware\nmodule.exports = {\n  greetingsMiddleware,\n  greetings,\n};\n```\n\n> You could export just export the provider, but I believe is a good practice to export both in case another part of your app wants to extend the class or use the function.\n\nThen, on you app, you would `use` the controller:\n\n```js\nconst { Jimpex } = require('jimpex');\nconst { greetings } = require('...');\n\nclass MyApp extends Jimpex {\n  boot() {\n    ...\n    this.use(greetings);\n  }\n}\n```\n\n## Built-in features\n\nJimpex comes with a few services, middlewares and controllers that you can import and use on your app, some of them [are activated by default on the options](manual/options.html), but others you have to implement manually:\n\n### Controllers\n\n- **Version validator:** If you mount it on a route it will generate a `409` error if the request doesn't have a version parameter with the same version as the one on the configuration file.\n- **Configuration:** Allows you to see and switch the current configuration. It can be enabled or disabled by using a setting on the configuration.\n- **Health:** Shows the version and name of the configuration, just to check the app is running.\n- **Root statics:** It allows your app to server static files from the root directory, without having to use the `static` middleware on that directory.\n\n[Read more about the built-in controllers](manual/controllers.html)\n\n### Middlewares\n\n- **Error handler:** Allows you to generate responses for errors and potentially hide uncaught exceptions under a generic message, unless it's disabled via configuration settings.\n- **Force HTTPS:** Redirect all incoming traffic from HTTP to HTTPS. It also allows you to set routes to ignore the redirection.\n- **Fast HTML:** Allows you to specify which routes will be handled and in case there are no controllers for a requested route, it sends out and HTML file, thus preventing the request to be unnecessarily processed by the middlewares.\n- **Show HTML:** A really simple middleware to serve an HTML file. Its true feature is that it can be hooked up to the **HTML Generator** service.\n\n[Read more about the built-in controllers](manual/middlewares.html)\n\n### Services\n\n- **API client:** An implementation of the [wootils API Client](https://github.com/homer0/wootils/blob/master/documents/shared/APIClient.md) but that is connected to the HTTP service, to allow logging and forwarding of the headers.\n- **Ensure bearer authentication:** A service-middleware that allows you to validate the incoming requests `Authorization` header.\n- **Version validator:** A service-middleware to validate a `version` parameter against the configuration `version` setting. It's what the version validator middleware internally uses.\n- **Error:** A very simple subclass of `Error` to inject extra information on the errors so they can customize the error handler responses.\n- **Send File:** It allows you to send a file on a response with a path relative to the app executable.\n- **Frontend Fs:** Useful for when your app has a bundled frontend, it allows you to read, write and delete files with paths relative to the app executable.\n- **HTML Generator:** A service that allows you to generate an HTML file when the app gets started and inject contents of the configuration as a `window` variable.\n- **HTTP:** A set of utilities to work with HTTP requests and responses.\n- **Responses builder:** A service that generates JSON and HTML responses.\n\n[Read more about the built-in services](manual/services.html)\n\nThe service also implements a few other services from the [wootils](https://github.com/homer0/wootils) as core utilities:\n\n- [`appLogger`](https://github.com/homer0/wootils/blob/master/documents/node/logger.md): The logger service.\n- [`environmentUtils`](https://github.com/homer0/wootils/blob/master/documents/node/environmentUtils.md): The service that reads the environment variables.\n- [`packageInfo`](https://github.com/homer0/wootils/blob/master/documents/node/packageInfo.md): The app package.json information.\n- [`pathUtils`](https://github.com/homer0/wootils/blob/master/documents/node/pathUtils.md): The service to build paths relative to the project root directory.\n- [`rootRequire`](https://github.com/homer0/wootils/blob/master/documents/node/rootRequire.md): The service to make requires relatives to the project root directory.\n- [`events`](https://github.com/homer0/wootils/blob/master/documents/shared/eventsHub.md): To handle the app events.\n\n## Development\n\nBefore doing anything, install the repository hooks:\n\n```bash\n# You can either use npm or yarn, it doesn't matter\nnpm run install-hooks\n```\n\n### NPM/Yarn Tasks\n\n| Task                    | Description                         |\n|-------------------------|-------------------------------------|\n| `npm run install-hooks` | Install the GIT repository hooks.   |\n| `npm test`              | Run the project unit tests.         |\n| `npm run lint`          | Lint the modified files.            |\n| `npm run lint:full`     | Lint the project code.              |\n| `npm run docs`          | Generate the project documentation. |\n| `npm run todo`          | List all the pending to-do's.       |\n\n### Testing\n\nI use [Jest](https://facebook.github.io/jest/) with [Jest-Ex](https://yarnpkg.com/en/package/jest-ex) to test the project. The configuration file is on `./.jestrc`, the tests and mocks are on `./tests` and the script that runs it is on `./utils/scripts/test`.\n\n### Linting\n\nI use [ESlint](http://eslint.org) to validate all our JS code. The configuration file for the project code is on `./.eslintrc` and for the tests on `./tests/.eslintrc` (which inherits from the one on the root), there's also an `./.eslintignore` to ignore some files on the process, and the script that runs it is on `./utils/scripts/lint`.\n\n### Documentation\n\nI use [ESDoc](http://esdoc.org) to generate HTML documentation for the project. The configuration file is on `./.esdocrc` and the script that runs it is on `./utils/scripts/docs`.\n\n### To-Dos\n\nI use `@todo` comments to write all the pending improvements and fixes, and [Leasot](https://yarnpkg.com/en/package/leasot) to generate a report. The script that runs it is on `./utils/scripts/todo`.\n",
-    "longname": "/Users/homer0/CODE/Node/jimpex/README-esdoc.md",
+    "longname": "/Users/homer0/CODE/node/jimpex/README-esdoc.md",
     "name": "./README-esdoc.md",
     "static": true,
     "access": "public"
   },
   {
     "kind": "packageJSON",
-    "content": "{\n    \"name\": \"jimpex\",\n    \"description\": \"Express as dependency injection container.\",\n    \"homepage\": \"https://homer0.github.io/jimpex/\",\n    \"version\": \"2.0.0\",\n    \"repository\": \"homer0/jimpex\",\n    \"author\": \"Leonardo Apiwan (@homer0) <me@homer0.com>\",\n    \"license\": \"MIT\",\n    \"dependencies\": {\n      \"wootils\": \"^1.0.5\",\n      \"jimple\": \"homer0/jimple\",\n      \"express\": \"4.16.2\",\n      \"body-parser\": \"1.18.2\",\n      \"compression\": \"1.7.1\",\n      \"extend\": \"3.0.1\",\n      \"node-fetch\": \"1.7.3\",\n      \"urijs\": \"1.19.0\",\n      \"statuses\": \"1.4.0\",\n      \"fs-extra\": \"5.0.0\",\n      \"multer\": \"1.3.0\",\n      \"mime\": \"2.2.0\"\n    },\n    \"devDependencies\": {\n      \"eslint\": \"4.16.0\",\n      \"eslint-config-airbnb-base\": \"12.1.0\",\n      \"eslint-plugin-import\": \"2.8.0\",\n      \"eslint-plugin-node\": \"5.2.1\",\n      \"babel-preset-env\": \"1.6.1\",\n      \"jest-ex\": \"4.0.0\",\n      \"jest-cli\": \"22.1.4\",\n      \"jasmine-expect\": \"3.8.3\",\n      \"esdoc\": \"1.0.4\",\n      \"esdoc-standard-plugin\": \"1.0.0\",\n      \"esdoc-node\": \"1.0.3\",\n      \"leasot\": \"4.13.0\",\n      \"coveralls\": \"3.0.0\"\n    },\n    \"engine-strict\": true,\n    \"engines\": {\n      \"node\": \">=6.0.0\",\n      \"npm\": \">=3.0.0\"\n    },\n    \"main\": \"src/index.js\",\n    \"scripts\": {\n      \"install-hooks\": \"./utils/hooks/install\",\n      \"test\": \"./utils/scripts/test\",\n      \"lint\": \"./utils/scripts/lint\",\n      \"lint:full\": \"./utils/scripts/lint-full\",\n      \"predocs\": \"./utils/scripts/docs-index\",\n      \"docs\": \"./utils/scripts/docs\",\n      \"todo\": \"./utils/scripts/todo\"\n    }\n}\n",
-    "longname": "/Users/homer0/CODE/Node/jimpex/package.json",
+    "content": "{\n    \"name\": \"jimpex\",\n    \"description\": \"Express as dependency injection container.\",\n    \"homepage\": \"https://homer0.github.io/jimpex/\",\n    \"version\": \"2.1.1\",\n    \"repository\": \"homer0/jimpex\",\n    \"author\": \"Leonardo Apiwan (@homer0) <me@homer0.com>\",\n    \"license\": \"MIT\",\n    \"dependencies\": {\n      \"wootils\": \"^1.1.2\",\n      \"jimple\": \"1.5.0\",\n      \"express\": \"4.16.2\",\n      \"body-parser\": \"1.18.2\",\n      \"compression\": \"1.7.1\",\n      \"extend\": \"3.0.1\",\n      \"node-fetch\": \"1.7.3\",\n      \"urijs\": \"1.19.0\",\n      \"statuses\": \"1.4.0\",\n      \"fs-extra\": \"5.0.0\",\n      \"multer\": \"1.3.0\",\n      \"mime\": \"2.2.0\"\n    },\n    \"devDependencies\": {\n      \"eslint\": \"4.16.0\",\n      \"eslint-config-airbnb-base\": \"12.1.0\",\n      \"eslint-plugin-import\": \"2.8.0\",\n      \"eslint-plugin-node\": \"5.2.1\",\n      \"babel-preset-env\": \"1.6.1\",\n      \"jest-ex\": \"4.0.0\",\n      \"jest-cli\": \"22.1.4\",\n      \"jasmine-expect\": \"3.8.3\",\n      \"esdoc\": \"1.0.4\",\n      \"esdoc-standard-plugin\": \"1.0.0\",\n      \"esdoc-node\": \"1.0.3\",\n      \"leasot\": \"4.13.0\",\n      \"coveralls\": \"3.0.0\"\n    },\n    \"engine-strict\": true,\n    \"engines\": {\n      \"node\": \">=6.0.0\",\n      \"npm\": \">=3.0.0\"\n    },\n    \"main\": \"src/index.js\",\n    \"scripts\": {\n      \"install-hooks\": \"./utils/hooks/install\",\n      \"test\": \"./utils/scripts/test\",\n      \"lint\": \"./utils/scripts/lint\",\n      \"lint:full\": \"./utils/scripts/lint-full\",\n      \"predocs\": \"./utils/scripts/docs-index\",\n      \"docs\": \"./utils/scripts/docs\",\n      \"todo\": \"./utils/scripts/todo\"\n    }\n}\n",
+    "longname": "/Users/homer0/CODE/node/jimpex/package.json",
     "name": "package.json",
     "static": true,
     "access": "public"
@@ -6009,7 +6109,7 @@
   },
   {
     "kind": "manual",
-    "longname": "/Users/homer0/CODE/Node/jimpex/documents/options.md",
+    "longname": "/Users/homer0/CODE/node/jimpex/documents/options.md",
     "name": "./documents/options.md",
     "content": "# Jimpex Options\n\nThe options the second parameter of the class constructor and it allows you to customize almost every aspect of Jimpex.\n\nThis is what the options object looks like:\n\n```js\n{\n  // The version of the app\n  version: '0.0.0',\n\n  // The size limit for the requests payload.\n  filesizeLimit: '15MB',\n\n  // The options to customize how the app configuration is loaded (details on its section).\n  configuration: ...,\n\n  // The options for the static middleware (details on its section).\n  statics: ...,\n\n  // The options to customize the express instance and default middlewares (details on its section).\n  express: ...,\n\n  // Which built-in services to register (details on its section).\n  defaultServices: ...\n}\n```\n\nBesides the first two, which default values and descriptions are pretty clear, I'll go in detail for all the others.\n\n## Configuration\n\nThis set of options allows you to customize every aspect of how the configuration service is created. Remember that the app requires a valid configuration with a `port` setting to be started:\n\n```js\n{\n  // The default configuration. If the value is null, it will load [app-name].config.js\n  default: null,\n\n  // The name of the app, to be used on the configurations directory and filenames.\n  name: 'app',\n\n  // The path relative to the root directory where the configurations are located.\n  path: 'config/',\n\n  // If `true`, the path to the configuration will add a folder with the name of the app.\n  hasFolder: true,\n\n  // The environment variable the app will check for a configuration name.\n  environmentVariable: 'CONFIG',\n\n  // Whether or not to check for the environment variable.\n  loadFromEnvironment: true,\n\n  // If `true`, the version of the app will be copied from the loaded configuration.\n  loadVersionFromConfiguration: true,\n\n  // The name format of the configuration files.\n  filenameFormat: '[app-name].[configuration-name].config.js',\n}\n```\n\nAs you can see, if you don't want to depend on environment variables or just have one single configuration for your app, you can use the `default` option and turn `loadFromEnvironment` to `false`.\n\nThe configuration service is an implementation of [wootils AppConfiguration](https://github.com/homer0/wootils/blob/master/documents/node/appConfiguration.md), so you can check its API in its oficial configuration.\n\n## Statics\n\nThese options are specifically for the Express [`static`](https://github.com/expressjs/serve-static) middleware:\n\n```js\n{\n  // Whether or not to enable the middleware to serve statics files.\n  enabled: true,\n\n  // If true, the statics folder would be relative to the project root directory, otherwise,\n  // it would be relative to the app executable.\n  onHome: false,\n\n  // The name of both the route and the folder, relative to whatever you defined with the\n  // `onHome` option.\n  route: 'statics',\n  \n  // By default, the folder will be the same as the `route`, but you can use this option\n  // to define a relative path that won't affect the route.\n  folder: '',\n}\n```\n\n## Express\n\nThese are options for miscellaneous things you can add to the Express server:\n\n```js\n{\n  // Whether or not to enable the `trust proxy` option.\n  trustProxy: true,\n\n  // Whether or not to remove the `x-powered-by` header.\n  disableXPoweredBy: true,\n\n  // Whether or not to add the `compression` middleware.\n  compression: true,\n\n  // Whether or not to add the `body-parser` middleware.\n  bodyParser: true,\n\n  // Whether or not to add the `multer` middleware.\n  multer: true,\n}\n```\n\n## Default services\n\nThese options allow you to register some of the built-in service that I consider useful enough to be added on any app.\n\n```js\n{\n  // These services include:\n  // - Error handler\n  // - Send File\n  common: true,\n\n  // These services include:\n  // - HTTP\n  // - Responses builder\n  http: true,\n\n  // These services include:\n  // - API client\n  // - Ensure bearer authentication\n  // - Version validator\n  api: true,\n}\n```\n\nFor more information about these services, check the document about **Built-in Services**.\n",
     "static": true,
@@ -6017,7 +6117,7 @@
   },
   {
     "kind": "manual",
-    "longname": "/Users/homer0/CODE/Node/jimpex/documents/controllers.md",
+    "longname": "/Users/homer0/CODE/node/jimpex/documents/controllers.md",
     "name": "./documents/controllers.md",
     "content": "# Built-in Controllers\n\nAll of these controllers are available on the Jimpex package and can be easily required and implemented.\n\n## Version validator\n\nIf you mount it on a route it will generate a `409` error if the request doesn't have a version parameter with the same version as the one on the configuration file.\n\n- Module: `api`\n- Requires: `versionValidator`\n\n```js\nconst {\n  Jimpex,\n  services: {\n    api: { versionValidator },\n  },\n  controllers: {\n    api: { versionValidatorController },\n  },\n};\n\nclass App extends Jimpex {\n  boot() {\n    // Register the dependencies...\n    this.register(versionValidator);\n    \n    // Add the controller.\n    this.mount('/api', versionValidatorController);\n  }\n}\n```\n\nThe controller will mount one route:\n\n- `* /:version/*`: To validate and protect any sub route.\n\nYou can mount other routes on `/api/:version/...` and they'll be _\"protected\"_ by the version check.\n\n## Configuration\n\nAllows you to see and switch the current configuration. It can be enabled or disabled by using a setting on the configuration.\n\n- Module: `common`\n- Requires: `responsesBuilder`\n\n```js\nconst {\n  Jimpex,\n  services: {\n    http: { responsesBuilder },\n  },\n  controllers: {\n    common: { configurationController },\n  },\n};\n\nclass App extends Jimpex {\n  boot() {\n    // Register the dependencies...\n    this.register(responsesBuilder);\n    \n    // Add the controller.\n    this.mount('/config', configurationController);\n  }\n}\n```\n\nNow, there are two rules behind this controller:\n\n1. Your configuration must have a setting `debug.configurationController` with the value of `true`.\n2. To be able to switch configurations, the default configuration and/or the first configuration loaded must have a setting `allowConfigurationSwitch` set to `true`.\n\nThe reason for those rules is that this controller is development purposes as you wouldn't want to make public the settings of your app.\n\nThe controller then will mount two routes:\n\n- `GET /`: It will show the current configuration.\n- `GET /switch/:name`: It will, if allowed, switch to an specified configuration.\n\n## Health\n\nShows the version and name of the configuration, just to check the app is running.\n\n- Module: `common`\n- Requires: `responsesBuilder`\n\n```js\nconst {\n  Jimpex,\n  services: {\n    http: { responsesBuilder },\n  },\n  controllers: {\n    common: { healthController },\n  },\n};\n\nclass App extends Jimpex {\n  boot() {\n    // Register the dependencies...\n    this.register(responsesBuilder);\n    \n    // Add the controller.\n    this.mount('/health', healthController);\n  }\n}\n```\n\nThat's all there is, the controller mounts only one route:\n\n- `GET /`: Shows the information.\n\n## Root Statics\n\nIt allows your app to server static files from the root directory, without having to use the `static` middleware on that directory.\n\n- Module: `common`\n- Requires: `sendFile`\n\n```js\nconst {\n  Jimpex,\n  services: {\n    common: { sendFile },\n  },\n  controllers: {\n    common: { healthController },\n  },\n};\n\nclass App extends Jimpex {\n  boot() {\n    // Register the dependencies...\n    this.register(sendFile);\n    \n    // Add the controller.\n    this.mount('/', rootStaticsController);\n  }\n}\n```\n\nBy default, it serves an `index.html` and a `favicon.ico`, but you can use the _\"controller generator\"_ `rootStaticsControllerCustom` to modify those values:\n\n```js\nconst {\n  Jimpex,\n  services: {\n    common: { sendFile },\n  },\n  controllers: {\n    common: { rootStaticsControllerCustom },\n  },\n};\n\nclass App extends Jimpex {\n  boot() {\n    // Register the dependencies...\n    this.register(sendFile);\n    \n    // Add the controller.\n    this.mount('/', rootStaticsControllerCustom([\n      'my-file-one.html',\n      'favicon.icon',\n      'index.html',\n      'some-other.html',\n    ]));\n  }\n}\n```\n\nThe controller mounts a `GET` route for each one of those files.",
     "static": true,
@@ -6025,7 +6125,7 @@
   },
   {
     "kind": "manual",
-    "longname": "/Users/homer0/CODE/Node/jimpex/documents/middlewares.md",
+    "longname": "/Users/homer0/CODE/node/jimpex/documents/middlewares.md",
     "name": "./documents/middlewares.md",
     "content": "# Built-in Middlewares\n\nAll of these controllers are available on the Jimpex package and can be easily required and implemented.\n\n## Error Handler\n\nAllows you to generate responses for errors and potentially hide uncaught exceptions under a generic message, unless it's disabled via configuration settings.\n\n- Module: `common`\n- Requires: `responsesBuilder` and `appError`\n\n```js\nconst {\n  Jimpex,\n  services: {\n    http: { responsesBuilder },\n    common: { appError },\n  },\n  middlewares: {\n    common: { errorHandler },\n  },\n};\n\nclass App extends Jimpex {\n  boot() {\n    // Register the dependencies...\n    this.register(responsesBuilder);\n    this.register(appError);\n    \n    ...\n    \n    // Add the middleware at the end.\n    this.use(errorHandler);\n  }\n}\n```\n\nNow, there's a configuration setting for this controller: `debug.showErrors`. By enabling the setting, the middleware will show the message and the stack information of all kind of errors.\n\nIf the configuration setting is disabled (or not present), the errors stack will never be visible, and if the error is not an instance of the `appError` service, it will show a generic message: _\"Oops! Something went wrong, please try again\"_.\n\nNow, when using errors of the type `appError`, you can add the following extra data:\n\n```js\n// Assuming `AppError` is the injected `appError` and you are on the context of a middleware\nnext(new AppError('Something went wrong', {\n  status: someHTTPStatus,\n  response: someObject,\n}));\n```\n\n- `status` will replace the error responses HTTP status.\n- `response` will be merged into the error response `data` key.\n\n## Force HTTPS\n\nRedirect all incoming traffic from HTTP to HTTPS. It also allows you to set routes to ignore the redirection.\n\n- Module: `common`\n\n```js\nconst {\n  Jimpex,\n  middlewares: {\n    common: { forceHTTPS },\n  },\n};\n\nclass App extends Jimpex {\n  boot() {\n    // Add the middleware first.\n    this.use(errorHandler);\n  }\n}\n```\n\nBy default, it redirects all the URLs that don't start with `/service/` from HTTP to HTTPs, but you can use the _\"middleware generator\"_ `forceHTTPSCustom` to modify the rules:\n\n```js\nconst {\n  Jimpex,\n  middlewares: {\n    common: { forceHTTPSCustom },\n  },\n};\n\nclass App extends Jimpex {\n  boot() {\n    // Add the middleware first.\n    this.use(forceHTTPSCustom([\n      /^\\/service\\//,\n      /^\\/api\\//,\n    ]));\n  }\n}\n```\n\n**VERY IMPORTANT:** The forced redirection will only happen if your configuration has a setting named `forceHTTPS` with a value of `true`.\n\n## Fast HTML\n\nAllows you to specify which routes will be handled and in case there are no controllers for a requested route, it sends out and HTML file, thus preventing the request to be unnecessarily processed by the middlewares.\n\n- Module: `html`\n- Requires: `sendFile` and, optionally, an `HTMLGenerator` service.\n\n```js\nconst {\n  Jimpex,\n  services: {\n    common: { sendFile },\n  },\n  middlewares: {\n    html: { fastHTML },\n  },\n};\n\nclass App extends Jimpex {\n  boot() {\n    // Register the dependencies...\n    this.register(sendFile);\n    \n    // Add the middleware on one of the first positions.\n    this.use(fastHTML);\n  }\n}\n```\n\nBy default, if the requested URL doesn't match `/^\\/api\\//` or `/\\.ico$/` it serves an `index.html`, but you can use the _\"middleware generator\"_ `fastHTMLCustom` to modify those options:\n\n```js\nconst {\n  Jimpex,\n  services: {\n    common: { sendFile },\n  },\n  middlewares: {\n    html: { fastHTMLCustom },\n  },\n};\n\nclass App extends Jimpex {\n  boot() {\n    // Register the dependencies...\n    this.register(sendFile);\n    \n    // Add the middleware on one of the first positions.\n    this.use(fastHTMLCustom(\n      'my-custom-index.html',\n      [`/^\\/service\\//`]\n    ));\n  }\n}\n```\n\nNow, as mentioned on the requirements, you can optionally use the `htmlGenerator` or an `HTMLGenerator` service to serve a generated file.\n\nThe default implementation checks if there's an `htmlGenerator` service registered on the app and uses that file; and in the case of `fastHTMLCustom`, you can specify a third parameter with the name of the `HTMLGenerator` service name you want to use.\n\n## Show HTML\n\nA really simple middleware to serve an HTML file. Its true feature is that it can be hooked up to the **HTML Generator** service.\n\n- Module: `html`\n- Requires: `sendFile` and, optionally, an `HTMLGenerator` service.\n\n```js\nconst {\n  Jimpex,\n  services: {\n    common: { sendFile },\n  },\n  middlewares: {\n    html: { showHTML },\n  },\n};\n\nclass App extends Jimpex {\n  boot() {\n    // Register the dependencies...\n    this.register(sendFile);\n    \n    // Add the middleware at the end.\n    this.use(showHTML);\n  }\n}\n```\n\nBy default, if the middleware is reached, it will show an `index.html`, but you can use the _\"middleware generator\"_ `showHTMLCustom` to modify the filename:\n\n```js\nconst {\n  Jimpex,\n  services: {\n    common: { sendFile },\n  },\n  middlewares: {\n    html: { showHTMLCustom },\n  },\n};\n\nclass App extends Jimpex {\n  boot() {\n    // Register the dependencies...\n    this.register(sendFile);\n    \n    // Add the middleware at the end.\n    this.use(showHTMLCustom('my-file.html'));\n  }\n}\n```\n\nNow, as mentioned on the requirements, you can optionally use the `htmlGenerator` or an `HTMLGenerator` service to show the generated file.\n\nThe default implementation checks if there's an `htmlGenerator` service registered on the app and uses that file; and in the case of `showHTMLCustom `, you can specify a second parameter with the name of the `HTMLGenerator` service name you want to use.",
     "static": true,
@@ -6033,9 +6133,9 @@
   },
   {
     "kind": "manual",
-    "longname": "/Users/homer0/CODE/Node/jimpex/documents/services.md",
+    "longname": "/Users/homer0/CODE/node/jimpex/documents/services.md",
     "name": "./documents/services.md",
-    "content": "# Built-in Services\n\nAll of these controllers are available on the Jimpex package and can be easily required and implemented.\n\nIn the case of the services from the modules `api`, `http` and `common`, you can register them when the app starts by using the `defaultService` option (Check the options document for more information).\n\n## API Client\n\nAn implementation of the [wootils API Client](https://github.com/homer0/wootils/blob/master/documents/shared/APIClient.md) but that is connected to the HTTP service, to allow logging and forwarding of the headers.\n\n- Module: `api`\n- Requires: `http` and `appError`\n\n```js\nconst {\n  Jimpex,\n  services: {\n    api: { apiClient },\n    common: { appError },\n    http: { http },\n  },\n};\n\nclass App extends Jimpex {\n  boot() {\n    // Register the dependencies...\n    this.register(http);\n    this.register(appError);\n        \n    // Register the client\n    this.register(apiClient);\n  }\n}\n```\n\nBy default, the service is registered with the name `apiClient`, the API entry point is taken from the configuration setting `api.url` and the endpoints from `api.endpoints`, but you can use the _\"service generator\"_ `apiClientCustom` to modify those options:\n\n```js\nconst {\n  Jimpex,\n  services: {\n    api: { apiClientCustom },\n    common: { appError },\n    http: { http },\n  },\n};\n\nclass App extends Jimpex {\n  boot() {\n    // Register the dependencies...\n    this.register(http);\n    this.register(appError);\n        \n    // Register the client\n    this.register({\n      'myCustomAPIService',\n      'myapi'\n    });\n  }\n}\n```\n\nThe first parameter is the name used to register the server and the second one is the setting key that has a `url` and an `endpoints` dictionary.\n\n## Ensure bearer authentication\n\nA service-middleware that allows you to validate the incoming requests `Authorization` header.\n\nIt's a _\"service-middleware\"_ because when you access the service, it doesn't return a class instance, but a middleware function for you to use on your controller routes.\n\n- Module: `api`\n- Requires: `appError`\n\n```js\nconst {\n  Jimpex,\n  services: {\n    api: { ensureBearerAuthentication },\n    common: { appError },\n  },\n};\n\nclass App extends Jimpex {\n  boot() {\n    // Register the dependencies...\n    this.register(appError);\n        \n    // Register the service\n    this.register(apiClient);\n  }\n}\n```\n\nNow, if the token process a request an detects a valid token, it will set that token on the request `bearerToken` property:\n\n```js\nconst myCtrl = controller((app) => {\n  const router = app.get('router');\n  const ensureAuthentication = app.get('ensureBearerAuthentication');\n  return [router.get('/something', [\n    ensureAuthentication,\n    (req, res, next) => {\n      console.log('Token:', req.bearerToken);\n      next();\n    },\n  ])];\n});\n```\n\n## Version validator\n\nA service-middleware to validate a `version` parameter against the configuration `version` setting. It's what the version validator middleware internally uses.\n\nIt's a _\"service-middleware\"_ because when you access the service, it doesn't return a class instance, but a middleware function for you to use on your controller routes.\n\n- Module: `api`\n- Requires: `responsesBuilder` and `appError`\n\n```js\nconst {\n  Jimpex,\n  services: {\n    api: { versionValidator },\n    common: { appError },\n    http: { responsesBuilder },\n  },\n};\n\nclass App extends Jimpex {\n  boot() {\n    // Register the dependencies...\n    this.register(appError);\n    this.register(responsesBuilder);\n        \n    // Register the service\n    this.register(versionValidator);\n  }\n}\n```\n\nNow you can use it on your controllers routes to validate that the version being used is the same as the one the app is running on:\n\n```js\nconst myCtrl = controller((app) => {\n  const router = app.get('router');\n  const versionValidator = app.get('versionValidator');\n  return [router.get('/:version/something', [\n    versionValidator,\n    (req, res, next) => {\n      console.log('The version is valid!');\n      next();\n    },\n  ])];\n});\n```\n\n## Error\n\nA very simple subclass the `Error` to inject extra information on the errors so they can customize the error handler responses.\n\nSomething important to remember is that the `appError` service doesn't return an instance of the service but the class so you can construct an error.\n\n- Module: `common`\n\n```js\nconst {\n  Jimpex,\n  services: {\n    common: { appError },\n  },\n};\n\nclass App extends Jimpex {\n  boot() {        \n    // Register the service\n    this.register(appError);\n  }\n}\n```\n\nThat's all, now you can do `get('appError')`, inject `AppError` and generate your custom errors:\n\n```js\nnew Error('Something happened', {\n  someProp: 'someValue',\n}):\n```\n\nThis is useful if you are building a app with multiple known exceptions, you can use the extra settings to send context information.\n\n## Send File\n\nIt allows you to send a file on a response with a path relative to the app executable.\n\nThe `sendFile` doesn't return a class service instance but just a function.\n\n- Module: `common`\n\n```js\nconst {\n  Jimpex,\n  services: {\n    common: { sendFile },\n  },\n};\n\nclass App extends Jimpex {\n  boot() {        \n    // Register the service\n    this.register(sendFile);\n  }\n}\n```\n\nDone, you can now use it on your middlewares and/or controllers routes to send files as responses:\n\n```js\nconst myCtrl = controller((app) => {\n  const router = app.get('router');\n  const sendFile = app.get('sendFile');\n  return [router.get('/something', [\n    (req, res, next) => {\n      sendFile(res, './something.html', next);\n    },\n  ])];\n});\n```\n\nBy default, the path of the file is relative to the directory where the app executable is located, but you can change the location ([Check `PathUtils` locations](https://github.com/homer0/wootils/blob/master/documents/node/pathUtils.md#multiple-locations)) by adding an extra parameter:\n\n```js\nconst myCtrl = controller((app) => {\n  const router = app.get('router');\n  const sendFile = app.get('sendFile');\n  return [router.get('/something', [\n    (req, res, next) => {\n      sendFile(res, './something.html', next, 'home');\n    },\n  ])];\n});\n```\n\nIn this last example, the path to the file is relative to the project root directory.\n\n## Frontend Fs\n\nThis service allows the app to easily read static files. The idea behind centralizing this functionalities into a service is that is pretty common to have bundling tools to generate the frontend, and on that process files can have different paths or not even be generated all, that's why this service exists.\n\n The service can be extended/overwritten to accommodate any requirements and avoid having to update or add `if`s to every `fs` call the app does. Another _'feature'_ of this service is that all the paths are relative to the directory where the app executable is located, so you don't have to remember the relative path from the place you are accessing a file to the place where it's located.\n\n- Module: `common`\n\n```js\nconst {\n  Jimpex,\n  services: {\n    frontend: { frontendFs },\n  },\n};\n\nclass App extends Jimpex {\n  boot() {        \n    // Register the service\n    this.register(frontendFs);\n  }\n}\n```\n\nNow, whenever you are reading/writing/deleting a file that was generated/belongs to the frontend, you can use this service methods:\n\n- `.read(filepath, [encoding='utf-8'])`\n- `.write(filepath, data)`\n- `.delete(filepath)`\n\n## HTML Generator\n\nA service that allows you to generate an HTML file when the app gets started and inject contents of the configuration as a `window` variable.\n\n- Module: `html`\n- Requires: `frontendFs`\n\n```js\nconst {\n  Jimpex,\n  services: {\n    frontend: { frontendFs },\n    html: { htmlGenerator },\n  },\n};\n\nclass App extends Jimpex {\n  boot() {\n    // Register the dependencies...\n    this.register(frontendFs);\n    \n    // Register the service\n    this.register(htmlGenerator);\n  }\n}\n```\n\nThe service, after registering, it also hooks itself to the app event that gets fired when it starts so it can create the file automatically.\n\nNow, this service has a few default options, so instead of explaining which are, we'll see each option on detail:\n\n```js\n{\n  // The name of the file it should use as template.\n  template: 'index.tpl.html',\n\n  // The name of the generated file.\n  file: 'index.html',\n\n  // Whether or not to delete the template after generating the file.\n  deleteTemplateAfter: true,\n\n  // The placeholder string where the information will be written.\n  replacePlaceholder: '{{appConfiguration}}',\n\n  // The name of the variable that will have the information on the file.\n  variable: 'appConfiguration',\n\n  // A list of settings from the app configuration that will be used as the\n  // information to inject on the file.\n  configurationKeys: ['features', 'version', 'postMessagesPrefix'],\n}\n```\n\nIt also supports a custom service with a `getValues` method to obtain the information to inject instead of taking it from the configuration.\n\nTo modify the options, you need to use the _\"service generator\"_ `htmlGeneratorCustom`:\n\n```js\nconst {\n  Jimpex,\n  services: {\n    frontend: { frontendFs },\n    html: { htmlGeneratorCustom },\n  },\n};\n\nclass App extends Jimpex {\n  boot() {\n    // Register the dependencies...\n    this.register(frontendFs);\n    \n    // Register the service\n    this.register(htmlGeneratorCustom({\n      template: 'template.tpl',\n      file: 'my-index.html',\n      ...\n    }));\n  }\n}\n```\n\nThe first parameter is the name of the service and the second the options to customize it. In case you want to use another service to get the values, you can send the name of that service as the third parameter.\n\n## HTTP\n\nA set of utilities to work with HTTP requests and responses.\n\n- Module: `http`\n\n```js\nconst {\n  Jimpex,\n  services: {\n    http: { http },\n  },\n};\n\nclass App extends Jimpex {\n  boot() {\n    // Register the service\n    this.register(http);\n  }\n}\n```\n\nThe `http` service has three methods:\n\n- `getIPFromRequest(req)`: It allows you to get the IP address from an app request.\n- `getCustomHeadersFromRequest(req)`: It returns a dictionary with all the custom headers a request may have, except for `x-forwarded-for`.\n- `fetch(url, options)`: Probably the most important as is the one the app uses to make requests to external services. This service supports the same signature as the native `fetch` function, with the addition that you can send a request object as `req` on the options and the method will include the `x-forwarded-for` method with the request IP address (`getIPFromRequest`) and all the request custom headers (`getCustomHeadersFromRequest`).\n\nAlso, if you have a configuration setting named `debug.logRequests` with the value of `true`, it will log information of all the outgoing requests and their responses on the console.\n\n## Responses builder\n\nA service that generates JSON and HTML responses.\n\n- Module: `http`\n\n```js\nconst {\n  Jimpex,\n  services: {\n    http: { responsesBuilder },\n  },\n};\n\nclass App extends Jimpex {\n  boot() {\n    // Register the service\n    this.register(responsesBuilder);\n  }\n}\n```\n\nThis service has only two methods:\n\n- `json(res, data, status = 200, metadata = {})`: To write regular JSON responses.\n- `htmlPostMessage(res, title, message, status = 200, options = {})`: To write an HTML response that sends a post message. Very useful for when the app opened the route using a popup. The last parameter allows you to customize the HTML response:\n\n```js\n{\n  // The target that will emit the `postMessage`.\n  target: 'window.opener',\n\n  //  Whether or not to do a `window.close` after sending the message.\n  close: true,\n\n  // How many ms should it wait before closing the window, if `options.close` is `true`.\n  closeDelay: 700,  \n}\n```",
+    "content": "# Built-in Services\n\nAll of these controllers are available on the Jimpex package and can be easily required and implemented.\n\nIn the case of the services from the modules `api`, `http` and `common`, you can register them when the app starts by using the `defaultService` option (Check the options document for more information).\n\n## API Client\n\nAn implementation of the [wootils API Client](https://github.com/homer0/wootils/blob/master/documents/shared/APIClient.md) but that is connected to the HTTP service, to allow logging and forwarding of the headers.\n\n- Module: `api`\n- Requires: `http` and `appError`\n\n```js\nconst {\n  Jimpex,\n  services: {\n    api: { apiClient },\n    common: { appError },\n    http: { http },\n  },\n};\n\nclass App extends Jimpex {\n  boot() {\n    // Register the dependencies...\n    this.register(http);\n    this.register(appError);\n\n    // Register the client\n    this.register(apiClient);\n  }\n}\n```\n\nBy default, the service is registered with the name `apiClient`, the API entry point is taken from the configuration setting `api.url` and the endpoints from `api.endpoints`, but you can use the _\"service generator\"_ `apiClientCustom` to modify those options:\n\n```js\nconst {\n  Jimpex,\n  services: {\n    api: { apiClientCustom },\n    common: { appError },\n    http: { http },\n  },\n};\n\nclass App extends Jimpex {\n  boot() {\n    // Register the dependencies...\n    this.register(http);\n    this.register(appError);\n\n    // Register the client\n    this.register({\n      'myCustomAPIService',\n      'myapi'\n    });\n  }\n}\n```\n\nThe first parameter is the name used to register the server and the second one is the setting key that has a `url` and an `endpoints` dictionary.\n\n## Ensure bearer authentication\n\nA service-middleware that allows you to validate the incoming requests `Authorization` header.\n\nIt's a _\"service-middleware\"_ because when you access the service, it doesn't return a class instance, but a middleware function for you to use on your controller routes.\n\n- Module: `api`\n- Requires: `appError`\n\n```js\nconst {\n  Jimpex,\n  services: {\n    api: { ensureBearerAuthentication },\n    common: { appError },\n  },\n};\n\nclass App extends Jimpex {\n  boot() {\n    // Register the dependencies...\n    this.register(appError);\n\n    // Register the service\n    this.register(apiClient);\n  }\n}\n```\n\nNow, if the token process a request an detects a valid token, it will set that token on the request `bearerToken` property:\n\n```js\nconst myCtrl = controller((app) => {\n  const router = app.get('router');\n  const ensureAuthentication = app.get('ensureBearerAuthentication');\n  return [router.get('/something', [\n    ensureAuthentication,\n    (req, res, next) => {\n      console.log('Token:', req.bearerToken);\n      next();\n    },\n  ])];\n});\n```\n\n## Version validator\n\nA service-middleware to validate a `version` parameter against the configuration `version` setting. It's what the version validator middleware internally uses.\n\nIt's a _\"service-middleware\"_ because when you access the service, it doesn't return a class instance, but a middleware function for you to use on your controller routes.\n\n- Module: `api`\n- Requires: `responsesBuilder` and `appError`\n\n```js\nconst {\n  Jimpex,\n  services: {\n    api: { versionValidator },\n    common: { appError },\n    http: { responsesBuilder },\n  },\n};\n\nclass App extends Jimpex {\n  boot() {\n    // Register the dependencies...\n    this.register(appError);\n    this.register(responsesBuilder);\n\n    // Register the service\n    this.register(versionValidator);\n  }\n}\n```\n\nNow you can use it on your controllers routes to validate that the version being used is the same as the one the app is running on:\n\n```js\nconst myCtrl = controller((app) => {\n  const router = app.get('router');\n  const versionValidator = app.get('versionValidator');\n  return [router.get('/:version/something', [\n    versionValidator,\n    (req, res, next) => {\n      console.log('The version is valid!');\n      next();\n    },\n  ])];\n});\n```\n\n## Error\n\nA very simple subclass the `Error` to inject extra information on the errors so they can customize the error handler responses.\n\nSomething important to remember is that the `appError` service doesn't return an instance of the service but the class so you can construct an error.\n\n- Module: `common`\n\n```js\nconst {\n  Jimpex,\n  services: {\n    common: { appError },\n  },\n};\n\nclass App extends Jimpex {\n  boot() {        \n    // Register the service\n    this.register(appError);\n  }\n}\n```\n\nThat's all, now you can do `get('appError')`, inject `AppError` and generate your custom errors:\n\n```js\nnew Error('Something happened', {\n  someProp: 'someValue',\n}):\n```\n\nThis is useful if you are building a app with multiple known exceptions, you can use the extra settings to send context information.\n\n## Send File\n\nIt allows you to send a file on a response with a path relative to the app executable.\n\nThe `sendFile` doesn't return a class service instance but just a function.\n\n- Module: `common`\n\n```js\nconst {\n  Jimpex,\n  services: {\n    common: { sendFile },\n  },\n};\n\nclass App extends Jimpex {\n  boot() {        \n    // Register the service\n    this.register(sendFile);\n  }\n}\n```\n\nDone, you can now use it on your middlewares and/or controllers routes to send files as responses:\n\n```js\nconst myCtrl = controller((app) => {\n  const router = app.get('router');\n  const sendFile = app.get('sendFile');\n  return [router.get('/something', [\n    (req, res, next) => {\n      sendFile(res, './something.html', next);\n    },\n  ])];\n});\n```\n\nBy default, the path of the file is relative to the directory where the app executable is located, but you can change the location ([Check `PathUtils` locations](https://github.com/homer0/wootils/blob/master/documents/node/pathUtils.md#multiple-locations)) by adding an extra parameter:\n\n```js\nconst myCtrl = controller((app) => {\n  const router = app.get('router');\n  const sendFile = app.get('sendFile');\n  return [router.get('/something', [\n    (req, res, next) => {\n      sendFile(res, './something.html', next, 'home');\n    },\n  ])];\n});\n```\n\nIn this last example, the path to the file is relative to the project root directory.\n\n## Frontend Fs\n\nThis service allows the app to easily read static files. The idea behind centralizing this functionalities into a service is that is pretty common to have bundling tools to generate the frontend, and on that process files can have different paths or not even be generated all, that's why this service exists.\n\n The service can be extended/overwritten to accommodate any requirements and avoid having to update or add `if`s to every `fs` call the app does. Another _'feature'_ of this service is that all the paths are relative to the directory where the app executable is located, so you don't have to remember the relative path from the place you are accessing a file to the place where it's located.\n\n- Module: `common`\n\n```js\nconst {\n  Jimpex,\n  services: {\n    frontend: { frontendFs },\n  },\n};\n\nclass App extends Jimpex {\n  boot() {        \n    // Register the service\n    this.register(frontendFs);\n  }\n}\n```\n\nNow, whenever you are reading/writing/deleting a file that was generated/belongs to the frontend, you can use this service methods:\n\n- `.read(filepath, [encoding='utf-8'])`\n- `.write(filepath, data)`\n- `.delete(filepath)`\n\n## HTML Generator\n\nA service that allows you to generate an HTML file when the app gets started and inject contents of the configuration as a `window` variable.\n\n- Module: `html`\n- Requires: `frontendFs`\n\n```js\nconst {\n  Jimpex,\n  services: {\n    frontend: { frontendFs },\n    html: { htmlGenerator },\n  },\n};\n\nclass App extends Jimpex {\n  boot() {\n    // Register the dependencies...\n    this.register(frontendFs);\n\n    // Register the service\n    this.register(htmlGenerator);\n  }\n}\n```\n\nThe service, after registering, it also hooks itself to the app event that gets fired when it starts so it can create the file automatically.\n\nNow, this service has a few default options, so instead of explaining which are, we'll see each option on detail:\n\n```js\n{\n  // The name of the file it should use as template.\n  template: 'index.tpl.html',\n\n  // The name of the generated file.\n  file: 'index.html',\n\n  // Whether or not to delete the template after generating the file.\n  deleteTemplateAfter: true,\n\n  // The placeholder string where the information will be written.\n  replacePlaceholder: '{{appConfiguration}}',\n\n  // A dynamic placeholder to replace single values on the template.\n  valuesExpression: /\\{\\{(.*?)\\}\\}/ig,\n\n  // The name of the variable that will have the information on the file.\n  variable: 'appConfiguration',\n\n  // A list of settings from the app configuration that will be used as the\n  // information to inject on the file.\n  configurationKeys: ['features', 'version', 'postMessagesPrefix'],\n}\n```\n\nIt also supports a custom service with a `getValues` method to obtain the information to inject instead of taking it from the configuration.\n\nTo modify the options, you need to use the _\"service generator\"_ `htmlGeneratorCustom`:\n\n```js\nconst {\n  Jimpex,\n  services: {\n    frontend: { frontendFs },\n    html: { htmlGeneratorCustom },\n  },\n};\n\nclass App extends Jimpex {\n  boot() {\n    // Register the dependencies...\n    this.register(frontendFs);\n\n    // Register the service\n    this.register(htmlGeneratorCustom({\n      template: 'template.tpl',\n      file: 'my-index.html',\n      ...\n    }));\n  }\n}\n```\n\nThe first parameter is the name of the service and the second the options to customize it. In case you want to use another service to get the values, you can send the name of that service as the third parameter.\n\n## HTTP\n\nA set of utilities to work with HTTP requests and responses.\n\n- Module: `http`\n\n```js\nconst {\n  Jimpex,\n  services: {\n    http: { http },\n  },\n};\n\nclass App extends Jimpex {\n  boot() {\n    // Register the service\n    this.register(http);\n  }\n}\n```\n\nThe `http` service has three methods:\n\n- `getIPFromRequest(req)`: It allows you to get the IP address from an app request.\n- `getCustomHeadersFromRequest(req)`: It returns a dictionary with all the custom headers a request may have, except for `x-forwarded-for`.\n- `fetch(url, options)`: Probably the most important as is the one the app uses to make requests to external services. This service supports the same signature as the native `fetch` function, with the addition that you can send a request object as `req` on the options and the method will include the `x-forwarded-for` method with the request IP address (`getIPFromRequest`) and all the request custom headers (`getCustomHeadersFromRequest`).\n\nAlso, if you have a configuration setting named `debug.logRequests` with the value of `true`, it will log information of all the outgoing requests and their responses on the console.\n\n## Responses builder\n\nA service that generates JSON and HTML responses.\n\n- Module: `http`\n\n```js\nconst {\n  Jimpex,\n  services: {\n    http: { responsesBuilder },\n  },\n};\n\nclass App extends Jimpex {\n  boot() {\n    // Register the service\n    this.register(responsesBuilder);\n  }\n}\n```\n\nThis service has only two methods:\n\n- `json(res, data, status = 200, metadata = {})`: To write regular JSON responses.\n- `htmlPostMessage(res, title, message, status = 200, options = {})`: To write an HTML response that sends a post message. Very useful for when the app opened the route using a popup. The last parameter allows you to customize the HTML response:\n\n```js\n{\n  // The target that will emit the `postMessage`.\n  target: 'window.opener',\n\n  //  Whether or not to do a `window.close` after sending the message.\n  close: true,\n\n  // How many ms should it wait before closing the window, if `options.close` is `true`.\n  closeDelay: 700,  \n}\n```\n",
     "static": true,
     "access": "public"
   }

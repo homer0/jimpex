@@ -334,6 +334,9 @@ class App extends Jimpex {
   // The placeholder string where the information will be written.
   replacePlaceholder: &apos;{{appConfiguration}}&apos;,
 
+  // A dynamic placeholder to replace single values on the template.
+  valuesExpression: /\{\{(.*?)\}\}/ig,
+
   // The name of the variable that will have the information on the file.
   variable: &apos;appConfiguration&apos;,
 
