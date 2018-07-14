@@ -156,7 +156,7 @@ const myCtrl = controller((app) => {
 
 ## Error
 
-A very simple subclass the `Error` to inject extra information on the errors so they can customize the error handler responses.
+A very simple subclass of `Error` to inject extra information on the errors so they can customize the error handler responses.
 
 Something important to remember is that the `appError` service doesn't return an instance of the service but the class so you can construct an error.
 
@@ -186,7 +186,7 @@ new Error('Something happened', {
 }):
 ```
 
-This is useful if you are building a app with multiple known exceptions, you can use the extra settings to send context information.
+This is useful if you are building an app with multiple known exceptions, you can use the extra settings to send context information.
 
 ## Send File
 
