@@ -170,3 +170,4 @@ class App extends Jimpex {
 ```
 
 The controller mounts a `GET` route for each one of those files.
+
