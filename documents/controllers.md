@@ -125,7 +125,7 @@ const {
     common: { sendFile },
   },
   controllers: {
-    common: { healthController },
+    common: { rootStaticsController },
   },
 };
 
