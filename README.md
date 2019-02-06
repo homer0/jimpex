@@ -10,15 +10,13 @@ A friend who's also web developer brought the idea of start using a dependency i
 
 A couple of months after that, the same friend told me that we should do something similar to [Silex](https://silex.symfony.com/), which is based on Pimple, with Express. I ran with the idea and... this project is what I think a mix of Jimple and Express would look like. To be clear, **this is not a port of Silex**.
 
-Thanks `[name]`!!! (I'll ask permission later to publish his name :P)
-
 ## Information
 
 | -            | -                                                                  |
 |--------------|--------------------------------------------------------------------|
 | Package      | jimpex                                                             |
 | Description  | Express as dependency injection container.                         |
-| Node Version | >= v6.10.0                                                         |
+| Node Version | >= v8.0.0                                                         |
 
 ## Usage
 
@@ -278,19 +276,19 @@ Before doing anything, install the repository hooks:
 
 ```bash
 # You can either use npm or yarn, it doesn't matter
-npm run install-hooks
+yarn run hooks
 ```
 
 ### NPM/Yarn Tasks
 
 | Task                    | Description                         |
 |-------------------------|-------------------------------------|
-| `npm run install-hooks` | Install the GIT repository hooks.   |
-| `npm test`              | Run the project unit tests.         |
-| `npm run lint`          | Lint the modified files.            |
-| `npm run lint:full`     | Lint the project code.              |
-| `npm run docs`          | Generate the project documentation. |
-| `npm run todo`          | List all the pending to-do's.       |
+| `yarn run hooks`        | Install the GIT repository hooks.   |
+| `yarn test`             | Run the project unit tests.         |
+| `yarn run lint`         | Lint the modified files.            |
+| `yarn run lint:full`    | Lint the project code.              |
+| `yarn run docs`         | Generate the project documentation. |
+| `yarn run todo`         | List all the pending to-do's.       |
 
 ### Testing
 
