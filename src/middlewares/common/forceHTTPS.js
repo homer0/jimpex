@@ -40,12 +40,11 @@ class ForceHTTPS {
  *                              ignored.
  * @return {Middleware}
  */
-const forceHTTPSCustom = (ignoredRoutes) =>
-  middleware((app) => (
-    app.get('appConfiguration').get('forceHTTPS') ?
-      new ForceHTTPS(ignoredRoutes).middleware() :
-      null
-  ));
+const forceHTTPSCustom = (ignoredRoutes) => middleware((app) => (
+  app.get('appConfiguration').get('forceHTTPS') ?
+    new ForceHTTPS(ignoredRoutes).middleware() :
+    null
+));
 /**
  * A middleware to force HTTPS redirections to all the routes.
  * @type {Middleware}

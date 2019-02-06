@@ -17,6 +17,8 @@
     "import/no-extraneous-dependencies": "off",
     "function-paren-newline": "off",
     "arrow-parens": ["error", "always"],
-    "no-plusplus": "off"
+    "no-plusplus": "off",
+    "lines-between-class-members": "off",
+    "operator-linebreak": ["error", "after"]
   }
 }

@@ -278,19 +278,19 @@ Before doing anything, install the repository hooks:
 
 ```bash
 # You can either use npm or yarn, it doesn't matter
-npm run install-hooks
+yarn run hooks
 ```
 
 ### NPM/Yarn Tasks
 
 | Task                    | Description                         |
 |-------------------------|-------------------------------------|
-| `npm run install-hooks` | Install the GIT repository hooks.   |
-| `npm test`              | Run the project unit tests.         |
-| `npm run lint`          | Lint the modified files.            |
-| `npm run lint:full`     | Lint the project code.              |
-| `npm run docs`          | Generate the project documentation. |
-| `npm run todo`          | List all the pending to-do's.       |
+| `yarn run hooks`        | Install the GIT repository hooks.   |
+| `yarn test`             | Run the project unit tests.         |
+| `yarn run lint`         | Lint the modified files.            |
+| `yarn run lint:full`    | Lint the project code.              |
+| `yarn run docs`         | Generate the project documentation. |
+| `yarn run todo`         | List all the pending to-do's.       |
 
 ### Testing
 
