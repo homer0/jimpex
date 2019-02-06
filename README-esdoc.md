@@ -10,15 +10,13 @@ A friend who's also web developer brought the idea of start using a dependency i
 
 A couple of months after that, the same friend told me that we should do something similar to [Silex](https://silex.symfony.com/), which is based on Pimple, with Express. I ran with the idea and... this project is what I think a mix of Jimple and Express would look like. To be clear, **this is not a port of Silex**.
 
-Thanks `[name]`!!! (I'll ask permission later to publish his name :P)
-
 ## Information
 
 | -            | -                                                                  |
 |--------------|--------------------------------------------------------------------|
 | Package      | jimpex                                                             |
 | Description  | Express as dependency injection container.                         |
-| Node Version | >= v6.10.0                                                         |
+| Node Version | >= v8.0.0                                                         |
 
 ## Usage
 
