@@ -62,6 +62,44 @@ class App extends Jimpex {
 
 The first parameter is the name used to register the server and the second one is the setting key that has a `url` and an `endpoints` dictionary.
 
+## App Error
+
+A very simple subclass of `Error` but with support for context information. It can be used to customize the error handler responses.
+
+- Module: `common`
+
+```js
+const {
+  Jimpex,
+  services: {
+    common: { appError },
+  },
+};
+
+class App extends Jimpex {
+  boot() {        
+    // Register the service
+    this.register(appError);
+  }
+}
+```
+
+By registering the "service", two things are added to the container: The class declaration, so you can construct the errors, and a shorthand function that does the same:
+
+```js
+const AppError = app.get('AppError');
+throw new AppError('Something happened', {
+  someProp: 'someValue',
+});
+// or
+const appError = app.get('appError');
+throw appError('Something happened', {
+  someProp: 'someValue',
+});
+```
+
+This is useful if you are building an app with multiple known exceptions, you can use the context to send useful information.
+
 ## Ensure bearer authentication
 
 A service-middleware that allows you to validate the incoming requests `Authorization` header.
@@ -107,11 +145,9 @@ const myCtrl = controller((app) => {
 });
 ```
 
-## Error
+## HTTP Error
 
-A very simple subclass of `Error` to inject extra information on the errors so they can customize the error handler responses.
-
-Something important to remember is that the `appError` service doesn't return an instance of the service but the class so you can construct an error.
+Another type of error, but specific for the HTTP requests the app does with the API client. This is a subclass of `AppError`. The only advantage over `AppError` is that you know the that the type of error is specific to requests and that it has a paramter for an HTTP status.
 
 - Module: `common`
 
@@ -119,28 +155,27 @@ Something important to remember is that the `appError` service doesn't return an
 const {
   Jimpex,
   services: {
-    common: { appError },
+    common: { httpError },
   },
 };
 
 class App extends Jimpex {
   boot() {        
     // Register the service
-    this.register(appError);
+    this.register(httpError);
   }
 }
 ```
 
-That's all, now you can do `get('appError')`, inject `AppError` and generate your custom errors:
+By registering the "service", two things are added to the container: The class declaration, so you can construct the errors, and a shorthand function that does the same:
 
 ```js
-new Error('Something happened', {
-  someProp: 'someValue',
-}):
+const HTTPError = app.get('HTTPError');
+throw new AppError('Not found', 404);
+// or
+const httpError = app.get('httpError');
+throw httpError('Not found', 404);
 ```
-
-This is useful if you are building an app with multiple known exceptions, you can use the extra settings to send context information.
-
 ## Send File
 
 It allows you to send a file on a response with a path relative to the app executable.
