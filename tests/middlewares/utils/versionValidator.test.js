@@ -24,13 +24,10 @@ describe('services/api:versionValidator', () => {
     // Then
     expect(sut).toBeInstanceOf(VersionValidator);
     expect(sut.options).toEqual({
+      error: 'The application version doesn\'t match',
       latest: {
         allow: true,
         name: 'latest',
-      },
-      errors: {
-        default: 'The application version doesn\'t match',
-        noVersion: 'No version was found on the route',
       },
       popup: {
         variable: 'popup',
@@ -57,11 +54,9 @@ describe('services/api:versionValidator', () => {
     const responsesBuilder = 'responsesBuilder';
     const AppError = 'AppError';
     const options = {
+      error: 'No way!',
       latest: {
         allow: false,
-      },
-      errors: {
-        default: 'No way!',
       },
       popup: {
         title: 'So much conflict!',
@@ -74,13 +69,10 @@ describe('services/api:versionValidator', () => {
     // Then
     expect(sut).toBeInstanceOf(VersionValidator);
     expect(sut.options).toEqual({
+      error: options.error,
       latest: {
         allow: options.latest.allow,
         name: 'latest',
-      },
-      errors: {
-        default: options.errors.default,
-        noVersion: 'No version was found on the route',
       },
       popup: {
         variable: 'popup',
@@ -92,20 +84,9 @@ describe('services/api:versionValidator', () => {
   });
 
   describe('middleware', () => {
-    it('should generate an error when no version is found in the route', () => {
+    it('shouldn\'t do anything when no version is found in the route', () => {
       // Given
       const version = '0.1';
-      const options = {
-        errors: {
-          noVersion: 'No version!',
-        },
-      };
-      const appError = jest.fn();
-      class AppError {
-        constructor(...args) {
-          appError(...args);
-        }
-      }
       const request = {
         params: {},
         query: {},
@@ -115,21 +96,12 @@ describe('services/api:versionValidator', () => {
       let sut = null;
       let middleware = null;
       // When
-      sut = new VersionValidator(version, 'responsesBuilder', AppError, options);
+      sut = new VersionValidator(version, 'responsesBuilder', 'AppError');
       middleware = sut.middleware();
       middleware(request, response, next);
       // Then
       expect(next).toHaveBeenCalledTimes(1);
-      expect(next).toHaveBeenCalledWith(expect.any(AppError));
-      expect(appError).toHaveBeenCalledWith(
-        options.errors.noVersion,
-        {
-          status: statuses['bad request'],
-          response: {
-            validation: true,
-          },
-        }
-      );
+      expect(next).toHaveBeenCalledWith();
     });
 
     it('should allow the current version', () => {
@@ -158,9 +130,7 @@ describe('services/api:versionValidator', () => {
       // Given
       const version = '2.0';
       const options = {
-        errors: {
-          default: 'Missmatch!',
-        },
+        error: 'Missmatch!',
       };
       const appError = jest.fn();
       class AppError {
@@ -186,7 +156,7 @@ describe('services/api:versionValidator', () => {
       expect(next).toHaveBeenCalledTimes(1);
       expect(next).toHaveBeenCalledWith(expect.any(AppError));
       expect(appError).toHaveBeenCalledWith(
-        options.errors.default,
+        options.error,
         {
           status: statuses.conflict,
           response: {
@@ -222,11 +192,9 @@ describe('services/api:versionValidator', () => {
       // Given
       const version = '2.0';
       const options = {
+        error: 'No latest!',
         latest: {
           allow: false,
-        },
-        errors: {
-          default: 'No latest!',
         },
       };
       const appError = jest.fn();
@@ -253,7 +221,7 @@ describe('services/api:versionValidator', () => {
       expect(next).toHaveBeenCalledTimes(1);
       expect(next).toHaveBeenCalledWith(expect.any(AppError));
       expect(appError).toHaveBeenCalledWith(
-        options.errors.default,
+        options.error,
         {
           status: statuses.conflict,
           response: {

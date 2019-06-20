@@ -66,7 +66,7 @@ class VersionValidator {
    *                                                   the `options` parameter.
    * @param {ResponsesBuilder}        responsesBuilder To generate post message responses for
    *                                                   popups.
-   * @param {Class}                   AppError         To generate errors in case the version is
+   * @param {Class}                   AppError         To generate the error in case the version is
    *                                                   invalid.
    * @param {VersionValidatorOptions} [options={}]     Custom options to modify the middleware
    *                                                   behavior.
@@ -100,10 +100,7 @@ class VersionValidator {
      */
     this._options = ObjectUtils.merge(
       {
-        errors: {
-          default: 'The application version doesn\'t match',
-          noVersion: 'No version was found on the route',
-        },
+        error: 'The application version doesn\'t match',
         latest: {
           allow: true,
           name: 'latest',
@@ -131,16 +128,8 @@ class VersionValidator {
       // Get the `version` parameter from the request.
       const { version } = req.params;
       if (!version) {
-        // If no version is present, move to the error handler.
-        next(new this._AppError(
-          this._options.errors.noVersion,
-          {
-            status: statuses['bad request'],
-            response: {
-              validation: true,
-            },
-          }
-        ));
+        // If no version is present, move on to the next middleware.
+        next();
       } else if (version === this._options.version || this._validateLatest(version)) {
         /**
          * If the version matches the one on the options, or the requested version is "latest"
@@ -161,7 +150,7 @@ class VersionValidator {
       } else {
         // Finally, if it doesn't match and is not from a popup, move to the error handler.
         next(new this._AppError(
-          this._options.errors.default,
+          this._options.error,
           {
             status: statuses.conflict,
             response: {
