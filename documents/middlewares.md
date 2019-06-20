@@ -213,3 +213,58 @@ class App extends Jimpex {
 Now, as mentioned on the requirements, you can optionally use the `htmlGenerator` or an `HTMLGenerator` service to show the generated file.
 
 The default implementation checks if there's an `htmlGenerator` service registered on the app and uses that file; and in the case of `showHTMLCustom `, you can specify a second parameter with the name of the `HTMLGenerator` service name you want to use.
+
+## Version validator
+
+This can be used as a middleware and as controller. The idea is that it validates a `version` parameter against the version defined on the configuration.
+
+- Module: `utils`
+- Requires: `appConfiguration`, `responsesBuilder` and `appError`
+
+```js
+const {
+  Jimpex,
+  middlewares: {
+    utils: { versionValidator },
+  },
+};
+
+class App extends Jimpex {
+  boot() {
+    // Add the middleware before the routes you want to be protected.
+    this.use(versionValidator);
+    // or, protect a specific route.
+    this.mount('/to-protect', versionValidator);
+  }
+}
+```
+
+By default, it comes with a lot of already defined options, like whether or not to allow `latest` as a version, but you can use the _"middleware generator"_ `versionValidatorCustom` to modify them, for example:
+
+```js
+const {
+  Jimpex,
+  middlewares: {
+    utils: { versionValidatorCustom },
+  },
+};
+
+class App extends Jimpex {
+  boot() {
+    // Add the middleware before the routes you want to be protected.
+    this.use(versionValidatorCustom({
+      latest: {
+        allow: false,
+      }
+    }));
+    // or, protect a specific route.
+    this.mount('/to-protect', versionValidatorCustom({
+      latest: {
+        allow: false,
+      }
+    }));
+  }
+}
+```
+
+**Very important:** The middleware will only validate if `req.params.version` is found.

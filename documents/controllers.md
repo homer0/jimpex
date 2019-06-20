@@ -2,41 +2,6 @@
 
 All of these controllers are available on the Jimpex package and can be easily required and implemented.
 
-## Version validator
-
-If you mount it on a route it will generate a `409` error if the request doesn't have a version parameter with the same version as the one on the configuration file.
-
-- Module: `api`
-- Requires: `versionValidator`
-
-```js
-const {
-  Jimpex,
-  services: {
-    api: { versionValidator },
-  },
-  controllers: {
-    api: { versionValidatorController },
-  },
-};
-
-class App extends Jimpex {
-  boot() {
-    // Register the dependencies...
-    this.register(versionValidator);
-    
-    // Add the controller.
-    this.mount('/api', versionValidatorController);
-  }
-}
-```
-
-The controller will mount one route:
-
-- `* /:version/*`: To validate and protect any sub route.
-
-You can mount other routes on `/api/:version/...` and they'll be _"protected"_ by the version check.
-
 ## Configuration
 
 Allows you to see and switch the current configuration. It can be enabled or disabled by using a setting on the configuration.

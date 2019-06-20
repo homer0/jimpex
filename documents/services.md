@@ -107,53 +107,6 @@ const myCtrl = controller((app) => {
 });
 ```
 
-## Version validator
-
-A service-middleware to validate a `version` parameter against the configuration `version` setting. It's what the version validator middleware internally uses.
-
-It's a _"service-middleware"_ because when you access the service, it doesn't return a class instance, but a middleware function for you to use on your controller routes.
-
-- Module: `api`
-- Requires: `responsesBuilder` and `appError`
-
-```js
-const {
-  Jimpex,
-  services: {
-    api: { versionValidator },
-    common: { appError },
-    http: { responsesBuilder },
-  },
-};
-
-class App extends Jimpex {
-  boot() {
-    // Register the dependencies...
-    this.register(appError);
-    this.register(responsesBuilder);
-
-    // Register the service
-    this.register(versionValidator);
-  }
-}
-```
-
-Now you can use it on your controllers routes to validate that the version being used is the same as the one the app is running on:
-
-```js
-const myCtrl = controller((app) => {
-  const router = app.get('router');
-  const versionValidator = app.get('versionValidator');
-  return [router.get('/:version/something', [
-    versionValidator,
-    (req, res, next) => {
-      console.log('The version is valid!');
-      next();
-    },
-  ])];
-});
-```
-
 ## Error
 
 A very simple subclass of `Error` to inject extra information on the errors so they can customize the error handler responses.
