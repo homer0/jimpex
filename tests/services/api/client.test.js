@@ -108,7 +108,7 @@ describe('services/api:client', () => {
     expect(sut.apiConfig).toBe(appConfiguration.apiConfig);
     expect(sut.url).toBe(appConfiguration.apiConfig.url);
     expect(sut.endpoints).toEqual(appConfiguration.apiConfig.endpoints);
-    expect(sut.AppError).toBe('appError');
+    expect(sut.AppError).toBe('AppError');
     expect(sut.fetchClient).toBe(http.fetch);
     expect(serviceName).toBe(name);
     expect(appConfiguration.get).toHaveBeenCalledTimes(1);

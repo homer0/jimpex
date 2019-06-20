@@ -208,7 +208,7 @@ const versionValidatorCustom = (options) => middleware((app, point) => {
   const middlewareValidator = (new VersionValidator(
     app.get('appConfiguration').get('version'),
     app.get('responsesBuilder'),
-    app.get('appError'),
+    app.get('AppError'),
     options
   )).middleware();
   // Set the variable to be returned.

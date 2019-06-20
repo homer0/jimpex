@@ -62,7 +62,7 @@ const apiClientCustom = (
   app.set(name, () => new ClientClass(
     app.get('appConfiguration').get(configurationKey),
     app.get('http'),
-    app.get('appError')
+    app.get('AppError')
   ));
 });
 /**
