@@ -15,6 +15,7 @@ describe('middlewares', () => {
     const knownMiddlewares = [
       'common',
       'html',
+      'utils',
     ];
     // When/Then
     expect(Object.keys(middlewares).length).toBe(knownMiddlewares.length);
