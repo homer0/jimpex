@@ -7,10 +7,6 @@ class HTTPError extends AppError {
   constructor(message, status = statuses.ok, context = {}) {
     super(message, ObjectUtils.merge({ status }, context));
   }
-
-  get status() {
-    return this.context.status;
-  }
 }
 
 const httpErrorGenerator = (message, status, context) => new HTTPError(

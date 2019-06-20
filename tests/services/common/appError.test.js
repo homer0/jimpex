@@ -29,6 +29,7 @@ describe('services/common:appError', () => {
     expect(sut.message).toBe(message);
     expect(sut.date).toBeInstanceOf(Date);
     expect(sut.response).toEqual({});
+    expect(sut.status).toBeNull();
   });
 
   it('should be instantiated with context information', () => {
@@ -38,6 +39,7 @@ describe('services/common:appError', () => {
       age: 3,
       name: 'Rosario',
       response: 'Something in case a response needs to be generated',
+      status: 500,
     };
     let sut = null;
     // When
@@ -47,6 +49,7 @@ describe('services/common:appError', () => {
     expect(sut.message).toBe(message);
     expect(sut.context).toEqual(context);
     expect(sut.response).toEqual(context.response);
+    expect(sut.status).toEqual(context.status);
   });
 
   it('should use `captureStackTrace` when avaiable', () => {

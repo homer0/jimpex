@@ -24,6 +24,10 @@ class AppError extends Error {
   get response() {
     return this._context.response || {};
   }
+
+  get status() {
+    return this._context.status || null;
+  }
 }
 
 const appErrorGenerator = (message, context) => new AppError(message, context);
