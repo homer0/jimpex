@@ -23,20 +23,20 @@ describe('services/api:client', () => {
     const http = {
       fetch: () => {},
     };
-    const AppError = Error;
+    const HTTPError = Error;
     let sut = null;
     // When
-    sut = new APIClient(apiConfig, http, AppError);
+    sut = new APIClient(apiConfig, http, HTTPError);
     // Then
     expect(sut).toBeInstanceOf(APIClientBase);
     expect(sut).toBeInstanceOf(APIClient);
     expect(sut.apiConfig).toBe(apiConfig);
     expect(sut.url).toBe(apiConfig.url);
     expect(sut.endpoints).toEqual(apiConfig.endpoints);
-    expect(sut.AppError).toBe(AppError);
+    expect(sut.HTTPError).toBe(HTTPError);
   });
 
-  it('should format error responses using the AppError service', () => {
+  it('should format error responses using the HTTPError service', () => {
     // Given
     const apiConfig = {
       url: 'my-api',
@@ -47,10 +47,10 @@ describe('services/api:client', () => {
     const http = {
       fetch: () => {},
     };
-    class AppError {
-      constructor(message, extras) {
+    class HTTPError {
+      constructor(message, status) {
         this.message = message;
-        this.extras = extras;
+        this.status = status;
       }
     }
     const response = {
@@ -62,12 +62,12 @@ describe('services/api:client', () => {
     let sut = null;
     let result = null;
     // When
-    sut = new APIClient(apiConfig, http, AppError);
+    sut = new APIClient(apiConfig, http, HTTPError);
     result = sut.error(response, status);
     // Then
-    expect(result).toBeInstanceOf(AppError);
+    expect(result).toBeInstanceOf(HTTPError);
     expect(result.message).toBe(response.data.message);
-    expect(result.extras).toEqual({ status });
+    expect(result.status).toBe(status);
   });
 
   it('should include a provider for the DIC', () => {
@@ -108,7 +108,7 @@ describe('services/api:client', () => {
     expect(sut.apiConfig).toBe(appConfiguration.apiConfig);
     expect(sut.url).toBe(appConfiguration.apiConfig.url);
     expect(sut.endpoints).toEqual(appConfiguration.apiConfig.endpoints);
-    expect(sut.AppError).toBe('AppError');
+    expect(sut.HTTPError).toBe('HTTPError');
     expect(sut.fetchClient).toBe(http.fetch);
     expect(serviceName).toBe(name);
     expect(appConfiguration.get).toHaveBeenCalledTimes(1);
