@@ -1,16 +1,16 @@
 {
   "extends": "airbnb-base",
   "rules": {
-    indent: ['error', 2, {
-      MemberExpression: 0,
+    "indent": ["error", 2, {
+      "MemberExpression": 0
     }],
     "no-underscore-dangle": ["error", { "allowAfterThis": true }],
     "comma-dangle": ["error", {
-      arrays: "always-multiline",
-      objects: "always-multiline",
-      imports: "always-multiline",
-      exports: "always-multiline",
-      functions: "never",
+      "arrays": "always-multiline",
+      "objects": "always-multiline",
+      "imports": "always-multiline",
+      "exports": "always-multiline",
+      "functions": "never"
     }],
     "class-methods-use-this": "off",
     "import/no-unresolved": "off",
