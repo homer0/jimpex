@@ -16,7 +16,6 @@ describe('services:api', () => {
     const expectedServices = [
       'apiClient',
       'ensureBearerAuthentication',
-      'versionValidator',
     ];
     // When
     apiServices.all(app);

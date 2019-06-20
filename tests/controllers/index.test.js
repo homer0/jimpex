@@ -13,7 +13,6 @@ describe('controllers', () => {
   it('should export all the app controllers', () => {
     // Given
     const knownControllers = [
-      'api',
       'common',
     ];
     // When/Then
