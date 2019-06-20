@@ -82,7 +82,8 @@ app.start(() => {
 });
 ```
 
-> And like Express, you can send a callback to be executed after the server starts.
+> - Like Express, you can send a callback to be executed after the server starts.
+> - You also have a `listen` alias with the same signature as express (port and callback) for serverless platforms where you don't manually start the app.
 
 You can also stop the app by calling `stop()`:
 
