@@ -1,4 +1,5 @@
-const { appError } = require('./error');
+const { appError } = require('./appError');
+const { httpError } = require('./httpError');
 const { sendFileProvider } = require('./sendFile');
 const { provider } = require('../../utils/wrappers');
 /**
@@ -8,11 +9,13 @@ const { provider } = require('../../utils/wrappers');
  */
 const all = provider((app) => {
   app.register(appError);
+  app.register(httpError);
   app.register(sendFileProvider);
 });
 
 module.exports = {
   appError,
+  httpError,
   sendFile: sendFileProvider,
   all,
 };

@@ -15,6 +15,7 @@ describe('services:common', () => {
     };
     const expectedServices = [
       'appError',
+      'httpError',
       'sendFile',
     ];
     // When
