@@ -12,7 +12,6 @@
       "express": "^4.17.1",
       "body-parser": "^1.19.0",
       "compression": "^1.7.4",
-      "extend": "^3.0.2",
       "node-fetch": "^2.6.0",
       "urijs": "^1.19.1",
       "statuses": "^1.5.0",

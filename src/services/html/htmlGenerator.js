@@ -1,4 +1,4 @@
-const extend = require('extend');
+const ObjectUtils = require('wootils/shared/objectUtils');
 const { deferred } = require('wootils/shared');
 const { provider } = require('../../utils/wrappers');
 /**
@@ -66,7 +66,7 @@ class HTMLGenerator {
      * The service options.
      * @type {HTMLGeneratorOptions}
      */
-    this.options = extend({
+    this.options = ObjectUtils.merge({
       template: 'index.tpl.html',
       file: 'index.html',
       deleteTemplateAfter: true,
