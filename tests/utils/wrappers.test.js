@@ -21,6 +21,7 @@ describe('utils/wrappers', () => {
       // Then
       expect(result).toEqual({
         register: serviceProvider,
+        provider: true,
       });
     });
 
@@ -37,6 +38,7 @@ describe('utils/wrappers', () => {
       // Then
       expect(result).toEqual({
         register: serviceProvider,
+        provider: true,
       });
       expect(creatorFn).toHaveBeenCalledTimes(1);
       expect(creatorFn).toHaveBeenCalledWith(options);
@@ -51,6 +53,7 @@ describe('utils/wrappers', () => {
       creator = providerCreator(creatorFn);
       // Then
       expect(creator.register).toBe(serviceProvider);
+      expect(creator.provider).toBeTrue();
       expect(creator.anyOtherProp).toBeUndefined(); // to validate the getter.
       expect(creatorFn).toHaveBeenCalledTimes(1);
       expect(creatorFn).toHaveBeenCalledWith();
@@ -81,6 +84,7 @@ describe('utils/wrappers', () => {
       // Then
       expect(result).toEqual({
         connect: routeController,
+        controller: true,
       });
     });
 
@@ -97,6 +101,7 @@ describe('utils/wrappers', () => {
       // Then
       expect(result).toEqual({
         connect: routeController,
+        controller: true,
       });
       expect(creatorFn).toHaveBeenCalledTimes(1);
       expect(creatorFn).toHaveBeenCalledWith(options);
@@ -111,6 +116,7 @@ describe('utils/wrappers', () => {
       creator = controllerCreator(creatorFn);
       // Then
       expect(creator.connect).toBe(routeController);
+      expect(creator.controller).toBeTrue();
       expect(creatorFn).toHaveBeenCalledTimes(1);
       expect(creatorFn).toHaveBeenCalledWith();
     });
@@ -126,6 +132,7 @@ describe('utils/wrappers', () => {
       // Then
       expect(result).toEqual({
         connect: appMiddleware,
+        middleware: true,
       });
     });
 
@@ -142,6 +149,7 @@ describe('utils/wrappers', () => {
       // Then
       expect(result).toEqual({
         connect: appMiddleware,
+        middleware: true,
       });
       expect(creatorFn).toHaveBeenCalledTimes(1);
       expect(creatorFn).toHaveBeenCalledWith(options);
@@ -156,6 +164,7 @@ describe('utils/wrappers', () => {
       creator = middlewareCreator(creatorFn);
       // Then
       expect(creator.connect).toBe(appMiddleware);
+      expect(creator.middleware).toBeTrue();
       expect(creatorFn).toHaveBeenCalledTimes(1);
       expect(creatorFn).toHaveBeenCalledWith();
     });

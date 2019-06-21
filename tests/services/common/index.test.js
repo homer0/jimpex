@@ -23,6 +23,7 @@ describe('services:common', () => {
       const registeredService = app.register.mock.calls[index][0];
       expect(registeredService).toEqual({
         register: expect.any(Function),
+        provider: true,
       });
       expect(registeredService.toString()).toBe(commonServices[service].toString());
     });

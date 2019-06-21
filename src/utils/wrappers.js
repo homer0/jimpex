@@ -5,6 +5,8 @@
  *              {@link Jimpex#register} and is inherit from {@link Jimple}.
  * @property {ProviderRegistrationCallback} register The function Jimpex calls when registering
  *                                                   the provider.
+ * @property {Boolean}                      provider A flag set to `true` to identify the resource
+ *                                                   as a service provider.
  */
 
 /**
@@ -32,8 +34,10 @@
  * @typedef {Object} Controller
  * @description An object that when mounted on Jimpex will take care of handling a list of specific
  *              routes. The method Jimpex uses to mount a controller is {@link Jimpex#mount}.
- * @property {ControllerMountCallback} connect The function Jimpex calls when mounting the
- *                                             controller.
+ * @property {ControllerMountCallback} connect    The function Jimpex calls when mounting the
+ *                                                controller.
+ * @property {Boolean}                 controller A flag set to `true` to identify the resource
+ *                                                as a routes controller.
  */
 
 /**
@@ -63,8 +67,10 @@
  * @typedef {Object} Middleware
  * @description An object that when mounted on Jimpex add an {@link ExpressMiddleware} to the app.
  *              The method Jimpex uses to mount a middleware is {@link Jimpex#use}.
- * @property {MiddlewareUseCallback} connect The function Jimpex calls when mounting the
- *                                           middleware.
+ * @property {MiddlewareUseCallback} connect    The function Jimpex calls when mounting the
+ *                                              middleware.
+ * @property {Boolean}               middleware A flag set to `true` to identify the resource
+ *                                              as a middleware.
  */
 
 /**
@@ -93,13 +99,16 @@
 /**
  * This is a helper the wrappers use in order to create an object by placing a given function
  * on an specific key.
- * @param {string}   key The key in which the function will be placed.
- * @param {function} fn  The function to insert in the object.
+ * @param {string}   name The name of the resource. It will also be added to the object as a
+ *                        property with the value of `true`.
+ * @param {string}   key  The key in which the function will be placed.
+ * @param {function} fn   The function to insert in the object.
  * @return {Object}
  * @ignore
  */
-const resource = (key, fn) => ({
+const resource = (name, key, fn) => ({
   [key]: fn,
+  [name]: true,
 });
 /**
  * Similar to `resource`, this helper creates an "object" and places a given function on an
@@ -108,13 +117,16 @@ const resource = (key, fn) => ({
  * property and return the result of the function.
  *
  * This is kind of hard to explain, so let's compare it with `resource` and use a proper example:
- * - `resource`: (key, fn) => ({ [key]: fn })
- * - `resourceCreator`: ((key, creatorFn) => creatorFn(...) => fn)[key]: creatorFn()
+ * - `resource`: (name, key, fn) => ({ [key]: fn, [name]: true })
+ * - `resourceCreator`: ((name, key, creatorFn) => creatorFn(...) => fn)[key]: creatorFn()
  *
  * While `resource` is meant to create objects with a resource function, this is meant to create
  * those resource functions by sending them "optional paramters", and they are optionals because
  * if you access the `key` property, it would be the same as calling the `creatorFn` without
  * paramters.
+ * @param {string}   name      The name of the resource, to be added as a property of both the
+ *                             generated resource and the one with the proxy. The value of the
+ *                             property will be `true`.
  * @param {string}   key       The key in which the creator function will be placed in case it's
  *                             used without parameters; and also the key in which the result
  *                             function from the creator will be placed if called with parameters.
@@ -122,13 +134,16 @@ const resource = (key, fn) => ({
  * @return {function}
  * @ignore
  */
-const resourceCreator = (key, creatorFn) => new Proxy(
-  (...args) => resource(key, creatorFn(...args)),
+const resourceCreator = (name, key, creatorFn) => new Proxy(
+  (...args) => resource(name, key, creatorFn(...args)),
   {
+    name,
     resource: null,
     get(target, property) {
       let result;
-      if (property === key) {
+      if (property === this.name) {
+        result = true;
+      } else if (property === key) {
         if (this.resource === null) {
           this.resource = creatorFn();
         }
@@ -147,7 +162,7 @@ const resourceCreator = (key, creatorFn) => new Proxy(
  *                                                  app registers the provider.
  * @return {Provider}
  */
-const provider = (registerFn) => resource('register', registerFn);
+const provider = (registerFn) => resource('provider', 'register', registerFn);
 /**
  * Generates a configurable service provider for the app container. It's configurable because
  * the creator, instead of just being sent to the container to register, it can also be called
@@ -159,7 +174,7 @@ const provider = (registerFn) => resource('register', registerFn);
  * @param {ProviderCreatorCallback} creatorFn The function that generates the provider.
  * @return {ProviderCreator}
  */
-const providerCreator = (creatorFn) => resourceCreator('register', creatorFn);
+const providerCreator = (creatorFn) => resourceCreator('provider', 'register', creatorFn);
 /**
  * Generates a routes controller for the app container to mount.
  * @param {ControllerMountCallback} connect A function that will be called the moment the app
@@ -167,7 +182,7 @@ const providerCreator = (creatorFn) => resourceCreator('register', creatorFn);
  *                                          routes.
  * @return {Controller}
  */
-const controller = (connectFn) => resource('connect', connectFn);
+const controller = (connectFn) => resource('controller', 'connect', connectFn);
 /**
  * Generates a configurable routes controller for the app to mount. It's configurable because
  * the creator, instead of just being sent to the container to mount, it can also be called
@@ -178,10 +193,10 @@ const controller = (connectFn) => resource('connect', connectFn);
  *   const ctrl = new MyController(options);
  *   return [router.get('...', ctrl.doSomething())];
  * });
- * @param {ProviderCreatorCallback} creatorFn The function that generates the provider.
+ * @param {ProviderCreatorCallback} creatorFn The function that generates the controller.
  * @return {ProviderCreator}
  */
-const controllerCreator = (creatorFn) => resourceCreator('connect', creatorFn);
+const controllerCreator = (creatorFn) => resourceCreator('controller', 'connect', creatorFn);
 /**
  * Generates a middleware for the app to use.
  * @param {function(app:Jimpex):?ExpressMiddleware} connect A function that will be called the
@@ -189,7 +204,7 @@ const controllerCreator = (creatorFn) => resourceCreator('connect', creatorFn);
  *                                                          It should return an Express middleware.
  * @return {Middleware}
  */
-const middleware = (connectFn) => resource('connect', connectFn);
+const middleware = (connectFn) => resource('middleware', 'connect', connectFn);
 /**
  * Generates a configurable middleware for the app to use. It's configurable because the creator,
  * instead of just being sent to the container to use, it can also be called as a function with
@@ -200,10 +215,10 @@ const middleware = (connectFn) => resource('connect', connectFn);
  *     (req, res, next) => {} :
  *     null
  * ));
- * @param {ProviderCreatorCallback} creatorFn The function that generates the provider.
+ * @param {ProviderCreatorCallback} creatorFn The function that generates the middleware.
  * @return {ProviderCreator}
  */
-const middlewareCreator = (creatorFn) => resourceCreator('connect', creatorFn);
+const middlewareCreator = (creatorFn) => resourceCreator('middleware', 'connect', creatorFn);
 
 module.exports = {
   provider,

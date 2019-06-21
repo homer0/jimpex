@@ -14,6 +14,7 @@ describe('services:api', () => {
       apiClient: expect.any(Function),
       ensureBearerAuthentication: {
         register: expect.any(Function),
+        provider: true,
       },
     };
     const expectedServicesNames = Object.keys(expectedServices);
