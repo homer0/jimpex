@@ -1,6 +1,3 @@
-const JimpleMock = require('/tests/mocks/jimple.mock');
-
-jest.mock('jimple', () => JimpleMock);
 jest.mock('node-fetch');
 jest.unmock('/src/utils/wrappers');
 jest.unmock('/src/services/http/http');
@@ -46,7 +43,7 @@ describe('services/http:http', () => {
     let serviceName = null;
     let serviceFn = null;
     // When
-    http(app);
+    http.register(app);
     [[serviceName, serviceFn]] = app.set.mock.calls;
     sut = serviceFn();
     // Then
@@ -390,7 +387,7 @@ describe('services/http:http', () => {
     let serviceName = null;
     let serviceFn = null;
     // When
-    http(app);
+    http.register(app);
     [[serviceName, serviceFn]] = app.set.mock.calls;
     sut = serviceFn();
     // Then

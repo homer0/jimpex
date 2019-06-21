@@ -99,7 +99,7 @@ describe('services/api:client', () => {
     let serviceName = null;
     let serviceFn = null;
     // When
-    apiClientCustom(name, configurationKey, ClientClass)(app);
+    apiClientCustom(name, configurationKey, ClientClass).register(app);
     [[serviceName, serviceFn]] = app.set.mock.calls;
     sut = serviceFn();
     // Then

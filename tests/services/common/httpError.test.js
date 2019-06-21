@@ -1,7 +1,5 @@
 const statuses = require('statuses');
-const JimpleMock = require('/tests/mocks/jimple.mock');
 
-jest.mock('jimple', () => JimpleMock);
 jest.unmock('/src/utils/wrappers');
 jest.unmock('/src/services/common/appError');
 jest.unmock('/src/services/common/httpError');
@@ -69,7 +67,7 @@ describe('services/common:httpError', () => {
       let serviceName = null;
       let serviceFn = null;
       // When
-      httpError(app);
+      httpError.register(app);
       [[serviceName, serviceFn]] = app.set.mock.calls;
       sut = serviceFn();
       // Then
@@ -88,7 +86,7 @@ describe('services/common:httpError', () => {
       let serviceFn = null;
       let result = null;
       // When
-      httpError(app);
+      httpError.register(app);
       [, [serviceName, serviceFn]] = app.set.mock.calls;
       sut = serviceFn();
       result = sut(message, statuses.conflict);

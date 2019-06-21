@@ -18,12 +18,14 @@ describe('services:api', () => {
       'ensureBearerAuthentication',
     ];
     // When
-    apiServices.all(app);
+    apiServices.all.register(app);
     // When/Then
     expect(app.register).toHaveBeenCalledTimes(expectedServices.length);
     expectedServices.forEach((service, index) => {
       const registeredService = app.register.mock.calls[index][0];
-      expect(registeredService).toBeFunction();
+      expect(registeredService).toEqual({
+        register: expect.any(Function),
+      });
       expect(registeredService.toString()).toBe(apiServices[service].toString());
     });
   });

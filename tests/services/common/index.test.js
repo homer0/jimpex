@@ -19,12 +19,14 @@ describe('services:common', () => {
       'sendFile',
     ];
     // When
-    commonServices.all(app);
+    commonServices.all.register(app);
     // When/Then
     expect(app.register).toHaveBeenCalledTimes(expectedServices.length);
     expectedServices.forEach((service, index) => {
       const registeredService = app.register.mock.calls[index][0];
-      expect(registeredService).toBeFunction();
+      expect(registeredService).toEqual({
+        register: expect.any(Function),
+      });
       expect(registeredService.toString()).toBe(commonServices[service].toString());
     });
   });

@@ -1,7 +1,5 @@
-const JimpleMock = require('/tests/mocks/jimple.mock');
 const wootilsMock = require('/tests/mocks/wootils.mock');
 
-jest.mock('jimple', () => JimpleMock);
 jest.mock('wootils/shared', () => wootilsMock);
 jest.unmock('/src/utils/wrappers');
 jest.unmock('/src/services/html/htmlGenerator');
@@ -474,7 +472,7 @@ describe('services/html:htmlGenerator', () => {
     let eventName = null;
     let eventFn = null;
     // When
-    htmlGeneratorCustom({}, name)(app);
+    htmlGeneratorCustom({}, name).register(app);
     [[serviceName, serviceFn]] = app.set.mock.calls;
     [[eventName, eventFn]] = events.once.mock.calls;
     sut = serviceFn();
@@ -544,7 +542,7 @@ describe('services/html:htmlGenerator', () => {
     const expectedGets = Object.keys(services);
     const expectedEventName = 'after-start';
     // When
-    htmlGeneratorCustom({}, name, myValuesServiceName)(app);
+    htmlGeneratorCustom({}, name, myValuesServiceName).register(app);
     [[serviceName, serviceFn]] = app.set.mock.calls;
     [[eventName, eventFn]] = events.once.mock.calls;
     sut = serviceFn();
