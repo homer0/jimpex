@@ -1,6 +1,5 @@
-const { htmlGenerator, htmlGeneratorCustom } = require('./htmlGenerator');
+const { htmlGenerator } = require('./htmlGenerator');
 
 module.exports = {
   htmlGenerator,
-  htmlGeneratorCustom,
 };

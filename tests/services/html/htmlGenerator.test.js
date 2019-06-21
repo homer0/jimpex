@@ -7,7 +7,7 @@ jest.unmock('/src/services/html/htmlGenerator');
 require('jasmine-expect');
 const {
   HTMLGenerator,
-  htmlGeneratorCustom,
+  htmlGenerator,
 } = require('/src/services/html/htmlGenerator');
 
 describe('services/html:htmlGenerator', () => {
@@ -438,7 +438,7 @@ describe('services/html:htmlGenerator', () => {
     });
   });
 
-  it('should register the generator to be runned when the server starts', () => {
+  it('should register the generator to be executed when the server starts', () => {
     // Given
     const appConfiguration = {
       get: jest.fn(() => {}),
@@ -456,7 +456,7 @@ describe('services/html:htmlGenerator', () => {
       once: jest.fn(),
     };
     let sut = null;
-    const name = 'myHTMLGenerator';
+    const name = 'htmlGenerator';
     const services = {
       appConfiguration,
       appLogger,
@@ -472,7 +472,7 @@ describe('services/html:htmlGenerator', () => {
     let eventName = null;
     let eventFn = null;
     // When
-    htmlGeneratorCustom({}, name).register(app);
+    htmlGenerator.register(app);
     [[serviceName, serviceFn]] = app.set.mock.calls;
     [[eventName, eventFn]] = events.once.mock.calls;
     sut = serviceFn();
@@ -542,7 +542,7 @@ describe('services/html:htmlGenerator', () => {
     const expectedGets = Object.keys(services);
     const expectedEventName = 'after-start';
     // When
-    htmlGeneratorCustom({}, name, myValuesServiceName).register(app);
+    htmlGenerator({}, name, myValuesServiceName).register(app);
     [[serviceName, serviceFn]] = app.set.mock.calls;
     [[eventName, eventFn]] = events.once.mock.calls;
     sut = serviceFn();
