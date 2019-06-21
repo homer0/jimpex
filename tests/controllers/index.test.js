@@ -1,6 +1,4 @@
-jest.mock('/src/utils/wrappers', () => ({
-  controller: (connect) => connect,
-}));
+jest.unmock('/src/utils/wrappers');
 jest.unmock('/src/controllers');
 
 require('jasmine-expect');
@@ -16,8 +14,6 @@ describe('controllers', () => {
     expect(Object.keys(controllers).length).toBe(knownControllers.length);
     knownControllers.forEach((name) => {
       expect(controllers[name]).toBeObject();
-      const modules = Object.keys(controllers[name]);
-      modules.forEach((mod) => expect(controllers[name][mod]).toBeFunction());
     });
   });
 });

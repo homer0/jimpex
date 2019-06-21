@@ -1,13 +1,9 @@
 const { configurationController } = require('./configuration');
 const { healthController } = require('./health');
-const {
-  rootStaticsController,
-  rootStaticsControllerCustom,
-} = require('./rootStatics');
+const { rootStaticsController } = require('./rootStatics');
 
 module.exports = {
   configurationController,
   healthController,
   rootStaticsController,
-  rootStaticsControllerCustom,
 };
