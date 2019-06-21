@@ -1,5 +1,4 @@
 const { apiClient } = require('./client');
-const { ensureBearerAuthentication } = require('./ensureBearerAuthentication');
 const { providers } = require('../../utils/wrappers');
 
 /**
@@ -12,7 +11,6 @@ const { providers } = require('../../utils/wrappers');
  */
 const apiServices = providers({
   apiClient,
-  ensureBearerAuthentication,
 });
 
 module.exports = apiServices;
