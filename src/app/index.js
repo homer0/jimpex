@@ -119,8 +119,8 @@ class Jimpex extends Jimple {
   }
   /**
    * Mount a controller on a route point.
-   * @param {string}     point      The route for the controller.
-   * @param {Controller} controller The route controller.
+   * @param {string}                       point      The route for the controller.
+   * @param {Controller|ControllerCreator} controller The route controller.
    */
   mount(point, controller) {
     this.mountQueue.push(
@@ -131,7 +131,7 @@ class Jimpex extends Jimple {
   }
   /**
    * Add a middleware.
-   * @param {Middleware} middleware [description]
+   * @param {Middleware|MiddlewareCreator} middleware The middleware to use.
    */
   use(middleware) {
     this.mountQueue.push((server) => {
