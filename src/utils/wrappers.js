@@ -164,6 +164,43 @@ const resourceCreator = (name, key, creatorFn) => new Proxy(
  */
 const provider = (registerFn) => resource('provider', 'register', registerFn);
 /**
+ * Generates a collection of service providers that can be registered all at once or one by one.
+ * You can send the collection directly to the `.register()` and it will register all its
+ * "children"; and if you want to register one provider at a time, you can access them by name,
+ * as the collection is a regular object.
+ * @example
+ * const collection = providers({ one: providerOne, two: providerTwo });
+ * // Register all at once
+ * app.register(collection);
+ * // Register one by one
+ * app.register(collection.one);
+ * app.register(collection.two);
+ * @param {Object} items A dictionary of service providers; the keys will be for the collection
+ *                       object, and the values the one that will get send to `.register()`.
+ * @return {Provider}
+ */
+const providers = (items) => {
+  const invalidNames = Object.keys(items).some((name) => (
+    ['register', 'providers'].includes(name)
+  ));
+  if (invalidNames) {
+    throw new Error(
+      'You can\'t create a collection with a providers called `register` or `providers`'
+    );
+  }
+
+  return Object.assign(
+    resource(
+      'providers',
+      'register',
+      (app) => Object.keys(items).forEach((item) => {
+        app.register(items[item]);
+      })
+    ),
+    items
+  );
+};
+/**
  * Generates a configurable service provider for the app container. It's configurable because
  * the creator, instead of just being sent to the container to register, it can also be called
  * as a function with custom parameters the service can receive.
@@ -223,6 +260,7 @@ const middlewareCreator = (creatorFn) => resourceCreator('middleware', 'connect'
 module.exports = {
   provider,
   providerCreator,
+  providers,
   controller,
   controllerCreator,
   middleware,

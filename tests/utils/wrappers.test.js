@@ -4,6 +4,7 @@ require('jasmine-expect');
 const {
   provider,
   providerCreator,
+  providers,
   controller,
   controllerCreator,
   middleware,
@@ -71,6 +72,49 @@ describe('utils/wrappers', () => {
       expect(creator.register).toBe(serviceProvider); // this is the second trigger for the proxy.
       expect(creatorFn).toHaveBeenCalledTimes(1);
       expect(creatorFn).toHaveBeenCalledWith();
+    });
+
+    it('should create a providers collection', () => {
+      // Given
+      const serviceProviderOne = 'serviceProviderOne';
+      const serviceProviderTwo = 'serviceProviderTwo';
+      let collection = null;
+      // When
+      collection = providers({
+        one: serviceProviderOne,
+        two: serviceProviderTwo,
+      });
+      // Then
+      expect(collection.one).toBe(serviceProviderOne);
+      expect(collection.two).toBe(serviceProviderTwo);
+      expect(collection.three).toBeUndefined(); // to validate the getter.
+    });
+
+    it('should create a collection to register multiple providers at once', () => {
+      // Given
+      const app = {
+        register: jest.fn(),
+      };
+      const services = {
+        one: 'serviceProviderOne',
+        two: 'serviceProviderTwo',
+      };
+      const servicesNames = Object.keys(services);
+      let collection = null;
+      // When
+      collection = providers(services);
+      collection.register(app);
+      // Then
+      expect(app.register).toHaveBeenCalledTimes(servicesNames.length);
+      servicesNames.forEach((name) => {
+        expect(app.register).toHaveBeenCalledWith(services[name]);
+      });
+    });
+
+    it('should throw an error when trying to create a collection with invalid providers', () => {
+      // Given/When/Then
+      expect(() => providers({ providers: 'something' }))
+      .toThrow(/You can't create a collection with a providers called `register` or `providers`/i);
     });
   });
 
