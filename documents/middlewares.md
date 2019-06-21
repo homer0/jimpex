@@ -37,12 +37,45 @@ class App extends Jimpex {
 
 Now, there's a configuration setting for this controller: `debug.showErrors`. By enabling the setting, the middleware will show the message and the stack information of all kind of errors.
 
-If the configuration setting is disabled (or not present), the errors stack will never be visible, and if the error is not an instance of the `appError` service, it will show a generic message: _"Oops! Something went wrong, please try again"_.
+If the configuration setting is disabled (or not present), the errors stack will never be visible, and if the error is not an instance of the `AppError` service, it will show a generic message.
 
-Now, when using errors of the type `appError`, you can add the following extra data:
+By default, the generic message is _"Oops! Something went wrong, please try again"_ and the default HTTP status is `500`, but you can use the _"middleware generator"_ `errorHandlerCustom` to modify those defaults:
 
 ```js
-// Assuming `AppError` is the injected `appError` and you are on the context of a middleware
+const {
+  Jimpex,
+  services: {
+    http: { responsesBuilder },
+    common: { appError },
+  },
+  middlewares: {
+    common: { errorHandlerCustom },
+  },
+};
+
+class App extends Jimpex {
+  boot() {
+    // Register the dependencies...
+    this.register(responsesBuilder);
+    this.register(appError);
+    
+    ...
+    
+    // Add the middleware at the end.
+    this.use(errorHandlerCustom({
+      default: {
+        message: 'Unknown error',
+        status: 503,
+      },
+    }));
+  }
+}
+```
+
+Finally, when using errors of the type `AppError`, you can add the following context information:
+
+```js
+// Assuming `AppError` is the injected `AppError` and you are on the context of a middleware
 next(new AppError('Something went wrong', {
   status: someHTTPStatus,
   response: someObject,
