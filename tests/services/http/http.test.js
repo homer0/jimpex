@@ -14,7 +14,7 @@ describe('services/http:http', () => {
     fetch.mockReset();
   });
 
-  it('should be instantiated with all its dependencies', () => {
+  it('should be instantiated', () => {
     // Given
     const logRequests = 'logRequests';
     const appLogger = 'appLogger';
@@ -23,8 +23,6 @@ describe('services/http:http', () => {
     sut = new HTTP(logRequests, appLogger);
     // Then
     expect(sut).toBeInstanceOf(HTTP);
-    expect(sut.logRequests).toBe(logRequests);
-    expect(sut.appLogger).toBe(appLogger);
   });
 
   it('should include a provider for the DIC', () => {
@@ -50,7 +48,6 @@ describe('services/http:http', () => {
     expect(serviceName).toBe('http');
     expect(sut).toBeInstanceOf(HTTP);
     expect(sut.logRequests).toBeFalse();
-    expect(sut.appLogger).toBe('appLogger');
   });
 
   it('should get a request IP from an Express request object', () => {
@@ -394,6 +391,5 @@ describe('services/http:http', () => {
     expect(serviceName).toBe('http');
     expect(sut).toBeInstanceOf(HTTP);
     expect(sut.logRequests).toBeTrue();
-    expect(sut.appLogger).toBe('appLogger');
   });
 });

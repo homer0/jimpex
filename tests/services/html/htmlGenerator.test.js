@@ -15,7 +15,7 @@ describe('services/html:htmlGenerator', () => {
     wootilsMock.reset();
   });
 
-  it('should be instantiated with all its dependencies', () => {
+  it('should be instantiated', () => {
     // Given
     const options = {};
     const appConfiguration = 'appConfiguration';
@@ -40,10 +40,6 @@ describe('services/html:htmlGenerator', () => {
       variable: expect.any(String),
       configurationKeys: expect.any(Array),
     });
-    expect(sut.appConfiguration).toBe(appConfiguration);
-    expect(sut.appLogger).toBe(appLogger);
-    expect(sut.frontendFs).toBe(frontendFs);
-    expect(sut.valuesService).toBeNull();
   });
 
   it('should be instantiated with a custom service to get the template values', () => {
@@ -66,11 +62,6 @@ describe('services/html:htmlGenerator', () => {
     );
     // Then
     expect(sut).toBeInstanceOf(HTMLGenerator);
-    expect(sut.options).toBeObject();
-    expect(sut.appConfiguration).toBe(appConfiguration);
-    expect(sut.appLogger).toBe(appLogger);
-    expect(sut.frontendFs).toBe(frontendFs);
-    expect(sut.valuesService).toEqual(valuesService);
   });
 
   it('should throw an error if the values service doesnt have a `getValues` method', () => {

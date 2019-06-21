@@ -16,13 +16,17 @@ class EnsureBearerAuthentication {
     /**
      * A local reference for the class the app uses to generate errors.
      * @type {Class}
+     * @access protected
+     * @ignore
      */
-    this.AppError = AppError;
+    this._AppError = AppError;
     /**
      * The regular expression used to validate the token.
      * @type {RegExp}
+     * @access protected
+     * @ignore
      */
-    this.bearerRegex = /bearer .+$/i;
+    this._bearerRegex = /bearer .+$/i;
   }
   /**
    * Returns the Express middleware that validates the `Authorization` header.
@@ -34,14 +38,14 @@ class EnsureBearerAuthentication {
       // Get the `Authorization` header.
       const { headers: { authorization } } = req;
       // If the header has content the RegExp says it's valid...
-      if (authorization && this.bearerRegex.test(authorization)) {
+      if (authorization && this._bearerRegex.test(authorization)) {
         // ...Set the token as the `bearerToken` property of the current request.
         req.bearerToken = authorization.trim().split(' ').pop();
         // Move to the next middleware.
         next();
       } else {
         // ...otherwise, send an unauthorized error to the next middleware.
-        next(new this.AppError('Unauthorized', {
+        next(new this._AppError('Unauthorized', {
           status: statuses.Unauthorized,
         }));
       }

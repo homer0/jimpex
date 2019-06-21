@@ -23,8 +23,10 @@ class ResponsesBuilder {
     /**
      * A local reference for the `appConfiguration` service.
      * @type {AppConfiguration}
+     * @access protected
+     * @ignore
      */
-    this.appConfiguration = appConfiguration;
+    this._appConfiguration = appConfiguration;
   }
   /**
    * Generates and sends a JSON response.
@@ -52,7 +54,7 @@ class ResponsesBuilder {
     .status(status)
     .json({
       metadata: Object.assign({
-        version: this.appConfiguration.get('version'),
+        version: this._appConfiguration.get('version'),
         status,
       }, metadata),
       data,
@@ -83,7 +85,7 @@ class ResponsesBuilder {
     status = statuses.ok,
     options = {}
   ) {
-    const prefix = this.appConfiguration.get('postMessagesPrefix') || '';
+    const prefix = this._appConfiguration.get('postMessagesPrefix') || '';
     const target = options.target || 'window.opener';
     const close = typeof options.close !== 'undefined' ? options.close : true;
     const defaultCloseDelay = 700;

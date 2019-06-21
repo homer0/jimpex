@@ -66,7 +66,7 @@ class HTMLGenerator {
      * The service options.
      * @type {HTMLGeneratorOptions}
      */
-    this.options = ObjectUtils.merge({
+    this._options = ObjectUtils.merge({
       template: 'index.tpl.html',
       file: 'index.html',
       deleteTemplateAfter: true,
@@ -82,7 +82,7 @@ class HTMLGenerator {
      * you end up with `['d', 'e', 'c']`, and in this case, that's not very useful.
      */
     if (options.configurationKeys) {
-      this.options.configurationKeys = options.configurationKeys.slice();
+      this._options.configurationKeys = options.configurationKeys.slice();
     }
     // If `valuesService` was specified, check if it has a `getValues` method.
     if (valuesService && typeof valuesService.getValues !== 'function') {
@@ -91,36 +91,44 @@ class HTMLGenerator {
     /**
      * A local reference for the `appConfiguration` service.
      * @type {AppConfiguration}
+     * @access protected
+     * @ignore
      */
-    this.appConfiguration = appConfiguration;
+    this._appConfiguration = appConfiguration;
     /**
      * A local reference for the `appLogger` service.
      * @type {Logger}
+     * @access protected
+     * @ignore
      */
-    this.appLogger = appLogger;
+    this._appLogger = appLogger;
     /**
      * A local reference for the `frontendFs` service.
      * @type {FrontendFs}
+     * @access protected
+     * @ignore
      */
-    this.frontendFs = frontendFs;
+    this._frontendFs = frontendFs;
     /**
      * A local reference for the recieved `valuesService` service.
      * @type {?HTMLGeneratorValuesService}
+     * @access protected
+     * @ignore
      */
-    this.valuesService = valuesService;
+    this._valuesService = valuesService;
     /**
      * Whether or not the file has been generated.
      * @type {Boolean}
-     * @ignore
      * @access protected
+     * @ignore
      */
     this._fileReady = false;
     /**
      * A deferred promise to return when another service asks if the file has been generated. Once
      * this sevice finishes generating the file, the promise will be resolved.
      * @type {Object}
-     * @ignore
      * @access protected
+     * @ignore
      */
     this._fileDeferred = deferred();
   }
@@ -138,7 +146,7 @@ class HTMLGenerator {
    * @return {string}
    */
   getFile() {
-    return this.options.file;
+    return this._options.file;
   }
   /**
    * Get the values that are going to be injected on the file.
@@ -147,16 +155,16 @@ class HTMLGenerator {
   getValues() {
     let valuesPromise;
     // If an `HTMLGeneratorValuesService` was specified...
-    if (this.valuesService) {
+    if (this._valuesService) {
       // ...get the values from there.
-      valuesPromise = this.valuesService.getValues();
-    } else if (this.options.configurationKeys.length) {
+      valuesPromise = this._valuesService.getValues();
+    } else if (this._options.configurationKeys.length) {
       /**
        * ...if there are configuration keys to be copied, set to return an already resolved
        * promise with the settings from the configuration.
        */
       valuesPromise = Promise.resolve(
-        this.appConfiguration.get(this.options.configurationKeys)
+        this._appConfiguration.get(this._options.configurationKeys)
       );
     } else {
       // ...otherwsie, return an already resolved promise with an empty object.
@@ -175,11 +183,11 @@ class HTMLGenerator {
       template,
       deleteTemplateAfter,
       file,
-    } = this.options;
+    } = this._options;
     // Define the variable where the template contents will be saved.
     let templateContents = '';
     // Read the template file.
-    return this.frontendFs.read(`./${template}`)
+    return this._frontendFs.read(`./${template}`)
     .then((contents) => {
       // Save the template contents.
       templateContents = contents;
@@ -190,20 +198,20 @@ class HTMLGenerator {
       // Get the HTML code for the file.
       const html = this._processHTML(templateContents, values);
       // Write the generated file.
-      return this.frontendFs.write(file, html);
+      return this._frontendFs.write(file, html);
     })
     .then(() => {
-      this.appLogger.success(`The HTML was successfully generated (${file})`);
+      this._appLogger.success(`The HTML was successfully generated (${file})`);
       /**
        * If the template needs to be deleted, return the call to the `delete` method, otherwise,
        * just an empty object to continue the promise chain.
        */
-      return deleteTemplateAfter && this.frontendFs.delete(`./${template}`);
+      return deleteTemplateAfter && this._frontendFs.delete(`./${template}`);
     })
     .then(() => {
       // If the template was deleted, log a message informing it.
       if (deleteTemplateAfter) {
-        this.appLogger.info(`The HTML template was successfully removed (${template})`);
+        this._appLogger.info(`The HTML template was successfully removed (${template})`);
       }
       /**
        * Mark the `_fileReady` flag as `true` so the next calls to `whenReady` won't get the
@@ -214,9 +222,16 @@ class HTMLGenerator {
       this._fileDeferred.resolve();
     })
     .catch((error) => {
-      this.appLogger.error('There was an error while generating the HTML');
+      this._appLogger.error('There was an error while generating the HTML');
       return Promise.reject(error);
     });
+  }
+  /**
+   * The service options.
+   * @type {HTMLGeneratorOptions}
+   */
+  get options() {
+    return Object.freeze(this._options);
   }
   /**
    * Creates the code for the HTML file.
@@ -231,7 +246,7 @@ class HTMLGenerator {
       replacePlaceholder,
       valuesExpression,
       variable,
-    } = this.options;
+    } = this._options;
     const htmlObject = JSON.stringify(values);
     let code = template
     .replace(

@@ -9,7 +9,7 @@ const {
 const APIClientBase = require('wootils/shared/apiClient');
 
 describe('services/api:client', () => {
-  it('should be instantiated with all its dependencies', () => {
+  it('should be instantiated with its configuration', () => {
     // Given
     const apiConfig = {
       url: 'my-api',
@@ -20,17 +20,16 @@ describe('services/api:client', () => {
     const http = {
       fetch: () => {},
     };
-    const HTTPError = Error;
+    const HTTPError = 'HTTPError';
     let sut = null;
     // When
     sut = new APIClient(apiConfig, http, HTTPError);
     // Then
     expect(sut).toBeInstanceOf(APIClientBase);
     expect(sut).toBeInstanceOf(APIClient);
-    expect(sut.apiConfig).toBe(apiConfig);
+    expect(sut.apiConfig).toEqual(apiConfig);
     expect(sut.url).toBe(apiConfig.url);
     expect(sut.endpoints).toEqual(apiConfig.endpoints);
-    expect(sut.HTTPError).toBe(HTTPError);
   });
 
   it('should format error responses using the HTTPError service', () => {
@@ -102,7 +101,6 @@ describe('services/api:client', () => {
     expect(sut.apiConfig).toBe(appConfiguration.api);
     expect(sut.url).toBe(appConfiguration.api.url);
     expect(sut.endpoints).toEqual(appConfiguration.api.endpoints);
-    expect(sut.HTTPError).toBe('HTTPError');
     expect(sut.fetchClient).toBe(http.fetch);
     expect(serviceName).toBe('apiClient');
     expect(appConfiguration.get).toHaveBeenCalledTimes(1);
@@ -147,7 +145,6 @@ describe('services/api:client', () => {
     expect(sut.apiConfig).toBe(appConfiguration.apiConfig);
     expect(sut.url).toBe(appConfiguration.apiConfig.url);
     expect(sut.endpoints).toEqual(appConfiguration.apiConfig.endpoints);
-    expect(sut.HTTPError).toBe('HTTPError');
     expect(sut.fetchClient).toBe(http.fetch);
     expect(serviceName).toBe(name);
     expect(appConfiguration.get).toHaveBeenCalledTimes(1);
