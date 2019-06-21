@@ -8,7 +8,7 @@ const { middlewareCreator } = require('../../utils/wrappers');
  *              response.
  * @property {string} [message='Oops! Something went wrong, please try again']
  * The error message the response will show.
- * @property {number} status
+ * @property {number} [status=500]
  * The HTTP status code for the response.
  */
 
