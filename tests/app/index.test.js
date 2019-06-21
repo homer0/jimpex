@@ -11,9 +11,9 @@ jest.mock('compression', () => compressionMock);
 jest.mock('multer', () => multerMock);
 jest.mock('body-parser', () => bodyParserMock);
 jest.mock('wootils/node/providers', () => wootilsMock);
-jest.mock('/src/services/api', () => ({ all: 'apiServices' }));
-jest.mock('/src/services/common', () => ({ all: 'commonServices' }));
-jest.mock('/src/services/http', () => ({ all: 'httpServices' }));
+jest.mock('/src/services/api', () => 'apiServices');
+jest.mock('/src/services/common', () => 'commonServices');
+jest.mock('/src/services/http', () => 'httpServices');
 jest.unmock('/src/app/index');
 
 const path = require('path');

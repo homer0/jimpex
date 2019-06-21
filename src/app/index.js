@@ -278,15 +278,15 @@ class Jimpex extends Jimple {
     const { defaultServices } = this.options;
 
     if (defaultServices.api) {
-      this.register(apiServices.all);
+      this.register(apiServices);
     }
 
     if (defaultServices.common) {
-      this.register(commonServices.all);
+      this.register(commonServices);
     }
 
     if (defaultServices.http) {
-      this.register(httpServices.all);
+      this.register(httpServices);
     }
 
     this.set('events', () => new EventsHub());

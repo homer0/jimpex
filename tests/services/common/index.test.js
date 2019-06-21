@@ -16,7 +16,7 @@ describe('services:common', () => {
       'sendFile',
     ];
     // When
-    commonServices.all.register(app);
+    commonServices.register(app);
     // When/Then
     expect(app.register).toHaveBeenCalledTimes(expectedServices.length);
     expectedServices.forEach((service, index) => {

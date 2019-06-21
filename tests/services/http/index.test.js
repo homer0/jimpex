@@ -15,7 +15,7 @@ describe('services:http', () => {
       'responsesBuilder',
     ];
     // When
-    httpServices.all.register(app);
+    httpServices.register(app);
     // When/Then
     expect(app.register).toHaveBeenCalledTimes(expectedServices.length);
     expectedServices.forEach((service, index) => {

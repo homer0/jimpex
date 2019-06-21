@@ -19,7 +19,7 @@ describe('services:api', () => {
     };
     const expectedServicesNames = Object.keys(expectedServices);
     // When
-    apiServices.all.register(app);
+    apiServices.register(app);
     // When/Then
     expect(app.register).toHaveBeenCalledTimes(expectedServicesNames.length);
     expectedServicesNames.forEach((service, index) => {
