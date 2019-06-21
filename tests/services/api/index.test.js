@@ -10,19 +10,20 @@ describe('services:api', () => {
     const app = {
       register: jest.fn(),
     };
-    const expectedServices = [
-      'apiClient',
-      'ensureBearerAuthentication',
-    ];
+    const expectedServices = {
+      apiClient: expect.any(Function),
+      ensureBearerAuthentication: {
+        register: expect.any(Function),
+      },
+    };
+    const expectedServicesNames = Object.keys(expectedServices);
     // When
     apiServices.all.register(app);
     // When/Then
-    expect(app.register).toHaveBeenCalledTimes(expectedServices.length);
-    expectedServices.forEach((service, index) => {
-      const registeredService = app.register.mock.calls[index][0];
-      expect(registeredService).toEqual({
-        register: expect.any(Function),
-      });
+    expect(app.register).toHaveBeenCalledTimes(expectedServicesNames.length);
+    expectedServicesNames.forEach((service, index) => {
+      const [registeredService] = app.register.mock.calls[index];
+      expect(registeredService).toEqual(expectedServices[service]);
       expect(registeredService.toString()).toBe(apiServices[service].toString());
     });
   });
