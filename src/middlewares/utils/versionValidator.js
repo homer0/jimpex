@@ -1,6 +1,6 @@
 const ObjectUtils = require('wootils/shared/objectUtils');
 const statuses = require('statuses');
-const { middleware } = require('../../utils/wrappers');
+const { middlewareCreator } = require('../../utils/wrappers');
 
 /**
  * @typdef {Object} VersionValidatorLatestOptions
@@ -192,18 +192,19 @@ class VersionValidator {
   }
 }
 /**
- * Generates a middleware/controller with customized options.
- * The reason for "middleware/controller" is because the wrappers for both are the same, the
+ * A middleware that will validate a `version` request parameter against the app version and
+ * generate an error if they don't match.
+ * This is a "middleware/controller" is because the wrappers for both are the same, the
  * difference is that, for controllers, Jimpex sends a second parameter with the point where they
  * are mounted.
  * By validating the point parameter, the function can know whether the implementation is going
  * to use the middleware by itself or as a route middleware.
  * If used as middleware, it will just return the result of {@link VersionValidator#middleware};
  * but if used as controller, it will mount it on `[point]/:version/*`.
+ * @type {MiddlewareCreator}
  * @param {VersionValidatorOptions} [options] Custom options to modify the middleware behavior.
- * @return {Middleware}
  */
-const versionValidatorCustom = (options) => middleware((app, point) => {
+const versionValidator = middlewareCreator((options) => (app, point) => {
   // Get the middleware function.
   const middlewareValidator = (new VersionValidator(
     app.get('appConfiguration').get('version'),
@@ -228,15 +229,8 @@ const versionValidatorCustom = (options) => middleware((app, point) => {
   // Return the route or the middleware.
   return result;
 });
-/**
- * A middleware that will validate a `version` request parameter against the app version and
- * generate an error if they don't match.
- * @var  {Middleware}
- */
-const versionValidator = versionValidatorCustom();
 
 module.exports = {
   VersionValidator,
   versionValidator,
-  versionValidatorCustom,
 };
