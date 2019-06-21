@@ -37,34 +37,36 @@ class FastHTML {
     /**
      * A local reference for the `sendFile` service.
      * @type {SendFile}
+     * @access protected
+     * @ignore
      */
-    this.sendFile = sendFile;
+    this._sendFile = sendFile;
     /**
      * The name of the file to serve.
      * @type {string}
      */
-    this.file = file;
+    this._file = file;
     /**
      * A list of regular expressions to match requests paths that should be ignored.
      * @type {Array}
      */
-    this.ignoredRoutes = ignoredRoutes;
+    this._ignoredRoutes = ignoredRoutes;
     /**
      * If specified, a reference for a service that generates HTML files.
      * @type {HTMLGenerator}
      */
-    this.htmlGenerator = htmlGenerator;
+    this._htmlGenerator = htmlGenerator;
     /**
      * Whether or not the file is ready to be served.
      * @type {Boolean}
-     * @ignore
      * @access protected
+     * @ignore
      */
     this._ready = true;
     // If an `HTMLGenerator` service was specified...
-    if (this.htmlGenerator) {
+    if (this._htmlGenerator) {
       // ...get the name of the file from that service.
-      this.file = this.htmlGenerator.getFile();
+      this._file = this._htmlGenerator.getFile();
       /**
        * Mark the `_ready` flag as `false` as this service needs to wait for the generator to
        * create the file.
@@ -79,7 +81,7 @@ class FastHTML {
   middleware() {
     return (req, res, next) => {
       // Validate if the route should be ignored.
-      const shouldIgnore = this.ignoredRoutes
+      const shouldIgnore = this._ignoredRoutes
       .some((expression) => expression.test(req.originalUrl));
       // If the route should be ignored...
       if (shouldIgnore) {
@@ -91,7 +93,7 @@ class FastHTML {
          * calls the method that will notify this service when the file has been created and is
          * ready to be loaded.
          */
-        this.htmlGenerator.whenReady()
+        this._htmlGenerator.whenReady()
         .then(() => {
           // The file is ready to use, so mark the `_ready` flag as `true`.
           this._ready = true;
@@ -112,6 +114,20 @@ class FastHTML {
     };
   }
   /**
+   * The name of the file to serve.
+   * @type {string}
+   */
+  get file() {
+    return this._file;
+  }
+  /**
+   * A list of regular expressions to match requests paths that should be ignored.
+   * @type {Array}
+   */
+  get ignoredRoutes() {
+    return this._ignoredRoutes.slice();
+  }
+  /**
    * Serves the file on the response.
    * @param {ExpressResponse} res  The server response.
    * @param {ExpressNext}     next The functino to call the next middleware.
@@ -120,7 +136,7 @@ class FastHTML {
    */
   _sendHTML(res, next) {
     res.setHeader('Content-Type', mime.getType('html'));
-    this.sendFile(res, this.file, next);
+    this._sendFile(res, this._file, next);
   }
 }
 /**

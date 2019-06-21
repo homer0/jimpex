@@ -20,29 +20,35 @@ class ShowHTML {
     /**
      * A local reference for the `sendFile` service.
      * @type {SendFile}
+     * @access protected
+     * @ignore
      */
-    this.sendFile = sendFile;
+    this._sendFile = sendFile;
     /**
      * The name of the file to serve.
      * @type {string}
+     * @access protected
+     * @ignore
      */
-    this.file = file;
+    this._file = file;
     /**
      * If specified, a reference for a service that generates HTML files.
      * @type {HTMLGenerator}
+     * @access protected
+     * @ignore
      */
-    this.htmlGenerator = htmlGenerator;
+    this._htmlGenerator = htmlGenerator;
     /**
      * Whether or not the file is ready to be served.
      * @type {Boolean}
-     * @ignore
      * @access protected
+     * @ignore
      */
     this._ready = true;
     // If an `HTMLGenerator` service was specified...
-    if (this.htmlGenerator) {
+    if (this._htmlGenerator) {
       // ...get the name of the file from that service.
-      this.file = this.htmlGenerator.getFile();
+      this._file = this._htmlGenerator.getFile();
       /**
        * Mark the `_ready` flag as `false` as this service needs to wait for the generator to
        * create the file.
@@ -63,7 +69,7 @@ class ShowHTML {
          * calls the method that will notify this service when the file has been created and is
          * ready to be loaded.
          */
-        this.htmlGenerator.whenReady()
+        this._htmlGenerator.whenReady()
         .then(() => {
           // The file is ready to use, so mark the `_ready` flag as `true`.
           this._ready = true;
@@ -84,6 +90,13 @@ class ShowHTML {
     };
   }
   /**
+   * The name of the file to serve.
+   * @type {string}
+   */
+  get file() {
+    return this._file;
+  }
+  /**
    * Serves the file on the response.
    * @param {ExpressResponse} res  The server response.
    * @param {ExpressNext}     next The functino to call the next middleware.
@@ -92,7 +105,7 @@ class ShowHTML {
    */
   _sendHTML(res, next) {
     res.setHeader('Content-Type', mime.getType('html'));
-    return this.sendFile(res, this.file, next);
+    return this._sendFile(res, this._file, next);
   }
 }
 /**

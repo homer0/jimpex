@@ -47,23 +47,31 @@ class ErrorHandler {
     /**
      * A local reference for the `appLogger` service.
      * @type {Logger}
+     * @access protected
+     * @ignore
      */
-    this.appLogger = appLogger;
+    this._appLogger = appLogger;
     /**
      * A local reference for the `responsesBuilder` service.
      * @type {ResponsesBuilder}
+     * @access protected
+     * @ignore
      */
-    this.responsesBuilder = responsesBuilder;
+    this._responsesBuilder = responsesBuilder;
     /**
      * Whether or not to show unknown errors real messages.
      * @type {Boolean}
+     * @access protected
+     * @ignore
      */
-    this.showErrors = showErrors;
+    this._showErrors = showErrors;
     /**
      * A local reference for the class the app uses to generate errors.
      * @type {Class}
+     * @access protected
+     * @ignore
      */
-    this.AppError = AppError;
+    this._AppError = AppError;
     /**
      * These are the "settings" the middleware will use in order to display the errors.
      * @type {ErrorHandlerOptions}
@@ -96,9 +104,9 @@ class ErrorHandler {
         // Define the error response default status.
         let { status } = this._options.default;
         // Validate if the error is known or not.
-        const knownError = err instanceof this.AppError;
+        const knownError = err instanceof this._AppError;
         // If the `showErrors` flag is enabled or the error is a known error...
-        if (this.showErrors || knownError) {
+        if (this._showErrors || knownError) {
           // ...set the error real message on the response.
           data.message = err.message;
           // If the error type is known...
@@ -109,7 +117,7 @@ class ErrorHandler {
             status = err.status || statuses['Bad Request'];
           }
           // If the `showErrors` flag is enabled...
-          if (this.showErrors) {
+          if (this._showErrors) {
             // Get the error stack and format it into an `Array`.
             const stack = err.stack.split('\n').map((line) => line.trim());
             //  Add the stack to the response.
@@ -117,12 +125,12 @@ class ErrorHandler {
             // Remove the first item of the stack, since it's the same as the message.
             stack.splice(0, 1);
             // Log the error.
-            this.appLogger.error(`ERROR: ${err.message}`);
-            this.appLogger.info(stack);
+            this._appLogger.error(`ERROR: ${err.message}`);
+            this._appLogger.info(stack);
           }
         }
         // Send the response.
-        this.responsesBuilder.json(res, data, status);
+        this._responsesBuilder.json(res, data, status);
       } else {
         // ...otherwise, move to the next middleware.
         next();

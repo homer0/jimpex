@@ -8,7 +8,7 @@ const {
 } = require('/src/middlewares/common/forceHTTPS');
 
 describe('middlewares/common:forceHTTPS', () => {
-  it('should be instantiated with its default values', () => {
+  it('should be instantiated with its default options', () => {
     // Given
     let sut = null;
     // When
@@ -26,7 +26,7 @@ describe('middlewares/common:forceHTTPS', () => {
     sut = new ForceHTTPS(ignoredFiles);
     // Then
     expect(sut).toBeInstanceOf(ForceHTTPS);
-    expect(sut.ignoredRoutes).toBe(ignoredFiles);
+    expect(sut.ignoredRoutes).toEqual(ignoredFiles);
   });
 
   it('should return a middleware to force the traffic to HTTPS', () => {
