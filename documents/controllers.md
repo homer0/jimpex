@@ -105,7 +105,7 @@ class App extends Jimpex {
 }
 ```
 
-By default, it serves an `index.html` and a `favicon.ico`, but you can use the _"controller generator"_ `rootStaticsControllerCustom` to modify those values:
+By default, it serves an `index.html` and a `favicon.ico`, but you can use it as a function to modify those values:
 
 ```js
 const {
@@ -114,7 +114,7 @@ const {
     common: { sendFile },
   },
   controllers: {
-    common: { rootStaticsControllerCustom },
+    common: { rootStaticsController },
   },
 };
 
@@ -124,7 +124,7 @@ class App extends Jimpex {
     this.register(sendFile);
     
     // Add the controller.
-    this.mount('/', rootStaticsControllerCustom([
+    this.mount('/', rootStaticsController([
       'my-file-one.html',
       'favicon.icon',
       'index.html',
