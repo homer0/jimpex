@@ -1,6 +1,4 @@
-jest.mock('/src/utils/wrappers', () => ({
-  middleware: (connect) => connect,
-}));
+jest.unmock('/src/utils/wrappers');
 jest.unmock('/src/middlewares');
 
 require('jasmine-expect');
@@ -18,8 +16,6 @@ describe('middlewares', () => {
     expect(Object.keys(middlewares).length).toBe(knownMiddlewares.length);
     knownMiddlewares.forEach((name) => {
       expect(middlewares[name]).toBeObject();
-      const modules = Object.keys(middlewares[name]);
-      modules.forEach((mod) => expect(middlewares[name][mod]).toBeFunction());
     });
   });
 });

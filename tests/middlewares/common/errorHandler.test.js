@@ -6,7 +6,6 @@ const statuses = require('statuses');
 const {
   ErrorHandler,
   errorHandler,
-  errorHandlerCustom,
 } = require('/src/middlewares/common/errorHandler');
 
 describe('middlewares/common:errorHandler', () => {
@@ -291,7 +290,7 @@ describe('middlewares/common:errorHandler', () => {
     expect(appConfiguration.get).toHaveBeenCalledWith('debug');
   });
 
-  it('should include a middleware generator shorthand', () => {
+  it('should include a middleware creator shorthand to modify its options', () => {
     // Given
     const appConfiguration = {
       debug: {
@@ -314,7 +313,7 @@ describe('middlewares/common:errorHandler', () => {
       'AppError',
     ];
     // When
-    middleware = errorHandlerCustom().connect(app);
+    middleware = errorHandler().connect(app);
     toCompare = new ErrorHandler(
       'appLogger',
       'responsesBuilder',
