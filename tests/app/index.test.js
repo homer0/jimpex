@@ -11,9 +11,9 @@ jest.mock('compression', () => compressionMock);
 jest.mock('multer', () => multerMock);
 jest.mock('body-parser', () => bodyParserMock);
 jest.mock('wootils/node/providers', () => wootilsMock);
-jest.mock('/src/services/api', () => 'apiServices');
 jest.mock('/src/services/common', () => 'commonServices');
 jest.mock('/src/services/http', () => 'httpServices');
+jest.mock('/src/services/utils', () => 'utilsServices');
 jest.unmock('/src/app/index');
 
 const path = require('path');
@@ -72,7 +72,7 @@ describe('app:Jimpex', () => {
       'packageInfo',
       'pathUtils',
       'rootRequire',
-      'apiServices',
+      'utilsServices',
       'commonServices',
       'httpServices',
       'appConfiguration',
@@ -474,9 +474,9 @@ describe('app:Jimpex', () => {
     // When
     sut = new Sut(true, {
       defaultServices: {
-        api: false,
         common: false,
         http: false,
+        utils: false,
       },
     });
     // Then

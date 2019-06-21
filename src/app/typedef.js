@@ -57,7 +57,7 @@
  * @typedef {Object} JimpexDefaultServicesOptions
  * @property {boolean} [common=true] Whether or not to register all the `common` service providers.
  * @property {boolean} [http=true]   Whether or not to register all the `http` service providers.
- * @property {boolean} [api=true]    Whether or not to register all the `api` service providers.
+ * @property {boolean} [utils=true]  Whether or not to register all the `utils` service providers.
  */
 
 /**

@@ -8,7 +8,6 @@ describe('services', () => {
   it('should export all the app sevices', () => {
     // Given
     const knownServices = [
-      'api',
       'common',
       'frontend',
       'html',
