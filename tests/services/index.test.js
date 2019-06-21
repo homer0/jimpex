@@ -13,6 +13,7 @@ describe('services', () => {
       'frontend',
       'html',
       'http',
+      'utils',
     ];
     // When/Then
     expect(Object.keys(services).length).toBe(knownServices.length);
