@@ -4,7 +4,7 @@ jest.unmock('/src/middlewares/html/showHTML');
 require('jasmine-expect');
 const {
   ShowHTML,
-  showHTMLCustom,
+  showHTML,
 } = require('/src/middlewares/html/showHTML');
 
 describe('middlewares/html:showHTML', () => {
@@ -144,7 +144,7 @@ describe('middlewares/html:showHTML', () => {
       'sendFile',
     ];
     // When
-    middleware = showHTMLCustom().connect(app);
+    middleware = showHTML.connect(app);
     toCompare = new ShowHTML();
     // Then
     expect(middleware.toString()).toEqual(toCompare.middleware().toString());
@@ -152,5 +152,36 @@ describe('middlewares/html:showHTML', () => {
     expectedGets.forEach((service) => {
       expect(app.get).toHaveBeenCalledWith(service);
     });
+  });
+
+  it('should include a middleware creator shorthand to configure its options', () => {
+    // Given
+    const htmlGeneratorServiceName = 'someCustomService';
+    const htmlGeneratorService = {
+      getFile: jest.fn(() => ''),
+    };
+    const app = {
+      get: jest.fn((service) => (
+        service === htmlGeneratorServiceName ?
+          htmlGeneratorService :
+          service
+      )),
+    };
+    let middleware = null;
+    let toCompare = null;
+    const expectedGets = [
+      htmlGeneratorServiceName,
+      'sendFile',
+    ];
+    // When
+    middleware = showHTML('some-file', htmlGeneratorServiceName).connect(app);
+    toCompare = new ShowHTML();
+    // Then
+    expect(middleware.toString()).toEqual(toCompare.middleware().toString());
+    expect(app.get).toHaveBeenCalledTimes(expectedGets.length);
+    expectedGets.forEach((service) => {
+      expect(app.get).toHaveBeenCalledWith(service);
+    });
+    expect(htmlGeneratorService.getFile).toHaveBeenCalledTimes(1);
   });
 });
