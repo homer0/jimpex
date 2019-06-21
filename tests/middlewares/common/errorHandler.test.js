@@ -9,6 +9,7 @@ const statuses = require('statuses');
 const {
   ErrorHandler,
   errorHandler,
+  errorHandlerCustom,
 } = require('/src/middlewares/common/errorHandler');
 
 describe('middlewares/common:errorHandler', () => {
@@ -26,6 +27,34 @@ describe('middlewares/common:errorHandler', () => {
     expect(sut.appLogger).toBe(appLogger);
     expect(sut.responsesBuilder).toBe(responsesBuilder);
     expect(sut.showErrors).toBe(showErrors);
+    expect(sut.options).toEqual(({
+      default: {
+        message: 'Oops! Something went wrong, please try again',
+        status: statuses['internal server error'],
+      },
+    }));
+  });
+
+  it('should be instantiated with custom options', () => {
+    // Given
+    const customOptions = {
+      default: {
+        message: 'Unknown error',
+        status: statuses['service unavailable'],
+      },
+    };
+    let sut = null;
+    // When
+    sut = new ErrorHandler(
+      'appLogger',
+      'responsesBuilder',
+      'showErrors',
+      'AppError',
+      customOptions
+    );
+    // Then
+    expect(sut).toBeInstanceOf(ErrorHandler);
+    expect(sut.options).toEqual(customOptions);
   });
 
   it('should return a middleware to format errors received by Express', () => {
@@ -68,6 +97,11 @@ describe('middlewares/common:errorHandler', () => {
     };
     const showErrors = false;
     const AppError = Error;
+    const options = {
+      default: {
+        message: 'Unknown error',
+      },
+    };
     const error = {
       message: 'Some weird and unexpected error',
     };
@@ -78,11 +112,11 @@ describe('middlewares/common:errorHandler', () => {
     let middleware = null;
     const expectedData = {
       error: true,
-      message: 'Oops! Something went wrong, please try again',
+      message: options.default.message,
     };
     const expectedStatus = statuses['Internal Server Error'];
     // When
-    sut = new ErrorHandler(appLogger, responsesBuilder, showErrors, AppError);
+    sut = new ErrorHandler(appLogger, responsesBuilder, showErrors, AppError, options);
     middleware = sut.middleware();
     middleware(error, request, response, next);
     // Then
@@ -244,6 +278,46 @@ describe('middlewares/common:errorHandler', () => {
     ];
     // When
     middleware = errorHandler.connect(app);
+    toCompare = new ErrorHandler(
+      'appLogger',
+      'responsesBuilder',
+      'showErrors',
+      'AppError'
+    );
+    // Then
+    expect(middleware.toString()).toEqual(toCompare.middleware().toString());
+    expect(app.get).toHaveBeenCalledTimes(expectedGets.length);
+    expectedGets.forEach((service) => {
+      expect(app.get).toHaveBeenCalledWith(service);
+    });
+    expect(appConfiguration.get).toHaveBeenCalledTimes(1);
+    expect(appConfiguration.get).toHaveBeenCalledWith('debug');
+  });
+
+  it('should include a middleware generator shorthand', () => {
+    // Given
+    const appConfiguration = {
+      debug: {
+        showErrors: true,
+      },
+      get: jest.fn(() => appConfiguration.debug),
+    };
+    const services = {
+      appConfiguration,
+    };
+    const app = {
+      get: jest.fn((service) => (services[service] || service)),
+    };
+    let middleware = null;
+    let toCompare = null;
+    const expectedGets = [
+      'appConfiguration',
+      'appLogger',
+      'responsesBuilder',
+      'AppError',
+    ];
+    // When
+    middleware = errorHandlerCustom().connect(app);
     toCompare = new ErrorHandler(
       'appLogger',
       'responsesBuilder',
