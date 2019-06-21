@@ -1,6 +1,5 @@
-const { versionValidator, versionValidatorCustom } = require('./versionValidator');
+const { versionValidator } = require('./versionValidator');
 
 module.exports = {
   versionValidator,
-  versionValidatorCustom,
 };
