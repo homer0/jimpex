@@ -1,6 +1,3 @@
-const JimpleMock = require('/tests/mocks/jimple.mock');
-
-jest.mock('jimple', () => JimpleMock);
 jest.mock('/src/utils/wrappers', () => ({
   controller: (connect) => connect,
 }));
