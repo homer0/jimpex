@@ -15,13 +15,17 @@ class HealthController {
     /**
      * A local reference for the `appConfiguration` service.
      * @type {AppConfiguration}
+     * @access protected
+     * @ignore
      */
-    this.appConfiguration = appConfiguration;
+    this._appConfiguration = appConfiguration;
     /**
      * A local reference for the `responsesBuilder` service.
      * @type {ResponsesBuilder}
+     * @access protected
+     * @ignore
      */
-    this.responsesBuilder = responsesBuilder;
+    this._responsesBuilder = responsesBuilder;
   }
   /**
    * Returns the middleware that shows the health information.
@@ -32,8 +36,8 @@ class HealthController {
       const {
         name: configuration,
         version,
-      } = this.appConfiguration.get(['name', 'version']);
-      this.responsesBuilder.json(res, {
+      } = this._appConfiguration.get(['name', 'version']);
+      this._responsesBuilder.json(res, {
         isHealthy: true,
         status: statuses.ok,
         configuration,

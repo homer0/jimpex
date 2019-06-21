@@ -9,7 +9,7 @@ const {
 } = require('/src/controllers/common/health');
 
 describe('controllers/common:health', () => {
-  it('should be instantiated with all its dependencies', () => {
+  it('should be instantiated and have a public method', () => {
     // Given
     const appConfiguration = 'appConfiguration';
     const responsesBuilder = 'responsesBuilder';
@@ -18,8 +18,7 @@ describe('controllers/common:health', () => {
     sut = new HealthController(appConfiguration, responsesBuilder);
     // Then
     expect(sut).toBeInstanceOf(HealthController);
-    expect(sut.appConfiguration).toBe(appConfiguration);
-    expect(sut.responsesBuilder).toBe(responsesBuilder);
+    expect(sut.health).toBeFunction();
   });
 
   it('should have a middleware to show "health" information', () => {

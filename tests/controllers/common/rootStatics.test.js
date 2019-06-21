@@ -8,7 +8,7 @@ const {
 } = require('/src/controllers/common/rootStatics');
 
 describe('controllers/common:rootStatics', () => {
-  it('should be instantiated with all its dependencies', () => {
+  it('should be instantiated and have public methods', () => {
     // Given
     const sendFile = 'sendFile';
     let sut = null;
@@ -16,7 +16,8 @@ describe('controllers/common:rootStatics', () => {
     sut = new RootStaticsController(sendFile);
     // Then
     expect(sut).toBeInstanceOf(RootStaticsController);
-    expect(sut.sendFile).toBe(sendFile);
+    expect(sut.getFileEntries).toBeFunction();
+    expect(sut.serveFile).toBeFunction();
   });
 
   it('should have a method to return all the files it will serve', () => {
