@@ -55,6 +55,10 @@
  */
 
 /**
+ * @external {ExpressRouter} https://expressjs.com/en/4x/api.html#router
+ */
+
+/**
  * @typdef {function} ExpressNext
  * @description A function to call the next middleware. If an argument is specified, it will be
  *              handled as an error and sent to the `errorHandler` service.
