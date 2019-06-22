@@ -267,11 +267,11 @@ class Jimpex extends Jimple {
     }
 
     if (statics.enabled) {
-      const { onHome, route, folder } = statics;
-      const joinFrom = onHome ? 'home' : 'app';
-      const staticsRoute = route.startsWith('/') ? route.substr(1) : route;
-      const staticsFolderPath = this.get('pathUtils').joinFrom(joinFrom, folder || staticsRoute);
-      this._express.use(`/${staticsRoute}`, express.static(staticsFolderPath));
+      this._addStaticsFolder(
+        statics.route,
+        statics.folder,
+        statics.onHome
+      );
     }
 
     if (expressOptions.bodyParser) {
@@ -289,6 +289,26 @@ class Jimpex extends Jimple {
     }
 
     this.set('router', this.factory(() => express.Router()));
+  }
+  /**
+   * Helper method to add static folders to the app.
+   * @param {string}  route          The route for the static folder.
+   * @param {string}  [folder='']    The path to the folder. If not defined, it will use the
+   *                                 value from `route`.
+   * @param {Boolean} [onHome=false] If `true`, the path to the folder will be relative to where
+   *                                 the app is being executed (`process.cwd()`), otherwise, it
+   *                                 will be relative to where the executable file is located.
+   * @access protected
+   * @ignore
+   */
+  _addStaticsFolder(route, folder = '', onHome = false) {
+    const joinFrom = onHome ? 'home' : 'app';
+    const staticRoute = route.replace(/^\/+/, '');
+    const staticFolder = this.get('pathUtils').joinFrom(
+      joinFrom,
+      folder || staticRoute
+    );
+    this._express.use(`/${staticRoute}`, express.static(staticFolder));
   }
   /**
    * Based on the constructor received options, register or not the default services.
