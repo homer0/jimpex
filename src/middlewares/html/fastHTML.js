@@ -161,21 +161,12 @@ const fastHTML = middlewareCreator((
   file,
   ignoredRoutes,
   htmlGeneratorServiceName = 'htmlGenerator'
-) => (app) => {
-  let htmlGenerator;
-  try {
-    htmlGenerator = app.get(htmlGeneratorServiceName);
-  } catch (ignore) {
-    htmlGenerator = null;
-  }
-
-  return new FastHTML(
-    app.get('sendFile'),
-    file,
-    ignoredRoutes,
-    htmlGenerator
-  ).middleware();
-});
+) => (app) => new FastHTML(
+  app.get('sendFile'),
+  file,
+  ignoredRoutes,
+  app.try(htmlGeneratorServiceName)
+).middleware());
 
 module.exports = {
   FastHTML,
