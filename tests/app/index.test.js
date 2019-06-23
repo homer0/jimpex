@@ -1033,11 +1033,12 @@ describe('app:Jimpex', () => {
     };
     JimpleMock.service('appLogger', appLogger);
     const routes = ['route-a', 'route-b'];
-    const point = '/api';
+    const route = '/api';
     const controller = {
       connect: jest.fn(() => routes),
     };
     let sut = null;
+    let routesList = null;
     const expectedStaticsFolder = 'app/statics';
     const expectedMiddlewares = [
       ['compression-middleware'],
@@ -1048,25 +1049,38 @@ describe('app:Jimpex', () => {
     ];
     const expectedUseCalls = [
       ...expectedMiddlewares,
-      ...routes.map((route) => [point, route]),
+      ...routes.map((routeRouter) => [route, routeRouter]),
+    ];
+    const expectedEvents = [
+      ['before-start'],
+      ['start'],
+      ['route-added', route],
+      ['after-start'],
+      ['after-start-callback'],
     ];
     // When
     sut = new Sut();
-    sut.mount(point, controller);
+    sut.mount(route, controller);
     sut.start();
+    routesList = sut.routes;
     // Then
     expect(expressMock.mocks.use).toHaveBeenCalledTimes(expectedUseCalls.length);
     expectedUseCalls.forEach((useCall) => {
       expect(expressMock.mocks.use).toHaveBeenCalledWith(...useCall);
     });
+    expect(events.emit).toHaveBeenCalledTimes(expectedEvents.length);
+    expectedEvents.forEach((eventInformation) => {
+      expect(events.emit).toHaveBeenCalledWith(...[...eventInformation, sut]);
+    });
     expect(events.reduce).toHaveBeenCalledTimes(1);
     expect(events.reduce).toHaveBeenCalledWith(
       'controller-mount',
       routes,
-      point,
+      route,
       controller,
       sut
     );
+    expect(routesList).toEqual([route]);
   });
 
   it('should mount a controller router', () => {
@@ -1099,11 +1113,12 @@ describe('app:Jimpex', () => {
     };
     JimpleMock.service('appLogger', appLogger);
     const router = 'my-router';
-    const point = '/api';
+    const route = '/api';
     const controller = {
       connect: jest.fn(() => router),
     };
     let sut = null;
+    let routesList = null;
     const expectedStaticsFolder = 'app/statics';
     const expectedMiddlewares = [
       ['compression-middleware'],
@@ -1114,25 +1129,38 @@ describe('app:Jimpex', () => {
     ];
     const expectedUseCalls = [
       ...expectedMiddlewares,
-      ...[[point, router]],
+      ...[[route, router]],
+    ];
+    const expectedEvents = [
+      ['before-start'],
+      ['start'],
+      ['route-added', route],
+      ['after-start'],
+      ['after-start-callback'],
     ];
     // When
     sut = new Sut();
-    sut.mount(point, controller);
+    sut.mount(route, controller);
     sut.start();
+    routesList = sut.routes;
     // Then
     expect(expressMock.mocks.use).toHaveBeenCalledTimes(expectedUseCalls.length);
     expectedUseCalls.forEach((useCall) => {
       expect(expressMock.mocks.use).toHaveBeenCalledWith(...useCall);
     });
+    expect(events.emit).toHaveBeenCalledTimes(expectedEvents.length);
+    expectedEvents.forEach((eventInformation) => {
+      expect(events.emit).toHaveBeenCalledWith(...[...eventInformation, sut]);
+    });
     expect(events.reduce).toHaveBeenCalledTimes(1);
     expect(events.reduce).toHaveBeenCalledWith(
       'controller-mount',
       router,
-      point,
+      route,
       controller,
       sut
     );
+    expect(routesList).toEqual([route]);
   });
 
   it('should mount a middleware', () => {

@@ -47,6 +47,8 @@ class Jimpex extends Jimple {
     /**
      * The app options.
      * @type {JimpexOptions}
+     * @access protected
+     * @ignore
      */
     this._options = ObjectUtils.merge({
       version: '0.0.0',
@@ -83,11 +85,15 @@ class Jimpex extends Jimple {
     /**
      * The Express app Jimpex uses under the hood.
      * @type {Express}
+     * @access protected
+     * @ignore
      */
     this._express = express();
     /**
      * When the app starts, this will be running instance.
      * @type {?Object}
+     * @access protected
+     * @ignore
      */
     this._instance = null;
     /**
@@ -97,8 +103,18 @@ class Jimpex extends Jimple {
      * services on Jimple use lazy loading, and adding middlewares and controllers as they come
      * could cause errors if they depend on services that are not yet registered.
      * @type {Array}
+     * @access protected
+     * @ignore
      */
     this._mountQueue = [];
+    /**
+     * A list of all the top routes controlled by the app. Every time a controller is mounted,
+     * its route will be added here.
+     * @type {Array}
+     * @access protected
+     * @ignore
+     */
+    this._controlledRoutes = [];
 
     this._setupCoreServices();
     this._setupExpress();
@@ -129,6 +145,13 @@ class Jimpex extends Jimple {
    */
   get instance() {
     return this._instance;
+  }
+  /**
+   * A list of all the top routes controlled by the app.
+   * @type {Array}
+   */
+  get routes() {
+    return ObjectUtils.copy(this._controlledRoutes);
   }
   /**
    * This is where the app would register all its specific services, middlewares and controllers.
@@ -180,6 +203,8 @@ class Jimpex extends Jimple {
         result = server.use(route, routes);
       }
 
+      this._controlledRoutes.push(route);
+      this._emitEvent('route-added', route);
       return result;
     });
   }
@@ -434,10 +459,11 @@ class Jimpex extends Jimple {
   /**
    * Emits an app event with a reference to this class instance.
    * @param {string} name The name of the event.
+   * @param {...*}   args   Extra parameters for the listeners.
    * @access protected
    */
-  _emitEvent(name) {
-    this.get('events').emit(name, this);
+  _emitEvent(name, ...args) {
+    this.get('events').emit(name, ...[...args, this]);
   }
   /**
    * Sends a target object to a list of reducer events so they can modify or replace it. This
