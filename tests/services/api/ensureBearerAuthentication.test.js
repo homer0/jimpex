@@ -1,6 +1,3 @@
-const JimpleMock = require('/tests/mocks/jimple.mock');
-
-jest.mock('jimple', () => JimpleMock);
 jest.unmock('/src/utils/wrappers');
 jest.unmock('/src/services/api/ensureBearerAuthentication');
 
@@ -113,7 +110,7 @@ describe('services/api:ensureBearerAuthentication', () => {
     let toCompare = null;
     // When
     toCompare = new EnsureBearerAuthentication('AppError');
-    ensureBearerAuthentication(app);
+    ensureBearerAuthentication.register(app);
     [[serviceName, serviceFn]] = app.set.mock.calls;
     sut = serviceFn();
     // Then

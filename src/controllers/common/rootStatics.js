@@ -1,6 +1,6 @@
 const ObjectUtils = require('wootils/shared/objectUtils');
 const mime = require('mime');
-const { controller } = require('../../utils/wrappers');
+const { controllerCreator } = require('../../utils/wrappers');
 /**
  * Since the static files are inside a folder and we can't have the the `static` middleware pointing
  * to the app root directory, this service allows you to serve static files that are on the root
@@ -95,28 +95,24 @@ class RootStaticsController {
   }
 }
 /**
- * Generates a controller with an already defined list of files.
- * The controller will get all the files, add route for each one of them and include a middleware
- * provided by the `RootStaticsController` in order to serve them.
+ * This controller can be used to serve files from the root directory; the idea is to avoid
+ * declaring the root directory as a static folder.
+ * The files are sent to {@link RootStaticsController} and for each file, it will declare a route
+ * and mount a middleware in order to serve them.
+ * @type {ControllerCreator}
  * @param {Array} files The list of files. Each item can be a `string` or an `Object` with the
  *                      keys `origin` for the file route, `output` for the file location relative
- *                      to the root, and `headers` with the file custom headers for the response.
- * @return {Controller}
+ *                      to the root, and `headers` with the file custom headers in case they are
+ *                      needed on the response.
  */
-const rootStaticsControllerCustom = (files) => controller((app) => {
+const rootStaticsController = controllerCreator((files) => (app) => {
   const router = app.get('router');
   const ctrl = new RootStaticsController(app.get('sendFile'), files);
   return ctrl.getFileEntries()
   .map((file) => router.all(`/${file}`, ctrl.serveFile(file)));
 });
-/**
- * Mount a controller to serve an `index.html` and `favicon.ico` files from the root directory.
- * @type {Controller}
- */
-const rootStaticsController = rootStaticsControllerCustom();
 
 module.exports = {
   RootStaticsController,
   rootStaticsController,
-  rootStaticsControllerCustom,
 };

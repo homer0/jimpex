@@ -1,6 +1,3 @@
-const JimpleMock = require('/tests/mocks/jimple.mock');
-
-jest.mock('jimple', () => JimpleMock);
 jest.unmock('/src/utils/wrappers');
 jest.unmock('/src/services');
 
@@ -21,8 +18,6 @@ describe('services', () => {
     expect(Object.keys(services).length).toBe(knownServices.length);
     knownServices.forEach((name) => {
       expect(services[name]).toBeObject();
-      const modules = Object.keys(services[name]);
-      modules.forEach((mod) => expect(services[name][mod]).toBeFunction());
     });
   });
 });

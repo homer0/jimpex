@@ -1,4 +1,4 @@
-const { middleware } = require('../../utils/wrappers');
+const { middlewareCreator } = require('../../utils/wrappers');
 /**
  * Force all the app traffice to be through HTTPS.
  */
@@ -35,24 +35,18 @@ class ForceHTTPS {
   }
 }
 /**
- * Generates a middleware with an already defined list of ignored routes expressions.
+ * A middleware to force HTTPS redirections to all the routes.
+ * @type {MiddlewareCreator}
  * @param {Array} ignoredRoutes A list of regular expressions to match routes that should be
  *                              ignored.
- * @return {Middleware}
  */
-const forceHTTPSCustom = (ignoredRoutes) => middleware((app) => (
+const forceHTTPS = middlewareCreator((ignoredRoutes) => (app) => (
   app.get('appConfiguration').get('forceHTTPS') ?
     new ForceHTTPS(ignoredRoutes).middleware() :
     null
 ));
-/**
- * A middleware to force HTTPS redirections to all the routes.
- * @type {Middleware}
- */
-const forceHTTPS = forceHTTPSCustom();
 
 module.exports = {
   ForceHTTPS,
   forceHTTPS,
-  forceHTTPSCustom,
 };

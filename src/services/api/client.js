@@ -1,5 +1,5 @@
 const APIClientBase = require('wootils/shared/apiClient');
-const { provider } = require('../../utils/wrappers');
+const { providerCreator } = require('../../utils/wrappers');
 /**
  * An API client for the app to use. What makes this service special is that its that it formats
  * the received errors using the `AppError` service class and as fetch function it uses the
@@ -45,40 +45,28 @@ class APIClient extends APIClientBase {
   }
 }
 /**
- * Generates a provider with customized options. This allows the app to have multiple clients for
- * different APIs.
+ * An API Client service to make requests to an API using endpoints defined on the app
+ * configuration.
+ * @type {ProviderCreator}
  * @param {string} [name='apiClient']       The name of the service that will be registered into
  *                                          the app.
  * @param {string} [configurationKey='api'] The name of the app configuration setting that has the
  *                                          API information.
  * @param {Class}  [ClientClass=APIClient]  The Class the service will instantiate.
- * @return {Provider}
  */
-const apiClientCustom = (
+const apiClient = providerCreator((
   name = 'apiClient',
   configurationKey = 'api',
   ClientClass = APIClient
-) => provider((app) => {
+) => (app) => {
   app.set(name, () => new ClientClass(
     app.get('appConfiguration').get(configurationKey),
     app.get('http'),
     app.get('HTTPError')
   ));
 });
-/**
- * The service provider that once registered on the app container will set an instance of
- * `APIClient` as the `apiClient` service.
- * @example
- * // Register it on the container
- * container.register(apiClient);
- * // Getting access to the service instance
- * const apiClient = container.get('apiClient');
- * @type {Provider}
- */
-const apiClient = apiClientCustom();
 
 module.exports = {
   APIClient,
   apiClient,
-  apiClientCustom,
 };

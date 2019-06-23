@@ -1,13 +1,10 @@
-const JimpleMock = require('/tests/mocks/jimple.mock');
-
-jest.mock('jimple', () => JimpleMock);
 jest.unmock('/src/utils/wrappers');
 jest.unmock('/src/services/api/client');
 
 require('jasmine-expect');
 const {
   APIClient,
-  apiClientCustom,
+  apiClient,
 } = require('/src/services/api/client');
 const APIClientBase = require('wootils/shared/apiClient');
 
@@ -73,6 +70,48 @@ describe('services/api:client', () => {
   it('should include a provider for the DIC', () => {
     // Given
     const appConfiguration = {
+      api: {
+        url: 'my-api',
+        endpoints: {
+          info: 'api-info',
+        },
+      },
+      get: jest.fn(() => appConfiguration.api),
+    };
+    const http = {
+      fetch: 'fetch',
+    };
+    const services = {
+      appConfiguration,
+      http,
+    };
+    const app = {
+      set: jest.fn(),
+      get: jest.fn((service) => (services[service] || service)),
+    };
+    let sut = null;
+    let serviceName = null;
+    let serviceFn = null;
+    // When
+    apiClient.register(app);
+    [[serviceName, serviceFn]] = app.set.mock.calls;
+    sut = serviceFn();
+    // Then
+    expect(sut).toBeInstanceOf(APIClientBase);
+    expect(sut).toBeInstanceOf(APIClient);
+    expect(sut.apiConfig).toBe(appConfiguration.api);
+    expect(sut.url).toBe(appConfiguration.api.url);
+    expect(sut.endpoints).toEqual(appConfiguration.api.endpoints);
+    expect(sut.HTTPError).toBe('HTTPError');
+    expect(sut.fetchClient).toBe(http.fetch);
+    expect(serviceName).toBe('apiClient');
+    expect(appConfiguration.get).toHaveBeenCalledTimes(1);
+    expect(appConfiguration.get).toHaveBeenCalledWith('api');
+  });
+
+  it('should include a provider creactor to configure its options', () => {
+    // Given
+    const appConfiguration = {
       apiConfig: {
         url: 'my-api',
         endpoints: {
@@ -99,7 +138,7 @@ describe('services/api:client', () => {
     let serviceName = null;
     let serviceFn = null;
     // When
-    apiClientCustom(name, configurationKey, ClientClass)(app);
+    apiClient(name, configurationKey, ClientClass).register(app);
     [[serviceName, serviceFn]] = app.set.mock.calls;
     sut = serviceFn();
     // Then

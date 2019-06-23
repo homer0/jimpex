@@ -1,18 +1,15 @@
 const { http } = require('./http');
 const { responsesBuilder } = require('./responsesBuilder');
-const { provider } = require('../../utils/wrappers');
+const { providers } = require('../../utils/wrappers');
 /**
- * A single service provider that once registered on the app container will take care of
- * registering the providers for the `http` and 'responsesBuilder' services.
+ * The providers collection for the HTTP services.
  * @type {Provider}
+ * @property {Provider} http             The provider for {@link HTTP}.
+ * @property {Provider} responsesBuilder The provider for {@link ResponsesBuilder}.
  */
-const all = provider((app) => {
-  app.register(http);
-  app.register(responsesBuilder);
-});
-
-module.exports = {
+const httpServices = providers({
   http,
   responsesBuilder,
-  all,
-};
+});
+
+module.exports = httpServices;

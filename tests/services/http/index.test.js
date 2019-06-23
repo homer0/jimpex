@@ -1,6 +1,3 @@
-const JimpleMock = require('/tests/mocks/jimple.mock');
-
-jest.mock('jimple', () => JimpleMock);
 jest.unmock('/src/utils/wrappers');
 jest.unmock('/src/services/http');
 
@@ -18,12 +15,15 @@ describe('services:http', () => {
       'responsesBuilder',
     ];
     // When
-    httpServices.all(app);
+    httpServices.register(app);
     // When/Then
     expect(app.register).toHaveBeenCalledTimes(expectedServices.length);
     expectedServices.forEach((service, index) => {
       const registeredService = app.register.mock.calls[index][0];
-      expect(registeredService).toBeFunction();
+      expect(registeredService).toEqual({
+        register: expect.any(Function),
+        provider: true,
+      });
       expect(registeredService.toString()).toBe(httpServices[service].toString());
     });
   });

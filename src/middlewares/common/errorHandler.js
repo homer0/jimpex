@@ -1,6 +1,6 @@
 const ObjectUtils = require('wootils/shared/objectUtils');
 const statuses = require('statuses');
-const { middleware } = require('../../utils/wrappers');
+const { middlewareCreator } = require('../../utils/wrappers');
 
 /**
  * @typedef {Object} ErrorHandlerDefaultOptions
@@ -138,11 +138,11 @@ class ErrorHandler {
   }
 }
 /**
- * Generates a middleware that generates responses for unhandled errors thrown by the app.
+ * Generates a middleware that show responses for unhandled errors thrown by the app.
+ * @type {MiddlewareCreator}
  * @param {ErrorHandlerOptions} [options] Custom options to modify the middleware behavior.
- * @return {Middleware}
  */
-const errorHandlerCustom = (options) => middleware((app) => {
+const errorHandler = middlewareCreator((options) => (app) => {
   const debugging = app.get('appConfiguration').get('debug');
   const showErrors = debugging && debugging.showErrors;
   return new ErrorHandler(
@@ -155,14 +155,7 @@ const errorHandlerCustom = (options) => middleware((app) => {
   .middleware();
 });
 
-/**
- * This middleware generates responses for unhandled errors thrown by the app.
- * @type {Middleware}
- */
-const errorHandler = errorHandlerCustom();
-
 module.exports = {
   ErrorHandler,
   errorHandler,
-  errorHandlerCustom,
 };

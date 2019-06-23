@@ -1,6 +1,3 @@
-const JimpleMock = require('/tests/mocks/jimple.mock');
-
-jest.mock('jimple', () => JimpleMock);
 jest.unmock('/src/utils/wrappers');
 jest.unmock('/src/services/common/sendFile');
 
@@ -116,7 +113,7 @@ describe('services/common:sendFile', () => {
     let serviceName = null;
     let serviceFn = null;
     // When
-    sendFileProvider(app);
+    sendFileProvider.register(app);
     [[serviceName, serviceFn]] = app.set.mock.calls;
     sut = serviceFn();
     // Then

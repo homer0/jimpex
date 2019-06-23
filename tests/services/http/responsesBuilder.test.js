@@ -1,6 +1,3 @@
-const JimpleMock = require('/tests/mocks/jimple.mock');
-
-jest.mock('jimple', () => JimpleMock);
 jest.unmock('/src/utils/wrappers');
 jest.unmock('/src/services/http/responsesBuilder');
 
@@ -188,7 +185,7 @@ describe('services/http:responsesBuilder', () => {
     let serviceName = null;
     let serviceFn = null;
     // When
-    responsesBuilder(app);
+    responsesBuilder.register(app);
     [[serviceName, serviceFn]] = app.set.mock.calls;
     sut = serviceFn();
     // Then

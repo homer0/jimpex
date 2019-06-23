@@ -1,6 +1,3 @@
-const JimpleMock = require('/tests/mocks/jimple.mock');
-
-jest.mock('jimple', () => JimpleMock);
 jest.unmock('/src/utils/wrappers');
 jest.unmock('/src/middlewares/utils/versionValidator');
 
@@ -9,7 +6,6 @@ const statuses = require('statuses');
 const {
   VersionValidator,
   versionValidator,
-  versionValidatorCustom,
 } = require('/src/middlewares/utils/versionValidator');
 
 describe('services/api:versionValidator', () => {
@@ -298,7 +294,7 @@ describe('services/api:versionValidator', () => {
         'AppError',
       ];
       // When
-      sut = versionValidatorCustom().connect(app);
+      sut = versionValidator().connect(app);
       toCompare = new VersionValidator('25.09');
       // Then
       expect(sut.toString()).toEqual(toCompare.middleware().toString());

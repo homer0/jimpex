@@ -1,13 +1,10 @@
-const JimpleMock = require('/tests/mocks/jimple.mock');
-
-jest.mock('jimple', () => JimpleMock);
 jest.unmock('/src/utils/wrappers');
 jest.unmock('/src/controllers/common/rootStatics');
 
 require('jasmine-expect');
 const {
   RootStaticsController,
-  rootStaticsControllerCustom,
+  rootStaticsController,
 } = require('/src/controllers/common/rootStatics');
 
 describe('controllers/common:rootStatics', () => {
@@ -131,6 +128,33 @@ describe('controllers/common:rootStatics', () => {
 
   it('should include a controller shorthand to return its routes', () => {
     // Given
+    const files = ['index.html', 'favicon.ico'];
+    const services = {
+      router: {
+        all: jest.fn((route, middleware) => [`all:${route}`, middleware.toString()]),
+      },
+    };
+    const app = {
+      get: jest.fn((service) => (services[service] || service)),
+    };
+    let routes = null;
+    let toCompare = null;
+    const expectedGets = ['router', 'sendFile'];
+    // When
+    routes = rootStaticsController.connect(app);
+    toCompare = new RootStaticsController('sendFile');
+    // Then
+    expect(routes).toEqual(files.map((file) => (
+      [`all:/${file}`, toCompare.serveFile(file).toString()]
+    )));
+    expect(app.get).toHaveBeenCalledTimes(expectedGets.length);
+    expectedGets.forEach((service) => {
+      expect(app.get).toHaveBeenCalledWith(service);
+    });
+  });
+
+  it('should include a controller creator shorthand to configure the files', () => {
+    // Given
     const file = 'index.html';
     const services = {
       router: {
@@ -144,7 +168,7 @@ describe('controllers/common:rootStatics', () => {
     let toCompare = null;
     const expectedGets = ['router', 'sendFile'];
     // When
-    routes = rootStaticsControllerCustom([file]).connect(app);
+    routes = rootStaticsController([file]).connect(app);
     toCompare = new RootStaticsController('sendFile', [file]);
     // Then
     expect(routes).toEqual([

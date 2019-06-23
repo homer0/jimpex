@@ -1,5 +1,5 @@
 const mime = require('mime');
-const { middleware } = require('../../utils/wrappers');
+const { middlewareCreator } = require('../../utils/wrappers');
 /**
  * It's common for an app to show an HTML view when no route was able to handle a request, so the
  * idea behind this middleware is to avoid going to every middleware and controller and just
@@ -124,7 +124,9 @@ class FastHTML {
   }
 }
 /**
- * Generates a middleware with customized options.
+ * A middleware for filtering routes and serve an HTML file when the requested route doesn't have
+ * a controller to handle it.
+ * @type {MiddlewareCreator}
  * @param {string} [file]                                     The name of the file it will serve.
  *                                                            If the `HTMLGenerator` service
  *                                                            specified is avaialable, this will
@@ -138,13 +140,12 @@ class FastHTML {
  *                                                            registered on the app, it won't throw
  *                                                            an error, but just send `null` to
  *                                                            the service constructor.
- * @return {Middleware}
  */
-const fastHTMLCustom = (
+const fastHTML = middlewareCreator((
   file,
   ignoredRoutes,
   htmlGeneratorServiceName = 'htmlGenerator'
-) => middleware((app) => {
+) => (app) => {
   let htmlGenerator;
   try {
     htmlGenerator = app.get(htmlGeneratorServiceName);
@@ -159,15 +160,8 @@ const fastHTMLCustom = (
     htmlGenerator
   ).middleware();
 });
-/**
- * A middleware for filtering routes and serve an HTML file when the requested route doesn't have
- * a controller to handle it.
- * @type {Middleware}
- */
-const fastHTML = fastHTMLCustom();
 
 module.exports = {
   FastHTML,
   fastHTML,
-  fastHTMLCustom,
 };

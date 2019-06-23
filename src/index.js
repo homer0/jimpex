@@ -4,16 +4,24 @@ const middlewares = require('./middlewares');
 const services = require('./services');
 const {
   provider,
+  providerCreator,
+  providers,
   controller,
+  controllerCreator,
   middleware,
+  middlewareCreator,
 } = require('./utils/wrappers');
 
 module.exports = {
-  Jimpex,
-  provider,
-  controllers,
-  middlewares,
-  services,
   controller,
+  controllerCreator,
+  controllers,
   middleware,
+  middlewareCreator,
+  middlewares,
+  provider,
+  providerCreator,
+  providers,
+  services,
+  Jimpex,
 };

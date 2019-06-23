@@ -1,5 +1,5 @@
 const mime = require('mime');
-const { middleware } = require('../../utils/wrappers');
+const { middlewareCreator } = require('../../utils/wrappers');
 /**
  * A very simple middleware service to send an HTML on a server response. The special _'feature'_ of
  * this service is that it can be hooked up to an `HTMLGenerator` service and it will automatically
@@ -96,7 +96,8 @@ class ShowHTML {
   }
 }
 /**
- * Generates a middleware with customized options.
+ * A middleware for showing an `index.html` file.
+ * @type {MiddlewareCreator}
  * @param {string} [file]                                     The name of the file it will serve.
  *                                                            If the `HTMLGenerator` service
  *                                                            specified is avaialable, this will
@@ -107,12 +108,11 @@ class ShowHTML {
  *                                                            registered on the app, it won't throw
  *                                                            an error, but just send `null` to
  *                                                            the service constructor.
- * @return {Middleware}
  */
-const showHTMLCustom = (
+const showHTML = middlewareCreator((
   file,
   htmlGeneratorServiceName = 'htmlGenerator'
-) => middleware((app) => {
+) => (app) => {
   let htmlGenerator;
   try {
     htmlGenerator = app.get(htmlGeneratorServiceName);
@@ -126,14 +126,8 @@ const showHTMLCustom = (
     htmlGenerator
   ).middleware();
 });
-/**
- * A middleware for showing an `index.html` file.
- * @type {Middleware}
- */
-const showHTML = showHTMLCustom();
 
 module.exports = {
   ShowHTML,
   showHTML,
-  showHTMLCustom,
 };

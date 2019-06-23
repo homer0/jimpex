@@ -1,13 +1,10 @@
-const JimpleMock = require('/tests/mocks/jimple.mock');
-
-jest.mock('jimple', () => JimpleMock);
 jest.unmock('/src/utils/wrappers');
 jest.unmock('/src/middlewares/html/fastHTML');
 
 require('jasmine-expect');
 const {
   FastHTML,
-  fastHTMLCustom,
+  fastHTML,
 } = require('/src/middlewares/html/fastHTML');
 
 describe('middlewares/html:fastHTML', () => {
@@ -174,7 +171,36 @@ describe('middlewares/html:fastHTML', () => {
       'sendFile',
     ];
     // When
-    middleware = fastHTMLCustom().connect(app);
+    middleware = fastHTML.connect(app);
+    toCompare = new FastHTML();
+    // Then
+    expect(middleware.toString()).toEqual(toCompare.middleware().toString());
+    expect(app.get).toHaveBeenCalledTimes(expectedGets.length);
+    expectedGets.forEach((service) => {
+      expect(app.get).toHaveBeenCalledWith(service);
+    });
+  });
+
+  it('should include a middleware creator shorthand to configure its options', () => {
+    // Given
+    const services = {};
+    const app = {
+      get: jest.fn((service) => {
+        if (service === 'htmlGenerator') {
+          throw Error();
+        }
+
+        return services[service] || service;
+      }),
+    };
+    let middleware = null;
+    let toCompare = null;
+    const expectedGets = [
+      'htmlGenerator',
+      'sendFile',
+    ];
+    // When
+    middleware = fastHTML().connect(app);
     toCompare = new FastHTML();
     // Then
     expect(middleware.toString()).toEqual(toCompare.middleware().toString());

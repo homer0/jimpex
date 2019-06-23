@@ -1,6 +1,3 @@
-const JimpleMock = require('/tests/mocks/jimple.mock');
-
-jest.mock('jimple', () => JimpleMock);
 jest.mock('fs-extra');
 jest.unmock('/src/utils/wrappers');
 jest.unmock('/src/services/frontend/frontendFs');
@@ -126,7 +123,7 @@ describe('services/frontend:frontendFs', () => {
     let serviceName = null;
     let serviceFn = null;
     // When
-    frontendFs(app);
+    frontendFs.register(app);
     [[serviceName, serviceFn]] = app.set.mock.calls;
     sut = serviceFn();
     // Then

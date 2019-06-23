@@ -1,6 +1,6 @@
 const ObjectUtils = require('wootils/shared/objectUtils');
 const { deferred } = require('wootils/shared');
-const { provider } = require('../../utils/wrappers');
+const { providerCreator } = require('../../utils/wrappers');
 /**
  * @typedef {Object} HTMLGeneratorOptions The options to customize the an `HTMLGenerator` service.
  * @property {string}  [template='index.tpl.html']                 The name of the file it should
@@ -288,22 +288,21 @@ class HTMLGenerator {
   }
 }
 /**
- * Generates an `HTMLGenerator` service provider with customized options and that automatically
- * hooks itself to the `after-start` event of the app server in order to trigger the generation of
- * the html file when the server starts.
+ * A service that hooks itself to the `after-start` event of the app server in order to trigger
+ * the generation an the html file when the server starts.
+ * @type {ProviderCreator}
  * @param {HTMLGeneratorOptions}  [options={}]                  Options to customize the service.
  * @param {string}                [serviceName='htmlGenerator'] The name of the service that will
  *                                                              be register into the app.
  * @param {?string}               [valuesServiceName=null]      The name of a service used to read
  *                                                              the values that will be injected in
  *                                                              the generated file.
- * @return {Provider}
  */
-const htmlGeneratorCustom = (
+const htmlGenerator = providerCreator((
   options = {},
   serviceName = 'htmlGenerator',
   valuesServiceName = null
-) => provider((app) => {
+) => (app) => {
   app.set(serviceName, () => {
     let valuesService = null;
     if (valuesServiceName) {
@@ -322,22 +321,8 @@ const htmlGeneratorCustom = (
   app.get('events')
   .once('after-start', () => app.get(serviceName).generateHTML());
 });
-/**
- * The service provider that once registered on the app container will set an instance of
- * `HTMLGenerator` as the `htmlGenerator` service. It also hooks itself to the `after-start`
- * event of the app server in order to trigger the generation of
- * the html file when the server starts.
- * @example
- * // Register it on the container
- * container.register(htmlGenerator);
- * // Getting access to the service instance
- * const htmlGenerator = container.get('htmlGenerator');
- * @type {Provider}
- */
-const htmlGenerator = htmlGeneratorCustom();
 
 module.exports = {
   HTMLGenerator,
   htmlGenerator,
-  htmlGeneratorCustom,
 };
