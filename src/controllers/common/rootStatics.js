@@ -1,4 +1,4 @@
-const extend = require('extend');
+const ObjectUtils = require('wootils/shared/objectUtils');
 const mime = require('mime');
 const { controller } = require('../../utils/wrappers');
 /**
@@ -53,7 +53,7 @@ class RootStaticsController {
       const item = this.files[file];
       const extension = item.output.split('.').pop().toLowerCase();
       const baseHeaders = { 'Content-Type': mime.getType(extension) };
-      const headers = extend(true, baseHeaders, item.headers);
+      const headers = ObjectUtils.merge(baseHeaders, item.headers);
 
       Object.keys(headers).forEach((headerName) => {
         res.setHeader(headerName, headers[headerName]);

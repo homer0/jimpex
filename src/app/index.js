@@ -1,5 +1,5 @@
 const Jimple = require('jimple');
-const extend = require('extend');
+const ObjectUtils = require('wootils/shared/objectUtils');
 const express = require('express');
 const bodyParser = require('body-parser');
 const compression = require('compression');
@@ -48,7 +48,7 @@ class Jimpex extends Jimple {
      * The app options.
      * @type {JimpexOptions}
      */
-    this.options = extend(true, {
+    this.options = ObjectUtils.merge({
       version: '0.0.0',
       filesizeLimit: '15MB',
       configuration: {
