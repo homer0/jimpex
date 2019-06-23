@@ -137,6 +137,50 @@ class MyApp extends Jimpex {
 
 Done, your service is now available.
 
+#### Defining a configurable service
+
+In case you want to create a service that could accept custom setting when instantiated, you can use a _"provider creator"_:
+
+```js
+const { providerCreator } = require('jimpex');
+
+// Create your service
+class MyService {
+  constructor(depOne, depTwo, options = {});
+}
+
+// Define the provider
+const myService = providerCreator((options) => (app) => {
+  app.set('myService', () => new MyService(
+    app.get('depOne'),
+    app.get('depTwo'),
+    settings
+  ));
+});
+
+// Export the service and its provider
+module.exports = {
+  MyService,
+  myService,
+};
+```
+
+The special behavior the creators have, is that you can call them as a function, sending the settings, or just use them on the `register`, so **it's very important that the settings must be optional**:
+
+```js
+const { Jimpex } = require('jimpex');
+const { myService } = require('...');
+
+class MyApp extends Jimpex {
+  boot() {
+    ...
+    this.register(myService);
+    // or
+    this.register(myService({ ... }));
+  }
+}
+```
+
 ### Adding a controller
 
 To add controller you need to use the `controller` function and return a list of routes:
@@ -188,6 +232,59 @@ class MyApp extends Jimpex {
 }
 ```
 
+#### Defining a configurable controller
+
+Like with _"providers creators", you can define controllers that accept custom settings when
+instantiated, using a _"controller creator"_:
+
+```js
+const { controllerCreator } = require('jimpex');
+
+// (Optional) Define a class to organize your route handlers.
+class HealthController {
+  constructor(settings = {});
+  
+  health() {
+    return (req, res) => {
+      res.write('Everything works!');
+    };
+  }
+}
+
+// Define the controller
+const healthController = controllerCreator((settings) => (app) => {
+  const ctrl = new HealthController(settings);
+  // Get the router service
+  const router = app.get('router');
+  // Return the list of routes this controller will handle
+  return [
+    router.get('/', ctrl.health()),
+  ];
+});
+
+// Export the controller class and the controller itself
+module.exports = {
+  HealthController,
+  healthController,
+};
+```
+
+The special behavior the creators have, is that you can call them as a function, sending the settings, or just use them with `mount` as regular controllers; and since they can be used as regular controllers, **it's very important that the settings are optional**:
+
+```js
+const { Jimpex } = require('jimpex');
+const { healthController } = require('...');
+
+class MyApp extends Jimpex {
+  boot() {
+    ...
+    this.mount('/health', healthController);
+    // or
+    this.mount('/health', healthController({ ... }));
+  }
+}
+```
+
 ### Adding a middleware
 
 To add a new middleware you need to use the `middleware` function and return a function:
@@ -226,6 +323,44 @@ class MyApp extends Jimpex {
 }
 ```
 
+#### Defining a configurable middleware
+
+Like with controllers and providers, you can also create a middleware that can accept settings when instantiated, with a _"middleware creator"_:
+
+```js
+const { middlwareCreator } = require('jimpex');
+
+// Define your middleware function (or class if it gets more complex)
+const greetingsMiddleware = (message = 'Hello!') => (req, res, next) => {
+  console.log(message);
+};
+
+// Define the middleware
+const greetings = middlewareCreator((message) => greetingsMiddleware(message));
+
+// Export the function and the middleware
+module.exports = {
+  greetingsMiddleware,
+  greetings,
+};
+```
+
+The special behavior the creators have, is that you can call them as a function, sending the settings, or just register them with `use` as regular middlewares, so **it's very important that the settings must be optional**:
+
+```js
+const { Jimpex } = require('jimpex');
+const { greetings } = require('...');
+
+class MyApp extends Jimpex {
+  boot() {
+    ...
+    this.use(greetings);
+    // or
+    this.use(greetings('Howdy!'));
+  }
+}
+```
+
 ## Built-in features
 
 Jimpex comes with a few services, middlewares and controllers that you can import and use on your app, some of them [are activated by default on the options](./documents/options.md), but others you have to implement manually:
@@ -252,7 +387,7 @@ Jimpex comes with a few services, middlewares and controllers that you can impor
 
 - **API client:** An implementation of the [wootils API Client](https://github.com/homer0/wootils/blob/master/documents/shared/APIClient.md) but that is connected to the HTTP service, to allow logging and forwarding of the headers.
 - **App Error:** A very simple subclass of `Error` but with support for context information. It can be used to customize the error handler responses.
-- **Ensure bearer authentication:** A service-middleware that allows you to validate the incoming requests `Authorization` header.
+- **Ensure bearer token:** A service-middleware that allows you to validate and retrieve a bearer token from the incoming requests `Authorization` header.
 - **HTTP Error:** Another type of error, but specific for the HTTP requests the app does with the API client.
 - **Send File:** It allows you to send a file on a response with a path relative to the app executable.
 - **Frontend Fs:** Useful for when your app has a bundled frontend, it allows you to read, write and delete files with paths relative to the app executable.

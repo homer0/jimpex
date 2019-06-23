@@ -15,9 +15,9 @@ const {
 } = require('wootils/node/providers');
 const { EventsHub } = require('wootils/shared');
 
-const apiServices = require('../services/api');
 const commonServices = require('../services/common');
 const httpServices = require('../services/http');
+const utilsServices = require('../services/utils');
 /**
  * Jimpex is a mix of Jimple, a Javascript port of Pimple dependency injection container, and
  * Express, one of the most popular web frameworks for Node.
@@ -75,9 +75,9 @@ class Jimpex extends Jimple {
         multer: true,
       },
       defaultServices: {
-        api: true,
         common: true,
         http: true,
+        utils: true,
       },
     }, options);
     /**
@@ -298,16 +298,16 @@ class Jimpex extends Jimple {
   _setupDefaultServices() {
     const { defaultServices } = this._options;
 
-    if (defaultServices.api) {
-      this.register(apiServices);
-    }
-
     if (defaultServices.common) {
       this.register(commonServices);
     }
 
     if (defaultServices.http) {
       this.register(httpServices);
+    }
+
+    if (defaultServices.utils) {
+      this.register(utilsServices);
     }
 
     this.set('events', () => new EventsHub());

@@ -37,9 +37,9 @@ class App extends Jimpex {
 
 Now, there's a configuration setting for this controller: `debug.showErrors`. By enabling the setting, the middleware will show the message and the stack information of all kind of errors.
 
-If the configuration setting is disabled (or not present), the errors stack will never be visible, and if the error is not an instance of the `AppError` service, it will show a generic message.
+If the configuration setting is disabled (or not present), the errors stack will never be visible, and if the error is not an instance of `AppError`, it will show a generic message.
 
-By default, the generic message is _"Oops! Something went wrong, please try again"_ and the default HTTP status is `500`, but you can use the _"middleware generator"_ `errorHandlerCustom` to modify those defaults:
+By default, the generic message is _"Oops! Something went wrong, please try again"_ and the default HTTP status is `500`, but you can use it as a function to modify those defaults:
 
 ```js
 const {
@@ -49,7 +49,7 @@ const {
     common: { appError },
   },
   middlewares: {
-    common: { errorHandlerCustom },
+    common: { errorHandler },
   },
 };
 
@@ -62,7 +62,7 @@ class App extends Jimpex {
     ...
     
     // Add the middleware at the end.
-    this.use(errorHandlerCustom({
+    this.use(errorHandler({
       default: {
         message: 'Unknown error',
         status: 503,
@@ -107,20 +107,20 @@ class App extends Jimpex {
 }
 ```
 
-By default, it redirects all the URLs that don't start with `/service/` from HTTP to HTTPs, but you can use the _"middleware generator"_ `forceHTTPSCustom` to modify the rules:
+By default, it redirects all the URLs that don't start with `/service/` from HTTP to HTTPs, but you can use it as a function to modify the rules:
 
 ```js
 const {
   Jimpex,
   middlewares: {
-    common: { forceHTTPSCustom },
+    common: { forceHTTPS },
   },
 };
 
 class App extends Jimpex {
   boot() {
     // Add the middleware first.
-    this.use(forceHTTPSCustom([
+    this.use(forceHTTPS([
       /^\/service\//,
       /^\/api\//,
     ]));
@@ -159,7 +159,7 @@ class App extends Jimpex {
 }
 ```
 
-By default, if the requested URL doesn't match `/^\/api\//` or `/\.ico$/` it serves an `index.html`, but you can use the _"middleware generator"_ `fastHTMLCustom` to modify those options:
+By default, if the requested URL doesn't match `/^\/api\//` or `/\.ico$/` it serves an `index.html`, but you can use it as a function to modify those options:
 
 ```js
 const {
@@ -168,7 +168,7 @@ const {
     common: { sendFile },
   },
   middlewares: {
-    html: { fastHTMLCustom },
+    html: { fastHTML },
   },
 };
 
@@ -178,7 +178,7 @@ class App extends Jimpex {
     this.register(sendFile);
     
     // Add the middleware on one of the first positions.
-    this.use(fastHTMLCustom(
+    this.use(fastHTML(
       'my-custom-index.html',
       [`/^\/service\//`]
     ));
@@ -188,7 +188,7 @@ class App extends Jimpex {
 
 Now, as mentioned on the requirements, you can optionally use the `htmlGenerator` or an `HTMLGenerator` service to serve a generated file.
 
-The default implementation checks if there's an `htmlGenerator` service registered on the app and uses that file; and in the case of `fastHTMLCustom`, you can specify a third parameter with the name of the `HTMLGenerator` service name you want to use.
+The default implementation checks if there's an `htmlGenerator` service registered on the app and uses that file; and in the case of `fastHTML`, you can specify a third parameter with the name of the `HTMLGenerator` service name you want to use.
 
 ## Show HTML
 
@@ -219,7 +219,7 @@ class App extends Jimpex {
 }
 ```
 
-By default, if the middleware is reached, it will show an `index.html`, but you can use the _"middleware generator"_ `showHTMLCustom` to modify the filename:
+By default, if the middleware is reached, it will show an `index.html`, but you can use it as a function to modify the filename:
 
 ```js
 const {
@@ -228,7 +228,7 @@ const {
     common: { sendFile },
   },
   middlewares: {
-    html: { showHTMLCustom },
+    html: { showHTML },
   },
 };
 
@@ -238,14 +238,14 @@ class App extends Jimpex {
     this.register(sendFile);
     
     // Add the middleware at the end.
-    this.use(showHTMLCustom('my-file.html'));
+    this.use(showHTML('my-file.html'));
   }
 }
 ```
 
 Now, as mentioned on the requirements, you can optionally use the `htmlGenerator` or an `HTMLGenerator` service to show the generated file.
 
-The default implementation checks if there's an `htmlGenerator` service registered on the app and uses that file; and in the case of `showHTMLCustom `, you can specify a second parameter with the name of the `HTMLGenerator` service name you want to use.
+The default implementation checks if there's an `htmlGenerator` service registered on the app and uses that file; and in the case of `showHTML`, you can specify a second parameter with the name of the `HTMLGenerator` service name you want to use.
 
 ## Version validator
 
@@ -272,26 +272,26 @@ class App extends Jimpex {
 }
 ```
 
-By default, it comes with a lot of already defined options, like whether or not to allow `latest` as a version, but you can use the _"middleware generator"_ `versionValidatorCustom` to modify them, for example:
+By default, it comes with a lot of already defined options, like whether or not to allow `latest` as a version, but you can use it as a function to modify them, for example:
 
 ```js
 const {
   Jimpex,
   middlewares: {
-    utils: { versionValidatorCustom },
+    utils: { versionValidator },
   },
 };
 
 class App extends Jimpex {
   boot() {
     // Add the middleware before the routes you want to be protected.
-    this.use(versionValidatorCustom({
+    this.use(versionValidator({
       latest: {
         allow: false,
       }
     }));
     // or, protect a specific route.
-    this.mount('/to-protect', versionValidatorCustom({
+    this.mount('/to-protect', versionValidator({
       latest: {
         allow: false,
       }

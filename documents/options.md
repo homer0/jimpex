@@ -122,15 +122,14 @@ These options allow you to register some of the built-in service that I consider
   common: true,
 
   // These services include:
+  // - API client
   // - HTTP
   // - Responses builder
   http: true,
 
   // These services include:
-  // - API client
-  // - Ensure bearer authentication
-  // - Version validator
-  api: true,
+  // - Ensure bearer token
+  utils: true,
 }
 ```
 

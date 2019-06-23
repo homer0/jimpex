@@ -8,11 +8,11 @@ describe('services', () => {
   it('should export all the app sevices', () => {
     // Given
     const knownServices = [
-      'api',
       'common',
       'frontend',
       'html',
       'http',
+      'utils',
     ];
     // When/Then
     expect(Object.keys(services).length).toBe(knownServices.length);

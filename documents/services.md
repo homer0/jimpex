@@ -8,16 +8,15 @@ In the case of the services from the modules `api`, `http` and `common`, you can
 
 An implementation of the [wootils API Client](https://github.com/homer0/wootils/blob/master/documents/shared/APIClient.md) but that is connected to the HTTP service, to allow logging and forwarding of the headers.
 
-- Module: `api`
+- Module: `http`
 - Requires: `http` and `appError`
 
 ```js
 const {
   Jimpex,
   services: {
-    api: { apiClient },
     common: { appError },
-    http: { http },
+    http: { apiClient, http },
   },
 };
 
@@ -33,15 +32,14 @@ class App extends Jimpex {
 }
 ```
 
-By default, the service is registered with the name `apiClient`, the API entry point is taken from the configuration setting `api.url` and the endpoints from `api.endpoints`, but you can use the _"service generator"_ `apiClientCustom` to modify those options:
+By default, the service is registered with the name `apiClient`, the API entry point is taken from the configuration setting `api.url` and the endpoints from `api.endpoints`, but you can use it as a function to modify those options:
 
 ```js
 const {
   Jimpex,
   services: {
-    api: { apiClientCustom },
     common: { appError },
-    http: { http },
+    http: { apiClient, http },
   },
 };
 
@@ -52,10 +50,10 @@ class App extends Jimpex {
     this.register(appError);
 
     // Register the client
-    this.register({
+    this.register(apiClient(
       'myCustomAPIService',
       'myapi'
-    });
+    );
   }
 }
 ```
@@ -100,21 +98,21 @@ throw appError('Something happened', {
 
 This is useful if you are building an app with multiple known exceptions, you can use the context to send useful information.
 
-## Ensure bearer authentication
+## Ensure bearer token
 
-A service-middleware that allows you to validate the incoming requests `Authorization` header.
+A service-middleware that allows you to validate and retrieve a bearer token from the incoming requests `Authorization` header.
 
-It's a _"service-middleware"_ because when you access the service, it doesn't return a class instance, but a middleware function for you to use on your controller routes.
+It's a _"service-middleware"_ because when you access the service, it doesn't return a class/service instance, but a middleware function for you to use on your controller routes.
 
-- Module: `api`
+- Module: `utils`
 - Requires: `appError`
 
 ```js
 const {
   Jimpex,
   services: {
-    api: { ensureBearerAuthentication },
     common: { appError },
+    utils: { ensureBearerToken },
   },
 };
 
@@ -124,21 +122,68 @@ class App extends Jimpex {
     this.register(appError);
 
     // Register the service
-    this.register(apiClient);
+    this.register(ensureBearerToken);
   }
 }
 ```
 
-Now, if the token process a request an detects a valid token, it will set that token on the request `bearerToken` property:
+This service has a few default options:
+
+```js
+{
+  // The information for the error generated when no token is found.
+  error: {
+    // The error message.
+    message: 'Unauthorized',
+    // The HTTP status associated to the error, this is for the error handler.
+    status: statuses.unauthorized,
+    // Extra context information for the error handler to add to the response.
+    response: {},
+  },
+  // The regular expression used to validate and extract the token.
+  expression: /bearer (.*?)(?:$|\s)/i,
+  // The name of the property on `res.locals` where the token will be saved.
+  local: 'token',
+}
+```
+
+You modify those default values by using the provider as a function when registering:
+
+```js
+const {
+  Jimpex,
+  services: {
+    common: { appError },
+    utils: { ensureBearerToken },
+  },
+};
+
+class App extends Jimpex {
+  boot() {
+    // Register the dependencies...
+    this.register(appError);
+
+    // Register the service
+    this.register(ensureBearerToken({
+      error: {
+        message: 'You are not authorized to access this route',
+      },
+      local: 'userToken',
+    }));
+  }
+}
+```
+
+Now, if the token processes a request and detects a valid token, it will save it on `res.locals.token`:
 
 ```js
 const myCtrl = controller((app) => {
   const router = app.get('router');
-  const ensureAuthentication = app.get('ensureBearerAuthentication');
+  const ensureBearerToken = app.get('ensureBearerToken');
   return [router.get('/something', [
-    ensureAuthentication,
+    ensureBearerToken,
     (req, res, next) => {
-      console.log('Token:', req.bearerToken);
+      console.log('Token:', res.locals.token);
       next();
     },
   ])];
@@ -319,14 +364,14 @@ Now, this service has a few default options, so instead of explaining which are,
 
 It also supports a custom service with a `getValues` method to obtain the information to inject instead of taking it from the configuration.
 
-To modify the options, you need to use the _"service generator"_ `htmlGeneratorCustom`:
+To modify the options, you just need to use provider as a function:
 
 ```js
 const {
   Jimpex,
   services: {
     frontend: { frontendFs },
-    html: { htmlGeneratorCustom },
+    html: { htmlGenerator },
   },
 };
 
@@ -336,7 +381,7 @@ class App extends Jimpex {
     this.register(frontendFs);
 
     // Register the service
-    this.register(htmlGeneratorCustom({
+    this.register(htmlGenerator({
       template: 'template.tpl',
       file: 'my-index.html',
       ...

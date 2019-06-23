@@ -1,14 +1,14 @@
 jest.unmock('/src/utils/wrappers');
-jest.unmock('/src/services/api/client');
+jest.unmock('/src/services/http/apiClient');
 
 require('jasmine-expect');
 const {
   APIClient,
   apiClient,
-} = require('/src/services/api/client');
+} = require('/src/services/http/apiClient');
 const APIClientBase = require('wootils/shared/apiClient');
 
-describe('services/api:client', () => {
+describe('services/http:client', () => {
   it('should be instantiated with its configuration', () => {
     // Given
     const apiConfig = {
@@ -49,21 +49,55 @@ describe('services/api:client', () => {
         this.status = status;
       }
     }
-    const response = {
-      data: {
-        message: 'Damn it!',
+    const message = 'Damn it!';
+    const responses = [
+      {
+        error: message,
+      },
+      {
+        data: {
+          message,
+        },
+      },
+      {
+        data: {
+          error: message,
+        },
+      },
+    ];
+    const status = 409;
+    let sut = null;
+    let results = null;
+    // When
+    sut = new APIClient(apiConfig, http, HTTPError);
+    results = responses.map((response) => sut.error(response, status));
+    // Then
+    results.forEach((result) => {
+      expect(result).toBeInstanceOf(HTTPError);
+      expect(result.message).toBe(message);
+      expect(result.status).toBe(status);
+    });
+  });
+
+  it('should have a fallback for when it can\'t find an error on a response', () => {
+    // Given
+    const apiConfig = {
+      url: 'my-api',
+      endpoints: {
+        info: 'api-info',
       },
     };
-    const status = 409;
+    const http = {
+      fetch: () => {},
+    };
+    const fallback = 'Damn it!';
     let sut = null;
     let result = null;
     // When
-    sut = new APIClient(apiConfig, http, HTTPError);
-    result = sut.error(response, status);
+    sut = new APIClient(apiConfig, http, 'HTTPError');
+    result = sut.getErrorMessageFromResponse({}, fallback)
     // Then
-    expect(result).toBeInstanceOf(HTTPError);
-    expect(result.message).toBe(response.data.message);
-    expect(result.status).toBe(status);
+    expect(result).toBe(fallback);
   });
 
   it('should include a provider for the DIC', () => {
@@ -98,7 +132,7 @@ describe('services/api:client', () => {
     // Then
     expect(sut).toBeInstanceOf(APIClientBase);
     expect(sut).toBeInstanceOf(APIClient);
-    expect(sut.apiConfig).toBe(appConfiguration.api);
+    expect(sut.apiConfig).toEqual(appConfiguration.api);
     expect(sut.url).toBe(appConfiguration.api.url);
     expect(sut.endpoints).toEqual(appConfiguration.api.endpoints);
     expect(sut.fetchClient).toBe(http.fetch);
@@ -142,7 +176,7 @@ describe('services/api:client', () => {
     // Then
     expect(sut).toBeInstanceOf(APIClientBase);
     expect(sut).toBeInstanceOf(APIClient);
-    expect(sut.apiConfig).toBe(appConfiguration.apiConfig);
+    expect(sut.apiConfig).toEqual(appConfiguration.apiConfig);
     expect(sut.url).toBe(appConfiguration.apiConfig.url);
     expect(sut.endpoints).toEqual(appConfiguration.apiConfig.endpoints);
     expect(sut.fetchClient).toBe(http.fetch);

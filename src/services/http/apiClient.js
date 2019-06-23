@@ -1,3 +1,4 @@
+const ObjectUtils = require('wootils/shared/objectUtils');
 const APIClientBase = require('wootils/shared/apiClient');
 const { providerCreator } = require('../../utils/wrappers');
 /**
@@ -29,7 +30,7 @@ class APIClient extends APIClientBase {
      * @access protected
      * @ignore
      */
-    this._apiConfig = Object.freeze(apiConfig);
+    this._apiConfig = ObjectUtils.copy(apiConfig);
     /**
      * A local reference for the class the app uses to generate HTTP errors.
      * @type {Class}
@@ -45,7 +46,28 @@ class APIClient extends APIClientBase {
    * @return {HTTPError}
    */
   error(response, status) {
-    return new this._HTTPError(response.data.message, status);
+    return new this._HTTPError(this.getErrorMessageFromResponse(response), status);
+  }
+  /**
+   * Helper method that tries to get an error message from a given response.
+   * @param {Object} response                      A received response from a request.
+   * @param {string} [fallback='Unexpected error'] A fallback message in case the method doesn't
+   *                                               found one on the response.
+   * @return {string}
+   */
+  getErrorMessageFromResponse(response, fallback = 'Unexpected error') {
+    let message;
+    if (response.error) {
+      message = response.error;
+    } else if (response.data && response.data && response.data.message) {
+      ({ message } = response.data);
+    } else if (response.data && response.data && response.data.error) {
+      message = response.data.error;
+    } else {
+      message = fallback;
+    }
+
+    return message;
   }
   /**
    * The configuration for the API the client will make requests to.
@@ -55,7 +77,7 @@ class APIClient extends APIClientBase {
    *                              entry point.
    */
   get apiConfig() {
-    return this._apiConfig;
+    return Object.freeze(this._apiConfig);
   }
 }
 /**
