@@ -20,6 +20,7 @@ const path = require('path');
 require('jasmine-expect');
 
 const Jimpex = require('/src/app');
+const { eventNames } = require('/src/constants');
 const { EventsHub } = require('wootils/shared');
 
 const originalNodeTLSRejectUnauthorized = process.env.NODE_TLS_REJECT_UNAUTHORIZED;
@@ -765,12 +766,12 @@ describe('app:Jimpex', () => {
     let sut = null;
     let runningInstance = null;
     const expectedEvents = [
-      'before-start',
-      'start',
-      'after-start',
-      'after-start-callback',
-      'before-stop',
-      'after-stop',
+      eventNames.beforeStart,
+      eventNames.start,
+      eventNames.afterStart,
+      eventNames.afterStartCallback,
+      eventNames.beforeStop,
+      eventNames.afterStop,
     ];
     // When
     sut = new Sut();
@@ -1052,11 +1053,11 @@ describe('app:Jimpex', () => {
       ...routes.map((routeRouter) => [route, routeRouter]),
     ];
     const expectedEvents = [
-      ['before-start'],
-      ['start'],
-      ['route-added', route],
-      ['after-start'],
-      ['after-start-callback'],
+      [eventNames.beforeStart],
+      [eventNames.start],
+      [eventNames.routeAdded, route],
+      [eventNames.afterStart],
+      [eventNames.afterStartCallback],
     ];
     // When
     sut = new Sut();
@@ -1074,7 +1075,7 @@ describe('app:Jimpex', () => {
     });
     expect(events.reduce).toHaveBeenCalledTimes(1);
     expect(events.reduce).toHaveBeenCalledWith(
-      'controller-will-be-mounted',
+      eventNames.controllerWillBeMounted,
       routes,
       route,
       controller,
@@ -1132,11 +1133,11 @@ describe('app:Jimpex', () => {
       ...[[route, router]],
     ];
     const expectedEvents = [
-      ['before-start'],
-      ['start'],
-      ['route-added', route],
-      ['after-start'],
-      ['after-start-callback'],
+      [eventNames.beforeStart],
+      [eventNames.start],
+      [eventNames.routeAdded, route],
+      [eventNames.afterStart],
+      [eventNames.afterStartCallback],
     ];
     // When
     sut = new Sut();
@@ -1154,7 +1155,7 @@ describe('app:Jimpex', () => {
     });
     expect(events.reduce).toHaveBeenCalledTimes(1);
     expect(events.reduce).toHaveBeenCalledWith(
-      'controller-will-be-mounted',
+      eventNames.controllerWillBeMounted,
       router,
       route,
       controller,
@@ -1220,7 +1221,7 @@ describe('app:Jimpex', () => {
     });
     expect(events.reduce).toHaveBeenCalledTimes(1);
     expect(events.reduce).toHaveBeenCalledWith(
-      'middleware-will-be-used',
+      eventNames.middlewareWillBeUsed,
       middlewareFn,
       middleware,
       sut
@@ -1281,7 +1282,7 @@ describe('app:Jimpex', () => {
     });
     expect(events.reduce).toHaveBeenCalledTimes(1);
     expect(events.reduce).toHaveBeenCalledWith(
-      'middleware-will-be-used',
+      eventNames.middlewareWillBeUsed,
       middleware,
       null,
       sut
