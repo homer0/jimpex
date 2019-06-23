@@ -2,7 +2,13 @@ const services = {};
 
 const mocks = {
   set: jest.fn(),
-  get: jest.fn((name) => services[name]),
+  get: jest.fn((name) => {
+    if (!services[name]) {
+      throw new Error();
+    }
+
+    return services[name];
+  }),
   register: jest.fn(),
   factory: jest.fn((fn) => fn()),
 };

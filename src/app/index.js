@@ -139,6 +139,26 @@ class Jimpex extends Jimple {
     throw new Error('This method must to be overwritten');
   }
   /**
+   * Tries to access a service on the container, but if is not present, it won't throw an error, it
+   * will just return `null`.
+   * @param {string} name The name of the service.
+   * @return {*}
+   */
+  try(name) {
+    let result;
+    try {
+      result = this.get(name);
+    } catch (ignore) {
+      /**
+       * The only reason we are ignoring the error is because is expected to throw an error if
+       * the service is not registered.
+       */
+      result = null;
+    }
+
+    return result;
+  }
+  /**
    * Mounts a controller on a route point.
    * @param {string}                       point      The route for the controller.
    * @param {Controller|ControllerCreator} controller The route controller.

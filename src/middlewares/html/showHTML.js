@@ -125,20 +125,11 @@ class ShowHTML {
 const showHTML = middlewareCreator((
   file,
   htmlGeneratorServiceName = 'htmlGenerator'
-) => (app) => {
-  let htmlGenerator;
-  try {
-    htmlGenerator = app.get(htmlGeneratorServiceName);
-  } catch (ignore) {
-    htmlGenerator = null;
-  }
-
-  return new ShowHTML(
-    app.get('sendFile'),
-    file,
-    htmlGenerator
-  ).middleware();
-});
+) => (app) => new ShowHTML(
+  app.get('sendFile'),
+  file,
+  app.try(htmlGeneratorServiceName)
+).middleware());
 
 module.exports = {
   ShowHTML,

@@ -991,6 +991,46 @@ describe('app:Jimpex', () => {
       success: jest.fn(),
     };
     JimpleMock.service('appLogger', appLogger);
+    let sut = null;
+    let resultAvailable = null;
+    let resultUnavailable = null;
+    // When
+    sut = new Sut();
+    resultAvailable = sut.try('events');
+    resultUnavailable = sut.try('randomService');
+    // Then
+    expect(resultAvailable).toBe(events);
+    expect(resultUnavailable).toBeNull();
+  });
+
+  it('should mount a controller', () => {
+    // Given
+    class Sut extends Jimpex {
+      boot() {}
+    }
+    const pathUtils = {
+      joinFrom: jest.fn((from, rest) => path.join(from, rest)),
+    };
+    JimpleMock.service('pathUtils', pathUtils);
+    const defaultConfig = {};
+    const rootRequire = jest.fn(() => defaultConfig);
+    JimpleMock.service('rootRequire', rootRequire);
+    const configuration = {
+      port: 2509,
+    };
+    const appConfiguration = {
+      loadFromEnvironment: jest.fn(),
+      get: jest.fn((prop) => configuration[prop]),
+    };
+    JimpleMock.service('appConfiguration', appConfiguration);
+    const events = {
+      emit: jest.fn(),
+    };
+    JimpleMock.service('events', events);
+    const appLogger = {
+      success: jest.fn(),
+    };
+    JimpleMock.service('appLogger', appLogger);
     const routes = ['route-a', 'route-b'];
     const point = '/api';
     const controller = {

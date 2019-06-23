@@ -158,19 +158,16 @@ describe('middlewares/html:fastHTML', () => {
     // Given
     const services = {};
     const app = {
-      get: jest.fn((service) => {
-        if (service === 'htmlGenerator') {
-          throw Error();
-        }
-
-        return services[service] || service;
-      }),
+      get: jest.fn((service) => services[service] || service),
+      try: jest.fn(() => null),
     };
     let middleware = null;
     let toCompare = null;
     const expectedGets = [
-      'htmlGenerator',
       'sendFile',
+    ];
+    const expectedTryAttempts = [
+      'htmlGenerator',
     ];
     // When
     middleware = fastHTML.connect(app);
@@ -181,25 +178,26 @@ describe('middlewares/html:fastHTML', () => {
     expectedGets.forEach((service) => {
       expect(app.get).toHaveBeenCalledWith(service);
     });
+    expect(app.try).toHaveBeenCalledTimes(expectedTryAttempts.length);
+    expectedTryAttempts.forEach((service) => {
+      expect(app.try).toHaveBeenCalledWith(service);
+    });
   });
 
   it('should include a middleware creator shorthand to configure its options', () => {
     // Given
     const services = {};
     const app = {
-      get: jest.fn((service) => {
-        if (service === 'htmlGenerator') {
-          throw Error();
-        }
-
-        return services[service] || service;
-      }),
+      get: jest.fn((service) => services[service] || service),
+      try: jest.fn(() => null),
     };
     let middleware = null;
     let toCompare = null;
     const expectedGets = [
-      'htmlGenerator',
       'sendFile',
+    ];
+    const expectedTryAttempts = [
+      'htmlGenerator',
     ];
     // When
     middleware = fastHTML().connect(app);
@@ -209,6 +207,10 @@ describe('middlewares/html:fastHTML', () => {
     expect(app.get).toHaveBeenCalledTimes(expectedGets.length);
     expectedGets.forEach((service) => {
       expect(app.get).toHaveBeenCalledWith(service);
+    });
+    expect(app.try).toHaveBeenCalledTimes(expectedTryAttempts.length);
+    expectedTryAttempts.forEach((service) => {
+      expect(app.try).toHaveBeenCalledWith(service);
     });
   });
 });

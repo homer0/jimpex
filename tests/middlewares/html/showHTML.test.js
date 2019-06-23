@@ -126,19 +126,16 @@ describe('middlewares/html:showHTML', () => {
     // Given
     const services = {};
     const app = {
-      get: jest.fn((service) => {
-        if (service === 'htmlGenerator') {
-          throw Error();
-        }
-
-        return services[service] || service;
-      }),
+      get: jest.fn((service) => services[service] || service),
+      try: jest.fn(() => null),
     };
     let middleware = null;
     let toCompare = null;
     const expectedGets = [
-      'htmlGenerator',
       'sendFile',
+    ];
+    const expectedTryAttempts = [
+      'htmlGenerator',
     ];
     // When
     middleware = showHTML.connect(app);
@@ -149,6 +146,10 @@ describe('middlewares/html:showHTML', () => {
     expectedGets.forEach((service) => {
       expect(app.get).toHaveBeenCalledWith(service);
     });
+    expect(app.try).toHaveBeenCalledTimes(expectedTryAttempts.length);
+    expectedTryAttempts.forEach((service) => {
+      expect(app.try).toHaveBeenCalledWith(service);
+    });
   });
 
   it('should include a middleware creator shorthand to configure its options', () => {
@@ -158,17 +159,16 @@ describe('middlewares/html:showHTML', () => {
       getFile: jest.fn(() => ''),
     };
     const app = {
-      get: jest.fn((service) => (
-        service === htmlGeneratorServiceName ?
-          htmlGeneratorService :
-          service
-      )),
+      get: jest.fn((service) => service),
+      try: jest.fn(() => htmlGeneratorService),
     };
     let middleware = null;
     let toCompare = null;
     const expectedGets = [
-      htmlGeneratorServiceName,
       'sendFile',
+    ];
+    const expectedTryAttempts = [
+      htmlGeneratorServiceName,
     ];
     // When
     middleware = showHTML('some-file', htmlGeneratorServiceName).connect(app);
@@ -178,6 +178,10 @@ describe('middlewares/html:showHTML', () => {
     expect(app.get).toHaveBeenCalledTimes(expectedGets.length);
     expectedGets.forEach((service) => {
       expect(app.get).toHaveBeenCalledWith(service);
+    });
+    expect(app.try).toHaveBeenCalledTimes(expectedTryAttempts.length);
+    expectedTryAttempts.forEach((service) => {
+      expect(app.try).toHaveBeenCalledWith(service);
     });
     expect(htmlGeneratorService.getFile).toHaveBeenCalledTimes(1);
   });
