@@ -369,7 +369,7 @@ Jimpex comes with a few services, middlewares and controllers that you can impor
 
 - **Configuration:** Allows you to see and switch the current configuration. It can be enabled or disabled by using a setting on the configuration.
 - **Health:** Shows the version and name of the configuration, just to check the app is running.
-- **Root statics:** It allows your app to server static files from the root directory, without having to use the `static` middleware on that directory.
+- **Statics:** It allows your app to server specific files from any directory, without having to use the `static` middleware.
 
 [Read more about the built-in controllers](manual/controllers.html)
 

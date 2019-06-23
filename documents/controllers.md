@@ -76,9 +76,9 @@ That's all there is, the controller mounts only one route:
 
 - `GET /`: Shows the information.
 
-## Root Statics
+## Statics
 
-It allows your app to server static files from the root directory, without having to use the `static` middleware on that directory.
+It allows your app to server specific files from any directory, without having to use the `static` middleware.
 
 - Module: `common`
 - Requires: `sendFile`
@@ -90,7 +90,7 @@ const {
     common: { sendFile },
   },
   controllers: {
-    common: { rootStaticsController },
+    common: { staticsController },
   },
 };
 
@@ -100,12 +100,33 @@ class App extends Jimpex {
     this.register(sendFile);
     
     // Add the controller.
-    this.mount('/', rootStaticsController);
+    this.mount('/', staticsController);
   }
 }
 ```
 
-By default, it serves an `index.html` and a `favicon.ico`, but you can use it as a function to modify those values:
+The controller comes with a lot of default options:
+
+```js
+{
+  // The list of files it will serve.
+  files: ['favicon.ico', 'index.html'],
+  // The HTTP methods for which it will mount routes.
+  methods: {
+    // If `all` is `true`, then all the others are ignored.
+    all: false,
+    get: true,
+  },
+  // The "master" paths to prepend to all file routes and files.
+  paths: {
+    // The base route from where the files are going to be served.
+    route: '',
+    // The base path from where the files are located.
+    source: './',
+  },
+}
+```
+All of those values can be customized by calling the controller as a function:
 
 ```js
 const {
@@ -114,7 +135,7 @@ const {
     common: { sendFile },
   },
   controllers: {
-    common: { rootStaticsController },
+    common: { staticsController },
   },
 };
 
@@ -124,14 +145,57 @@ class App extends Jimpex {
     this.register(sendFile);
     
     // Add the controller.
-    this.mount('/', rootStaticsController([
-      'my-file-one.html',
-      'favicon.icon',
-      'index.html',
-      'some-other.html',
-    ]));
+    this.mount('/', staticsController({
+      paths: {
+        route: 'public',
+        source: 'secret-folder',
+      }
+      files: [
+        'my-file-one.html',
+        'favicon.icon',
+        'index.html',
+        'some-other.html',
+      ],
+    }));
   }
 }
 ```
 
-The controller mounts a `GET` route for each one of those files.
+You can also specify custom information to each individual file:
+
+```js
+this.mount('/', staticsController({
+  files: [
+    'my-file-one.html',
+    {
+      route: 'favicon.ico',
+      source: 'icons/fav/icon.ico',
+      headers: {
+        'X-Custom-Icon-Header': 'Something!',
+      },
+    },
+    'index.html',
+  ],
+}));
+```
+
+Finally, you can also add a custom middleware or middlewares to the routes created by the controller, you just need to send a function that returns the middlewares when called.
+
+```js
+/**
+ * In this case, we'll use Jimpex's `ensureBearerToken` to protect the
+ * file routes.
+ */
+const filesProtection = (app) => [app.get('ensureBearerToken')];
+
+this.mount('/', staticsController(
+  {
+    files: [
+      'index.html',
+    ],
+  },
+  [filesProtection]
+));
+```
+
+And that's all, the middleware will be added to the route, just before serving the file.

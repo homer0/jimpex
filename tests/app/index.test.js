@@ -445,6 +445,61 @@ describe('app:Jimpex', () => {
     });
   });
 
+  it('should be able to add an extra statics folder', () => {
+    /**
+     * App directory: Where the executable file is located.
+     * Home directory: Where the app is executed from (`process.cwd`).
+     */
+    // Given
+    const customStatic = 'my-static';
+    class Sut extends Jimpex {
+      boot() {
+        this._addStaticsFolder(customStatic);
+      }
+    }
+    const pathUtils = {
+      joinFrom: jest.fn((from, rest) => path.join(from, rest)),
+    };
+    JimpleMock.service('pathUtils', pathUtils);
+    const defaultConfig = {};
+    const rootRequire = jest.fn(() => defaultConfig);
+    JimpleMock.service('rootRequire', rootRequire);
+    const appConfiguration = {
+      loadFromEnvironment: jest.fn(),
+      get: jest.fn(),
+    };
+    JimpleMock.service('appConfiguration', appConfiguration);
+    const staticsRoute = '/some/statics';
+    const staticsFolder = '../statics';
+    let sut = null;
+    const expectedMiddlewares = [
+      ['compression-middleware'],
+      [staticsRoute, path.join('home', staticsFolder)],
+      ['body-parser-json'],
+      ['body-parser-urlencoded'],
+      ['multer-any'],
+      [`/${customStatic}`, path.join('app', customStatic)],
+    ];
+    // When
+    sut = new Sut(true, {
+      statics: {
+        onHome: true,
+        route: staticsRoute,
+        folder: staticsFolder,
+      },
+    });
+    // Then
+    expect(sut.options.statics.folder).toBe(staticsFolder);
+    expect(expressMock.static).toHaveBeenCalledTimes(2);
+    expect(pathUtils.joinFrom).toHaveBeenCalledTimes(2);
+    expect(pathUtils.joinFrom).toHaveBeenCalledWith('home', staticsFolder);
+    expect(pathUtils.joinFrom).toHaveBeenCalledWith('app', customStatic);
+    expect(expressMock.mocks.use).toHaveBeenCalledTimes(expectedMiddlewares.length);
+    expectedMiddlewares.forEach((useCall) => {
+      expect(expressMock.mocks.use).toHaveBeenCalledWith(...useCall);
+    });
+  });
+
   it('shouldn\'t add the default services if their flags are `false`', () => {
     // Given
     class Sut extends Jimpex {
