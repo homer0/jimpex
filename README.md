@@ -232,7 +232,6 @@ Jimpex comes with a few services, middlewares and controllers that you can impor
 
 ### Controllers
 
-- **Version validator:** If you mount it on a route it will generate a `409` error if the request doesn't have a version parameter with the same version as the one on the configuration file.
 - **Configuration:** Allows you to see and switch the current configuration. It can be enabled or disabled by using a setting on the configuration.
 - **Health:** Shows the version and name of the configuration, just to check the app is running.
 - **Root statics:** It allows your app to server static files from the root directory, without having to use the `static` middleware on that directory.
@@ -245,6 +244,7 @@ Jimpex comes with a few services, middlewares and controllers that you can impor
 - **Force HTTPS:** Redirect all incoming traffic from HTTP to HTTPS. It also allows you to set routes to ignore the redirection.
 - **Fast HTML:** Allows you to specify which routes will be handled and in case there are no controllers for a requested route, it sends out and HTML file, thus preventing the request to be unnecessarily processed by the middlewares.
 - **Show HTML:** A really simple middleware to serve an HTML file. Its true feature is that it can be hooked up to the **HTML Generator** service.
+- **Version validator:** If you mount it on a route it will generate a `409` error if the request doesn't have a version parameter with the same version as the one on the configuration.
 
 [Read more about the built-in controllers](./documents/middlewares.md)
 
@@ -252,7 +252,6 @@ Jimpex comes with a few services, middlewares and controllers that you can impor
 
 - **API client:** An implementation of the [wootils API Client](https://github.com/homer0/wootils/blob/master/documents/shared/APIClient.md) but that is connected to the HTTP service, to allow logging and forwarding of the headers.
 - **Ensure bearer authentication:** A service-middleware that allows you to validate the incoming requests `Authorization` header.
-- **Version validator:** A service-middleware to validate a `version` parameter against the configuration `version` setting. It's what the version validator middleware internally uses.
 - **Error:** A very simple subclass of `Error` to inject extra information on the errors so they can customize the error handler responses.
 - **Send File:** It allows you to send a file on a response with a path relative to the app executable.
 - **Frontend Fs:** Useful for when your app has a bundled frontend, it allows you to read, write and delete files with paths relative to the app executable.
