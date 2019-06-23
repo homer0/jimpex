@@ -139,7 +139,7 @@ class Jimpex extends Jimple {
     throw new Error('This method must to be overwritten');
   }
   /**
-   * Mount a controller on a route point.
+   * Mounts a controller on a route point.
    * @param {string}                       point      The route for the controller.
    * @param {Controller|ControllerCreator} controller The route controller.
    */
@@ -151,19 +151,23 @@ class Jimpex extends Jimple {
     );
   }
   /**
-   * Add a middleware.
-   * @param {Middleware|MiddlewareCreator} middleware The middleware to use.
+   * Adds a middleware.
+   * @param {Middleware|MiddlewareCreator|ExpressMiddleware} middleware The middleware to use.
    */
   use(middleware) {
     this._mountQueue.push((server) => {
-      const middlewareHandler = middleware.connect(this);
-      if (middlewareHandler) {
-        server.use(middlewareHandler);
+      if (typeof middleware.connect === 'function') {
+        const middlewareHandler = middleware.connect(this);
+        if (middlewareHandler) {
+          server.use(middlewareHandler);
+        }
+      } else {
+        server.use(middleware);
       }
     });
   }
   /**
-   * Start the app server.
+   * Starts the app server.
    * @param {function(config:AppConfiguration)} [fn] A callback function to be called when the
    *                                                 server starts.
    * @return {Object} The server instance
@@ -201,14 +205,14 @@ class Jimpex extends Jimple {
     return this.start(fn, port);
   }
   /**
-   * Emit an app event with a reference to this class instance.
+   * Emits an app event with a reference to this class instance.
    * @param {string} name The name of the event.
    */
   emitEvent(name) {
     this.get('events').emit(name, this);
   }
   /**
-   * Disable the server TLS validation.
+   * Disables the server TLS validation.
    */
   disableTLSValidation() {
     // eslint-disable-next-line no-process-env
@@ -227,7 +231,7 @@ class Jimpex extends Jimple {
     }
   }
   /**
-   * Register the _'core services'_.
+   * Registers the _'core services'_.
    * @ignore
    * @access protected
    */
@@ -244,7 +248,7 @@ class Jimpex extends Jimple {
     this.register(rootRequire);
   }
   /**
-   * Create and configure the Express instance.
+   * Creates and configure the Express instance.
    * @ignore
    * @access protected
    */
@@ -333,7 +337,7 @@ class Jimpex extends Jimple {
     this.set('events', () => new EventsHub());
   }
   /**
-   * Create the configuration service.
+   * Creates the configuration service.
    * @ignore
    * @access protected
    */
@@ -383,7 +387,7 @@ class Jimpex extends Jimple {
     }
   }
   /**
-   * Process and mount all the resources on the `mountQueue`.
+   * Processes and mount all the resources on the `mountQueue`.
    * @ignore
    * @access protected
    */
