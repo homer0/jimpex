@@ -158,6 +158,10 @@ describe('middlewares/html:showHTML', () => {
     const htmlGeneratorService = {
       getFile: jest.fn(() => ''),
     };
+    const options = {
+      file: 'some-file',
+      htmlGenerator: htmlGeneratorServiceName,
+    };
     const app = {
       get: jest.fn((service) => service),
       try: jest.fn(() => htmlGeneratorService),
@@ -171,7 +175,7 @@ describe('middlewares/html:showHTML', () => {
       htmlGeneratorServiceName,
     ];
     // When
-    middleware = showHTML('some-file', htmlGeneratorServiceName).connect(app);
+    middleware = showHTML(options).connect(app);
     toCompare = new ShowHTML();
     // Then
     expect(middleware.toString()).toEqual(toCompare.middleware().toString());
@@ -184,5 +188,32 @@ describe('middlewares/html:showHTML', () => {
       expect(app.try).toHaveBeenCalledWith(service);
     });
     expect(htmlGeneratorService.getFile).toHaveBeenCalledTimes(1);
+  });
+
+  it('should be able to disable the HTMLGenerator from the middleware creator', () => {
+    // Given
+    const options = {
+      file: 'some-file',
+      htmlGenerator: null,
+    };
+    const app = {
+      get: jest.fn((service) => service),
+      try: jest.fn(),
+    };
+    let middleware = null;
+    let toCompare = null;
+    const expectedGets = [
+      'sendFile',
+    ];
+    // When
+    middleware = showHTML(options).connect(app);
+    toCompare = new ShowHTML();
+    // Then
+    expect(middleware.toString()).toEqual(toCompare.middleware().toString());
+    expect(app.get).toHaveBeenCalledTimes(expectedGets.length);
+    expectedGets.forEach((service) => {
+      expect(app.get).toHaveBeenCalledWith(service);
+    });
+    expect(app.try).toHaveBeenCalledTimes(0);
   });
 });

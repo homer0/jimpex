@@ -24,8 +24,8 @@ const { middlewareCreator } = require('../../utils/wrappers');
  * @extends {FastHTMLOptions}
  * @description The only difference with {@link FastHTMLOptions} is that in this options, you can
  *              specify an {@link HTMLGenerator} service name.
- * @property {string} htmlGenerator The name of a {@link HTMLGenerator} service for the middleware
- *                                  to use.
+ * @property {string} [htmlGenerator='htmlGenerator'] The name of a {@link HTMLGenerator} service
+ *                                                    for the middleware to use.
  */
 
 /**
