@@ -164,6 +164,22 @@ class Jimpex extends Jimple {
     return this.instance;
   }
   /**
+   * This is an alias of `start`. The idea is for it to be used on serverless platforms, where you
+   * don't get to start your app, you just have export it.
+   * @param {number}                            port The port where the app will run. In case the
+   *                                                 rest of the app needs to be aware of the port,
+   *                                                 this method will overwrite the `port` setting
+   *                                                 on the configuration.
+   * @param {function(config:AppConfiguration)} [fn] A callback function to be called when the
+   *                                                 server starts.
+   * @return {Object} The server instance
+   */
+  listen(port, fn = () => {}) {
+    const config = this.get('appConfiguration');
+    config.set('port', port);
+    return this.start(fn, port);
+  }
+  /**
    * Emit an app event with a reference to this class instance.
    * @param {string} name The name of the event.
    */

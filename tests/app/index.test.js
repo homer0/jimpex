@@ -734,7 +734,7 @@ describe('app:Jimpex', () => {
     expect(expressMock.mocks.closeInstance).toHaveBeenCalledTimes(1);
   });
 
-  it('should start the server an fire a custom callback', () => {
+  it('should start the server and fire a custom callback', () => {
     // Given
     class Sut extends Jimpex {
       boot() {}
@@ -770,6 +770,99 @@ describe('app:Jimpex', () => {
     // Then
     expect(callback).toHaveBeenCalledTimes(1);
     expect(callback).toHaveBeenCalledWith(appConfiguration);
+  });
+
+  it('should start the server using `listen`', () => {
+    // Given
+    class Sut extends Jimpex {
+      boot() {}
+    }
+    const pathUtils = {
+      joinFrom: jest.fn((from, rest) => path.join(from, rest)),
+    };
+    JimpleMock.service('pathUtils', pathUtils);
+    const defaultConfig = {};
+    const rootRequire = jest.fn(() => defaultConfig);
+    JimpleMock.service('rootRequire', rootRequire);
+    const customPort = 8080;
+    const configuration = {
+      port: 2509,
+      changes: {},
+    };
+    const appConfiguration = {
+      loadFromEnvironment: jest.fn(),
+      get: jest.fn((prop) => configuration.changes[prop] || configuration[prop]),
+      set: jest.fn((prop, value) => {
+        configuration.changes[prop] = value;
+      }),
+    };
+    JimpleMock.service('appConfiguration', appConfiguration);
+    const events = {
+      emit: jest.fn(),
+    };
+    JimpleMock.service('events', events);
+    const appLogger = {
+      success: jest.fn(),
+    };
+    JimpleMock.service('appLogger', appLogger);
+    let sut = null;
+    // When
+    sut = new Sut();
+    sut.listen(customPort);
+    // Then
+    expect(appLogger.success).toHaveBeenCalledTimes(1);
+    expect(appLogger.success).toHaveBeenCalledWith(`Starting on port ${customPort}`);
+    expect(appConfiguration.set).toHaveBeenCalledTimes(1);
+    expect(appConfiguration.set).toHaveBeenCalledWith('port', customPort);
+    expect(configuration.changes.port).toBe(customPort);
+  });
+
+  it('should start the server using `listen` and fire a custom callback', () => {
+    // Given
+    class Sut extends Jimpex {
+      boot() {}
+    }
+    const pathUtils = {
+      joinFrom: jest.fn((from, rest) => path.join(from, rest)),
+    };
+    JimpleMock.service('pathUtils', pathUtils);
+    const defaultConfig = {};
+    const rootRequire = jest.fn(() => defaultConfig);
+    JimpleMock.service('rootRequire', rootRequire);
+    const customPort = 8080;
+    const configuration = {
+      port: 2509,
+      changes: {},
+    };
+    const appConfiguration = {
+      loadFromEnvironment: jest.fn(),
+      get: jest.fn((prop) => configuration.changes[prop] || configuration[prop]),
+      set: jest.fn((prop, value) => {
+        configuration.changes[prop] = value;
+      }),
+    };
+    JimpleMock.service('appConfiguration', appConfiguration);
+    const events = {
+      emit: jest.fn(),
+    };
+    JimpleMock.service('events', events);
+    const appLogger = {
+      success: jest.fn(),
+    };
+    JimpleMock.service('appLogger', appLogger);
+    const callback = jest.fn();
+    let sut = null;
+    // When
+    sut = new Sut();
+    sut.listen(customPort, callback);
+    // Then
+    expect(callback).toHaveBeenCalledTimes(1);
+    expect(callback).toHaveBeenCalledWith(appConfiguration);
+    expect(appLogger.success).toHaveBeenCalledTimes(1);
+    expect(appLogger.success).toHaveBeenCalledWith(`Starting on port ${customPort}`);
+    expect(appConfiguration.set).toHaveBeenCalledTimes(1);
+    expect(appConfiguration.set).toHaveBeenCalledWith('port', customPort);
+    expect(configuration.changes.port).toBe(customPort);
   });
 
   it('shouldn\'t do anything when trying to stop the server without starting it', () => {
