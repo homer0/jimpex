@@ -1,8 +1,10 @@
 const ObjectUtils = require('wootils/shared/objectUtils');
 const { deferred } = require('wootils/shared');
+const { eventNames } = require('../../constants');
 const { providerCreator } = require('../../utils/wrappers');
 /**
- * @typedef {Object} HTMLGeneratorOptions The options to customize the an `HTMLGenerator` service.
+ * @typedef {Object} HTMLGeneratorOptions
+ * @description The options to customize the an `HTMLGenerator` service.
  * @property {string}  [template='index.tpl.html']                 The name of the file it should
  *                                                                 use as template.
  * @property {string}  [file='index.html']                         The name of the generated file.
@@ -23,6 +25,20 @@ const { providerCreator } = require('../../utils/wrappers');
  * the file.
  */
 
+/**
+ * @typedef {Object} HTMLGeneratorProviderOptions
+ * @extends {HTMLGeneratorOptions}
+ * @description These are the options specific for the service provider that registers
+ *              {@link HTMLGenerator}. It's the same as {@link HTMLGeneratorOptions} but with a
+ *              couple extras settings.
+ * @property {string}  [serviceName='htmlGenerator'] The name that will be used to register the
+ * service on the app container. This is to allow multiple "instances" of the service to be
+ * created.
+ * @property {?string} [valuesService='htmlGeneratorValues']
+ * The name of a service that the generator will use in order to read the values that will be
+ * injected on the template. If the service is available, the values from `configurationKeys`
+ * will be ignored.
+ */
 /**
  * @typedef {Object} HTMLGeneratorValuesService A service to provide the information value to an
  *                                              `HTMLGenerator` service to use on the generated
@@ -306,35 +322,23 @@ class HTMLGenerator {
  * A service that hooks itself to the `after-start` event of the app server in order to trigger
  * the generation an the html file when the server starts.
  * @type {ProviderCreator}
- * @param {HTMLGeneratorOptions}  [options={}]                  Options to customize the service.
- * @param {string}                [serviceName='htmlGenerator'] The name of the service that will
- *                                                              be register into the app.
- * @param {?string}               [valuesServiceName=null]      The name of a service used to read
- *                                                              the values that will be injected in
- *                                                              the generated file.
+ * @param {HTMLGeneratorProviderOptions|HTMLGeneratorOptions} [options] The options to customize
+ *                                                                      the service behavior.
  */
-const htmlGenerator = providerCreator((
-  options = {},
-  serviceName = 'htmlGenerator',
-  valuesServiceName = null
-) => (app) => {
+const htmlGenerator = providerCreator((options = {}) => (app) => {
+  const { serviceName = 'htmlGenerator' } = options;
   app.set(serviceName, () => {
-    let valuesService = null;
-    if (valuesServiceName) {
-      valuesService = app.get(valuesServiceName);
-    }
-
+    const { valuesService = 'htmlGeneratorValues' } = options;
     return new HTMLGenerator(
       app.get('appConfiguration'),
       app.get('appLogger'),
       app.get('frontendFs'),
       options,
-      valuesService
+      valuesService ? app.try(valuesService) : null
     );
   });
 
-  app.get('events')
-  .once('after-start', () => app.get(serviceName).generateHTML());
+  app.get('events').once(eventNames.afterStart, () => app.get(serviceName).generateHTML());
 });
 
 module.exports = {
