@@ -5,6 +5,7 @@ const services = require('./services');
 const {
   provider,
   providerCreator,
+  providers,
   controller,
   controllerCreator,
   middleware,
@@ -20,6 +21,7 @@ module.exports = {
   middlewares,
   provider,
   providerCreator,
+  providers,
   services,
   Jimpex,
 };
