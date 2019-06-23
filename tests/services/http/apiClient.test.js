@@ -95,7 +95,7 @@ describe('services/http:client', () => {
     let result = null;
     // When
     sut = new APIClient(apiConfig, http, 'HTTPError');
-    result = sut.getErrorMessageFromResponse({}, fallback)
+    result = sut.getErrorMessageFromResponse({}, fallback);
     // Then
     expect(result).toBe(fallback);
   });
@@ -164,13 +164,17 @@ describe('services/http:client', () => {
       get: jest.fn((service) => (services[service] || service)),
     };
     const name = 'myAPI';
-    const configurationKey = 'my-api';
-    const ClientClass = APIClient;
+    const configurationSetting = 'my-api';
+    const clientClass = APIClient;
     let sut = null;
     let serviceName = null;
     let serviceFn = null;
     // When
-    apiClient(name, configurationKey, ClientClass).register(app);
+    apiClient({
+      serviceName: name,
+      configurationSetting,
+      clientClass,
+    }).register(app);
     [[serviceName, serviceFn]] = app.set.mock.calls;
     sut = serviceFn();
     // Then
@@ -182,6 +186,52 @@ describe('services/http:client', () => {
     expect(sut.fetchClient).toBe(http.fetch);
     expect(serviceName).toBe(name);
     expect(appConfiguration.get).toHaveBeenCalledTimes(1);
-    expect(appConfiguration.get).toHaveBeenCalledWith(configurationKey);
+    expect(appConfiguration.get).toHaveBeenCalledWith(configurationSetting);
+  });
+
+  it('should use the same name as the service when is different from the default', () => {
+    // Given
+    const appConfiguration = {
+      apiConfig: {
+        url: 'my-api',
+        endpoints: {
+          info: 'api-info',
+        },
+      },
+      get: jest.fn(() => appConfiguration.apiConfig),
+    };
+    const http = {
+      fetch: 'fetch',
+    };
+    const services = {
+      appConfiguration,
+      http,
+    };
+    const app = {
+      set: jest.fn(),
+      get: jest.fn((service) => (services[service] || service)),
+    };
+    const name = 'myAPI';
+    const clientClass = APIClient;
+    let sut = null;
+    let serviceName = null;
+    let serviceFn = null;
+    // When
+    apiClient({
+      serviceName: name,
+      clientClass,
+    }).register(app);
+    [[serviceName, serviceFn]] = app.set.mock.calls;
+    sut = serviceFn();
+    // Then
+    expect(sut).toBeInstanceOf(APIClientBase);
+    expect(sut).toBeInstanceOf(APIClient);
+    expect(sut.apiConfig).toEqual(appConfiguration.apiConfig);
+    expect(sut.url).toBe(appConfiguration.apiConfig.url);
+    expect(sut.endpoints).toEqual(appConfiguration.apiConfig.endpoints);
+    expect(sut.fetchClient).toBe(http.fetch);
+    expect(serviceName).toBe(name);
+    expect(appConfiguration.get).toHaveBeenCalledTimes(1);
+    expect(appConfiguration.get).toHaveBeenCalledWith(name);
   });
 });
