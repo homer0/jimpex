@@ -190,7 +190,7 @@ class Jimpex extends Jimple {
     this._mountQueue.push((server) => {
       let result;
       const routes = this._reduceWithEvent(
-        'controller-mount',
+        'controller-will-be-mounted',
         controller.connect(this, route),
         route,
         controller
@@ -219,7 +219,7 @@ class Jimpex extends Jimple {
         const middlewareHandler = middleware.connect(this);
         if (middlewareHandler) {
           server.use(this._reduceWithEvent(
-            'middleware-use',
+            'middleware-will-be-used',
             middlewareHandler,
             middleware
           ));
@@ -227,7 +227,7 @@ class Jimpex extends Jimple {
       } else {
         // But if the middleware is a regular middleware, just use it directly.
         server.use(this._reduceWithEvent(
-          'middleware-use',
+          'middleware-will-be-used',
           middleware,
           null
         ));

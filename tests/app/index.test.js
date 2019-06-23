@@ -1074,7 +1074,7 @@ describe('app:Jimpex', () => {
     });
     expect(events.reduce).toHaveBeenCalledTimes(1);
     expect(events.reduce).toHaveBeenCalledWith(
-      'controller-mount',
+      'controller-will-be-mounted',
       routes,
       route,
       controller,
@@ -1154,7 +1154,7 @@ describe('app:Jimpex', () => {
     });
     expect(events.reduce).toHaveBeenCalledTimes(1);
     expect(events.reduce).toHaveBeenCalledWith(
-      'controller-mount',
+      'controller-will-be-mounted',
       router,
       route,
       controller,
@@ -1220,7 +1220,7 @@ describe('app:Jimpex', () => {
     });
     expect(events.reduce).toHaveBeenCalledTimes(1);
     expect(events.reduce).toHaveBeenCalledWith(
-      'middleware-use',
+      'middleware-will-be-used',
       middlewareFn,
       middleware,
       sut
@@ -1281,7 +1281,7 @@ describe('app:Jimpex', () => {
     });
     expect(events.reduce).toHaveBeenCalledTimes(1);
     expect(events.reduce).toHaveBeenCalledWith(
-      'middleware-use',
+      'middleware-will-be-used',
       middleware,
       null,
       sut
