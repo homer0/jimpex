@@ -6,6 +6,7 @@ const { eventNames } = require('./constants');
 const {
   provider,
   providerCreator,
+  providers,
   controller,
   controllerCreator,
   middleware,
@@ -21,6 +22,7 @@ module.exports = {
   middlewares,
   provider,
   providerCreator,
+  providers,
   services,
   eventNames,
   Jimpex,
