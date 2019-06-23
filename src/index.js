@@ -2,6 +2,7 @@ const Jimpex = require('./app');
 const controllers = require('./controllers');
 const middlewares = require('./middlewares');
 const services = require('./services');
+const { eventNames } = require('./constants');
 const {
   provider,
   providerCreator,
@@ -23,5 +24,6 @@ module.exports = {
   providerCreator,
   providers,
   services,
+  eventNames,
   Jimpex,
 };

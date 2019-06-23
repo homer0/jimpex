@@ -32,7 +32,25 @@ class App extends Jimpex {
 }
 ```
 
-By default, the service is registered with the name `apiClient`, the API entry point is taken from the configuration setting `api.url` and the endpoints from `api.endpoints`, but you can use it as a function to modify those options:
+The service has a few options that can be customized:
+
+```js
+{
+  // The name the service will have in the container; in case you need more than one.
+  serviceName: 'apiClient',
+
+  // The name of the configuration setting that will contain the API `url` and `endpoints`.
+  // If this is not customized, but the `serviceName` is, this value will be set to the
+  // same as the `serviceName`.
+  configurationSetting: 'api',
+
+  // The class the service will instantiate. This is in case you end up extending the
+  // base one in order to add custommethods.
+  clientClass: APIClient,
+}
+```
+
+You can use the provider as a function to modify the options:
 
 ```js
 const {
@@ -50,15 +68,13 @@ class App extends Jimpex {
     this.register(appError);
 
     // Register the client
-    this.register(apiClient(
-      'myCustomAPIService',
-      'myapi'
-    );
+    this.register(apiClient({
+      serviceName: 'myCustomAPIService',
+      configurationSetting: 'myapi',
+    });
   }
 }
 ```
-
-The first parameter is the name used to register the server and the second one is the setting key that has a `url` and an `endpoints` dictionary.
 
 ## App Error
 
@@ -332,12 +348,21 @@ class App extends Jimpex {
 }
 ```
 
-The service, after registering, it also hooks itself to the app event that gets fired when it starts so it can create the file automatically.
+The service, after registering, it hooks itself to the app event that gets fired when it starts, so it can create the file automatically.
 
 Now, this service has a few default options, so instead of explaining which are, we'll see each option on detail:
 
 ```js
 {
+  // The name the service will have in the container; in case you need more than one.
+  serviceName: 'htmlGenerator',
+
+  // The name of a service from will it obtain the values for the template. When
+  // instantiated, it will look for it on the container, and if is not avaiable,
+  // it will just ignore it and use `configurationKeys`.
+  // You can completely by setting the value to `null`.
+  valuesService: 'htmlGeneratorValues',
+
   // The name of the file it should use as template.
   template: 'index.tpl.html',
 
@@ -361,8 +386,6 @@ Now, this service has a few default options, so instead of explaining which are,
   configurationKeys: ['features', 'version', 'postMessagesPrefix'],
 }
 ```
-
-It also supports a custom service with a `getValues` method to obtain the information to inject instead of taking it from the configuration.
 
 To modify the options, you just need to use provider as a function:
 
@@ -389,8 +412,6 @@ class App extends Jimpex {
   }
 }
 ```
-
-The first parameter is the name of the service and the second the options to customize it. In case you want to use another service to get the values, you can send the name of that service as the third parameter.
 
 ## HTTP
 

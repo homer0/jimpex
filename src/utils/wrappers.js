@@ -52,8 +52,9 @@
  * @typedef {function} ControllerMountCallback
  * @description The function called by the app container in order to mount a routes controller.
  * @param {Jimpex} app   The instance of the app container.
- * @param {string} point The point where the controller will be mounted.
- * @return {Array} The list of routes the controller will manage.
+ * @param {string} route The route where the controller will be mounted.
+ * @return {Array|ExpressRouter} The list of routes the controller will manage, or a router
+ *                               instance.
  */
 
 /**
@@ -214,9 +215,9 @@ const providers = (items) => {
 const providerCreator = (creatorFn) => resourceCreator('provider', 'register', creatorFn);
 /**
  * Generates a routes controller for the app container to mount.
- * @param {ControllerMountCallback} connect A function that will be called the moment the app
- *                                          mounts the controller. It should return a list of
- *                                          routes.
+ * @param {ControllerMountCallback} connectFn A function that will be called the moment the app
+ *                                            mounts the controller. It should return a list of
+ *                                            routes.
  * @return {Controller}
  */
 const controller = (connectFn) => resource('controller', 'connect', connectFn);
@@ -236,9 +237,8 @@ const controller = (connectFn) => resource('controller', 'connect', connectFn);
 const controllerCreator = (creatorFn) => resourceCreator('controller', 'connect', creatorFn);
 /**
  * Generates a middleware for the app to use.
- * @param {function(app:Jimpex):?ExpressMiddleware} connect A function that will be called the
- *                                                          moment the app mounts the middleware.
- *                                                          It should return an Express middleware.
+ * @param {MiddlewareUseCallback} connectFn A function that will be called the moment the app
+ *                                          mounts the middleware.
  * @return {Middleware}
  */
 const middleware = (connectFn) => resource('middleware', 'connect', connectFn);

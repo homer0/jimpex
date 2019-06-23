@@ -2,6 +2,17 @@ const ObjectUtils = require('wootils/shared/objectUtils');
 const APIClientBase = require('wootils/shared/apiClient');
 const { providerCreator } = require('../../utils/wrappers');
 /**
+ * @typdef {Object} APIClientProviderOptions
+ * @description The options to customize how the service gets registered.
+ * @property {string} [serviceName='apiClient']    The name of the service that will be registered
+ *                                                 into the app.
+ * @property {string} [configurationSetting='api'] The name of the configuration setting that has
+ *                                                 the API information.
+ * @property {Class}  [clientClass=APIClient]      The class the service will instantiate. It has
+ *                                                 to extend from {@link APIClient}.
+ */
+
+/**
  * An API client for the app to use. What makes this service special is that its that it formats
  * the received errors using the `AppError` service class and as fetch function it uses the
  * `http` service, allowing the app to to internally handle all the requests and responses.
@@ -84,19 +95,21 @@ class APIClient extends APIClientBase {
  * An API Client service to make requests to an API using endpoints defined on the app
  * configuration.
  * @type {ProviderCreator}
- * @param {string} [name='apiClient']       The name of the service that will be registered into
- *                                          the app.
- * @param {string} [configurationKey='api'] The name of the app configuration setting that has the
- *                                          API information.
- * @param {Class}  [ClientClass=APIClient]  The Class the service will instantiate.
+ * @param {APIClientProviderOptions} [options] The options to customize how the service gets
+ *                                             registered.
  */
-const apiClient = providerCreator((
-  name = 'apiClient',
-  configurationKey = 'api',
-  ClientClass = APIClient
-) => (app) => {
-  app.set(name, () => new ClientClass(
-    app.get('appConfiguration').get(configurationKey),
+const apiClient = providerCreator((options = {}) => (app) => {
+  const defaultName = 'apiClient';
+  const {
+    serviceName = defaultName,
+    clientClass: ClientClass = APIClient,
+  } = options;
+  let { configurationSetting } = options;
+  if (!configurationSetting) {
+    configurationSetting = serviceName === defaultName ? 'api' : serviceName;
+  }
+  app.set(serviceName, () => new ClientClass(
+    app.get('appConfiguration').get(configurationSetting),
     app.get('http'),
     app.get('HTTPError')
   ));

@@ -377,7 +377,7 @@ Jimpex comes with a few services, middlewares and controllers that you can impor
 
 - **Error handler:** Allows you to generate responses for errors and potentially hide uncaught exceptions under a generic message, unless it's disabled via configuration settings.
 - **Force HTTPS:** Redirect all incoming traffic from HTTP to HTTPS. It also allows you to set routes to ignore the redirection.
-- **Fast HTML:** Allows you to specify which routes will be handled and in case there are no controllers for a requested route, it sends out and HTML file, thus preventing the request to be unnecessarily processed by the middlewares.
+- **Fast HTML:** Allows your app to skip unnecessary processing by showing an specific HTML when a requested route doesn't have a controller for it or is not on a "whitelist".
 - **Show HTML:** A really simple middleware to serve an HTML file. Its true feature is that it can be hooked up to the **HTML Generator** service.
 - **Version validator:** If you mount it on a route it will generate a `409` error if the request doesn't have a version parameter with the same version as the one on the configuration.
 

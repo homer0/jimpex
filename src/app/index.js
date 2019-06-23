@@ -15,6 +15,7 @@ const {
 } = require('wootils/node/providers');
 const { EventsHub } = require('wootils/shared');
 
+const { eventNames } = require('../constants');
 const commonServices = require('../services/common');
 const httpServices = require('../services/http');
 const utilsServices = require('../services/utils');
@@ -47,6 +48,8 @@ class Jimpex extends Jimple {
     /**
      * The app options.
      * @type {JimpexOptions}
+     * @access protected
+     * @ignore
      */
     this._options = ObjectUtils.merge({
       version: '0.0.0',
@@ -83,11 +86,15 @@ class Jimpex extends Jimple {
     /**
      * The Express app Jimpex uses under the hood.
      * @type {Express}
+     * @access protected
+     * @ignore
      */
     this._express = express();
     /**
      * When the app starts, this will be running instance.
      * @type {?Object}
+     * @access protected
+     * @ignore
      */
     this._instance = null;
     /**
@@ -97,8 +104,18 @@ class Jimpex extends Jimple {
      * services on Jimple use lazy loading, and adding middlewares and controllers as they come
      * could cause errors if they depend on services that are not yet registered.
      * @type {Array}
+     * @access protected
+     * @ignore
      */
     this._mountQueue = [];
+    /**
+     * A list of all the top routes controlled by the app. Every time a controller is mounted,
+     * its route will be added here.
+     * @type {Array}
+     * @access protected
+     * @ignore
+     */
+    this._controlledRoutes = [];
 
     this._setupCoreServices();
     this._setupExpress();
@@ -131,6 +148,13 @@ class Jimpex extends Jimple {
     return this._instance;
   }
   /**
+   * A list of all the top routes controlled by the app.
+   * @type {Array}
+   */
+  get routes() {
+    return ObjectUtils.copy(this._controlledRoutes);
+  }
+  /**
    * This is where the app would register all its specific services, middlewares and controllers.
    * @throws {Error} if not overwritten.
    * @abstract
@@ -159,16 +183,31 @@ class Jimpex extends Jimple {
     return result;
   }
   /**
-   * Mounts a controller on a route point.
-   * @param {string}                       point      The route for the controller.
+   * Mounts a controller on a specific route.
+   * @param {string}                       route      The route for the controller.
    * @param {Controller|ControllerCreator} controller The route controller.
    */
-  mount(point, controller) {
-    this._mountQueue.push(
-      (server) => controller.connect(this, point).forEach(
-        (route) => server.use(point, route)
-      )
-    );
+  mount(route, controller) {
+    this._mountQueue.push((server) => {
+      let result;
+      const routes = this._reduceWithEvent(
+        'controllerWillBeMounted',
+        controller.connect(this, route),
+        route,
+        controller
+      );
+      if (Array.isArray(routes)) {
+        // If the returned value is a list of routes, mount each single route.
+        result = routes.forEach((routeRouter) => server.use(route, routeRouter));
+      } else {
+        // But if the returned value is not a list, it may be a router, so mount it directly.
+        result = server.use(route, routes);
+      }
+
+      this._controlledRoutes.push(route);
+      this._emitEvent('routeAdded', route);
+      return result;
+    });
   }
   /**
    * Adds a middleware.
@@ -177,12 +216,22 @@ class Jimpex extends Jimple {
   use(middleware) {
     this._mountQueue.push((server) => {
       if (typeof middleware.connect === 'function') {
+        // If the middleware is from Jimpex, connect it and then use it.
         const middlewareHandler = middleware.connect(this);
         if (middlewareHandler) {
-          server.use(middlewareHandler);
+          server.use(this._reduceWithEvent(
+            'middlewareWillBeUsed',
+            middlewareHandler,
+            middleware
+          ));
         }
       } else {
-        server.use(middleware);
+        // But if the middleware is a regular middleware, just use it directly.
+        server.use(this._reduceWithEvent(
+          'middlewareWillBeUsed',
+          middleware,
+          null
+        ));
       }
     });
   }
@@ -195,14 +244,14 @@ class Jimpex extends Jimple {
   start(fn = () => {}) {
     const config = this.get('appConfiguration');
     const port = config.get('port');
-    this.emitEvent('before-start');
+    this._emitEvent('beforeStart');
     this._instance = this._express.listen(port, () => {
-      this.emitEvent('start');
+      this._emitEvent('start');
       this._mountResources();
       this.get('appLogger').success(`Starting on port ${port}`);
-      this.emitEvent('after-start');
+      this._emitEvent('afterStart');
       const result = fn(config);
-      this.emitEvent('after-start-callback');
+      this._emitEvent('afterStartCallback');
       return result;
     });
 
@@ -225,13 +274,6 @@ class Jimpex extends Jimple {
     return this.start(fn, port);
   }
   /**
-   * Emits an app event with a reference to this class instance.
-   * @param {string} name The name of the event.
-   */
-  emitEvent(name) {
-    this.get('events').emit(name, this);
-  }
-  /**
    * Disables the server TLS validation.
    */
   disableTLSValidation() {
@@ -244,10 +286,10 @@ class Jimpex extends Jimple {
    */
   stop() {
     if (this._instance) {
-      this.emitEvent('before-stop');
+      this._emitEvent('beforeStop');
       this._instance.close();
       this._instance = null;
-      this.emitEvent('after-stop');
+      this._emitEvent('afterStop');
     }
   }
   /**
@@ -414,6 +456,27 @@ class Jimpex extends Jimple {
   _mountResources() {
     this._mountQueue.forEach((mountFn) => mountFn(this._express));
     this._mountQueue.length = 0;
+  }
+  /**
+   * Emits an app event with a reference to this class instance.
+   * @param {string} name The name of the event on {@link JimpexEvents}.
+   * @param {...*}   args   Extra parameters for the listeners.
+   * @access protected
+   */
+  _emitEvent(name, ...args) {
+    this.get('events').emit(eventNames[name], ...[...args, this]);
+  }
+  /**
+   * Sends a target object to a list of reducer events so they can modify or replace it. This
+   * method also sends a reference to this class instance as the last parameter of the event.
+   * @param {string} name   The name of the event on {@link JimpexEvents}.
+   * @param {*}      target The targe object to reduce.
+   * @param {...*}   args   Extra parameters for the listeners.
+   * @return {*} An object of the same type as the `target`.
+   * @access protected
+   */
+  _reduceWithEvent(name, target, ...args) {
+    return this.get('events').reduce(eventNames[name], target, ...[...args, this]);
   }
 }
 

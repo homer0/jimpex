@@ -132,10 +132,10 @@ class App extends Jimpex {
 
 ## Fast HTML
 
-Allows you to specify which routes will be handled and in case there are no controllers for a requested route, it sends out and HTML file, thus preventing the request to be unnecessarily processed by the middlewares.
+Allows your app to skip unnecessary processing by showing an specific HTML when a requested route doesn't have a controller for it or is not on a "whitelist"
 
 - Module: `html`
-- Requires: `sendFile` and, optionally, an `HTMLGenerator` service.
+- Requires: `events`, `sendFile` and, optionally, an `HTMLGenerator` service.
 
 ```js
 const {
@@ -159,7 +159,22 @@ class App extends Jimpex {
 }
 ```
 
-By default, if the requested URL doesn't match `/^\/api\//` or `/\.ico$/` it serves an `index.html`, but you can use it as a function to modify those options:
+The middleware has a few options with default values that can be customized:
+
+```js
+{
+  // The name of the file it will serve.
+  file: 'index.html',
+  // A list of expressions for routes that should be ignored.
+  ignore: [/\.ico$/i],
+  // Whether or not to use the routes controlled by the app to validate the requests.
+  useAppRoutes: true,
+  // The name of the HTML Generator service the middleware can use to obtain the HTML. 
+  htmlGenerator: 'htmlGenerator',
+}
+```
+
+You can customize all those options by just calling the middleware as a function:
 
 ```js
 const {
@@ -178,17 +193,24 @@ class App extends Jimpex {
     this.register(sendFile);
     
     // Add the middleware on one of the first positions.
-    this.use(fastHTML(
-      'my-custom-index.html',
-      [`/^\/service\//`]
-    ));
+    this.use(fastHTML({
+      file: 'my-custom-index.html',
+      ignore: [`/^\/service\//`],
+      useAppRoutes: false,
+      htmlGenerator: null, // To disable it.
+    }));
   }
 }
 ```
 
-Now, as mentioned on the requirements, you can optionally use the `htmlGenerator` or an `HTMLGenerator` service to serve a generated file.
+Now, as mentioned on the requirements, you can optionally use the `htmlGenerator` service or an `HTMLGenerator`-like service to serve a generated file.
 
-The default implementation checks if there's an `htmlGenerator` service registered on the app and uses that file; and in the case of `fastHTML`, you can specify a third parameter with the name of the `HTMLGenerator` service name you want to use.
+You use the `htmlGenerator` option to disable it, or modify the name of the service it will look for:
+
+- If you set it to a _"falsy"_ value, it will be disabled.
+- If you change its name, it will try to look for that service when mounted.
+
+**Important:** When using the generator, no matter the value you set on the `file` option, it will overwritten with the name of the file from the generator service.
 
 ## Show HTML
 
