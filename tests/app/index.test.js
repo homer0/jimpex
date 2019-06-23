@@ -1025,6 +1025,7 @@ describe('app:Jimpex', () => {
     JimpleMock.service('appConfiguration', appConfiguration);
     const events = {
       emit: jest.fn(),
+      reduce: jest.fn((eventName, router) => router),
     };
     JimpleMock.service('events', events);
     const appLogger = {
@@ -1058,6 +1059,14 @@ describe('app:Jimpex', () => {
     expectedUseCalls.forEach((useCall) => {
       expect(expressMock.mocks.use).toHaveBeenCalledWith(...useCall);
     });
+    expect(events.reduce).toHaveBeenCalledTimes(1);
+    expect(events.reduce).toHaveBeenCalledWith(
+      'controller-mount',
+      routes,
+      point,
+      controller,
+      sut
+    );
   });
 
   it('should mount a controller router', () => {
@@ -1082,6 +1091,7 @@ describe('app:Jimpex', () => {
     JimpleMock.service('appConfiguration', appConfiguration);
     const events = {
       emit: jest.fn(),
+      reduce: jest.fn((eventName, router) => router),
     };
     JimpleMock.service('events', events);
     const appLogger = {
@@ -1115,6 +1125,14 @@ describe('app:Jimpex', () => {
     expectedUseCalls.forEach((useCall) => {
       expect(expressMock.mocks.use).toHaveBeenCalledWith(...useCall);
     });
+    expect(events.reduce).toHaveBeenCalledTimes(1);
+    expect(events.reduce).toHaveBeenCalledWith(
+      'controller-mount',
+      router,
+      point,
+      controller,
+      sut
+    );
   });
 
   it('should mount a middleware', () => {
@@ -1139,6 +1157,7 @@ describe('app:Jimpex', () => {
     JimpleMock.service('appConfiguration', appConfiguration);
     const events = {
       emit: jest.fn(),
+      reduce: jest.fn((eventName, middleware) => middleware),
     };
     JimpleMock.service('events', events);
     const appLogger = {
@@ -1171,6 +1190,13 @@ describe('app:Jimpex', () => {
     expectedUseCalls.forEach((useCall) => {
       expect(expressMock.mocks.use).toHaveBeenCalledWith(...useCall);
     });
+    expect(events.reduce).toHaveBeenCalledTimes(1);
+    expect(events.reduce).toHaveBeenCalledWith(
+      'middleware-use',
+      middlewareFn,
+      middleware,
+      sut
+    );
   });
 
   it('should mount an Express middleware', () => {
@@ -1195,6 +1221,7 @@ describe('app:Jimpex', () => {
     JimpleMock.service('appConfiguration', appConfiguration);
     const events = {
       emit: jest.fn(),
+      reduce: jest.fn((eventName, middleware) => middleware),
     };
     JimpleMock.service('events', events);
     const appLogger = {
@@ -1224,6 +1251,13 @@ describe('app:Jimpex', () => {
     expectedUseCalls.forEach((useCall) => {
       expect(expressMock.mocks.use).toHaveBeenCalledWith(...useCall);
     });
+    expect(events.reduce).toHaveBeenCalledTimes(1);
+    expect(events.reduce).toHaveBeenCalledWith(
+      'middleware-use',
+      middleware,
+      null,
+      sut
+    );
   });
 
   it('shouldn\'t mount a middleware if its `connect` method returned a falsy value', () => {

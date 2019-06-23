@@ -166,7 +166,12 @@ class Jimpex extends Jimple {
   mount(point, controller) {
     this._mountQueue.push((server) => {
       let result;
-      const routes = controller.connect(this, point);
+      const routes = this._reduceWithEvent(
+        'controller-mount',
+        controller.connect(this, point),
+        point,
+        controller
+      );
       if (Array.isArray(routes)) {
         // If the returned value is a list of routes, mount each single route.
         result = routes.forEach((route) => server.use(point, route));
@@ -188,11 +193,19 @@ class Jimpex extends Jimple {
         // If the middleware is from Jimpex, connect it and then use it.
         const middlewareHandler = middleware.connect(this);
         if (middlewareHandler) {
-          server.use(middlewareHandler);
+          server.use(this._reduceWithEvent(
+            'middleware-use',
+            middlewareHandler,
+            middleware
+          ));
         }
       } else {
         // But if the middleware is a regular middleware, just use it directly.
-        server.use(middleware);
+        server.use(this._reduceWithEvent(
+          'middleware-use',
+          middleware,
+          null
+        ));
       }
     });
   }
@@ -425,6 +438,18 @@ class Jimpex extends Jimple {
    */
   _emitEvent(name) {
     this.get('events').emit(name, this);
+  }
+  /**
+   * Sends a target object to a list of reducer events so they can modify or replace it. This
+   * method also sends a reference to this class instance as the last parameter of the event.
+   * @param {string} name   The name of the event.
+   * @param {*}      target The targe object to reduce.
+   * @param {...*}   args   Extra parameters for the listeners.
+   * @return {*} An object of the same type as the `target`.
+   * @access protected
+   */
+  _reduceWithEvent(name, target, ...args) {
+    return this.get('events').reduce(name, target, ...[...args, this]);
   }
 }
 
