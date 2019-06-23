@@ -159,25 +159,25 @@ class Jimpex extends Jimple {
     return result;
   }
   /**
-   * Mounts a controller on a route point.
-   * @param {string}                       point      The route for the controller.
+   * Mounts a controller on a specific route.
+   * @param {string}                       route      The route for the controller.
    * @param {Controller|ControllerCreator} controller The route controller.
    */
-  mount(point, controller) {
+  mount(route, controller) {
     this._mountQueue.push((server) => {
       let result;
       const routes = this._reduceWithEvent(
         'controller-mount',
-        controller.connect(this, point),
-        point,
+        controller.connect(this, route),
+        route,
         controller
       );
       if (Array.isArray(routes)) {
         // If the returned value is a list of routes, mount each single route.
-        result = routes.forEach((route) => server.use(point, route));
+        result = routes.forEach((routeRouter) => server.use(route, routeRouter));
       } else {
         // But if the returned value is not a list, it may be a router, so mount it directly.
-        result = server.use(point, routes);
+        result = server.use(route, routes);
       }
 
       return result;

@@ -195,16 +195,16 @@ class VersionValidator {
  * A middleware that will validate a `version` request parameter against the app version and
  * generate an error if they don't match.
  * This is a "middleware/controller" is because the wrappers for both are the same, the
- * difference is that, for controllers, Jimpex sends a second parameter with the point where they
+ * difference is that, for controllers, Jimpex sends a second parameter with the route where they
  * are mounted.
- * By validating the point parameter, the function can know whether the implementation is going
+ * By validating the route parameter, the function can know whether the implementation is going
  * to use the middleware by itself or as a route middleware.
  * If used as middleware, it will just return the result of {@link VersionValidator#middleware};
- * but if used as controller, it will mount it on `[point]/:version/*`.
+ * but if used as controller, it will mount it on `[route]/:version/*`.
  * @type {MiddlewareCreator}
  * @param {VersionValidatorOptions} [options] Custom options to modify the middleware behavior.
  */
-const versionValidator = middlewareCreator((options) => (app, point) => {
+const versionValidator = middlewareCreator((options) => (app, route) => {
   // Get the middleware function.
   const middlewareValidator = (new VersionValidator(
     app.get('appConfiguration').get('version'),
@@ -214,7 +214,7 @@ const versionValidator = middlewareCreator((options) => (app, point) => {
   )).middleware();
   // Set the variable to be returned.
   let result;
-  if (point) {
+  if (route) {
     // If the implementation will use it as a router, get the `router` service and mount it.
     const router = app.get('router');
     // Set the array of "routes" as the return value.

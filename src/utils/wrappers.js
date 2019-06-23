@@ -52,7 +52,7 @@
  * @typedef {function} ControllerMountCallback
  * @description The function called by the app container in order to mount a routes controller.
  * @param {Jimpex} app   The instance of the app container.
- * @param {string} point The point where the controller will be mounted.
+ * @param {string} route The route where the controller will be mounted.
  * @return {Array|ExpressRouter} The list of routes the controller will manage, or a router
  *                               instance.
  */
