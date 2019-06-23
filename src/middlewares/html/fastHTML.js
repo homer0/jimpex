@@ -249,8 +249,8 @@ class FastHTML {
  * whether there's a controller for the requested route or not. For more information about the
  * reason of this middleware, please read the description of {@link FastHTML}.
  * @type {MiddlewareCreator}
- * @param {FastHTMLMiddlewareOptions} [options={}] The options to customize the middleware
- *                                                 behavior.
+ * @param {FastHTMLOptions|FastHTMLMiddlewareOptions} [options={}] The options to customize the
+ *                                                                 middleware behavior.
  */
 const fastHTML = middlewareCreator((options = {}) => (app) => {
   const htmlGeneratorServiceName = typeof options.htmlGenerator === 'undefined' ?

@@ -24,7 +24,7 @@
  * The name of all the events {@link Jimpex} can trigger.
  * @type {JimpexEvents}
  */
-module.exports = {
+const eventNames = {
   beforeStart: 'before-start',
   start: 'start',
   afterStart: 'after-start',
@@ -35,3 +35,5 @@ module.exports = {
   routeAdded: 'route-added',
   middlewareWillBeUsed: 'middleware-will-be-used',
 };
+
+module.exports = eventNames;
