@@ -32,7 +32,25 @@ class App extends Jimpex {
 }
 ```
 
-By default, the service is registered with the name `apiClient`, the API entry point is taken from the configuration setting `api.url` and the endpoints from `api.endpoints`, but you can use it as a function to modify those options:
+The service has a few options that can be customized:
+
+```js
+{
+  // The name the service will have in the container; in case you need more than one.
+  serviceName: 'apiClient',
+
+  // The name of the configuration setting that will contain the API `url` and `endpoints`.
+  // If this is not customized, but the `serviceName` is, this value will be set to the
+  // same as the `serviceName`.
+  configurationSetting: 'api',
+
+  // The class the service will instantiate. This is in case you end up extending the
+  // base one in order to add custommethods.
+  clientClass: APIClient,
+}
+```
+
+You can use the provider as a function to modify the options:
 
 ```js
 const {
@@ -50,15 +68,13 @@ class App extends Jimpex {
     this.register(appError);
 
     // Register the client
-    this.register(apiClient(
-      'myCustomAPIService',
-      'myapi'
-    );
+    this.register(apiClient({
+      serviceName: 'myCustomAPIService',
+      configurationSetting: 'myapi',
+    });
   }
 }
 ```
-
-The first parameter is the name used to register the server and the second one is the setting key that has a `url` and an `endpoints` dictionary.
 
 ## App Error
 
