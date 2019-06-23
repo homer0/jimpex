@@ -205,14 +205,14 @@ class Jimpex extends Jimple {
   start(fn = () => {}) {
     const config = this.get('appConfiguration');
     const port = config.get('port');
-    this.emitEvent('before-start');
+    this._emitEvent('before-start');
     this._instance = this._express.listen(port, () => {
-      this.emitEvent('start');
+      this._emitEvent('start');
       this._mountResources();
       this.get('appLogger').success(`Starting on port ${port}`);
-      this.emitEvent('after-start');
+      this._emitEvent('after-start');
       const result = fn(config);
-      this.emitEvent('after-start-callback');
+      this._emitEvent('after-start-callback');
       return result;
     });
 
@@ -235,13 +235,6 @@ class Jimpex extends Jimple {
     return this.start(fn, port);
   }
   /**
-   * Emits an app event with a reference to this class instance.
-   * @param {string} name The name of the event.
-   */
-  emitEvent(name) {
-    this.get('events').emit(name, this);
-  }
-  /**
    * Disables the server TLS validation.
    */
   disableTLSValidation() {
@@ -254,10 +247,10 @@ class Jimpex extends Jimple {
    */
   stop() {
     if (this._instance) {
-      this.emitEvent('before-stop');
+      this._emitEvent('before-stop');
       this._instance.close();
       this._instance = null;
-      this.emitEvent('after-stop');
+      this._emitEvent('after-stop');
     }
   }
   /**
@@ -424,6 +417,14 @@ class Jimpex extends Jimple {
   _mountResources() {
     this._mountQueue.forEach((mountFn) => mountFn(this._express));
     this._mountQueue.length = 0;
+  }
+  /**
+   * Emits an app event with a reference to this class instance.
+   * @param {string} name The name of the event.
+   * @access protected
+   */
+  _emitEvent(name) {
+    this.get('events').emit(name, this);
   }
 }
 
