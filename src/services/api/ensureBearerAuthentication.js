@@ -60,7 +60,7 @@ class EnsureBearerAuthentication {
  */
 const ensureBearerAuthentication = provider((app) => {
   app.set('ensureBearerAuthentication', () => new EnsureBearerAuthentication(
-    app.get('appError')
+    app.get('AppError')
   ).middleware());
 });
 

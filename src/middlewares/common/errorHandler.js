@@ -60,11 +60,9 @@ class ErrorHandler {
           // If the error type is known...
           if (knownError) {
             // Try to get any extra information that should be included on the response.
-            if (err.extras && err.extras.response) {
-              data = Object.assign(data, err.extras.response);
-            }
+            data = Object.assign(data, err.response);
             // Try to obtain the response status from the error
-            status = (err.extras && err.extras.status) || statuses['Bad Request'];
+            status = err.status || statuses['Bad Request'];
           }
           // If the `showErrors` flag is enabled...
           if (this.showErrors) {
@@ -99,7 +97,7 @@ const errorHandler = middleware((app) => {
     app.get('appLogger'),
     app.get('responsesBuilder'),
     showErrors,
-    app.get('appError')
+    app.get('AppError')
   )
   .middleware();
 });

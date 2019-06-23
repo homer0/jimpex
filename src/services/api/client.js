@@ -16,9 +16,9 @@ class APIClient extends APIClientBase {
    *                                                 the API entry point.
    * @param {HTTP}               http                To get the `fetch` function for this service
    *                                                 to use on all the requests.
-   * @param {Class}              AppError            To format the received errors.
+   * @param {Class}              HTTPError           To format the received errors.
    */
-  constructor(apiConfig, http, AppError) {
+  constructor(apiConfig, http, HTTPError) {
     super(apiConfig.url, apiConfig.endpoints, http.fetch);
     /**
      * The configuration for the API the client will make requests to.
@@ -29,19 +29,19 @@ class APIClient extends APIClientBase {
      */
     this.apiConfig = apiConfig;
     /**
-     * A local reference for the class the app uses to generate errors.
+     * A local reference for the class the app uses to generate HTTP errors.
      * @type {Class}
      */
-    this.AppError = AppError;
+    this.HTTPError = HTTPError;
   }
   /**
    * Formats a response error with the App error class.
    * @param {Object} response A received response from a request.
    * @param {number} status   The HTTP status of the request.
-   * @return {Error}
+   * @return {HTTPError}
    */
   error(response, status) {
-    return new this.AppError(response.data.message, { status });
+    return new this.HTTPError(response.data.message, status);
   }
 }
 /**
@@ -62,7 +62,7 @@ const apiClientCustom = (
   app.set(name, () => new ClientClass(
     app.get('appConfiguration').get(configurationKey),
     app.get('http'),
-    app.get('appError')
+    app.get('HTTPError')
   ));
 });
 /**

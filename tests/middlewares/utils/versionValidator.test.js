@@ -295,7 +295,7 @@ describe('services/api:versionValidator', () => {
       const expectedServices = [
         'appConfiguration',
         'responsesBuilder',
-        'appError',
+        'AppError',
       ];
       // When
       sut = versionValidatorCustom().connect(app);
@@ -331,7 +331,7 @@ describe('services/api:versionValidator', () => {
       const expectedServices = [
         'appConfiguration',
         'responsesBuilder',
-        'appError',
+        'AppError',
         'router',
       ];
       // When

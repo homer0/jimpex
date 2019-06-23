@@ -139,7 +139,7 @@ describe('middlewares/common:errorHandler', () => {
     expect(appLogger.info).toHaveBeenCalledWith(expectedData.stack);
   });
 
-  it('should show extra information the AppError object may contain', () => {
+  it('should show context information the AppError object may contain', () => {
     // Given
     const appLogger = {
       error: jest.fn(),
@@ -152,10 +152,8 @@ describe('middlewares/common:errorHandler', () => {
     class AppError {
       constructor(message, stack, status, response) {
         this.message = message;
-        this.extras = {
-          status,
-          response,
-        };
+        this.status = status;
+        this.response = response;
         this.stack = `${message}
           ${stack}`;
       }
@@ -242,7 +240,7 @@ describe('middlewares/common:errorHandler', () => {
       'appConfiguration',
       'appLogger',
       'responsesBuilder',
-      'appError',
+      'AppError',
     ];
     // When
     middleware = errorHandler.connect(app);
@@ -250,7 +248,7 @@ describe('middlewares/common:errorHandler', () => {
       'appLogger',
       'responsesBuilder',
       'showErrors',
-      'appError'
+      'AppError'
     );
     // Then
     expect(middleware.toString()).toEqual(toCompare.middleware().toString());

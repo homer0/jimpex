@@ -251,8 +251,9 @@ Jimpex comes with a few services, middlewares and controllers that you can impor
 ### Services
 
 - **API client:** An implementation of the [wootils API Client](https://github.com/homer0/wootils/blob/master/documents/shared/APIClient.md) but that is connected to the HTTP service, to allow logging and forwarding of the headers.
+- **App Error:** A very simple subclass of `Error` but with support for context information. It can be used to customize the error handler responses.
 - **Ensure bearer authentication:** A service-middleware that allows you to validate the incoming requests `Authorization` header.
-- **Error:** A very simple subclass of `Error` to inject extra information on the errors so they can customize the error handler responses.
+- **HTTP Error:** Another type of error, but specific for the HTTP requests the app does with the API client.
 - **Send File:** It allows you to send a file on a response with a path relative to the app executable.
 - **Frontend Fs:** Useful for when your app has a bundled frontend, it allows you to read, write and delete files with paths relative to the app executable.
 - **HTML Generator:** A service that allows you to generate an HTML file when the app gets started and inject contents of the configuration as a `window` variable.
