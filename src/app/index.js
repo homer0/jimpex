@@ -164,11 +164,19 @@ class Jimpex extends Jimple {
    * @param {Controller|ControllerCreator} controller The route controller.
    */
   mount(point, controller) {
-    this._mountQueue.push(
-      (server) => controller.connect(this, point).forEach(
-        (route) => server.use(point, route)
-      )
-    );
+    this._mountQueue.push((server) => {
+      let result;
+      const routes = controller.connect(this, point);
+      if (Array.isArray(routes)) {
+        // If the returned value is a list of routes, mount each single route.
+        result = routes.forEach((route) => server.use(point, route));
+      } else {
+        // But if the returned value is not a list, it may be a router, so mount it directly.
+        result = server.use(point, routes);
+      }
+
+      return result;
+    });
   }
   /**
    * Adds a middleware.
@@ -177,11 +185,13 @@ class Jimpex extends Jimple {
   use(middleware) {
     this._mountQueue.push((server) => {
       if (typeof middleware.connect === 'function') {
+        // If the middleware is from Jimpex, connect it and then use it.
         const middlewareHandler = middleware.connect(this);
         if (middlewareHandler) {
           server.use(middlewareHandler);
         }
       } else {
+        // But if the middleware is a regular middleware, just use it directly.
         server.use(middleware);
       }
     });

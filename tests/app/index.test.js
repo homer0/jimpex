@@ -1060,6 +1060,63 @@ describe('app:Jimpex', () => {
     });
   });
 
+  it('should mount a controller router', () => {
+    // Given
+    class Sut extends Jimpex {
+      boot() {}
+    }
+    const pathUtils = {
+      joinFrom: jest.fn((from, rest) => path.join(from, rest)),
+    };
+    JimpleMock.service('pathUtils', pathUtils);
+    const defaultConfig = {};
+    const rootRequire = jest.fn(() => defaultConfig);
+    JimpleMock.service('rootRequire', rootRequire);
+    const configuration = {
+      port: 2509,
+    };
+    const appConfiguration = {
+      loadFromEnvironment: jest.fn(),
+      get: jest.fn((prop) => configuration[prop]),
+    };
+    JimpleMock.service('appConfiguration', appConfiguration);
+    const events = {
+      emit: jest.fn(),
+    };
+    JimpleMock.service('events', events);
+    const appLogger = {
+      success: jest.fn(),
+    };
+    JimpleMock.service('appLogger', appLogger);
+    const router = 'my-router';
+    const point = '/api';
+    const controller = {
+      connect: jest.fn(() => router),
+    };
+    let sut = null;
+    const expectedStaticsFolder = 'app/statics';
+    const expectedMiddlewares = [
+      ['compression-middleware'],
+      ['/statics', expectedStaticsFolder],
+      ['body-parser-json'],
+      ['body-parser-urlencoded'],
+      ['multer-any'],
+    ];
+    const expectedUseCalls = [
+      ...expectedMiddlewares,
+      ...[[point, router]],
+    ];
+    // When
+    sut = new Sut();
+    sut.mount(point, controller);
+    sut.start();
+    // Then
+    expect(expressMock.mocks.use).toHaveBeenCalledTimes(expectedUseCalls.length);
+    expectedUseCalls.forEach((useCall) => {
+      expect(expressMock.mocks.use).toHaveBeenCalledWith(...useCall);
+    });
+  });
+
   it('should mount a middleware', () => {
     // Given
     class Sut extends Jimpex {
