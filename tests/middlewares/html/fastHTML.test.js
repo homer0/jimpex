@@ -8,7 +8,7 @@ const {
 } = require('/src/middlewares/html/fastHTML');
 
 describe('middlewares/html:fastHTML', () => {
-  it('should be instantiated with all its dependencies', () => {
+  it('should be instantiated', () => {
     // Given
     const sendFile = 'sendFile';
     let sut = null;
@@ -16,7 +16,6 @@ describe('middlewares/html:fastHTML', () => {
     sut = new FastHTML(sendFile);
     // Then
     expect(sut).toBeInstanceOf(FastHTML);
-    expect(sut.sendFile).toBe(sendFile);
   });
 
   it('should be instantiated with the optional htmlGenerator service', () => {
@@ -31,8 +30,6 @@ describe('middlewares/html:fastHTML', () => {
     sut = new FastHTML(sendFile, 'index.html', [], htmlGenerator);
     // Then
     expect(sut).toBeInstanceOf(FastHTML);
-    expect(sut.sendFile).toBe(sendFile);
-    expect(sut.htmlGenerator).toBe(htmlGenerator);
     expect(sut.file).toBe(file);
     expect(htmlGenerator.getFile).toHaveBeenCalledTimes(1);
   });
@@ -55,6 +52,7 @@ describe('middlewares/html:fastHTML', () => {
     sut = new FastHTML(sendFile, file, ignoredRoutes);
     middleware = sut.middleware();
     middleware(request, response, next);
+    // Then
     expect(response.setHeader).toHaveBeenCalledTimes(1);
     expect(response.setHeader).toHaveBeenCalledWith('Content-Type', 'text/html');
     expect(sendFile).toHaveBeenCalledTimes(1);
@@ -77,6 +75,8 @@ describe('middlewares/html:fastHTML', () => {
     sut = new FastHTML(sendFile, file, ignoredRoutes);
     middleware = sut.middleware();
     middleware(request, response, next);
+    // Then
+    expect(sut.ignoredRoutes).toEqual(ignoredRoutes);
     expect(next).toHaveBeenCalledTimes(1);
     expect(sendFile).toHaveBeenCalledTimes(0);
   });
@@ -104,6 +104,7 @@ describe('middlewares/html:fastHTML', () => {
       sut = new FastHTML(sendFile, '', ignoredRoutes, htmlGenerator);
       middleware = sut.middleware();
       middleware(request, response, () => {
+        // Then
         expect(htmlGenerator.getFile).toHaveBeenCalledTimes(1);
         expect(htmlGenerator.whenReady).toHaveBeenCalledTimes(1);
         expect(sendFile).toHaveBeenCalledTimes(1);
@@ -140,6 +141,7 @@ describe('middlewares/html:fastHTML', () => {
       sut = new FastHTML(sendFile, '', ignoredRoutes, htmlGenerator);
       middleware = sut.middleware();
       middleware(request, response, (result) => {
+        // Then
         expect(result).toBe(error);
         expect(htmlGenerator.getFile).toHaveBeenCalledTimes(1);
         expect(htmlGenerator.whenReady).toHaveBeenCalledTimes(1);

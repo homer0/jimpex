@@ -12,22 +12,26 @@ class ConfigurationController {
     /**
      * A local reference for the `appConfiguration` service.
      * @type {AppConfiguration}
+     * @access protected
+     * @ignore
      */
-    this.appConfiguration = appConfiguration;
+    this._appConfiguration = appConfiguration;
     /**
      * A local reference for the `responsesBuilder` service.
      * @type {ResponsesBuilder}
+     * @access protected
+     * @ignore
      */
-    this.responsesBuilder = responsesBuilder;
+    this._responsesBuilder = responsesBuilder;
   }
   /**
    * Send a response with the current app configuration as a body.
    * @param {ExpressResponse} res The server response.
    */
   getConfigurationResponse(res) {
-    const name = this.appConfiguration.get('name');
-    const data = Object.assign({ name }, this.appConfiguration.getConfig());
-    return this.responsesBuilder.json(res, data);
+    const name = this._appConfiguration.get('name');
+    const data = Object.assign({ name }, this._appConfiguration.getConfig());
+    return this._responsesBuilder.json(res, data);
   }
   /**
    * Returns the middleware to show the current configuration.
@@ -44,9 +48,9 @@ class ConfigurationController {
    */
   switchConfiguration() {
     return (req, res, next) => {
-      if (this.appConfiguration.canSwitch()) {
+      if (this._appConfiguration.canSwitch()) {
         try {
-          this.appConfiguration.switch(req.params.name);
+          this._appConfiguration.switch(req.params.name);
           this.getConfigurationResponse(res);
         } catch (error) {
           next(error);

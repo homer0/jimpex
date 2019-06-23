@@ -26,13 +26,17 @@ class APIClient extends APIClientBase {
      * @property {string} url       The API entry point.
      * @property {Object} endpoints A dictionary of named endpoints relative to the API
      *                              entry point.
+     * @access protected
+     * @ignore
      */
-    this.apiConfig = apiConfig;
+    this._apiConfig = Object.freeze(apiConfig);
     /**
      * A local reference for the class the app uses to generate HTTP errors.
      * @type {Class}
+     * @access protected
+     * @ignore
      */
-    this.HTTPError = HTTPError;
+    this._HTTPError = HTTPError;
   }
   /**
    * Formats a response error with the App error class.
@@ -41,7 +45,17 @@ class APIClient extends APIClientBase {
    * @return {HTTPError}
    */
   error(response, status) {
-    return new this.HTTPError(response.data.message, status);
+    return new this._HTTPError(response.data.message, status);
+  }
+  /**
+   * The configuration for the API the client will make requests to.
+   * @type {Object}
+   * @property {string} url       The API entry point.
+   * @property {Object} endpoints A dictionary of named endpoints relative to the API
+   *                              entry point.
+   */
+  get apiConfig() {
+    return this._apiConfig;
   }
 }
 /**

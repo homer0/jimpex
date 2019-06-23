@@ -16,7 +16,7 @@ describe('services/frontend:frontendFs', () => {
     fs.unlink.mockReset();
   });
 
-  it('should be instantiated with all its dependencies', () => {
+  it('should be instantiated', () => {
     // Given
     const pathUtils = 'pathUtils';
     let sut = null;
@@ -24,7 +24,6 @@ describe('services/frontend:frontendFs', () => {
     sut = new FrontendFs(pathUtils);
     // Then
     expect(sut).toBeInstanceOf(FrontendFs);
-    expect(sut.pathUtils).toBe(pathUtils);
   });
 
   it('should read a file', () => {
@@ -129,6 +128,5 @@ describe('services/frontend:frontendFs', () => {
     // Then
     expect(serviceName).toBe('frontendFs');
     expect(sut).toBeInstanceOf(FrontendFs);
-    expect(sut.pathUtils).toBe('pathUtils');
   });
 });

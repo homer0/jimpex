@@ -48,7 +48,7 @@ class Jimpex extends Jimple {
      * The app options.
      * @type {JimpexOptions}
      */
-    this.options = ObjectUtils.merge({
+    this._options = ObjectUtils.merge({
       version: '0.0.0',
       filesizeLimit: '15MB',
       configuration: {
@@ -81,15 +81,15 @@ class Jimpex extends Jimple {
       },
     }, options);
     /**
-     * The Express app.
+     * The Express app Jimpex uses under the hood.
      * @type {Express}
      */
-    this.express = express();
+    this._express = express();
     /**
      * When the app starts, this will be running instance.
-     * @type {Object}
+     * @type {?Object}
      */
-    this.instance = null;
+    this._instance = null;
     /**
      * A list of functions that return controllers and middlewares. When the app starts, the
      * queue will be processed and those controllers and middlewares added to the app.
@@ -98,7 +98,7 @@ class Jimpex extends Jimple {
      * could cause errors if they depend on services that are not yet registered.
      * @type {Array}
      */
-    this.mountQueue = [];
+    this._mountQueue = [];
 
     this._setupCoreServices();
     this._setupExpress();
@@ -108,6 +108,27 @@ class Jimpex extends Jimple {
     if (boot) {
       this.boot();
     }
+  }
+  /**
+   * The app options.
+   * @type {JimpexOptions}
+   */
+  get options() {
+    return ObjectUtils.copy(this._options);
+  }
+  /**
+   * The Express app Jimpex uses under the hood.
+   * @type {Express}
+   */
+  get express() {
+    return this._express;
+  }
+  /**
+   * The server instance that gets created when the app is started.
+   * @return {?Object}
+   */
+  get instance() {
+    return this._instance;
   }
   /**
    * This is where the app would register all its specific services, middlewares and controllers.
@@ -123,7 +144,7 @@ class Jimpex extends Jimple {
    * @param {Controller|ControllerCreator} controller The route controller.
    */
   mount(point, controller) {
-    this.mountQueue.push(
+    this._mountQueue.push(
       (server) => controller.connect(this, point).forEach(
         (route) => server.use(point, route)
       )
@@ -134,7 +155,7 @@ class Jimpex extends Jimple {
    * @param {Middleware|MiddlewareCreator} middleware The middleware to use.
    */
   use(middleware) {
-    this.mountQueue.push((server) => {
+    this._mountQueue.push((server) => {
       const middlewareHandler = middleware.connect(this);
       if (middlewareHandler) {
         server.use(middlewareHandler);
@@ -151,7 +172,7 @@ class Jimpex extends Jimple {
     const config = this.get('appConfiguration');
     const port = config.get('port');
     this.emitEvent('before-start');
-    this.instance = this.express.listen(port, () => {
+    this._instance = this._express.listen(port, () => {
       this.emitEvent('start');
       this._mountResources();
       this.get('appLogger').success(`Starting on port ${port}`);
@@ -161,7 +182,7 @@ class Jimpex extends Jimple {
       return result;
     });
 
-    return this.instance;
+    return this._instance;
   }
   /**
    * This is an alias of `start`. The idea is for it to be used on serverless platforms, where you
@@ -198,10 +219,10 @@ class Jimpex extends Jimple {
    * Stops the server instance.
    */
   stop() {
-    if (this.instance) {
+    if (this._instance) {
       this.emitEvent('before-stop');
-      this.instance.close();
-      this.instance = null;
+      this._instance.close();
+      this._instance = null;
       this.emitEvent('after-stop');
     }
   }
@@ -232,17 +253,17 @@ class Jimpex extends Jimple {
       statics,
       filesizeLimit,
       express: expressOptions,
-    } = this.options;
+    } = this._options;
     if (expressOptions.trustProxy) {
-      this.express.enable('trust proxy');
+      this._express.enable('trust proxy');
     }
 
     if (expressOptions.disableXPoweredBy) {
-      this.express.disable('x-powered-by');
+      this._express.disable('x-powered-by');
     }
 
     if (expressOptions.compression) {
-      this.express.use(compression());
+      this._express.use(compression());
     }
 
     if (statics.enabled) {
@@ -250,21 +271,21 @@ class Jimpex extends Jimple {
       const joinFrom = onHome ? 'home' : 'app';
       const staticsRoute = route.startsWith('/') ? route.substr(1) : route;
       const staticsFolderPath = this.get('pathUtils').joinFrom(joinFrom, folder || staticsRoute);
-      this.express.use(`/${staticsRoute}`, express.static(staticsFolderPath));
+      this._express.use(`/${staticsRoute}`, express.static(staticsFolderPath));
     }
 
     if (expressOptions.bodyParser) {
-      this.express.use(bodyParser.json({
+      this._express.use(bodyParser.json({
         limit: filesizeLimit,
       }));
-      this.express.use(bodyParser.urlencoded({
+      this._express.use(bodyParser.urlencoded({
         extended: true,
         limit: filesizeLimit,
       }));
     }
 
     if (expressOptions.multer) {
-      this.express.use(multer().any());
+      this._express.use(multer().any());
     }
 
     this.set('router', this.factory(() => express.Router()));
@@ -275,7 +296,7 @@ class Jimpex extends Jimple {
    * @access protected
    */
   _setupDefaultServices() {
-    const { defaultServices } = this.options;
+    const { defaultServices } = this._options;
 
     if (defaultServices.api) {
       this.register(apiServices);
@@ -297,7 +318,7 @@ class Jimpex extends Jimple {
    * @access protected
    */
   _setupConfiguration() {
-    const { version, configuration: options } = this.options;
+    const { version, configuration: options } = this._options;
     const {
       name,
       environmentVariable,
@@ -338,7 +359,7 @@ class Jimpex extends Jimple {
     }
 
     if (loadVersionFromConfiguration) {
-      this.options.version = this.get('appConfiguration').get('version');
+      this._options.version = this.get('appConfiguration').get('version');
     }
   }
   /**
@@ -347,8 +368,8 @@ class Jimpex extends Jimple {
    * @access protected
    */
   _mountResources() {
-    this.mountQueue.forEach((mountFn) => mountFn(this.express));
-    this.mountQueue.length = 0;
+    this._mountQueue.forEach((mountFn) => mountFn(this._express));
+    this._mountQueue.length = 0;
   }
 }
 

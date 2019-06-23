@@ -9,7 +9,7 @@ const {
 } = require('/src/services/http/responsesBuilder');
 
 describe('services/http:responsesBuilder', () => {
-  it('should be instantiated with all its dependencies', () => {
+  it('should be instantiated', () => {
     // Given
     const appConfiguration = 'appConfiguration';
     let sut = null;
@@ -17,7 +17,6 @@ describe('services/http:responsesBuilder', () => {
     sut = new ResponsesBuilder(appConfiguration);
     // Then
     expect(sut).toBeInstanceOf(ResponsesBuilder);
-    expect(sut.appConfiguration).toBe(appConfiguration);
   });
 
   it('should generate and send a basic JSON response', () => {
@@ -191,6 +190,5 @@ describe('services/http:responsesBuilder', () => {
     // Then
     expect(serviceName).toBe('responsesBuilder');
     expect(sut).toBeInstanceOf(ResponsesBuilder);
-    expect(sut.appConfiguration).toBe('appConfiguration');
   });
 });

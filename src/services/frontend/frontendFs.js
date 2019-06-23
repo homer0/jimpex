@@ -19,8 +19,10 @@ class FrontendFs {
     /**
      * A local reference for the `pathUtils` service.
      * @type {PathUtils}
+     * @access protected
+     * @ignore
      */
-    this.pathUtils = pathUtils;
+    this._pathUtils = pathUtils;
   }
   /**
    * Read a file from the file system.
@@ -29,7 +31,7 @@ class FrontendFs {
    * @return {Promise<string,Error>}
    */
   read(filepath, encoding = 'utf-8') {
-    return fs.readFile(this.pathUtils.joinFrom('app', filepath), encoding);
+    return fs.readFile(this._pathUtils.joinFrom('app', filepath), encoding);
   }
   /**
    * Write a file on the file system.
@@ -38,7 +40,7 @@ class FrontendFs {
    * @return {Promise<undefined,Error>}
    */
   write(filepath, data) {
-    return fs.writeFile(this.pathUtils.joinFrom('app', filepath), data);
+    return fs.writeFile(this._pathUtils.joinFrom('app', filepath), data);
   }
   /**
    * Delete a file from the file system.
@@ -46,7 +48,7 @@ class FrontendFs {
    * @return {Promise<undefined,Error>}
    */
   delete(filepath) {
-    return fs.unlink(this.pathUtils.joinFrom('app', filepath));
+    return fs.unlink(this._pathUtils.joinFrom('app', filepath));
   }
 }
 /**

@@ -20,7 +20,7 @@ class AppError extends Error {
      * @type {Object}
      * @access protected
      */
-    this._context = context;
+    this._context = Object.freeze(context);
     /**
      * The date of when the error was generated.
      * @type {Date}

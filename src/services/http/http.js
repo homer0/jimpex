@@ -27,13 +27,17 @@ class HTTP {
     /**
      * Whether or not to log the requests and their responses.
      * @type {Boolean}
+     * @access protected
+     * @ignore
      */
-    this.logRequests = logRequests;
+    this._logRequests = logRequests;
     /**
      * A local reference for the `appLogger` service.
      * @type {AppLogger}
+     * @access protected
+     * @ignore
      */
-    this.appLogger = appLogger;
+    this._appLogger = appLogger;
     /**
      * So it can be sent to other services as a reference.
      * @ignore
@@ -121,13 +125,13 @@ class HTTP {
       fetchOptions.headers = headers;
     }
     // If the `logRequests` flag is `true`, call the method to log the request.
-    if (this.logRequests) {
+    if (this._logRequests) {
       this._logRequest(fetchURL, fetchOptions);
     }
     // Make the request.
     let result = fetch(fetchURL, fetchOptions);
     // If the `logRequests` flag is `true`...
-    if (this.logRequests) {
+    if (this._logRequests) {
       // Add an extra step on the promise chain to log the response.
       result = result.then((response) => {
         this._logResponse(response);
@@ -136,6 +140,13 @@ class HTTP {
     }
     // Return the request promise.
     return result;
+  }
+  /**
+   * Whether or not to log the requests and their responses.
+   * @type {Boolean}
+   */
+  get logRequests() {
+    return this._logRequests;
   }
   /**
    * Log a a request information using the `appLogger` service.
@@ -161,7 +172,7 @@ class HTTP {
       lines.push(`${prefix}body: "${options.body}"`);
     }
 
-    this.appLogger.info(lines);
+    this._appLogger.info(lines);
   }
   /**
    * Log a a response information using the `appLogger` service.
@@ -182,7 +193,7 @@ class HTTP {
       lines.push(`${prefix}${header}: ${value}`);
     });
 
-    this.appLogger.info(lines);
+    this._appLogger.info(lines);
   }
 }
 /**

@@ -8,7 +8,7 @@ const {
 } = require('/src/middlewares/html/showHTML');
 
 describe('middlewares/html:showHTML', () => {
-  it('should be instantiated with all its dependencies', () => {
+  it('should be instantiated', () => {
     // Given
     const sendFile = 'sendFile';
     let sut = null;
@@ -16,7 +16,6 @@ describe('middlewares/html:showHTML', () => {
     sut = new ShowHTML(sendFile);
     // Then
     expect(sut).toBeInstanceOf(ShowHTML);
-    expect(sut.sendFile).toBe(sendFile);
   });
 
   it('should be instantiated with the optional htmlGenerator service', () => {
@@ -31,8 +30,6 @@ describe('middlewares/html:showHTML', () => {
     sut = new ShowHTML(sendFile, 'index.html', htmlGenerator);
     // Then
     expect(sut).toBeInstanceOf(ShowHTML);
-    expect(sut.sendFile).toBe(sendFile);
-    expect(sut.htmlGenerator).toBe(htmlGenerator);
     expect(sut.file).toBe(file);
     expect(htmlGenerator.getFile).toHaveBeenCalledTimes(1);
   });

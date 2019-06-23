@@ -9,7 +9,7 @@ const {
 } = require('/src/middlewares/common/errorHandler');
 
 describe('middlewares/common:errorHandler', () => {
-  it('should be instantiated with all its dependencies', () => {
+  it('should be instantiated with default options and have a middleware method', () => {
     // Given
     const appLogger = 'appLogger';
     const responsesBuilder = 'responsesBuilder';
@@ -20,9 +20,7 @@ describe('middlewares/common:errorHandler', () => {
     sut = new ErrorHandler(appLogger, responsesBuilder, showErrors, AppError);
     // Then
     expect(sut).toBeInstanceOf(ErrorHandler);
-    expect(sut.appLogger).toBe(appLogger);
-    expect(sut.responsesBuilder).toBe(responsesBuilder);
-    expect(sut.showErrors).toBe(showErrors);
+    expect(sut.middleware).toBeFunction();
     expect(sut.options).toEqual(({
       default: {
         message: 'Oops! Something went wrong, please try again',

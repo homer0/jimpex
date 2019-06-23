@@ -23,20 +23,24 @@ class RootStaticsController {
     /**
      * A local reference for the `sendFile` service.
      * @type {SendFile}
+     * @access protected
+     * @ignore
      */
-    this.sendFile = sendFile;
+    this._sendFile = sendFile;
     /**
-    * A dictionary with the file names as keys and information about the files as values.
-    * @type {Object}
-    */
-    this.files = this._parseFiles(files);
+     * A dictionary with the file names as keys and information about the files as  values.
+     * @type {Object}
+     * @access protected
+     * @ignore
+     */
+    this._files = this._parseFiles(files);
   }
   /**
    * Gets the list of files the service will serve.
    * @return {Array}
    */
   getFileEntries() {
-    return Object.keys(this.files);
+    return Object.keys(this._files);
   }
   /**
    * Generates a middleware to serve an specific file.
@@ -45,12 +49,12 @@ class RootStaticsController {
    * @throws {Error} If the file wasn't sent on the constructor.
    */
   serveFile(file) {
-    if (!this.files[file]) {
+    if (!this._files[file]) {
       throw new Error(`The required static file doesn't exist (${file})`);
     }
 
     return (req, res, next) => {
-      const item = this.files[file];
+      const item = this._files[file];
       const extension = item.output.split('.').pop().toLowerCase();
       const baseHeaders = { 'Content-Type': mime.getType(extension) };
       const headers = ObjectUtils.merge(baseHeaders, item.headers);
@@ -59,7 +63,7 @@ class RootStaticsController {
         res.setHeader(headerName, headers[headerName]);
       });
 
-      this.sendFile(res, item.output, next);
+      this._sendFile(res, item.output, next);
     };
   }
   /**

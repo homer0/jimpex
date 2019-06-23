@@ -99,6 +99,8 @@ describe('app:Jimpex', () => {
     expectedServices.forEach((service) => {
       expect(sut.register).toHaveBeenCalledWith(service);
     });
+    expect(sut.express).toBe(expressMock.mocks);
+    expect(expressMock).toHaveBeenCalledTimes(1);
     expect(expressMock.mocks.enable).toHaveBeenCalledTimes(1);
     expect(expressMock.mocks.enable).toHaveBeenCalledWith('trust proxy');
     expect(expressMock.mocks.disable).toHaveBeenCalledTimes(1);
@@ -706,6 +708,7 @@ describe('app:Jimpex', () => {
     };
     JimpleMock.service('appLogger', appLogger);
     let sut = null;
+    let runningInstance = null;
     const expectedEvents = [
       'before-start',
       'start',
@@ -717,8 +720,12 @@ describe('app:Jimpex', () => {
     // When
     sut = new Sut();
     sut.start();
+    runningInstance = sut.instance;
     sut.stop();
     // Then
+    expect(runningInstance).toEqual({
+      close: expect.any(Function),
+    });
     expect(events.emit).toHaveBeenCalledTimes(expectedEvents.length);
     expectedEvents.forEach((eventName) => {
       expect(events.emit).toHaveBeenCalledWith(eventName, sut);

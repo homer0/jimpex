@@ -9,7 +9,7 @@ const {
 } = require('/src/services/api/ensureBearerAuthentication');
 
 describe('services/api:ensureBearerAuthentication', () => {
-  it('should be instantiated with all its dependencies', () => {
+  it('should be instantiated', () => {
     // Given
     const AppError = Error;
     let sut = null;
@@ -17,7 +17,6 @@ describe('services/api:ensureBearerAuthentication', () => {
     sut = new EnsureBearerAuthentication(AppError);
     // Then
     expect(sut).toBeInstanceOf(EnsureBearerAuthentication);
-    expect(sut.AppError).toBe(AppError);
   });
 
   it('should have a middleware to unauthorize requests without tokens', () => {
