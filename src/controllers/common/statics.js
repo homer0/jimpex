@@ -2,6 +2,7 @@ const path = require('path');
 const ObjectUtils = require('wootils/shared/objectUtils');
 const mime = require('mime');
 const { controllerCreator } = require('../../utils/wrappers');
+const { removeSlashes } = require('../../utils/functions');
 
 /**
  * @typdef {Object} StaticsControllerFile
@@ -175,7 +176,7 @@ class StaticsController {
    */
   _createFiles() {
     const { files, paths } = this._options;
-    const routePath = this._removeTrailingSlash(paths.route);
+    const routePath = removeSlashes(paths.route, false, true);
     return files.reduce(
       (formatted, file) => {
         let source;
@@ -189,7 +190,7 @@ class StaticsController {
         }
 
         source = path.join(paths.source, source);
-        route = this._removeLeadingSlash(route);
+        route = removeSlashes(route, true, false);
         route = `${routePath}/${route}`;
 
         return Object.assign({}, formatted, {
@@ -239,26 +240,6 @@ class StaticsController {
 
       this._sendFile(res, file.source, next);
     };
-  }
-  /**
-   * Helper method to remove the leading slash from a URL.
-   * @param {string} url The URL to format.
-   * @return {string}
-   * @access protected
-   * @ignore
-   */
-  _removeLeadingSlash(url) {
-    return url.replace(/^\/+/, '');
-  }
-  /**
-   * Helper method to remove the trailing slash from a URL.
-   * @param {string} url The URL to format.
-   * @return {string}
-   * @access protected
-   * @ignore
-   */
-  _removeTrailingSlash(url) {
-    return url.replace(/\/+$/, '');
   }
 }
 /**

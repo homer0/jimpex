@@ -1,3 +1,4 @@
+jest.unmock('/src/utils/functions');
 jest.unmock('/src/utils/wrappers');
 jest.unmock('/src/controllers/common/statics');
 
