@@ -12,6 +12,7 @@ const {
   middleware,
   middlewareCreator,
 } = require('./utils/wrappers');
+const utils = require('./utils/functions');
 
 module.exports = {
   controller,
@@ -25,5 +26,6 @@ module.exports = {
   providers,
   services,
   eventNames,
+  utils,
   Jimpex,
 };
