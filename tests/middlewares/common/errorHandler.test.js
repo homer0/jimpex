@@ -251,10 +251,8 @@ describe('middlewares/common:errorHandler', () => {
   it('should include a middleware shorthand to return its function', () => {
     // Given
     const appConfiguration = {
-      debug: {
-        showErrors: true,
-      },
-      get: jest.fn(() => appConfiguration.debug),
+      'debug.showErrors': true,
+      get: jest.fn((prop) => appConfiguration[prop]),
     };
     const services = {
       appConfiguration,
@@ -285,16 +283,14 @@ describe('middlewares/common:errorHandler', () => {
       expect(app.get).toHaveBeenCalledWith(service);
     });
     expect(appConfiguration.get).toHaveBeenCalledTimes(1);
-    expect(appConfiguration.get).toHaveBeenCalledWith('debug');
+    expect(appConfiguration.get).toHaveBeenCalledWith('debug.showErrors');
   });
 
   it('should include a middleware creator shorthand to modify its options', () => {
     // Given
     const appConfiguration = {
-      debug: {
-        showErrors: true,
-      },
-      get: jest.fn(() => appConfiguration.debug),
+      'debug.showErrors': true,
+      get: jest.fn((prop) => appConfiguration[prop]),
     };
     const services = {
       appConfiguration,
@@ -325,6 +321,6 @@ describe('middlewares/common:errorHandler', () => {
       expect(app.get).toHaveBeenCalledWith(service);
     });
     expect(appConfiguration.get).toHaveBeenCalledTimes(1);
-    expect(appConfiguration.get).toHaveBeenCalledWith('debug');
+    expect(appConfiguration.get).toHaveBeenCalledWith('debug.showErrors');
   });
 });

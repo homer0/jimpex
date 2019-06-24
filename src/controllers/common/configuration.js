@@ -72,8 +72,7 @@ class ConfigurationController {
 const configurationController = controller((app) => {
   const routes = [];
   const appConfiguration = app.get('appConfiguration');
-  const debugging = appConfiguration.get('debug');
-  if (debugging && debugging.configurationController === true) {
+  if (appConfiguration.get('debug.configurationController') === true) {
     const router = app.get('router');
     const ctrl = new ConfigurationController(
       appConfiguration,
