@@ -2512,7 +2512,7 @@ extend-shallow@^3.0.0, extend-shallow@^3.0.2:
     assign-symbols "^1.0.0"
     is-extendable "^1.0.1"
 
-extend@~3.0.2:
+extend@^3.0.2, extend@~3.0.2:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/extend/-/extend-3.0.2.tgz#f8b1136b4071fbd8eb140aff858b1019ec2915fa"
   integrity sha512-fjquC59cD7CyW6urNXK0FBufkZcoiGG80wTuPujX590cB5Ttln20E2UB4S/WARVqhXffZl2LNgS+gQdPIIim/g==
@@ -6161,12 +6161,13 @@ wide-align@^1.1.0:
   dependencies:
     string-width "^1.0.2 || 2"
 
-wootils@^2.3.0:
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/wootils/-/wootils-2.3.0.tgz#b628fd4b0b7644ce116456d2f3c223cfddc5e7c5"
-  integrity sha512-VtUPHMR+0NM/+rEtGVZjCbY5ajfI0BpBqpCkepFCqcxvMq9YB/coZX5VAdR/aJHup7HvfROLoABtDYRAe2F1jw==
+wootils@^2.4.0:
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/wootils/-/wootils-2.4.0.tgz#03235f121cd2b2d1af235c4495f87f2bc20d6b86"
+  integrity sha512-QNpDy2QnQyloB+n/gPX/1pJpFYeSNvG0mVsMtL4w0L3Im9OQaRb9v2AepAUN7d+9bB33s7i4NYtklZO6QtXeaw==
   dependencies:
     colors "1.3.3"
+    extend "^3.0.2"
     fs-extra "8.0.1"
     jimple "1.5.0"
     statuses "1.5.0"
