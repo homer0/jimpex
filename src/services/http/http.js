@@ -209,8 +209,7 @@ class HTTP {
  */
 const http = provider((app) => {
   app.set('http', () => {
-    const debugging = app.get('appConfiguration').get('debug');
-    const logRequests = !!(debugging && debugging.logRequests === true);
+    const logRequests = app.get('appConfiguration').get('debug.logRequests') === true;
     return new HTTP(logRequests, app.get('appLogger'));
   });
 });

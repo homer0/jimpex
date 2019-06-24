@@ -368,10 +368,8 @@ describe('services/http:http', () => {
   it('should turn on the requests log when registered if the configuration flag is `true`', () => {
     // Given
     const appConfiguration = {
-      debug: {
-        logRequests: true,
-      },
-      get: jest.fn(() => appConfiguration.debug),
+      'debug.logRequests': true,
+      get: jest.fn((prop) => appConfiguration[prop]),
     };
     const services = {
       appConfiguration,

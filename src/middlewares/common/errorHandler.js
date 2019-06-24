@@ -151,8 +151,7 @@ class ErrorHandler {
  * @param {ErrorHandlerOptions} [options] Custom options to modify the middleware behavior.
  */
 const errorHandler = middlewareCreator((options) => (app) => {
-  const debugging = app.get('appConfiguration').get('debug');
-  const showErrors = debugging && debugging.showErrors;
+  const showErrors = app.get('appConfiguration').get('debug.showErrors') === true;
   return new ErrorHandler(
     app.get('appLogger'),
     app.get('responsesBuilder'),

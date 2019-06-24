@@ -209,9 +209,7 @@ describe('controllers/common:configuration', () => {
   it('should return its routes when the debug `configurationController` flag is `true`', () => {
     // Given
     const appConfiguration = {
-      debug: {
-        configurationController: true,
-      },
+      'debug.configurationController': true,
       get: jest.fn((prop) => appConfiguration[prop]),
     };
     const services = {
@@ -243,9 +241,7 @@ describe('controllers/common:configuration', () => {
   it('shouldn\'t return its routes when the debug `configurationController` flag is `false`', () => {
     // Given
     const appConfiguration = {
-      debug: {
-        configurationController: false,
-      },
+      'debug.configurationController': false,
       get: jest.fn((prop) => appConfiguration[prop]),
     };
     const services = {
