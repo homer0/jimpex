@@ -2,6 +2,7 @@ const mime = require('mime');
 const ObjectUtils = require('wootils/shared/objectUtils');
 const { eventNames } = require('../../constants');
 const { middlewareCreator } = require('../../utils/wrappers');
+const { createRouteExpression, removeSlashes } = require('../../utils/functions');
 
 /**
  * @typedef {Object} FastHTMLOptions
@@ -185,39 +186,14 @@ class FastHTML {
       // Re generate the list of expressions...
       this._routeExpressions = routes
       // Remove leading and trailing slashes.
-      .map((route) => route.replace(/^\/+/, '').replace(/\/+$/, '').trim())
+      .map((route) => removeSlashes(route).trim())
       // Filter empty routes (in case they were for `/`).
       .filter((route) => route !== '')
       // Remove repeated routes.
       .reduce((unique, route) => (unique.includes(route) ? unique : [...unique, route]), [])
       // Generate regular expressions for each route.
-      .map((route) => this._getRouteExpression(route));
+      .map((route) => createRouteExpression(route));
     });
-  }
-  /**
-   * Generates a regular expression for a given route.
-   * @param {string} route The route from where the expression will be created.
-   * @return {RegExp}
-   * @access protected
-   * @ignore
-   */
-  _getRouteExpression(route) {
-    const expression = route
-    // Separate each component of the route.
-    .split('/')
-    /**
-     * If the component is for a paramter, replace it with a expression to match anything; if not,
-     * escape it so it can be used on the final expression.
-     */
-    .map((part) => (
-      part.startsWith(':') ?
-        '(?:([^\\/]+?))' :
-        part.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&')
-    ))
-    // Put everything back together.
-    .join('\\/');
-    // Before returning it, add a leading slash, as `req.originalUrl` always have one.
-    return new RegExp(`\\/${expression}`);
   }
   /**
    * Checks whether a route should be ignored or not. The method checks first against the `ignore`
