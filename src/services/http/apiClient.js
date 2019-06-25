@@ -13,6 +13,14 @@ const { providerCreator } = require('../../utils/wrappers');
  */
 
 /**
+ * @typedef {Object} APIClientConfiguration
+ * @description The configuration for the API the client will make requests to.
+ * @property {string}             url       The API entry point.
+ * @property {APIClientEndpoints} endpoints A dictionary of named endpoints relative to the API
+ *                                          entry point.
+ */
+
+/**
  * An API client for the app to use. What makes this service special is that its that it formats
  * the received errors using the `AppError` service class and as fetch function it uses the
  * `http` service, allowing the app to to internally handle all the requests and responses.
@@ -20,24 +28,17 @@ const { providerCreator } = require('../../utils/wrappers');
  */
 class APIClient extends APIClientBase {
   /**
-   * Class constructor.
-   * @param {Object}             apiConfig           The configuration for the API the client will
-   *                                                 make requests to.
-   * @param {string}             apiConfig.url       The API entry point.
-   * @param {APIClientEndpoints} apiConfig.endpoints A dictionary of named endpoints relative to
-   *                                                 the API entry point.
-   * @param {HTTP}               http                To get the `fetch` function for this service
-   *                                                 to use on all the requests.
-   * @param {Class}              HTTPError           To format the received errors.
+   * @param {APIClientConfiguration} apiConfig The configuration for the API the client will
+   *                                           make requests to.
+   * @param {HTTP}                   http      To get the `fetch` function for this service
+   *                                           to use on all the requests.
+   * @param {Class}                  HTTPError To format the received errors.
    */
   constructor(apiConfig, http, HTTPError) {
     super(apiConfig.url, apiConfig.endpoints, http.fetch);
     /**
      * The configuration for the API the client will make requests to.
-     * @type {Object}
-     * @property {string} url       The API entry point.
-     * @property {Object} endpoints A dictionary of named endpoints relative to the API
-     *                              entry point.
+     * @type {APIClientConfiguration}
      * @access protected
      * @ignore
      */
