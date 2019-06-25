@@ -81,31 +81,31 @@ class StaticsController {
     this._files = this._createFiles();
   }
   /**
-   * Creates all the needed routes to serve the files.
+   * Defines all the needed routes to serve the files.
    * @param {ExpressRouter} router           To generate the routes.
    * @param {Array}         [middlewares=[]] A list of custom middlewares that will be added
    *                                         before the one that serves a file.
-   * @return {Array}
+   * @return {ExpressRouter}
    */
-  getRoutes(router, middlewares = []) {
+  addRoutes(router, middlewares = []) {
     const { methods } = this._options;
     const use = methods.all ?
       ['all'] :
       Object.keys(methods).reduce((acc, name) => (methods[name] ? [...acc, name] : acc), []);
 
-    return Object.keys(this._files)
-    .map((route) => {
+    Object.keys(this._files).forEach((route) => {
       const file = this._files[route];
       const fileMiddleware = this._getMiddleware(file);
-      return use.map((method) => this._getRoute(
+      use.forEach((method) => this._addRoute(
         router,
         method,
         file,
         fileMiddleware,
         middlewares
       ));
-    })
-    .reduce((allRoutes, routes) => [...allRoutes, ...routes], []);
+    });
+
+    return router;
   }
   /**
    * The controller configuration options.
@@ -212,11 +212,11 @@ class StaticsController {
    * @param {ExpressMiddleware}     fileMiddleware The middleware that serves the file.
    * @param {Array}                 middlewares    A list of custom middlewares to add before the
    *                                               one that serves the file.
-   * @return {Object} The Express route
+   * @return {ExpressRouter}
    * @access protected
    * @ignore
    */
-  _getRoute(router, method, file, fileMiddleware, middlewares) {
+  _addRoute(router, method, file, fileMiddleware, middlewares) {
     return router[method](file.route, [...middlewares, fileMiddleware]);
   }
   /**
@@ -264,7 +264,7 @@ const staticsController = controllerCreator((options, middlewares) => (app) => {
     ));
   }
 
-  return ctrl.getRoutes(router, useMiddlewares);
+  return ctrl.addRoutes(router, useMiddlewares);
 });
 
 module.exports = {
