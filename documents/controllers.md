@@ -199,3 +199,131 @@ this.mount('/', staticsController(
 ```
 
 And that's all, the middleware will be added to the route, just before serving the file.
+
+## Gateway
+
+It allows you to automatically generate a set of routes that will make gateway requests to an specific API.
+
+- Module: `utils`
+- Requires: `http`
+
+```js
+const {
+  Jimpex,
+  services: {
+    http: { http },
+  },
+  controllers: {
+    utils: { gateway },
+  },
+};
+
+class App extends Jimpex {
+  boot() {
+    // Register the dependencies...
+    this.register(http);
+    
+    // Add the controller.
+    this.mount('/gateway', gateway);
+  }
+}
+```
+
+The controller will automatically look into your app configuration for a key called `api` with the following format:
+
+```js
+{
+  url: 'api-entry-point',
+  gateway: {
+    endpointOne: 'endpoint/one/path',
+  },
+}
+```
+
+> Yes, the format is almost the same as the API Client.
+
+Based on the example above and that configuration, the controller would mount a route on `/gateway/endpoint/one/path` that would fire a request to `api-entry-point/endpoint/one/path`.
+
+The controller has a few options that you can customize:
+
+```js
+{
+
+  // The name that will be used to register the controller as a sevice (yes!),
+  // so other services can access the API Client configuration the controller
+  // generates from its routes.
+
+  serviceName: 'apiGateway',
+
+  // The name of a registered service that will work as a helper, and that the
+  // controller will call in order to modify requests, responses and even handle
+  // errors.
+  helperServiceName: 'apiGatewayHelper',
+
+  // The name of the configuration setting where the gateway configuration is stored.
+  // This is also used to wrap the endpoints on the generated API Client configuration.
+  configurationSetting: 'api',
+
+  // This is a helper for when the gateway is used with an API client. The idea is
+  // that, by default, the routes are mounted on the controller route, but with
+  // this option, you can specify another sub path. For example: The controller
+  // is mounted on `/routes`, if you set `root` to `gateway`, all the routes will
+  // be on `/routes/gateway`.
+  root: '',
+
+  // How the gateway will handle headers from requests and responses.
+  headers: {
+
+    // Whether or not to include the header with a request real IP.
+    useXForwardedFor: true,
+
+    // Whether or not to copy the custom headers (the ones that start with `x-`).
+    copyCustomHeaders: true,
+
+    // A list of headers that will be copied from the incoming request into the
+    // fetch request.
+    copy: [
+      'authorization',
+      'content-type',
+      'referer',
+      'user-agent',
+    ],
+
+    // A list of headers that will be removed while copying the headers from a
+    // fetch response into the server's response.
+    remove: [
+      'server',
+      'x-powered-by',
+    ],
+  },
+}
+```
+
+The way you overwrite them is by calling the controller as a function:
+
+```js
+const {
+  Jimpex,
+  services: {
+    http: { http },
+  },
+  controllers: {
+    utils: { gateway },
+  },
+};
+
+class App extends Jimpex {
+  boot() {
+    // Register the dependencies...
+    this.register(http);
+    
+    // Add the controller.
+    this.mount('/gateway', gateway({
+      serviceName: 'Batman',
+    }));
+  }
+}
+```
+
+I strongly recommend you to read the techinical documentation in order to know all the things you
+can do with the helper service and the logic behind the naming convetion the controller creator enforces (the `serviceName` must end with `Gateway`, among other things).
