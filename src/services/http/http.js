@@ -56,8 +56,8 @@ class HTTP {
       req.connection.socket.remoteAddress;
   }
   /**
-   * Get a dictionary with all the custom headers a request has. By custom header it means all the
-   * headers which name start with `x-`.
+   * Creates a dictionary with all the custom headers a request has. By custom header it means all
+   * the headers which name start with `x-`.
    * This method doesn't copy `x-forwarded-for` as the `fetch` method generates it by calling
    * `getIPFromRequest`.
    * @param {ExpressRequest} req The request from which it will try to get the headers.
@@ -72,6 +72,28 @@ class HTTP {
     });
 
     return headers;
+  }
+  /**
+   * It takes a dictionary of headers and normalize the names so each word will start with an
+   * upper case character. This is helpful in case you added custom headers and didn't care about
+   * the casing, or when copying headers from a server request, in which case they are all
+   * tranformed to lower case.
+   * @param {Object} headers The dictionary of headers to normalize.
+   * @return {Object}
+   */
+  normalizeHeaders(headers) {
+    return Object.keys(headers).reduce(
+      (newHeaders, name) => {
+        const newName = name
+        .split('-')
+        .map((part) => part.replace(/^(\w)/, (ignore, letter) => letter.toUpperCase()))
+        .join('-');
+        return Object.assign({}, newHeaders, {
+          [newName]: headers[name],
+        });
+      },
+      {}
+    );
   }
   /**
    * Make a request.
@@ -122,7 +144,7 @@ class HTTP {
      * to avoid sending an empty object.
      */
     if (Object.keys(headers).length) {
-      fetchOptions.headers = headers;
+      fetchOptions.headers = this.normalizeHeaders(headers);
     }
     // If the `logRequests` flag is `true`, call the method to log the request.
     if (this._logRequests) {

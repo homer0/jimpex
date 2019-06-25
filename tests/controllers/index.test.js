@@ -9,6 +9,7 @@ describe('controllers', () => {
     // Given
     const knownControllers = [
       'common',
+      'utils',
     ];
     // When/Then
     expect(Object.keys(controllers).length).toBe(knownControllers.length);

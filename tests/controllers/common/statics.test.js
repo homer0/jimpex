@@ -1,3 +1,4 @@
+jest.unmock('/src/utils/functions');
 jest.unmock('/src/utils/wrappers');
 jest.unmock('/src/controllers/common/statics');
 
@@ -17,7 +18,7 @@ describe('controllers/common:statics', () => {
     sut = new StaticsController(sendFile);
     // Then
     expect(sut).toBeInstanceOf(StaticsController);
-    expect(sut.getRoutes).toBeFunction();
+    expect(sut.addRoutes).toBeFunction();
     expect(sut.options).toEqual({
       files: ['favicon.ico', 'index.html'],
       methods: {
@@ -51,7 +52,7 @@ describe('controllers/common:statics', () => {
     sut = new StaticsController(sendFile, options);
     // Then
     expect(sut).toBeInstanceOf(StaticsController);
-    expect(sut.getRoutes).toBeFunction();
+    expect(sut.addRoutes).toBeFunction();
     expect(sut.options).toEqual(options);
   });
 
@@ -107,23 +108,20 @@ describe('controllers/common:statics', () => {
     .toThrow(/is not a valid HTTP method/i);
   });
 
-  it('should generate `get` routes for all the files', () => {
+  it('should register `get` routes for all the files', () => {
     // Given
     const sendFile = 'sendFile';
     const options = {
       files: ['charito.html'],
     };
-    const route = 'route';
     const router = {
-      get: jest.fn(() => route),
+      get: jest.fn(() => router),
     };
     let sut = null;
-    let result = null;
     // When
     sut = new StaticsController(sendFile, options);
-    result = sut.getRoutes(router);
+    sut.addRoutes(router);
     // Then
-    expect(result).toEqual(options.files.map(() => route));
     expect(router.get).toHaveBeenCalledTimes(options.files.length);
     options.files.forEach((file) => {
       expect(router.get).toHaveBeenCalledWith(`/${file}`, [expect.any(Function)]);
@@ -139,17 +137,14 @@ describe('controllers/common:statics', () => {
         all: true,
       },
     };
-    const route = 'route';
     const router = {
-      all: jest.fn(() => route),
+      all: jest.fn(() => router),
     };
     let sut = null;
-    let result = null;
     // When
     sut = new StaticsController(sendFile, options);
-    result = sut.getRoutes(router);
+    sut.addRoutes(router);
     // Then
-    expect(result).toEqual(options.files.map(() => route));
     expect(router.all).toHaveBeenCalledTimes(options.files.length);
     options.files.forEach((file) => {
       expect(router.all).toHaveBeenCalledWith(`/${file}`, [expect.any(Function)]);
@@ -167,23 +162,15 @@ describe('controllers/common:statics', () => {
         put: true,
       },
     };
-    const postRoute = 'post-route';
-    const putRoute = 'put-route';
     const router = {
-      post: jest.fn(() => postRoute),
-      put: jest.fn(() => putRoute),
+      post: jest.fn(() => router),
+      put: jest.fn(() => router),
     };
     let sut = null;
-    let result = null;
     // When
     sut = new StaticsController(sendFile, options);
-    result = sut.getRoutes(router);
+    sut.addRoutes(router);
     // Then
-    expect(result).toEqual(
-      options.files
-      .map(() => [postRoute, putRoute])
-      .reduce((acc, routes) => [...acc, ...routes], [])
-    );
     expect(router.post).toHaveBeenCalledTimes(options.files.length);
     expect(router.put).toHaveBeenCalledTimes(options.files.length);
     options.files.forEach((file) => {
@@ -199,17 +186,14 @@ describe('controllers/common:statics', () => {
       files: ['charito.html'],
     };
     const middlewares = ['middlewareOne', 'middlewareTwo'];
-    const route = 'route';
     const router = {
-      get: jest.fn(() => route),
+      get: jest.fn(() => router),
     };
     let sut = null;
-    let result = null;
     // When
     sut = new StaticsController(sendFile, options);
-    result = sut.getRoutes(router, middlewares);
+    sut.addRoutes(router, middlewares);
     // Then
-    expect(result).toEqual(options.files.map(() => route));
     expect(router.get).toHaveBeenCalledTimes(options.files.length);
     options.files.forEach((file) => {
       expect(router.get).toHaveBeenCalledWith(`/${file}`, [
@@ -226,9 +210,8 @@ describe('controllers/common:statics', () => {
     const options = {
       files: [file],
     };
-    const route = 'route';
     const router = {
-      get: jest.fn(() => route),
+      get: jest.fn(() => router),
     };
     const request = 'request';
     const response = {
@@ -239,7 +222,7 @@ describe('controllers/common:statics', () => {
     let middleware = null;
     // When
     sut = new StaticsController(sendFile, options);
-    sut.getRoutes(router);
+    sut.addRoutes(router);
     [[, [middleware]]] = router.get.mock.calls;
     middleware(request, response, next);
     // Then
@@ -259,9 +242,8 @@ describe('controllers/common:statics', () => {
         source: '../',
       },
     };
-    const route = 'route';
     const router = {
-      get: jest.fn(() => route),
+      get: jest.fn(() => router),
     };
     const request = 'request';
     const response = {
@@ -272,7 +254,7 @@ describe('controllers/common:statics', () => {
     let middleware = null;
     // When
     sut = new StaticsController(sendFile, options);
-    sut.getRoutes(router);
+    sut.addRoutes(router);
     [[, [middleware]]] = router.get.mock.calls;
     middleware(request, response, next);
     // Then
@@ -297,9 +279,8 @@ describe('controllers/common:statics', () => {
         route: '/statics',
       },
     };
-    const route = 'route';
     const router = {
-      get: jest.fn(() => route),
+      get: jest.fn(() => router),
     };
     const request = 'request';
     const response = {
@@ -310,7 +291,7 @@ describe('controllers/common:statics', () => {
     let middleware = null;
     // When
     sut = new StaticsController(sendFile, options);
-    sut.getRoutes(router);
+    sut.addRoutes(router);
     [[, [middleware]]] = router.get.mock.calls;
     middleware(request, response, next);
     // Then
@@ -343,9 +324,8 @@ describe('controllers/common:statics', () => {
         route: '/statics',
       },
     };
-    const route = 'route';
     const router = {
-      get: jest.fn(() => route),
+      get: jest.fn(() => router),
     };
     const request = 'request';
     const response = {
@@ -356,7 +336,7 @@ describe('controllers/common:statics', () => {
     let middleware = null;
     // When
     sut = new StaticsController(sendFile, options);
-    sut.getRoutes(router);
+    sut.addRoutes(router);
     [[, [middleware]]] = router.get.mock.calls;
     middleware(request, response, next);
     // Then
@@ -394,9 +374,8 @@ describe('controllers/common:statics', () => {
         route: '/statics',
       },
     };
-    const route = 'route';
     const router = {
-      get: jest.fn(() => route),
+      get: jest.fn(() => router),
     };
     const request = 'request';
     const response = {
@@ -411,7 +390,7 @@ describe('controllers/common:statics', () => {
     ];
     // When
     sut = new StaticsController(sendFile, options);
-    sut.getRoutes(router);
+    sut.addRoutes(router);
     [[, [middleware]]] = router.get.mock.calls;
     middleware(request, response, next);
     // Then
@@ -434,21 +413,26 @@ describe('controllers/common:statics', () => {
 
   it('should include a controller shorthand to return its routes', () => {
     // Given
+    const router = {
+      get: jest.fn(),
+    };
     const services = {
-      router: {
-        get: jest.fn((route, middlewaresList) => [`get:${route}`, middlewaresList]),
-      },
+      router,
     };
     const app = {
       get: jest.fn((service) => (services[service] || service)),
     };
-    let routes = null;
+    let result = null;
     const expectedGets = ['router', 'sendFile'];
     const expectedFiles = ['favicon.ico', 'index.html'];
     // When
-    routes = staticsController.connect(app);
+    result = staticsController.connect(app);
     // Then
-    expect(routes).toEqual(expectedFiles.map((file) => [`get:/${file}`, [expect.any(Function)]]));
+    expect(result).toBe(router);
+    expect(router.get).toHaveBeenCalledTimes(expectedFiles.length);
+    expectedFiles.forEach((file) => {
+      expect(router.get).toHaveBeenCalledWith(`/${file}`, [expect.any(Function)]);
+    });
     expect(app.get).toHaveBeenCalledTimes(expectedGets.length);
     expectedGets.forEach((service) => {
       expect(app.get).toHaveBeenCalledWith(service);
@@ -467,26 +451,28 @@ describe('controllers/common:statics', () => {
     };
     const middlewares = [normalMiddleware, jimpexMiddleware];
     const middlewareGenerator = jest.fn(() => middlewares);
+    const router = {
+      get: jest.fn(),
+    };
     const services = {
-      router: {
-        get: jest.fn((route, middlewaresList) => [`get:${route}`, middlewaresList]),
-      },
+      router,
     };
     const app = {
       get: jest.fn((service) => (services[service] || service)),
     };
-    let routes = null;
+    let result = null;
     const expectedGets = ['router', 'sendFile'];
     // When
-    routes = staticsController(options, middlewareGenerator).connect(app);
+    result = staticsController(options, middlewareGenerator).connect(app);
     // Then
-    expect(routes).toEqual(options.files.map((file) => [
-      `get:/${file}`,
-      [
+    expect(result).toBe(router);
+    expect(router.get).toHaveBeenCalledTimes(options.files.length);
+    options.files.forEach((file) => {
+      expect(router.get).toHaveBeenCalledWith(`/${file}`, [
         ...[normalMiddleware, jimpexMiddlewareName],
         expect.any(Function),
-      ],
-    ]));
+      ]);
+    });
     expect(middlewareGenerator).toHaveBeenCalledTimes(1);
     expect(middlewareGenerator).toHaveBeenCalledWith(app);
     expect(jimpexMiddleware.connect).toHaveBeenCalledTimes(1);
