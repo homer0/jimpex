@@ -210,7 +210,7 @@ const { controllerCreator } = require('../../utils/wrappers');
 /**
  * @typedef {function} GatewayHelperServiceErrorHandler
  * @description This is called in order for the helper to handle a fetch request error.
- * @param {Error}                                response The fetch request error.
+ * @param {Error}                                error    The fetch request error.
  * @param {GatewayControllerEndpointInformation} endpoint The information for the endpoint
  *                                                        responsible of creating the route.
  * @param {ExpressRequest}                       req      The server's incoming request
@@ -796,7 +796,7 @@ class GatewayController {
   /**
    * This method is called in order to handle a fetch request error. It will check if a
    * helper is defined and allow it to do it, or fallback and call the next middleware.
-   * @param {Error}                                response The fetch request error.
+   * @param {Error}                                error    The fetch request error.
    * @param {GatewayControllerEndpointInformation} endpoint The information for the endpoint
    *                                                        responsible of creating the route.
    * @param {ExpressRequest}                       req      The server's incoming request
