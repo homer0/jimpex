@@ -1,7 +1,7 @@
-const api = require('./api');
 const common = require('./common');
+const utils = require('./utils');
 
 module.exports = {
-  api,
   common,
+  utils,
 };

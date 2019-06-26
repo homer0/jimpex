@@ -1,6 +1,3 @@
-const JimpleMock = require('/tests/mocks/jimple.mock');
-
-jest.mock('jimple', () => JimpleMock);
 jest.unmock('/src/utils/wrappers');
 jest.unmock('/src/middlewares/common/errorHandler');
 
@@ -12,7 +9,7 @@ const {
 } = require('/src/middlewares/common/errorHandler');
 
 describe('middlewares/common:errorHandler', () => {
-  it('should be instantiated with all its dependencies', () => {
+  it('should be instantiated with default options and have a middleware method', () => {
     // Given
     const appLogger = 'appLogger';
     const responsesBuilder = 'responsesBuilder';
@@ -23,9 +20,35 @@ describe('middlewares/common:errorHandler', () => {
     sut = new ErrorHandler(appLogger, responsesBuilder, showErrors, AppError);
     // Then
     expect(sut).toBeInstanceOf(ErrorHandler);
-    expect(sut.appLogger).toBe(appLogger);
-    expect(sut.responsesBuilder).toBe(responsesBuilder);
-    expect(sut.showErrors).toBe(showErrors);
+    expect(sut.middleware).toBeFunction();
+    expect(sut.options).toEqual(({
+      default: {
+        message: 'Oops! Something went wrong, please try again',
+        status: statuses['internal server error'],
+      },
+    }));
+  });
+
+  it('should be instantiated with custom options', () => {
+    // Given
+    const customOptions = {
+      default: {
+        message: 'Unknown error',
+        status: statuses['service unavailable'],
+      },
+    };
+    let sut = null;
+    // When
+    sut = new ErrorHandler(
+      'appLogger',
+      'responsesBuilder',
+      'showErrors',
+      'AppError',
+      customOptions
+    );
+    // Then
+    expect(sut).toBeInstanceOf(ErrorHandler);
+    expect(sut.options).toEqual(customOptions);
   });
 
   it('should return a middleware to format errors received by Express', () => {
@@ -68,6 +91,11 @@ describe('middlewares/common:errorHandler', () => {
     };
     const showErrors = false;
     const AppError = Error;
+    const options = {
+      default: {
+        message: 'Unknown error',
+      },
+    };
     const error = {
       message: 'Some weird and unexpected error',
     };
@@ -78,11 +106,11 @@ describe('middlewares/common:errorHandler', () => {
     let middleware = null;
     const expectedData = {
       error: true,
-      message: 'Oops! Something went wrong, please try again',
+      message: options.default.message,
     };
     const expectedStatus = statuses['Internal Server Error'];
     // When
-    sut = new ErrorHandler(appLogger, responsesBuilder, showErrors, AppError);
+    sut = new ErrorHandler(appLogger, responsesBuilder, showErrors, AppError, options);
     middleware = sut.middleware();
     middleware(error, request, response, next);
     // Then
@@ -139,7 +167,7 @@ describe('middlewares/common:errorHandler', () => {
     expect(appLogger.info).toHaveBeenCalledWith(expectedData.stack);
   });
 
-  it('should show extra information the AppError object may contain', () => {
+  it('should show context information the AppError object may contain', () => {
     // Given
     const appLogger = {
       error: jest.fn(),
@@ -152,10 +180,8 @@ describe('middlewares/common:errorHandler', () => {
     class AppError {
       constructor(message, stack, status, response) {
         this.message = message;
-        this.extras = {
-          status,
-          response,
-        };
+        this.status = status;
+        this.response = response;
         this.stack = `${message}
           ${stack}`;
       }
@@ -225,10 +251,8 @@ describe('middlewares/common:errorHandler', () => {
   it('should include a middleware shorthand to return its function', () => {
     // Given
     const appConfiguration = {
-      debug: {
-        showErrors: true,
-      },
-      get: jest.fn(() => appConfiguration.debug),
+      'debug.showErrors': true,
+      get: jest.fn((prop) => appConfiguration[prop]),
     };
     const services = {
       appConfiguration,
@@ -242,7 +266,7 @@ describe('middlewares/common:errorHandler', () => {
       'appConfiguration',
       'appLogger',
       'responsesBuilder',
-      'appError',
+      'AppError',
     ];
     // When
     middleware = errorHandler.connect(app);
@@ -250,7 +274,7 @@ describe('middlewares/common:errorHandler', () => {
       'appLogger',
       'responsesBuilder',
       'showErrors',
-      'appError'
+      'AppError'
     );
     // Then
     expect(middleware.toString()).toEqual(toCompare.middleware().toString());
@@ -259,6 +283,44 @@ describe('middlewares/common:errorHandler', () => {
       expect(app.get).toHaveBeenCalledWith(service);
     });
     expect(appConfiguration.get).toHaveBeenCalledTimes(1);
-    expect(appConfiguration.get).toHaveBeenCalledWith('debug');
+    expect(appConfiguration.get).toHaveBeenCalledWith('debug.showErrors');
+  });
+
+  it('should include a middleware creator shorthand to modify its options', () => {
+    // Given
+    const appConfiguration = {
+      'debug.showErrors': true,
+      get: jest.fn((prop) => appConfiguration[prop]),
+    };
+    const services = {
+      appConfiguration,
+    };
+    const app = {
+      get: jest.fn((service) => (services[service] || service)),
+    };
+    let middleware = null;
+    let toCompare = null;
+    const expectedGets = [
+      'appConfiguration',
+      'appLogger',
+      'responsesBuilder',
+      'AppError',
+    ];
+    // When
+    middleware = errorHandler().connect(app);
+    toCompare = new ErrorHandler(
+      'appLogger',
+      'responsesBuilder',
+      'showErrors',
+      'AppError'
+    );
+    // Then
+    expect(middleware.toString()).toEqual(toCompare.middleware().toString());
+    expect(app.get).toHaveBeenCalledTimes(expectedGets.length);
+    expectedGets.forEach((service) => {
+      expect(app.get).toHaveBeenCalledWith(service);
+    });
+    expect(appConfiguration.get).toHaveBeenCalledTimes(1);
+    expect(appConfiguration.get).toHaveBeenCalledWith('debug.showErrors');
   });
 });

@@ -1,9 +1,7 @@
-const { fastHTML, fastHTMLCustom } = require('./fastHTML');
-const { showHTML, showHTMLCustom } = require('./showHTML');
+const { fastHTML } = require('./fastHTML');
+const { showHTML } = require('./showHTML');
 
 module.exports = {
   fastHTML,
-  fastHTMLCustom,
   showHTML,
-  showHTMLCustom,
 };

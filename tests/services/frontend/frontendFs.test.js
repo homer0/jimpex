@@ -1,6 +1,3 @@
-const JimpleMock = require('/tests/mocks/jimple.mock');
-
-jest.mock('jimple', () => JimpleMock);
 jest.mock('fs-extra');
 jest.unmock('/src/utils/wrappers');
 jest.unmock('/src/services/frontend/frontendFs');
@@ -19,7 +16,7 @@ describe('services/frontend:frontendFs', () => {
     fs.unlink.mockReset();
   });
 
-  it('should be instantiated with all its dependencies', () => {
+  it('should be instantiated', () => {
     // Given
     const pathUtils = 'pathUtils';
     let sut = null;
@@ -27,7 +24,6 @@ describe('services/frontend:frontendFs', () => {
     sut = new FrontendFs(pathUtils);
     // Then
     expect(sut).toBeInstanceOf(FrontendFs);
-    expect(sut.pathUtils).toBe(pathUtils);
   });
 
   it('should read a file', () => {
@@ -126,12 +122,11 @@ describe('services/frontend:frontendFs', () => {
     let serviceName = null;
     let serviceFn = null;
     // When
-    frontendFs(app);
+    frontendFs.register(app);
     [[serviceName, serviceFn]] = app.set.mock.calls;
     sut = serviceFn();
     // Then
     expect(serviceName).toBe('frontendFs');
     expect(sut).toBeInstanceOf(FrontendFs);
-    expect(sut.pathUtils).toBe('pathUtils');
   });
 });

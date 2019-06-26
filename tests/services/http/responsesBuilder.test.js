@@ -1,6 +1,3 @@
-const JimpleMock = require('/tests/mocks/jimple.mock');
-
-jest.mock('jimple', () => JimpleMock);
 jest.unmock('/src/utils/wrappers');
 jest.unmock('/src/services/http/responsesBuilder');
 
@@ -12,7 +9,7 @@ const {
 } = require('/src/services/http/responsesBuilder');
 
 describe('services/http:responsesBuilder', () => {
-  it('should be instantiated with all its dependencies', () => {
+  it('should be instantiated', () => {
     // Given
     const appConfiguration = 'appConfiguration';
     let sut = null;
@@ -20,7 +17,6 @@ describe('services/http:responsesBuilder', () => {
     sut = new ResponsesBuilder(appConfiguration);
     // Then
     expect(sut).toBeInstanceOf(ResponsesBuilder);
-    expect(sut.appConfiguration).toBe(appConfiguration);
   });
 
   it('should generate and send a basic JSON response', () => {
@@ -188,12 +184,11 @@ describe('services/http:responsesBuilder', () => {
     let serviceName = null;
     let serviceFn = null;
     // When
-    responsesBuilder(app);
+    responsesBuilder.register(app);
     [[serviceName, serviceFn]] = app.set.mock.calls;
     sut = serviceFn();
     // Then
     expect(serviceName).toBe('responsesBuilder');
     expect(sut).toBeInstanceOf(ResponsesBuilder);
-    expect(sut.appConfiguration).toBe('appConfiguration');
   });
 });

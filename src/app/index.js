@@ -1,5 +1,5 @@
 const Jimple = require('jimple');
-const extend = require('extend');
+const ObjectUtils = require('wootils/shared/objectUtils');
 const express = require('express');
 const bodyParser = require('body-parser');
 const compression = require('compression');
@@ -15,9 +15,10 @@ const {
 } = require('wootils/node/providers');
 const { EventsHub } = require('wootils/shared');
 
-const apiServices = require('../services/api');
+const { eventNames } = require('../constants');
 const commonServices = require('../services/common');
 const httpServices = require('../services/http');
+const utilsServices = require('../services/utils');
 /**
  * Jimpex is a mix of Jimple, a Javascript port of Pimple dependency injection container, and
  * Express, one of the most popular web frameworks for Node.
@@ -47,8 +48,10 @@ class Jimpex extends Jimple {
     /**
      * The app options.
      * @type {JimpexOptions}
+     * @access protected
+     * @ignore
      */
-    this.options = extend(true, {
+    this._options = ObjectUtils.merge({
       version: '0.0.0',
       filesizeLimit: '15MB',
       configuration: {
@@ -75,21 +78,25 @@ class Jimpex extends Jimple {
         multer: true,
       },
       defaultServices: {
-        api: true,
         common: true,
         http: true,
+        utils: true,
       },
     }, options);
     /**
-     * The Express app.
+     * The Express app Jimpex uses under the hood.
      * @type {Express}
+     * @access protected
+     * @ignore
      */
-    this.express = express();
+    this._express = express();
     /**
      * When the app starts, this will be running instance.
-     * @type {Object}
+     * @type {?Object}
+     * @access protected
+     * @ignore
      */
-    this.instance = null;
+    this._instance = null;
     /**
      * A list of functions that return controllers and middlewares. When the app starts, the
      * queue will be processed and those controllers and middlewares added to the app.
@@ -97,8 +104,18 @@ class Jimpex extends Jimple {
      * services on Jimple use lazy loading, and adding middlewares and controllers as they come
      * could cause errors if they depend on services that are not yet registered.
      * @type {Array}
+     * @access protected
+     * @ignore
      */
-    this.mountQueue = [];
+    this._mountQueue = [];
+    /**
+     * A list of all the top routes controlled by the app. Every time a controller is mounted,
+     * its route will be added here.
+     * @type {Array}
+     * @access protected
+     * @ignore
+     */
+    this._controlledRoutes = [];
 
     this._setupCoreServices();
     this._setupExpress();
@@ -110,6 +127,34 @@ class Jimpex extends Jimple {
     }
   }
   /**
+   * The app options.
+   * @type {JimpexOptions}
+   */
+  get options() {
+    return ObjectUtils.copy(this._options);
+  }
+  /**
+   * The Express app Jimpex uses under the hood.
+   * @type {Express}
+   */
+  get express() {
+    return this._express;
+  }
+  /**
+   * The server instance that gets created when the app is started.
+   * @return {?Object}
+   */
+  get instance() {
+    return this._instance;
+  }
+  /**
+   * A list of all the top routes controlled by the app.
+   * @type {Array}
+   */
+  get routes() {
+    return ObjectUtils.copy(this._controlledRoutes);
+  }
+  /**
    * This is where the app would register all its specific services, middlewares and controllers.
    * @throws {Error} if not overwritten.
    * @abstract
@@ -118,31 +163,80 @@ class Jimpex extends Jimple {
     throw new Error('This method must to be overwritten');
   }
   /**
-   * Mount a controller on a route point.
-   * @param {string}     point      The route for the controller.
-   * @param {Controller} controller The route controller.
+   * Tries to access a service on the container, but if is not present, it won't throw an error, it
+   * will just return `null`.
+   * @param {string} name The name of the service.
+   * @return {*}
    */
-  mount(point, controller) {
-    this.mountQueue.push(
-      (server) => controller.connect(this, point).forEach(
-        (route) => server.use(point, route)
-      )
-    );
+  try(name) {
+    let result;
+    try {
+      result = this.get(name);
+    } catch (ignore) {
+      /**
+       * The only reason we are ignoring the error is because is expected to throw an error if
+       * the service is not registered.
+       */
+      result = null;
+    }
+
+    return result;
   }
   /**
-   * Add a middleware.
-   * @param {Middleware} middleware [description]
+   * Mounts a controller on a specific route.
+   * @param {string}                       route      The route for the controller.
+   * @param {Controller|ControllerCreator} controller The route controller.
+   */
+  mount(route, controller) {
+    this._mountQueue.push((server) => {
+      let result;
+      const routes = this._reduceWithEvent(
+        'controllerWillBeMounted',
+        controller.connect(this, route),
+        route,
+        controller
+      );
+      if (Array.isArray(routes)) {
+        // If the returned value is a list of routes, mount each single route.
+        result = routes.forEach((routeRouter) => server.use(route, routeRouter));
+      } else {
+        // But if the returned value is not a list, it may be a router, so mount it directly.
+        result = server.use(route, routes);
+      }
+
+      this._controlledRoutes.push(route);
+      this._emitEvent('routeAdded', route);
+      return result;
+    });
+  }
+  /**
+   * Adds a middleware.
+   * @param {Middleware|MiddlewareCreator|ExpressMiddleware} middleware The middleware to use.
    */
   use(middleware) {
-    this.mountQueue.push((server) => {
-      const middlewareHandler = middleware.connect(this);
-      if (middlewareHandler) {
-        server.use(middlewareHandler);
+    this._mountQueue.push((server) => {
+      if (typeof middleware.connect === 'function') {
+        // If the middleware is from Jimpex, connect it and then use it.
+        const middlewareHandler = middleware.connect(this);
+        if (middlewareHandler) {
+          server.use(this._reduceWithEvent(
+            'middlewareWillBeUsed',
+            middlewareHandler,
+            middleware
+          ));
+        }
+      } else {
+        // But if the middleware is a regular middleware, just use it directly.
+        server.use(this._reduceWithEvent(
+          'middlewareWillBeUsed',
+          middleware,
+          null
+        ));
       }
     });
   }
   /**
-   * Start the app server.
+   * Starts the app server.
    * @param {function(config:AppConfiguration)} [fn] A callback function to be called when the
    *                                                 server starts.
    * @return {Object} The server instance
@@ -150,28 +244,37 @@ class Jimpex extends Jimple {
   start(fn = () => {}) {
     const config = this.get('appConfiguration');
     const port = config.get('port');
-    this.emitEvent('before-start');
-    this.instance = this.express.listen(port, () => {
-      this.emitEvent('start');
+    this._emitEvent('beforeStart');
+    this._instance = this._express.listen(port, () => {
+      this._emitEvent('start');
       this._mountResources();
       this.get('appLogger').success(`Starting on port ${port}`);
-      this.emitEvent('after-start');
+      this._emitEvent('afterStart');
       const result = fn(config);
-      this.emitEvent('after-start-callback');
+      this._emitEvent('afterStartCallback');
       return result;
     });
 
-    return this.instance;
+    return this._instance;
   }
   /**
-   * Emit an app event with a reference to this class instance.
-   * @param {string} name The name of the event.
+   * This is an alias of `start`. The idea is for it to be used on serverless platforms, where you
+   * don't get to start your app, you just have export it.
+   * @param {number}                            port The port where the app will run. In case the
+   *                                                 rest of the app needs to be aware of the port,
+   *                                                 this method will overwrite the `port` setting
+   *                                                 on the configuration.
+   * @param {function(config:AppConfiguration)} [fn] A callback function to be called when the
+   *                                                 server starts.
+   * @return {Object} The server instance
    */
-  emitEvent(name) {
-    this.get('events').emit(name, this);
+  listen(port, fn = () => {}) {
+    const config = this.get('appConfiguration');
+    config.set('port', port);
+    return this.start(fn, port);
   }
   /**
-   * Disable the server TLS validation.
+   * Disables the server TLS validation.
    */
   disableTLSValidation() {
     // eslint-disable-next-line no-process-env
@@ -182,15 +285,15 @@ class Jimpex extends Jimple {
    * Stops the server instance.
    */
   stop() {
-    if (this.instance) {
-      this.emitEvent('before-stop');
-      this.instance.close();
-      this.instance = null;
-      this.emitEvent('after-stop');
+    if (this._instance) {
+      this._emitEvent('beforeStop');
+      this._instance.close();
+      this._instance = null;
+      this._emitEvent('afterStop');
     }
   }
   /**
-   * Register the _'core services'_.
+   * Registers the _'core services'_.
    * @ignore
    * @access protected
    */
@@ -207,7 +310,7 @@ class Jimpex extends Jimple {
     this.register(rootRequire);
   }
   /**
-   * Create and configure the Express instance.
+   * Creates and configure the Express instance.
    * @ignore
    * @access protected
    */
@@ -216,42 +319,62 @@ class Jimpex extends Jimple {
       statics,
       filesizeLimit,
       express: expressOptions,
-    } = this.options;
+    } = this._options;
     if (expressOptions.trustProxy) {
-      this.express.enable('trust proxy');
+      this._express.enable('trust proxy');
     }
 
     if (expressOptions.disableXPoweredBy) {
-      this.express.disable('x-powered-by');
+      this._express.disable('x-powered-by');
     }
 
     if (expressOptions.compression) {
-      this.express.use(compression());
+      this._express.use(compression());
     }
 
     if (statics.enabled) {
-      const { onHome, route, folder } = statics;
-      const joinFrom = onHome ? 'home' : 'app';
-      const staticsRoute = route.startsWith('/') ? route.substr(1) : route;
-      const staticsFolderPath = this.get('pathUtils').joinFrom(joinFrom, folder || staticsRoute);
-      this.express.use(`/${staticsRoute}`, express.static(staticsFolderPath));
+      this._addStaticsFolder(
+        statics.route,
+        statics.folder,
+        statics.onHome
+      );
     }
 
     if (expressOptions.bodyParser) {
-      this.express.use(bodyParser.json({
+      this._express.use(bodyParser.json({
         limit: filesizeLimit,
       }));
-      this.express.use(bodyParser.urlencoded({
+      this._express.use(bodyParser.urlencoded({
         extended: true,
         limit: filesizeLimit,
       }));
     }
 
     if (expressOptions.multer) {
-      this.express.use(multer().any());
+      this._express.use(multer().any());
     }
 
     this.set('router', this.factory(() => express.Router()));
+  }
+  /**
+   * Helper method to add static folders to the app.
+   * @param {string}  route          The route for the static folder.
+   * @param {string}  [folder='']    The path to the folder. If not defined, it will use the
+   *                                 value from `route`.
+   * @param {Boolean} [onHome=false] If `true`, the path to the folder will be relative to where
+   *                                 the app is being executed (`process.cwd()`), otherwise, it
+   *                                 will be relative to where the executable file is located.
+   * @access protected
+   * @ignore
+   */
+  _addStaticsFolder(route, folder = '', onHome = false) {
+    const joinFrom = onHome ? 'home' : 'app';
+    const staticRoute = route.replace(/^\/+/, '');
+    const staticFolder = this.get('pathUtils').joinFrom(
+      joinFrom,
+      folder || staticRoute
+    );
+    this._express.use(`/${staticRoute}`, express.static(staticFolder));
   }
   /**
    * Based on the constructor received options, register or not the default services.
@@ -259,29 +382,29 @@ class Jimpex extends Jimple {
    * @access protected
    */
   _setupDefaultServices() {
-    const { defaultServices } = this.options;
-
-    if (defaultServices.api) {
-      this.register(apiServices.all);
-    }
+    const { defaultServices } = this._options;
 
     if (defaultServices.common) {
-      this.register(commonServices.all);
+      this.register(commonServices);
     }
 
     if (defaultServices.http) {
-      this.register(httpServices.all);
+      this.register(httpServices);
+    }
+
+    if (defaultServices.utils) {
+      this.register(utilsServices);
     }
 
     this.set('events', () => new EventsHub());
   }
   /**
-   * Create the configuration service.
+   * Creates the configuration service.
    * @ignore
    * @access protected
    */
   _setupConfiguration() {
-    const { version, configuration: options } = this.options;
+    const { version, configuration: options } = this._options;
     const {
       name,
       environmentVariable,
@@ -322,17 +445,38 @@ class Jimpex extends Jimple {
     }
 
     if (loadVersionFromConfiguration) {
-      this.options.version = this.get('appConfiguration').get('version');
+      this._options.version = this.get('appConfiguration').get('version');
     }
   }
   /**
-   * Process and mount all the resources on the `mountQueue`.
+   * Processes and mount all the resources on the `mountQueue`.
    * @ignore
    * @access protected
    */
   _mountResources() {
-    this.mountQueue.forEach((mountFn) => mountFn(this.express));
-    this.mountQueue.length = 0;
+    this._mountQueue.forEach((mountFn) => mountFn(this._express));
+    this._mountQueue.length = 0;
+  }
+  /**
+   * Emits an app event with a reference to this class instance.
+   * @param {string} name The name of the event on {@link JimpexEvents}.
+   * @param {...*}   args   Extra parameters for the listeners.
+   * @access protected
+   */
+  _emitEvent(name, ...args) {
+    this.get('events').emit(eventNames[name], ...[...args, this]);
+  }
+  /**
+   * Sends a target object to a list of reducer events so they can modify or replace it. This
+   * method also sends a reference to this class instance as the last parameter of the event.
+   * @param {string} name   The name of the event on {@link JimpexEvents}.
+   * @param {*}      target The targe object to reduce.
+   * @param {...*}   args   Extra parameters for the listeners.
+   * @return {*} An object of the same type as the `target`.
+   * @access protected
+   */
+  _reduceWithEvent(name, target, ...args) {
+    return this.get('events').reduce(eventNames[name], target, ...[...args, this]);
   }
 }
 

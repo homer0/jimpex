@@ -82,7 +82,8 @@ app.start(() => {
 });
 ```
 
-> And like Express, you can send a callback to be executed after the server starts.
+> - Like Express, you can send a callback to be executed after the server starts.
+> - You also have a `listen` alias with the same signature as express (port and callback) for serverless platforms where you don't manually start the app.
 
 You can also stop the app by calling `stop()`:
 
@@ -136,6 +137,50 @@ class MyApp extends Jimpex {
 
 Done, your service is now available.
 
+#### Defining a configurable service
+
+In case you want to create a service that could accept custom setting when instantiated, you can use a _"provider creator"_:
+
+```js
+const { providerCreator } = require('jimpex');
+
+// Create your service
+class MyService {
+  constructor(depOne, depTwo, options = {});
+}
+
+// Define the provider
+const myService = providerCreator((options) => (app) => {
+  app.set('myService', () => new MyService(
+    app.get('depOne'),
+    app.get('depTwo'),
+    settings
+  ));
+});
+
+// Export the service and its provider
+module.exports = {
+  MyService,
+  myService,
+};
+```
+
+The special behavior the creators have, is that you can call them as a function, sending the settings, or just use them on the `register`, so **it's very important that the settings must be optional**:
+
+```js
+const { Jimpex } = require('jimpex');
+const { myService } = require('...');
+
+class MyApp extends Jimpex {
+  boot() {
+    ...
+    this.register(myService);
+    // or
+    this.register(myService({ ... }));
+  }
+}
+```
+
 ### Adding a controller
 
 To add controller you need to use the `controller` function and return a list of routes:
@@ -187,6 +232,59 @@ class MyApp extends Jimpex {
 }
 ```
 
+#### Defining a configurable controller
+
+Like with _"providers creators", you can define controllers that accept custom settings when
+instantiated, using a _"controller creator"_:
+
+```js
+const { controllerCreator } = require('jimpex');
+
+// (Optional) Define a class to organize your route handlers.
+class HealthController {
+  constructor(settings = {});
+  
+  health() {
+    return (req, res) => {
+      res.write('Everything works!');
+    };
+  }
+}
+
+// Define the controller
+const healthController = controllerCreator((settings) => (app) => {
+  const ctrl = new HealthController(settings);
+  // Get the router service
+  const router = app.get('router');
+  // Return the list of routes this controller will handle
+  return [
+    router.get('/', ctrl.health()),
+  ];
+});
+
+// Export the controller class and the controller itself
+module.exports = {
+  HealthController,
+  healthController,
+};
+```
+
+The special behavior the creators have, is that you can call them as a function, sending the settings, or just use them with `mount` as regular controllers; and since they can be used as regular controllers, **it's very important that the settings are optional**:
+
+```js
+const { Jimpex } = require('jimpex');
+const { healthController } = require('...');
+
+class MyApp extends Jimpex {
+  boot() {
+    ...
+    this.mount('/health', healthController);
+    // or
+    this.mount('/health', healthController({ ... }));
+  }
+}
+```
+
 ### Adding a middleware
 
 To add a new middleware you need to use the `middleware` function and return a function:
@@ -225,16 +323,54 @@ class MyApp extends Jimpex {
 }
 ```
 
+#### Defining a configurable middleware
+
+Like with controllers and providers, you can also create a middleware that can accept settings when instantiated, with a _"middleware creator"_:
+
+```js
+const { middlwareCreator } = require('jimpex');
+
+// Define your middleware function (or class if it gets more complex)
+const greetingsMiddleware = (message = 'Hello!') => (req, res, next) => {
+  console.log(message);
+};
+
+// Define the middleware
+const greetings = middlewareCreator((message) => greetingsMiddleware(message));
+
+// Export the function and the middleware
+module.exports = {
+  greetingsMiddleware,
+  greetings,
+};
+```
+
+The special behavior the creators have, is that you can call them as a function, sending the settings, or just register them with `use` as regular middlewares, so **it's very important that the settings must be optional**:
+
+```js
+const { Jimpex } = require('jimpex');
+const { greetings } = require('...');
+
+class MyApp extends Jimpex {
+  boot() {
+    ...
+    this.use(greetings);
+    // or
+    this.use(greetings('Howdy!'));
+  }
+}
+```
+
 ## Built-in features
 
 Jimpex comes with a few services, middlewares and controllers that you can import and use on your app, some of them [are activated by default on the options](./documents/options.md), but others you have to implement manually:
 
 ### Controllers
 
-- **Version validator:** If you mount it on a route it will generate a `409` error if the request doesn't have a version parameter with the same version as the one on the configuration file.
 - **Configuration:** Allows you to see and switch the current configuration. It can be enabled or disabled by using a setting on the configuration.
 - **Health:** Shows the version and name of the configuration, just to check the app is running.
-- **Root statics:** It allows your app to server static files from the root directory, without having to use the `static` middleware on that directory.
+- **Statics:** It allows your app to server specific files from any directory, without having to use the `static` middleware.
+- **Gateway:** It allows you to automatically generate a set of routes that will make gateway requests to an specific API.
 
 [Read more about the built-in controllers](./documents/controllers.md)
 
@@ -242,17 +378,18 @@ Jimpex comes with a few services, middlewares and controllers that you can impor
 
 - **Error handler:** Allows you to generate responses for errors and potentially hide uncaught exceptions under a generic message, unless it's disabled via configuration settings.
 - **Force HTTPS:** Redirect all incoming traffic from HTTP to HTTPS. It also allows you to set routes to ignore the redirection.
-- **Fast HTML:** Allows you to specify which routes will be handled and in case there are no controllers for a requested route, it sends out and HTML file, thus preventing the request to be unnecessarily processed by the middlewares.
+- **Fast HTML:** Allows your app to skip unnecessary processing by showing an specific HTML when a requested route doesn't have a controller for it or is not on a "whitelist".
 - **Show HTML:** A really simple middleware to serve an HTML file. Its true feature is that it can be hooked up to the **HTML Generator** service.
+- **Version validator:** If you mount it on a route it will generate a `409` error if the request doesn't have a version parameter with the same version as the one on the configuration.
 
 [Read more about the built-in controllers](./documents/middlewares.md)
 
 ### Services
 
 - **API client:** An implementation of the [wootils API Client](https://github.com/homer0/wootils/blob/master/documents/shared/APIClient.md) but that is connected to the HTTP service, to allow logging and forwarding of the headers.
-- **Ensure bearer authentication:** A service-middleware that allows you to validate the incoming requests `Authorization` header.
-- **Version validator:** A service-middleware to validate a `version` parameter against the configuration `version` setting. It's what the version validator middleware internally uses.
-- **Error:** A very simple subclass of `Error` to inject extra information on the errors so they can customize the error handler responses.
+- **App Error:** A very simple subclass of `Error` but with support for context information. It can be used to customize the error handler responses.
+- **Ensure bearer token:** A service-middleware that allows you to validate and retrieve a bearer token from the incoming requests `Authorization` header.
+- **HTTP Error:** Another type of error, but specific for the HTTP requests the app does with the API client.
 - **Send File:** It allows you to send a file on a response with a path relative to the app executable.
 - **Frontend Fs:** Useful for when your app has a bundled frontend, it allows you to read, write and delete files with paths relative to the app executable.
 - **HTML Generator:** A service that allows you to generate an HTML file when the app gets started and inject contents of the configuration as a `window` variable.

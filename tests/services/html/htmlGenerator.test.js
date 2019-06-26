@@ -1,7 +1,5 @@
-const JimpleMock = require('/tests/mocks/jimple.mock');
 const wootilsMock = require('/tests/mocks/wootils.mock');
 
-jest.mock('jimple', () => JimpleMock);
 jest.mock('wootils/shared', () => wootilsMock);
 jest.unmock('/src/utils/wrappers');
 jest.unmock('/src/services/html/htmlGenerator');
@@ -9,7 +7,7 @@ jest.unmock('/src/services/html/htmlGenerator');
 require('jasmine-expect');
 const {
   HTMLGenerator,
-  htmlGeneratorCustom,
+  htmlGenerator,
 } = require('/src/services/html/htmlGenerator');
 
 describe('services/html:htmlGenerator', () => {
@@ -17,7 +15,7 @@ describe('services/html:htmlGenerator', () => {
     wootilsMock.reset();
   });
 
-  it('should be instantiated with all its dependencies', () => {
+  it('should be instantiated', () => {
     // Given
     const options = {};
     const appConfiguration = 'appConfiguration';
@@ -42,10 +40,6 @@ describe('services/html:htmlGenerator', () => {
       variable: expect.any(String),
       configurationKeys: expect.any(Array),
     });
-    expect(sut.appConfiguration).toBe(appConfiguration);
-    expect(sut.appLogger).toBe(appLogger);
-    expect(sut.frontendFs).toBe(frontendFs);
-    expect(sut.valuesService).toBeNull();
   });
 
   it('should be instantiated with a custom service to get the template values', () => {
@@ -68,11 +62,6 @@ describe('services/html:htmlGenerator', () => {
     );
     // Then
     expect(sut).toBeInstanceOf(HTMLGenerator);
-    expect(sut.options).toBeObject();
-    expect(sut.appConfiguration).toBe(appConfiguration);
-    expect(sut.appLogger).toBe(appLogger);
-    expect(sut.frontendFs).toBe(frontendFs);
-    expect(sut.valuesService).toEqual(valuesService);
   });
 
   it('should throw an error if the values service doesnt have a `getValues` method', () => {
@@ -440,7 +429,7 @@ describe('services/html:htmlGenerator', () => {
     });
   });
 
-  it('should register the generator to be runned when the server starts', () => {
+  it('should register the generator to be executed when the server starts', () => {
     // Given
     const appConfiguration = {
       get: jest.fn(() => {}),
@@ -458,7 +447,7 @@ describe('services/html:htmlGenerator', () => {
       once: jest.fn(),
     };
     let sut = null;
-    const name = 'myHTMLGenerator';
+    const name = 'htmlGenerator';
     const services = {
       appConfiguration,
       appLogger,
@@ -468,13 +457,14 @@ describe('services/html:htmlGenerator', () => {
     const app = {
       set: jest.fn(),
       get: jest.fn((service) => (service === name ? sut : services[service])),
+      try: jest.fn(() => null),
     };
     let serviceName = null;
     let serviceFn = null;
     let eventName = null;
     let eventFn = null;
     // When
-    htmlGeneratorCustom({}, name)(app);
+    htmlGenerator.register(app);
     [[serviceName, serviceFn]] = app.set.mock.calls;
     [[eventName, eventFn]] = events.once.mock.calls;
     sut = serviceFn();
@@ -496,9 +486,8 @@ describe('services/html:htmlGenerator', () => {
       expect(appLogger.info).toHaveBeenCalledTimes(1);
       expect(appLogger.info).toHaveBeenCalledWith(expect.any(String));
       expect(wootilsMock.mocks.deferredResolve).toHaveBeenCalledTimes(1);
-    })
-    .catch(() => {
-      expect(true).toBeFalse();
+      expect(app.try).toHaveBeenCalledTimes(1);
+      expect(app.try).toHaveBeenCalledWith('htmlGeneratorValues');
     });
   });
 
@@ -516,8 +505,7 @@ describe('services/html:htmlGenerator', () => {
       write: jest.fn(() => Promise.resolve()),
       delete: jest.fn(() => Promise.resolve()),
     };
-    const myValuesServiceName = 'myValues';
-    const myValuesService = {
+    const htmlGeneratorValues = {
       getValues: jest.fn(() => Promise.resolve({})),
     };
     const events = {
@@ -531,11 +519,11 @@ describe('services/html:htmlGenerator', () => {
       frontendFs,
       events,
       [name]: 'just-for-the-expect',
-      [myValuesServiceName]: myValuesService,
     };
     const app = {
       set: jest.fn(),
       get: jest.fn((service) => (service === name ? sut : services[service])),
+      try: jest.fn(() => htmlGeneratorValues),
     };
     let serviceName = null;
     let serviceFn = null;
@@ -544,7 +532,9 @@ describe('services/html:htmlGenerator', () => {
     const expectedGets = Object.keys(services);
     const expectedEventName = 'after-start';
     // When
-    htmlGeneratorCustom({}, name, myValuesServiceName)(app);
+    htmlGenerator({
+      serviceName: name,
+    }).register(app);
     [[serviceName, serviceFn]] = app.set.mock.calls;
     [[eventName, eventFn]] = events.once.mock.calls;
     sut = serviceFn();
@@ -572,10 +562,82 @@ describe('services/html:htmlGenerator', () => {
       expect(appLogger.info).toHaveBeenCalledTimes(1);
       expect(appLogger.info).toHaveBeenCalledWith(expect.any(String));
       expect(wootilsMock.mocks.deferredResolve).toHaveBeenCalledTimes(1);
-      expect(myValuesService.getValues).toHaveBeenCalledTimes(1);
-    })
-    .catch(() => {
-      expect(true).toBeFalse();
+      expect(htmlGeneratorValues.getValues).toHaveBeenCalledTimes(1);
+      expect(app.try).toHaveBeenCalledTimes(1);
+      expect(app.try).toHaveBeenCalledWith('htmlGeneratorValues');
+    });
+  });
+
+  it('should register the generator with the values service disabled', () => {
+    // Given
+    const appConfiguration = {
+      get: jest.fn(() => {}),
+    };
+    const appLogger = {
+      success: jest.fn(),
+      info: jest.fn(),
+    };
+    const frontendFs = {
+      read: jest.fn(() => Promise.resolve('')),
+      write: jest.fn(() => Promise.resolve()),
+      delete: jest.fn(() => Promise.resolve()),
+    };
+    const events = {
+      once: jest.fn(),
+    };
+    let sut = null;
+    const name = 'myHTMLGenerator';
+    const services = {
+      appConfiguration,
+      appLogger,
+      frontendFs,
+      events,
+      [name]: 'just-for-the-expect',
+    };
+    const app = {
+      set: jest.fn(),
+      get: jest.fn((service) => (service === name ? sut : services[service])),
+      try: jest.fn(),
+    };
+    let serviceName = null;
+    let serviceFn = null;
+    let eventName = null;
+    let eventFn = null;
+    const expectedGets = Object.keys(services);
+    const expectedEventName = 'after-start';
+    // When
+    htmlGenerator({
+      serviceName: name,
+      valuesService: null,
+    }).register(app);
+    [[serviceName, serviceFn]] = app.set.mock.calls;
+    [[eventName, eventFn]] = events.once.mock.calls;
+    sut = serviceFn();
+    return eventFn()
+    .then(() => {
+      // Then
+      expect(serviceName).toBe(name);
+      expect(eventName).toBe(expectedEventName);
+      expect(app.get).toHaveBeenCalledTimes(expectedGets.length);
+      expectedGets.forEach((service) => {
+        expect(app.get).toHaveBeenCalledWith(service);
+      });
+      expect(app.set).toHaveBeenCalledTimes(1);
+      expect(app.set).toHaveBeenCalledWith(name, expect.any(Function));
+      expect(events.once).toHaveBeenCalledTimes(1);
+      expect(events.once).toHaveBeenCalledWith(expectedEventName, expect.any(Function));
+      expect(frontendFs.read).toHaveBeenCalledTimes(1);
+      expect(frontendFs.read).toHaveBeenCalledWith(`./${sut.options.template}`);
+      expect(frontendFs.write).toHaveBeenCalledTimes(1);
+      expect(frontendFs.write).toHaveBeenCalledWith(sut.options.file, expect.any(String));
+      expect(frontendFs.delete).toHaveBeenCalledTimes(1);
+      expect(frontendFs.delete).toHaveBeenCalledWith(`./${sut.options.template}`);
+      expect(appLogger.success).toHaveBeenCalledTimes(1);
+      expect(appLogger.success).toHaveBeenCalledWith(expect.any(String));
+      expect(appLogger.info).toHaveBeenCalledTimes(1);
+      expect(appLogger.info).toHaveBeenCalledWith(expect.any(String));
+      expect(wootilsMock.mocks.deferredResolve).toHaveBeenCalledTimes(1);
+      expect(app.try).toHaveBeenCalledTimes(0);
     });
   });
 });

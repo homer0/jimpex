@@ -1,17 +1,14 @@
-const JimpleMock = require('/tests/mocks/jimple.mock');
-
-jest.mock('jimple', () => JimpleMock);
 jest.unmock('/src/utils/wrappers');
 jest.unmock('/src/middlewares/common/forceHTTPS');
 
 require('jasmine-expect');
 const {
   ForceHTTPS,
-  forceHTTPSCustom,
+  forceHTTPS,
 } = require('/src/middlewares/common/forceHTTPS');
 
 describe('middlewares/common:forceHTTPS', () => {
-  it('should be instantiated with its default values', () => {
+  it('should be instantiated with its default options', () => {
     // Given
     let sut = null;
     // When
@@ -29,7 +26,7 @@ describe('middlewares/common:forceHTTPS', () => {
     sut = new ForceHTTPS(ignoredFiles);
     // Then
     expect(sut).toBeInstanceOf(ForceHTTPS);
-    expect(sut.ignoredRoutes).toBe(ignoredFiles);
+    expect(sut.ignoredRoutes).toEqual(ignoredFiles);
   });
 
   it('should return a middleware to force the traffic to HTTPS', () => {
@@ -138,7 +135,7 @@ describe('middlewares/common:forceHTTPS', () => {
       'appConfiguration',
     ];
     // When
-    middleware = forceHTTPSCustom().connect(app);
+    middleware = forceHTTPS.connect(app);
     toCompare = new ForceHTTPS();
     // Then
     expect(middleware.toString()).toEqual(toCompare.middleware().toString());
@@ -167,7 +164,7 @@ describe('middlewares/common:forceHTTPS', () => {
       'appConfiguration',
     ];
     // When
-    middleware = forceHTTPSCustom().connect(app);
+    middleware = forceHTTPS().connect(app);
     // Then
     expect(middleware).toBeNull();
     expect(app.get).toHaveBeenCalledTimes(expectedGets.length);

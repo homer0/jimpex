@@ -1,6 +1,3 @@
-const JimpleMock = require('/tests/mocks/jimple.mock');
-
-jest.mock('jimple', () => JimpleMock);
 jest.unmock('/src/utils/wrappers');
 jest.unmock('/src/services');
 
@@ -11,18 +8,16 @@ describe('services', () => {
   it('should export all the app sevices', () => {
     // Given
     const knownServices = [
-      'api',
       'common',
       'frontend',
       'html',
       'http',
+      'utils',
     ];
     // When/Then
     expect(Object.keys(services).length).toBe(knownServices.length);
     knownServices.forEach((name) => {
       expect(services[name]).toBeObject();
-      const modules = Object.keys(services[name]);
-      modules.forEach((mod) => expect(services[name][mod]).toBeFunction());
     });
   });
 });

@@ -1,6 +1,3 @@
-const JimpleMock = require('/tests/mocks/jimple.mock');
-
-jest.mock('jimple', () => JimpleMock);
 jest.unmock('/src/utils/wrappers');
 jest.unmock('/src/services/common');
 
@@ -15,15 +12,19 @@ describe('services:common', () => {
     };
     const expectedServices = [
       'appError',
+      'httpError',
       'sendFile',
     ];
     // When
-    commonServices.all(app);
+    commonServices.register(app);
     // When/Then
     expect(app.register).toHaveBeenCalledTimes(expectedServices.length);
     expectedServices.forEach((service, index) => {
       const registeredService = app.register.mock.calls[index][0];
-      expect(registeredService).toBeFunction();
+      expect(registeredService).toEqual({
+        register: expect.any(Function),
+        provider: true,
+      });
       expect(registeredService.toString()).toBe(commonServices[service].toString());
     });
   });

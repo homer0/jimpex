@@ -1,6 +1,3 @@
-const JimpleMock = require('/tests/mocks/jimple.mock');
-
-jest.mock('jimple', () => JimpleMock);
 jest.unmock('/src/utils/wrappers');
 jest.unmock('/src/controllers/common/configuration');
 
@@ -11,7 +8,7 @@ const {
 } = require('/src/controllers/common/configuration');
 
 describe('controllers/common:configuration', () => {
-  it('should be instantiated with all its dependencies', () => {
+  it('should be instantiated an have public methods', () => {
     // Given
     const appConfiguration = 'appConfiguration';
     const responsesBuilder = 'responsesBuilder';
@@ -20,8 +17,9 @@ describe('controllers/common:configuration', () => {
     sut = new ConfigurationController(appConfiguration, responsesBuilder);
     // Then
     expect(sut).toBeInstanceOf(ConfigurationController);
-    expect(sut.appConfiguration).toBe(appConfiguration);
-    expect(sut.responsesBuilder).toBe(responsesBuilder);
+    expect(sut.getConfigurationResponse).toBeFunction();
+    expect(sut.showConfiguration).toBeFunction();
+    expect(sut.switchConfiguration).toBeFunction();
   });
 
   it('should have a generic method to generate a configuration reponse', () => {
@@ -211,9 +209,7 @@ describe('controllers/common:configuration', () => {
   it('should return its routes when the debug `configurationController` flag is `true`', () => {
     // Given
     const appConfiguration = {
-      debug: {
-        configurationController: true,
-      },
+      'debug.configurationController': true,
       get: jest.fn((prop) => appConfiguration[prop]),
     };
     const services = {
@@ -245,9 +241,7 @@ describe('controllers/common:configuration', () => {
   it('shouldn\'t return its routes when the debug `configurationController` flag is `false`', () => {
     // Given
     const appConfiguration = {
-      debug: {
-        configurationController: false,
-      },
+      'debug.configurationController': false,
       get: jest.fn((prop) => appConfiguration[prop]),
     };
     const services = {

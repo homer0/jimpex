@@ -1,18 +1,18 @@
-const { appError } = require('./error');
+const { appError } = require('./appError');
+const { httpError } = require('./httpError');
 const { sendFileProvider } = require('./sendFile');
-const { provider } = require('../../utils/wrappers');
+const { providers } = require('../../utils/wrappers');
 /**
- * A single service provider that once registered on the app container will take care of
- * registering the providers for the `appError` and `sendFileProvider` services.
+ * The providers collection for the common services.
  * @type {Provider}
+ * @property {Provider} appError  The provider for {@link AppError}.
+ * @property {Provider} httpError The provider for {@link HTTPError}.
+ * @property {Provider} sendFile  The provider for {@link SendFile}.
  */
-const all = provider((app) => {
-  app.register(appError);
-  app.register(sendFileProvider);
+const commonServices = providers({
+  appError,
+  httpError,
+  sendFile: sendFileProvider,
 });
 
-module.exports = {
-  appError,
-  sendFile: sendFileProvider,
-  all,
-};
+module.exports = commonServices;

@@ -8,16 +8,15 @@ In the case of the services from the modules `api`, `http` and `common`, you can
 
 An implementation of the [wootils API Client](https://github.com/homer0/wootils/blob/master/documents/shared/APIClient.md) but that is connected to the HTTP service, to allow logging and forwarding of the headers.
 
-- Module: `api`
+- Module: `http`
 - Requires: `http` and `appError`
 
 ```js
 const {
   Jimpex,
   services: {
-    api: { apiClient },
     common: { appError },
-    http: { http },
+    http: { apiClient, http },
   },
 };
 
@@ -33,15 +32,32 @@ class App extends Jimpex {
 }
 ```
 
-By default, the service is registered with the name `apiClient`, the API entry point is taken from the configuration setting `api.url` and the endpoints from `api.endpoints`, but you can use the _"service generator"_ `apiClientCustom` to modify those options:
+The service has a few options that can be customized:
+
+```js
+{
+  // The name the service will have in the container; in case you need more than one.
+  serviceName: 'apiClient',
+
+  // The name of the configuration setting that will contain the API `url` and `endpoints`.
+  // If this is not customized, but the `serviceName` is, this value will be set to the
+  // same as the `serviceName`.
+  configurationSetting: 'api',
+
+  // The class the service will instantiate. This is in case you end up extending the
+  // base one in order to add custommethods.
+  clientClass: APIClient,
+}
+```
+
+You can use the provider as a function to modify the options:
 
 ```js
 const {
   Jimpex,
   services: {
-    api: { apiClientCustom },
     common: { appError },
-    http: { http },
+    http: { apiClient, http },
   },
 };
 
@@ -52,113 +68,17 @@ class App extends Jimpex {
     this.register(appError);
 
     // Register the client
-    this.register({
-      'myCustomAPIService',
-      'myapi'
+    this.register(apiClient({
+      serviceName: 'myCustomAPIService',
+      configurationSetting: 'myapi',
     });
   }
 }
 ```
 
-The first parameter is the name used to register the server and the second one is the setting key that has a `url` and an `endpoints` dictionary.
+## App Error
 
-## Ensure bearer authentication
-
-A service-middleware that allows you to validate the incoming requests `Authorization` header.
-
-It's a _"service-middleware"_ because when you access the service, it doesn't return a class instance, but a middleware function for you to use on your controller routes.
-
-- Module: `api`
-- Requires: `appError`
-
-```js
-const {
-  Jimpex,
-  services: {
-    api: { ensureBearerAuthentication },
-    common: { appError },
-  },
-};
-
-class App extends Jimpex {
-  boot() {
-    // Register the dependencies...
-    this.register(appError);
-
-    // Register the service
-    this.register(apiClient);
-  }
-}
-```
-
-Now, if the token process a request an detects a valid token, it will set that token on the request `bearerToken` property:
-
-```js
-const myCtrl = controller((app) => {
-  const router = app.get('router');
-  const ensureAuthentication = app.get('ensureBearerAuthentication');
-  return [router.get('/something', [
-    ensureAuthentication,
-    (req, res, next) => {
-      console.log('Token:', req.bearerToken);
-      next();
-    },
-  ])];
-});
-```
-
-## Version validator
-
-A service-middleware to validate a `version` parameter against the configuration `version` setting. It's what the version validator middleware internally uses.
-
-It's a _"service-middleware"_ because when you access the service, it doesn't return a class instance, but a middleware function for you to use on your controller routes.
-
-- Module: `api`
-- Requires: `responsesBuilder` and `appError`
-
-```js
-const {
-  Jimpex,
-  services: {
-    api: { versionValidator },
-    common: { appError },
-    http: { responsesBuilder },
-  },
-};
-
-class App extends Jimpex {
-  boot() {
-    // Register the dependencies...
-    this.register(appError);
-    this.register(responsesBuilder);
-
-    // Register the service
-    this.register(versionValidator);
-  }
-}
-```
-
-Now you can use it on your controllers routes to validate that the version being used is the same as the one the app is running on:
-
-```js
-const myCtrl = controller((app) => {
-  const router = app.get('router');
-  const versionValidator = app.get('versionValidator');
-  return [router.get('/:version/something', [
-    versionValidator,
-    (req, res, next) => {
-      console.log('The version is valid!');
-      next();
-    },
-  ])];
-});
-```
-
-## Error
-
-A very simple subclass of `Error` to inject extra information on the errors so they can customize the error handler responses.
-
-Something important to remember is that the `appError` service doesn't return an instance of the service but the class so you can construct an error.
+A very simple subclass of `Error` but with support for context information. It can be used to customize the error handler responses.
 
 - Module: `common`
 
@@ -178,16 +98,145 @@ class App extends Jimpex {
 }
 ```
 
-That's all, now you can do `get('appError')`, inject `AppError` and generate your custom errors:
+By registering the "service", two things are added to the container: The class declaration, so you can construct the errors, and a shorthand function that does the same:
 
 ```js
-new Error('Something happened', {
+const AppError = app.get('AppError');
+throw new AppError('Something happened', {
   someProp: 'someValue',
-}):
+});
+// or
+const appError = app.get('appError');
+throw appError('Something happened', {
+  someProp: 'someValue',
+});
 ```
 
-This is useful if you are building an app with multiple known exceptions, you can use the extra settings to send context information.
+This is useful if you are building an app with multiple known exceptions, you can use the context to send useful information.
 
+## Ensure bearer token
+
+A service-middleware that allows you to validate and retrieve a bearer token from the incoming requests `Authorization` header.
+
+It's a _"service-middleware"_ because when you access the service, it doesn't return a class/service instance, but a middleware function for you to use on your controller routes.
+
+- Module: `utils`
+- Requires: `appError`
+
+```js
+const {
+  Jimpex,
+  services: {
+    common: { appError },
+    utils: { ensureBearerToken },
+  },
+};
+
+class App extends Jimpex {
+  boot() {
+    // Register the dependencies...
+    this.register(appError);
+
+    // Register the service
+    this.register(ensureBearerToken);
+  }
+}
+```
+
+This service has a few default options:
+
+```js
+{
+  // The information for the error generated when no token is found.
+  error: {
+    // The error message.
+    message: 'Unauthorized',
+    // The HTTP status associated to the error, this is for the error handler.
+    status: statuses.unauthorized,
+    // Extra context information for the error handler to add to the response.
+    response: {},
+  },
+  // The regular expression used to validate and extract the token.
+  expression: /bearer (.*?)(?:$|\s)/i,
+  // The name of the property on `res.locals` where the token will be saved.
+  local: 'token',
+}
+```
+
+You modify those default values by using the provider as a function when registering:
+
+```js
+const {
+  Jimpex,
+  services: {
+    common: { appError },
+    utils: { ensureBearerToken },
+  },
+};
+
+class App extends Jimpex {
+  boot() {
+    // Register the dependencies...
+    this.register(appError);
+
+    // Register the service
+    this.register(ensureBearerToken({
+      error: {
+        message: 'You are not authorized to access this route',
+      },
+      local: 'userToken',
+    }));
+  }
+}
+```
+
+Now, if the token processes a request and detects a valid token, it will save it on `res.locals.token`:
+
+```js
+const myCtrl = controller((app) => {
+  const router = app.get('router');
+  const ensureBearerToken = app.get('ensureBearerToken');
+  return [router.get('/something', [
+    ensureBearerToken,
+    (req, res, next) => {
+      console.log('Token:', res.locals.token);
+      next();
+    },
+  ])];
+});
+```
+
+## HTTP Error
+
+Another type of error, but specific for the HTTP requests the app does with the API client. This is a subclass of `AppError`. The only advantage over `AppError` is that you know the that the type of error is specific to requests and that it has a paramter for an HTTP status.
+
+- Module: `common`
+
+```js
+const {
+  Jimpex,
+  services: {
+    common: { httpError },
+  },
+};
+
+class App extends Jimpex {
+  boot() {        
+    // Register the service
+    this.register(httpError);
+  }
+}
+```
+
+By registering the "service", two things are added to the container: The class declaration, so you can construct the errors, and a shorthand function that does the same:
+
+```js
+const HTTPError = app.get('HTTPError');
+throw new AppError('Not found', 404);
+// or
+const httpError = app.get('httpError');
+throw httpError('Not found', 404);
+```
 ## Send File
 
 It allows you to send a file on a response with a path relative to the app executable.
@@ -299,12 +348,21 @@ class App extends Jimpex {
 }
 ```
 
-The service, after registering, it also hooks itself to the app event that gets fired when it starts so it can create the file automatically.
+The service, after registering, it hooks itself to the app event that gets fired when it starts, so it can create the file automatically.
 
 Now, this service has a few default options, so instead of explaining which are, we'll see each option on detail:
 
 ```js
 {
+  // The name the service will have in the container; in case you need more than one.
+  serviceName: 'htmlGenerator',
+
+  // The name of a service from will it obtain the values for the template. When
+  // instantiated, it will look for it on the container, and if is not avaiable,
+  // it will just ignore it and use `configurationKeys`.
+  // You can completely by setting the value to `null`.
+  valuesService: 'htmlGeneratorValues',
+
   // The name of the file it should use as template.
   template: 'index.tpl.html',
 
@@ -329,16 +387,14 @@ Now, this service has a few default options, so instead of explaining which are,
 }
 ```
 
-It also supports a custom service with a `getValues` method to obtain the information to inject instead of taking it from the configuration.
-
-To modify the options, you need to use the _"service generator"_ `htmlGeneratorCustom`:
+To modify the options, you just need to use provider as a function:
 
 ```js
 const {
   Jimpex,
   services: {
     frontend: { frontendFs },
-    html: { htmlGeneratorCustom },
+    html: { htmlGenerator },
   },
 };
 
@@ -348,7 +404,7 @@ class App extends Jimpex {
     this.register(frontendFs);
 
     // Register the service
-    this.register(htmlGeneratorCustom({
+    this.register(htmlGenerator({
       template: 'template.tpl',
       file: 'my-index.html',
       ...
@@ -356,8 +412,6 @@ class App extends Jimpex {
   }
 }
 ```
-
-The first parameter is the name of the service and the second the options to customize it. In case you want to use another service to get the values, you can send the name of that service as the third parameter.
 
 ## HTTP
 

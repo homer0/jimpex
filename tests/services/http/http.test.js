@@ -1,6 +1,3 @@
-const JimpleMock = require('/tests/mocks/jimple.mock');
-
-jest.mock('jimple', () => JimpleMock);
 jest.mock('node-fetch');
 jest.unmock('/src/utils/wrappers');
 jest.unmock('/src/services/http/http');
@@ -17,7 +14,7 @@ describe('services/http:http', () => {
     fetch.mockReset();
   });
 
-  it('should be instantiated with all its dependencies', () => {
+  it('should be instantiated', () => {
     // Given
     const logRequests = 'logRequests';
     const appLogger = 'appLogger';
@@ -26,8 +23,6 @@ describe('services/http:http', () => {
     sut = new HTTP(logRequests, appLogger);
     // Then
     expect(sut).toBeInstanceOf(HTTP);
-    expect(sut.logRequests).toBe(logRequests);
-    expect(sut.appLogger).toBe(appLogger);
   });
 
   it('should include a provider for the DIC', () => {
@@ -46,14 +41,13 @@ describe('services/http:http', () => {
     let serviceName = null;
     let serviceFn = null;
     // When
-    http(app);
+    http.register(app);
     [[serviceName, serviceFn]] = app.set.mock.calls;
     sut = serviceFn();
     // Then
     expect(serviceName).toBe('http');
     expect(sut).toBeInstanceOf(HTTP);
     expect(sut.logRequests).toBeFalse();
-    expect(sut.appLogger).toBe('appLogger');
   });
 
   it('should get a request IP from an Express request object', () => {
@@ -158,9 +152,6 @@ describe('services/http:http', () => {
       expect(fetch).toHaveBeenCalledWith(url, {
         method: 'GET',
       });
-    })
-    .catch(() => {
-      expect(true).toBeFalse();
     });
   });
 
@@ -181,9 +172,6 @@ describe('services/http:http', () => {
       expect(result).toBe(response);
       expect(fetch).toHaveBeenCalledTimes(1);
       expect(fetch).toHaveBeenCalledWith(url, { method });
-    })
-    .catch(() => {
-      expect(true).toBeFalse();
     });
   });
 
@@ -210,9 +198,6 @@ describe('services/http:http', () => {
       expect(fetch).toHaveBeenCalledWith(`${url}?${qsVariable}=${qsValue}`, {
         method: 'GET',
       });
-    })
-    .catch(() => {
-      expect(true).toBeFalse();
     });
   });
 
@@ -239,9 +224,6 @@ describe('services/http:http', () => {
         method,
         body,
       });
-    })
-    .catch(() => {
-      expect(true).toBeFalse();
     });
   });
 
@@ -268,11 +250,11 @@ describe('services/http:http', () => {
       expect(fetch).toHaveBeenCalledTimes(1);
       expect(fetch).toHaveBeenCalledWith(url, {
         method: 'GET',
-        headers: request.headers,
+        headers: {
+          'X-Forwarded-For': request.headers['x-forwarded-for'],
+          'X-Custom-Header': request.headers['x-custom-header'],
+        },
       });
-    })
-    .catch(() => {
-      expect(true).toBeFalse();
     });
   });
 
@@ -310,9 +292,6 @@ describe('services/http:http', () => {
         `RESPONSE> ${url}`,
         `RESPONSE> status: ${response.status}`,
       ]);
-    })
-    .catch(() => {
-      expect(true).toBeFalse();
     });
   });
 
@@ -333,6 +312,10 @@ describe('services/http:http', () => {
       // The headers object is actually a custom iterable
       headers: ['custom-header-value', 'another-custom-header-value'],
     };
+    const headersFixedNames = {
+      'x-forwarded-for': 'X-Forwarded-For',
+      'x-custom-header': 'X-Custom-Header',
+    };
     fetch.mockImplementationOnce(() => Promise.resolve(response));
     const logRequests = true;
     const appLogger = {
@@ -349,14 +332,22 @@ describe('services/http:http', () => {
       expect(fetch).toHaveBeenCalledWith(url, {
         method,
         body,
-        headers: request.headers,
+        headers: Object.keys(request.headers).reduce(
+          (newHeaders, name) => Object.assign({}, newHeaders, {
+            [headersFixedNames[name]]: request.headers[name],
+          }),
+          {}
+        ),
       });
       expect(appLogger.info).toHaveBeenCalledTimes(['request', 'response'].length);
       expect(appLogger.info).toHaveBeenCalledWith([
         '--->>',
         `REQUEST> ${method} ${url}`,
         ...Object.keys(request.headers)
-        .map((headerName) => `REQUEST> ${headerName}: ${request.headers[headerName]}`),
+        .map((headerName) => (
+          `REQUEST> ${headersFixedNames[headerName]}: ` +
+            `${request.headers[headerName]}`
+        )),
         `REQUEST> body: "${body}"`,
       ]);
       expect(appLogger.info).toHaveBeenCalledWith([
@@ -365,19 +356,14 @@ describe('services/http:http', () => {
         `RESPONSE> status: ${response.status}`,
         ...response.headers.map((value, index) => `RESPONSE> ${index}: ${value}`),
       ]);
-    })
-    .catch(() => {
-      expect(true).toBeFalse();
     });
   });
 
   it('should turn on the requests log when registered if the configuration flag is `true`', () => {
     // Given
     const appConfiguration = {
-      debug: {
-        logRequests: true,
-      },
-      get: jest.fn(() => appConfiguration.debug),
+      'debug.logRequests': true,
+      get: jest.fn((prop) => appConfiguration[prop]),
     };
     const services = {
       appConfiguration,
@@ -390,13 +376,12 @@ describe('services/http:http', () => {
     let serviceName = null;
     let serviceFn = null;
     // When
-    http(app);
+    http.register(app);
     [[serviceName, serviceFn]] = app.set.mock.calls;
     sut = serviceFn();
     // Then
     expect(serviceName).toBe('http');
     expect(sut).toBeInstanceOf(HTTP);
     expect(sut.logRequests).toBeTrue();
-    expect(sut.appLogger).toBe('appLogger');
   });
 });
