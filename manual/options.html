@@ -42,10 +42,10 @@
     <ul class="manual-toc">
       
     <li data-ice="manualNav" class="indent-h1" data-link="manual/controllers.html"><a href="manual/controllers.html" data-ice="link">Built-in Controllers</a></li>
-<li data-ice="manualNav" class="indent-h2" data-link="manual/controllers.html"><a href="manual/controllers.html#version-validator" data-ice="link">Version validator</a></li>
 <li data-ice="manualNav" class="indent-h2" data-link="manual/controllers.html"><a href="manual/controllers.html#configuration" data-ice="link">Configuration</a></li>
 <li data-ice="manualNav" class="indent-h2" data-link="manual/controllers.html"><a href="manual/controllers.html#health" data-ice="link">Health</a></li>
-<li data-ice="manualNav" class="indent-h2" data-link="manual/controllers.html"><a href="manual/controllers.html#root-statics" data-ice="link">Root Statics</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/controllers.html"><a href="manual/controllers.html#statics" data-ice="link">Statics</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/controllers.html"><a href="manual/controllers.html#gateway" data-ice="link">Gateway</a></li>
 </ul>
   </div>
 <div data-ice="manual">
@@ -56,6 +56,7 @@
 <li data-ice="manualNav" class="indent-h2" data-link="manual/middlewares.html"><a href="manual/middlewares.html#force-https" data-ice="link">Force HTTPS</a></li>
 <li data-ice="manualNav" class="indent-h2" data-link="manual/middlewares.html"><a href="manual/middlewares.html#fast-html" data-ice="link">Fast HTML</a></li>
 <li data-ice="manualNav" class="indent-h2" data-link="manual/middlewares.html"><a href="manual/middlewares.html#show-html" data-ice="link">Show HTML</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/middlewares.html"><a href="manual/middlewares.html#version-validator" data-ice="link">Version validator</a></li>
 </ul>
   </div>
 <div data-ice="manual">
@@ -63,9 +64,9 @@
       
     <li data-ice="manualNav" class="indent-h1" data-link="manual/services.html"><a href="manual/services.html" data-ice="link">Built-in Services</a></li>
 <li data-ice="manualNav" class="indent-h2" data-link="manual/services.html"><a href="manual/services.html#api-client" data-ice="link">API Client</a></li>
-<li data-ice="manualNav" class="indent-h2" data-link="manual/services.html"><a href="manual/services.html#ensure-bearer-authentication" data-ice="link">Ensure bearer authentication</a></li>
-<li data-ice="manualNav" class="indent-h2" data-link="manual/services.html"><a href="manual/services.html#version-validator" data-ice="link">Version validator</a></li>
-<li data-ice="manualNav" class="indent-h2" data-link="manual/services.html"><a href="manual/services.html#error" data-ice="link">Error</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/services.html"><a href="manual/services.html#app-error" data-ice="link">App Error</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/services.html"><a href="manual/services.html#ensure-bearer-token" data-ice="link">Ensure bearer token</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/services.html"><a href="manual/services.html#http-error" data-ice="link">HTTP Error</a></li>
 <li data-ice="manualNav" class="indent-h2" data-link="manual/services.html"><a href="manual/services.html#send-file" data-ice="link">Send File</a></li>
 <li data-ice="manualNav" class="indent-h2" data-link="manual/services.html"><a href="manual/services.html#frontend-fs" data-ice="link">Frontend Fs</a></li>
 <li data-ice="manualNav" class="indent-h2" data-link="manual/services.html"><a href="manual/services.html#html-generator" data-ice="link">HTML Generator</a></li>
@@ -172,15 +173,14 @@
   common: true,
 
   // These services include:
+  // - API client
   // - HTTP
   // - Responses builder
   http: true,
 
   // These services include:
-  // - API client
-  // - Ensure bearer authentication
-  // - Version validator
-  api: true,
+  // - Ensure bearer token
+  utils: true,
 }</code>
 </code></pre>
 <p>For more information about these services, check the document about <strong>Built-in Services</strong>.</p>

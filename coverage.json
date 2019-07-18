@@ -1,16 +1,21 @@
 {
-  "coverage": "100%",
-  "expectCount": 154,
-  "actualCount": 154,
+  "coverage": "99.56%",
+  "expectCount": 230,
+  "actualCount": 229,
   "files": {
     "src/app/index.js": {
-      "expectCount": 18,
-      "actualCount": 18,
+      "expectCount": 27,
+      "actualCount": 27,
       "undocumentLines": []
     },
-    "src/controllers/api/versionValidator.js": {
-      "expectCount": 5,
-      "actualCount": 5,
+    "src/constants/eventNames.js": {
+      "expectCount": 1,
+      "actualCount": 1,
+      "undocumentLines": []
+    },
+    "src/constants/index.js": {
+      "expectCount": 1,
+      "actualCount": 1,
       "undocumentLines": []
     },
     "src/controllers/common/configuration.js": {
@@ -23,14 +28,21 @@
       "actualCount": 6,
       "undocumentLines": []
     },
-    "src/controllers/common/rootStatics.js": {
-      "expectCount": 9,
-      "actualCount": 9,
+    "src/controllers/common/statics.js": {
+      "expectCount": 12,
+      "actualCount": 12,
       "undocumentLines": []
     },
+    "src/controllers/utils/gateway.js": {
+      "expectCount": 32,
+      "actualCount": 31,
+      "undocumentLines": [
+        260
+      ]
+    },
     "src/middlewares/common/errorHandler.js": {
-      "expectCount": 8,
-      "actualCount": 8,
+      "expectCount": 10,
+      "actualCount": 10,
       "undocumentLines": []
     },
     "src/middlewares/common/forceHTTPS.js": {
@@ -39,8 +51,8 @@
       "undocumentLines": []
     },
     "src/middlewares/html/fastHTML.js": {
-      "expectCount": 11,
-      "actualCount": 11,
+      "expectCount": 15,
+      "actualCount": 15,
       "undocumentLines": []
     },
     "src/middlewares/html/showHTML.js": {
@@ -48,29 +60,19 @@
       "actualCount": 10,
       "undocumentLines": []
     },
-    "src/services/api/client.js": {
-      "expectCount": 7,
-      "actualCount": 7,
+    "src/middlewares/utils/versionValidator.js": {
+      "expectCount": 10,
+      "actualCount": 10,
       "undocumentLines": []
     },
-    "src/services/api/ensureBearerAuthentication.js": {
-      "expectCount": 6,
-      "actualCount": 6,
+    "src/services/common/appError.js": {
+      "expectCount": 11,
+      "actualCount": 11,
       "undocumentLines": []
     },
-    "src/services/api/index.js": {
-      "expectCount": 1,
-      "actualCount": 1,
-      "undocumentLines": []
-    },
-    "src/services/api/versionValidator.js": {
-      "expectCount": 7,
-      "actualCount": 7,
-      "undocumentLines": []
-    },
-    "src/services/common/error.js": {
-      "expectCount": 5,
-      "actualCount": 5,
+    "src/services/common/httpError.js": {
+      "expectCount": 4,
+      "actualCount": 4,
       "undocumentLines": []
     },
     "src/services/common/index.js": {
@@ -93,9 +95,14 @@
       "actualCount": 17,
       "undocumentLines": []
     },
+    "src/services/http/apiClient.js": {
+      "expectCount": 8,
+      "actualCount": 8,
+      "undocumentLines": []
+    },
     "src/services/http/http.js": {
-      "expectCount": 10,
-      "actualCount": 10,
+      "expectCount": 12,
+      "actualCount": 12,
       "undocumentLines": []
     },
     "src/services/http/index.js": {
@@ -108,9 +115,24 @@
       "actualCount": 7,
       "undocumentLines": []
     },
+    "src/services/utils/ensureBearerToken.js": {
+      "expectCount": 7,
+      "actualCount": 7,
+      "undocumentLines": []
+    },
+    "src/services/utils/index.js": {
+      "expectCount": 1,
+      "actualCount": 1,
+      "undocumentLines": []
+    },
+    "src/utils/functions.js": {
+      "expectCount": 5,
+      "actualCount": 5,
+      "undocumentLines": []
+    },
     "src/utils/wrappers.js": {
-      "expectCount": 2,
-      "actualCount": 2,
+      "expectCount": 9,
+      "actualCount": 9,
       "undocumentLines": []
     }
   }

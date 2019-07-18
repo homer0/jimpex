@@ -1,14 +1,14 @@
 window.esdocSearchIndex = [
   [
-    "jimpex/src/services/api/client.js~apiclient",
-    "class/src/services/api/client.js~APIClient.html",
-    "<span>APIClient</span> <span class=\"search-result-import-path\">jimpex/src/services/api/client.js</span>",
+    "jimpex/src/services/http/apiclient.js~apiclient",
+    "class/src/services/http/apiClient.js~APIClient.html",
+    "<span>APIClient</span> <span class=\"search-result-import-path\">jimpex/src/services/http/apiClient.js</span>",
     "class"
   ],
   [
-    "jimpex/src/services/common/error.js~apperror",
-    "class/src/services/common/error.js~AppError.html",
-    "<span>AppError</span> <span class=\"search-result-import-path\">jimpex/src/services/common/error.js</span>",
+    "jimpex/src/services/common/apperror.js~apperror",
+    "class/src/services/common/appError.js~AppError.html",
+    "<span>AppError</span> <span class=\"search-result-import-path\">jimpex/src/services/common/appError.js</span>",
     "class"
   ],
   [
@@ -18,9 +18,9 @@ window.esdocSearchIndex = [
     "class"
   ],
   [
-    "jimpex/src/services/api/ensurebearerauthentication.js~ensurebearerauthentication",
-    "class/src/services/api/ensureBearerAuthentication.js~EnsureBearerAuthentication.html",
-    "<span>EnsureBearerAuthentication</span> <span class=\"search-result-import-path\">jimpex/src/services/api/ensureBearerAuthentication.js</span>",
+    "jimpex/src/services/utils/ensurebearertoken.js~ensurebearertoken",
+    "class/src/services/utils/ensureBearerToken.js~EnsureBearerToken.html",
+    "<span>EnsureBearerToken</span> <span class=\"search-result-import-path\">jimpex/src/services/utils/ensureBearerToken.js</span>",
     "class"
   ],
   [
@@ -48,6 +48,12 @@ window.esdocSearchIndex = [
     "class"
   ],
   [
+    "jimpex/src/controllers/utils/gateway.js~gatewaycontroller",
+    "class/src/controllers/utils/gateway.js~GatewayController.html",
+    "<span>GatewayController</span> <span class=\"search-result-import-path\">jimpex/src/controllers/utils/gateway.js</span>",
+    "class"
+  ],
+  [
     "jimpex/src/services/html/htmlgenerator.js~htmlgenerator",
     "class/src/services/html/htmlGenerator.js~HTMLGenerator.html",
     "<span>HTMLGenerator</span> <span class=\"search-result-import-path\">jimpex/src/services/html/htmlGenerator.js</span>",
@@ -57,6 +63,12 @@ window.esdocSearchIndex = [
     "jimpex/src/services/http/http.js~http",
     "class/src/services/http/http.js~HTTP.html",
     "<span>HTTP</span> <span class=\"search-result-import-path\">jimpex/src/services/http/http.js</span>",
+    "class"
+  ],
+  [
+    "jimpex/src/services/common/httperror.js~httperror",
+    "class/src/services/common/httpError.js~HTTPError.html",
+    "<span>HTTPError</span> <span class=\"search-result-import-path\">jimpex/src/services/common/httpError.js</span>",
     "class"
   ],
   [
@@ -78,63 +90,39 @@ window.esdocSearchIndex = [
     "class"
   ],
   [
-    "jimpex/src/controllers/common/rootstatics.js~rootstaticscontroller",
-    "class/src/controllers/common/rootStatics.js~RootStaticsController.html",
-    "<span>RootStaticsController</span> <span class=\"search-result-import-path\">jimpex/src/controllers/common/rootStatics.js</span>",
-    "class"
-  ],
-  [
     "jimpex/src/middlewares/html/showhtml.js~showhtml",
     "class/src/middlewares/html/showHTML.js~ShowHTML.html",
     "<span>ShowHTML</span> <span class=\"search-result-import-path\">jimpex/src/middlewares/html/showHTML.js</span>",
     "class"
   ],
   [
-    "jimpex/src/services/api/versionvalidator.js~versionvalidator",
-    "class/src/services/api/versionValidator.js~VersionValidator.html",
-    "<span>VersionValidator</span> <span class=\"search-result-import-path\">jimpex/src/services/api/versionValidator.js</span>",
+    "jimpex/src/controllers/common/statics.js~staticscontroller",
+    "class/src/controllers/common/statics.js~StaticsController.html",
+    "<span>StaticsController</span> <span class=\"search-result-import-path\">jimpex/src/controllers/common/statics.js</span>",
     "class"
   ],
   [
-    "jimpex/src/controllers/api/versionvalidator.js~versionvalidatorcontroller",
-    "class/src/controllers/api/versionValidator.js~VersionValidatorController.html",
-    "<span>VersionValidatorController</span> <span class=\"search-result-import-path\">jimpex/src/controllers/api/versionValidator.js</span>",
+    "jimpex/src/middlewares/utils/versionvalidator.js~versionvalidator",
+    "class/src/middlewares/utils/versionValidator.js~VersionValidator.html",
+    "<span>VersionValidator</span> <span class=\"search-result-import-path\">jimpex/src/middlewares/utils/versionValidator.js</span>",
     "class"
   ],
   [
-    "jimpex/src/services/api/index.js~all",
-    "variable/index.html#static-variable-all",
-    "<span>all</span> <span class=\"search-result-import-path\">jimpex/src/services/api/index.js</span>",
-    "variable"
-  ],
-  [
-    "jimpex/src/services/common/index.js~all",
-    "variable/index.html#static-variable-all",
-    "<span>all</span> <span class=\"search-result-import-path\">jimpex/src/services/common/index.js</span>",
-    "variable"
-  ],
-  [
-    "jimpex/src/services/http/index.js~all",
-    "variable/index.html#static-variable-all",
-    "<span>all</span> <span class=\"search-result-import-path\">jimpex/src/services/http/index.js</span>",
-    "variable"
-  ],
-  [
-    "jimpex/src/services/api/client.js~apiclient",
+    "jimpex/src/services/http/apiclient.js~apiclient",
     "variable/index.html#static-variable-apiClient",
-    "<span>apiClient</span> <span class=\"search-result-import-path\">jimpex/src/services/api/client.js</span>",
+    "<span>apiClient</span> <span class=\"search-result-import-path\">jimpex/src/services/http/apiClient.js</span>",
     "variable"
   ],
   [
-    "jimpex/src/services/api/client.js~apiclientcustom",
-    "function/index.html#static-function-apiClientCustom",
-    "<span>apiClientCustom</span> <span class=\"search-result-import-path\">jimpex/src/services/api/client.js</span>",
-    "function"
+    "jimpex/src/services/common/apperror.js~apperror",
+    "variable/index.html#static-variable-appError",
+    "<span>appError</span> <span class=\"search-result-import-path\">jimpex/src/services/common/appError.js</span>",
+    "variable"
   ],
   [
-    "jimpex/src/services/common/error.js~apperror",
-    "variable/index.html#static-variable-appError",
-    "<span>appError</span> <span class=\"search-result-import-path\">jimpex/src/services/common/error.js</span>",
+    "jimpex/src/services/common/index.js~commonservices",
+    "variable/index.html#static-variable-commonServices",
+    "<span>commonServices</span> <span class=\"search-result-import-path\">jimpex/src/services/common/index.js</span>",
     "variable"
   ],
   [
@@ -150,9 +138,21 @@ window.esdocSearchIndex = [
     "function"
   ],
   [
-    "jimpex/src/services/api/ensurebearerauthentication.js~ensurebearerauthentication",
-    "variable/index.html#static-variable-ensureBearerAuthentication",
-    "<span>ensureBearerAuthentication</span> <span class=\"search-result-import-path\">jimpex/src/services/api/ensureBearerAuthentication.js</span>",
+    "jimpex/src/utils/wrappers.js~controllercreator",
+    "function/index.html#static-function-controllerCreator",
+    "<span>controllerCreator</span> <span class=\"search-result-import-path\">jimpex/src/utils/wrappers.js</span>",
+    "function"
+  ],
+  [
+    "jimpex/src/utils/functions.js~createrouteexpression",
+    "function/index.html#static-function-createRouteExpression",
+    "<span>createRouteExpression</span> <span class=\"search-result-import-path\">jimpex/src/utils/functions.js</span>",
+    "function"
+  ],
+  [
+    "jimpex/src/services/utils/ensurebearertoken.js~ensurebearertoken",
+    "variable/index.html#static-variable-ensureBearerToken",
+    "<span>ensureBearerToken</span> <span class=\"search-result-import-path\">jimpex/src/services/utils/ensureBearerToken.js</span>",
     "variable"
   ],
   [
@@ -162,16 +162,22 @@ window.esdocSearchIndex = [
     "variable"
   ],
   [
+    "jimpex/src/utils/functions.js~escapeforregexp",
+    "function/index.html#static-function-escapeForRegExp",
+    "<span>escapeForRegExp</span> <span class=\"search-result-import-path\">jimpex/src/utils/functions.js</span>",
+    "function"
+  ],
+  [
+    "jimpex/src/constants/eventnames.js~eventnames",
+    "variable/index.html#static-variable-eventNames",
+    "<span>eventNames</span> <span class=\"search-result-import-path\">jimpex/src/constants/eventNames.js</span>",
+    "variable"
+  ],
+  [
     "jimpex/src/middlewares/html/fasthtml.js~fasthtml",
     "variable/index.html#static-variable-fastHTML",
     "<span>fastHTML</span> <span class=\"search-result-import-path\">jimpex/src/middlewares/html/fastHTML.js</span>",
     "variable"
-  ],
-  [
-    "jimpex/src/middlewares/html/fasthtml.js~fasthtmlcustom",
-    "function/index.html#static-function-fastHTMLCustom",
-    "<span>fastHTMLCustom</span> <span class=\"search-result-import-path\">jimpex/src/middlewares/html/fastHTML.js</span>",
-    "function"
   ],
   [
     "jimpex/src/middlewares/common/forcehttps.js~forcehttps",
@@ -180,15 +186,15 @@ window.esdocSearchIndex = [
     "variable"
   ],
   [
-    "jimpex/src/middlewares/common/forcehttps.js~forcehttpscustom",
-    "function/index.html#static-function-forceHTTPSCustom",
-    "<span>forceHTTPSCustom</span> <span class=\"search-result-import-path\">jimpex/src/middlewares/common/forceHTTPS.js</span>",
-    "function"
-  ],
-  [
     "jimpex/src/services/frontend/frontendfs.js~frontendfs",
     "variable/index.html#static-variable-frontendFs",
     "<span>frontendFs</span> <span class=\"search-result-import-path\">jimpex/src/services/frontend/frontendFs.js</span>",
+    "variable"
+  ],
+  [
+    "jimpex/src/controllers/utils/gateway.js~gatewaycontroller",
+    "variable/index.html#static-variable-gatewayController",
+    "<span>gatewayController</span> <span class=\"search-result-import-path\">jimpex/src/controllers/utils/gateway.js</span>",
     "variable"
   ],
   [
@@ -204,15 +210,21 @@ window.esdocSearchIndex = [
     "variable"
   ],
   [
-    "jimpex/src/services/html/htmlgenerator.js~htmlgeneratorcustom",
-    "function/index.html#static-function-htmlGeneratorCustom",
-    "<span>htmlGeneratorCustom</span> <span class=\"search-result-import-path\">jimpex/src/services/html/htmlGenerator.js</span>",
-    "function"
-  ],
-  [
     "jimpex/src/services/http/http.js~http",
     "variable/index.html#static-variable-http",
     "<span>http</span> <span class=\"search-result-import-path\">jimpex/src/services/http/http.js</span>",
+    "variable"
+  ],
+  [
+    "jimpex/src/services/common/httperror.js~httperror",
+    "variable/index.html#static-variable-httpError",
+    "<span>httpError</span> <span class=\"search-result-import-path\">jimpex/src/services/common/httpError.js</span>",
+    "variable"
+  ],
+  [
+    "jimpex/src/services/http/index.js~httpservices",
+    "variable/index.html#static-variable-httpServices",
+    "<span>httpServices</span> <span class=\"search-result-import-path\">jimpex/src/services/http/index.js</span>",
     "variable"
   ],
   [
@@ -222,22 +234,52 @@ window.esdocSearchIndex = [
     "function"
   ],
   [
+    "jimpex/src/utils/wrappers.js~middlewarecreator",
+    "function/index.html#static-function-middlewareCreator",
+    "<span>middlewareCreator</span> <span class=\"search-result-import-path\">jimpex/src/utils/wrappers.js</span>",
+    "function"
+  ],
+  [
+    "jimpex/src/utils/wrappers.js~provider",
+    "function/index.html#static-function-provider",
+    "<span>provider</span> <span class=\"search-result-import-path\">jimpex/src/utils/wrappers.js</span>",
+    "function"
+  ],
+  [
+    "jimpex/src/utils/wrappers.js~providercreator",
+    "function/index.html#static-function-providerCreator",
+    "<span>providerCreator</span> <span class=\"search-result-import-path\">jimpex/src/utils/wrappers.js</span>",
+    "function"
+  ],
+  [
+    "jimpex/src/utils/wrappers.js~providers",
+    "function/index.html#static-function-providers",
+    "<span>providers</span> <span class=\"search-result-import-path\">jimpex/src/utils/wrappers.js</span>",
+    "function"
+  ],
+  [
+    "jimpex/src/utils/functions.js~removeleadingslash",
+    "function/index.html#static-function-removeLeadingSlash",
+    "<span>removeLeadingSlash</span> <span class=\"search-result-import-path\">jimpex/src/utils/functions.js</span>",
+    "function"
+  ],
+  [
+    "jimpex/src/utils/functions.js~removeslashes",
+    "function/index.html#static-function-removeSlashes",
+    "<span>removeSlashes</span> <span class=\"search-result-import-path\">jimpex/src/utils/functions.js</span>",
+    "function"
+  ],
+  [
+    "jimpex/src/utils/functions.js~removetrailingslash",
+    "function/index.html#static-function-removeTrailingSlash",
+    "<span>removeTrailingSlash</span> <span class=\"search-result-import-path\">jimpex/src/utils/functions.js</span>",
+    "function"
+  ],
+  [
     "jimpex/src/services/http/responsesbuilder.js~responsesbuilder",
     "variable/index.html#static-variable-responsesBuilder",
     "<span>responsesBuilder</span> <span class=\"search-result-import-path\">jimpex/src/services/http/responsesBuilder.js</span>",
     "variable"
-  ],
-  [
-    "jimpex/src/controllers/common/rootstatics.js~rootstaticscontroller",
-    "variable/index.html#static-variable-rootStaticsController",
-    "<span>rootStaticsController</span> <span class=\"search-result-import-path\">jimpex/src/controllers/common/rootStatics.js</span>",
-    "variable"
-  ],
-  [
-    "jimpex/src/controllers/common/rootstatics.js~rootstaticscontrollercustom",
-    "function/index.html#static-function-rootStaticsControllerCustom",
-    "<span>rootStaticsControllerCustom</span> <span class=\"search-result-import-path\">jimpex/src/controllers/common/rootStatics.js</span>",
-    "function"
   ],
   [
     "jimpex/src/services/common/sendfile.js~sendfile",
@@ -258,21 +300,21 @@ window.esdocSearchIndex = [
     "variable"
   ],
   [
-    "jimpex/src/middlewares/html/showhtml.js~showhtmlcustom",
-    "function/index.html#static-function-showHTMLCustom",
-    "<span>showHTMLCustom</span> <span class=\"search-result-import-path\">jimpex/src/middlewares/html/showHTML.js</span>",
-    "function"
-  ],
-  [
-    "jimpex/src/services/api/versionvalidator.js~versionvalidator",
-    "variable/index.html#static-variable-versionValidator",
-    "<span>versionValidator</span> <span class=\"search-result-import-path\">jimpex/src/services/api/versionValidator.js</span>",
+    "jimpex/src/controllers/common/statics.js~staticscontroller",
+    "variable/index.html#static-variable-staticsController",
+    "<span>staticsController</span> <span class=\"search-result-import-path\">jimpex/src/controllers/common/statics.js</span>",
     "variable"
   ],
   [
-    "jimpex/src/controllers/api/versionvalidator.js~versionvalidatorcontroller",
-    "variable/index.html#static-variable-versionValidatorController",
-    "<span>versionValidatorController</span> <span class=\"search-result-import-path\">jimpex/src/controllers/api/versionValidator.js</span>",
+    "jimpex/src/services/utils/index.js~utilsservices",
+    "variable/index.html#static-variable-utilsServices",
+    "<span>utilsServices</span> <span class=\"search-result-import-path\">jimpex/src/services/utils/index.js</span>",
+    "variable"
+  ],
+  [
+    "jimpex/src/middlewares/utils/versionvalidator.js~versionvalidator",
+    "variable/index.html#static-variable-versionValidator",
+    "<span>versionValidator</span> <span class=\"search-result-import-path\">jimpex/src/middlewares/utils/versionValidator.js</span>",
     "variable"
   ],
   [
@@ -564,6 +606,18 @@ window.esdocSearchIndex = [
     "file"
   ],
   [
+    "src/app/index.js~jimpex#_emitevent",
+    "class/src/app/index.js~Jimpex.html#instance-method-_emitEvent",
+    "src/app/index.js~Jimpex#_emitEvent",
+    "method"
+  ],
+  [
+    "src/app/index.js~jimpex#_reducewithevent",
+    "class/src/app/index.js~Jimpex.html#instance-method-_reduceWithEvent",
+    "src/app/index.js~Jimpex#_reduceWithEvent",
+    "method"
+  ],
+  [
     "src/app/index.js~jimpex#boot",
     "class/src/app/index.js~Jimpex.html#instance-method-boot",
     "src/app/index.js~Jimpex#boot",
@@ -582,22 +636,22 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
-    "src/app/index.js~jimpex#emitevent",
-    "class/src/app/index.js~Jimpex.html#instance-method-emitEvent",
-    "src/app/index.js~Jimpex#emitEvent",
-    "method"
-  ],
-  [
     "src/app/index.js~jimpex#express",
-    "class/src/app/index.js~Jimpex.html#instance-member-express",
+    "class/src/app/index.js~Jimpex.html#instance-get-express",
     "src/app/index.js~Jimpex#express",
     "member"
   ],
   [
     "src/app/index.js~jimpex#instance",
-    "class/src/app/index.js~Jimpex.html#instance-member-instance",
+    "class/src/app/index.js~Jimpex.html#instance-get-instance",
     "src/app/index.js~Jimpex#instance",
     "member"
+  ],
+  [
+    "src/app/index.js~jimpex#listen",
+    "class/src/app/index.js~Jimpex.html#instance-method-listen",
+    "src/app/index.js~Jimpex#listen",
+    "method"
   ],
   [
     "src/app/index.js~jimpex#mount",
@@ -606,15 +660,15 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
-    "src/app/index.js~jimpex#mountqueue",
-    "class/src/app/index.js~Jimpex.html#instance-member-mountQueue",
-    "src/app/index.js~Jimpex#mountQueue",
+    "src/app/index.js~jimpex#options",
+    "class/src/app/index.js~Jimpex.html#instance-get-options",
+    "src/app/index.js~Jimpex#options",
     "member"
   ],
   [
-    "src/app/index.js~jimpex#options",
-    "class/src/app/index.js~Jimpex.html#instance-member-options",
-    "src/app/index.js~Jimpex#options",
+    "src/app/index.js~jimpex#routes",
+    "class/src/app/index.js~Jimpex.html#instance-get-routes",
+    "src/app/index.js~Jimpex#routes",
     "member"
   ],
   [
@@ -627,6 +681,12 @@ window.esdocSearchIndex = [
     "src/app/index.js~jimpex#stop",
     "class/src/app/index.js~Jimpex.html#instance-method-stop",
     "src/app/index.js~Jimpex#stop",
+    "method"
+  ],
+  [
+    "src/app/index.js~jimpex#try",
+    "class/src/app/index.js~Jimpex.html#instance-method-try",
+    "src/app/index.js~Jimpex#try",
     "method"
   ],
   [
@@ -678,46 +738,28 @@ window.esdocSearchIndex = [
     "external"
   ],
   [
-    "src/controllers/api/index.js",
-    "file/src/controllers/api/index.js.html",
-    "src/controllers/api/index.js",
+    "src/constants/eventnames.js",
+    "file/src/constants/eventNames.js.html",
+    "src/constants/eventNames.js",
     "file"
   ],
   [
-    "src/controllers/api/versionvalidator.js",
-    "file/src/controllers/api/versionValidator.js.html",
-    "src/controllers/api/versionValidator.js",
+    "src/constants/eventnames.js~jimpexevents",
+    "typedef/index.html#static-typedef-JimpexEvents",
+    "src/constants/eventNames.js~JimpexEvents",
+    "typedef"
+  ],
+  [
+    "src/constants/index.js",
+    "file/src/constants/index.js.html",
+    "src/constants/index.js",
     "file"
-  ],
-  [
-    "src/controllers/api/versionvalidator.js~versionvalidatorcontroller#constructor",
-    "class/src/controllers/api/versionValidator.js~VersionValidatorController.html#instance-constructor-constructor",
-    "src/controllers/api/versionValidator.js~VersionValidatorController#constructor",
-    "method"
-  ],
-  [
-    "src/controllers/api/versionvalidator.js~versionvalidatorcontroller#validate",
-    "class/src/controllers/api/versionValidator.js~VersionValidatorController.html#instance-method-validate",
-    "src/controllers/api/versionValidator.js~VersionValidatorController#validate",
-    "method"
-  ],
-  [
-    "src/controllers/api/versionvalidator.js~versionvalidatorcontroller#versionvalidator",
-    "class/src/controllers/api/versionValidator.js~VersionValidatorController.html#instance-member-versionValidator",
-    "src/controllers/api/versionValidator.js~VersionValidatorController#versionValidator",
-    "member"
   ],
   [
     "src/controllers/common/configuration.js",
     "file/src/controllers/common/configuration.js.html",
     "src/controllers/common/configuration.js",
     "file"
-  ],
-  [
-    "src/controllers/common/configuration.js~configurationcontroller#appconfiguration",
-    "class/src/controllers/common/configuration.js~ConfigurationController.html#instance-member-appConfiguration",
-    "src/controllers/common/configuration.js~ConfigurationController#appConfiguration",
-    "member"
   ],
   [
     "src/controllers/common/configuration.js~configurationcontroller#constructor",
@@ -730,12 +772,6 @@ window.esdocSearchIndex = [
     "class/src/controllers/common/configuration.js~ConfigurationController.html#instance-method-getConfigurationResponse",
     "src/controllers/common/configuration.js~ConfigurationController#getConfigurationResponse",
     "method"
-  ],
-  [
-    "src/controllers/common/configuration.js~configurationcontroller#responsesbuilder",
-    "class/src/controllers/common/configuration.js~ConfigurationController.html#instance-member-responsesBuilder",
-    "src/controllers/common/configuration.js~ConfigurationController#responsesBuilder",
-    "member"
   ],
   [
     "src/controllers/common/configuration.js~configurationcontroller#showconfiguration",
@@ -756,12 +792,6 @@ window.esdocSearchIndex = [
     "file"
   ],
   [
-    "src/controllers/common/health.js~healthcontroller#appconfiguration",
-    "class/src/controllers/common/health.js~HealthController.html#instance-member-appConfiguration",
-    "src/controllers/common/health.js~HealthController#appConfiguration",
-    "member"
-  ],
-  [
     "src/controllers/common/health.js~healthcontroller#constructor",
     "class/src/controllers/common/health.js~HealthController.html#instance-constructor-constructor",
     "src/controllers/common/health.js~HealthController#constructor",
@@ -774,63 +804,183 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
-    "src/controllers/common/health.js~healthcontroller#responsesbuilder",
-    "class/src/controllers/common/health.js~HealthController.html#instance-member-responsesBuilder",
-    "src/controllers/common/health.js~HealthController#responsesBuilder",
-    "member"
-  ],
-  [
     "src/controllers/common/index.js",
     "file/src/controllers/common/index.js.html",
     "src/controllers/common/index.js",
     "file"
   ],
   [
-    "src/controllers/common/rootstatics.js",
-    "file/src/controllers/common/rootStatics.js.html",
-    "src/controllers/common/rootStatics.js",
+    "src/controllers/common/statics.js",
+    "file/src/controllers/common/statics.js.html",
+    "src/controllers/common/statics.js",
     "file"
   ],
   [
-    "src/controllers/common/rootstatics.js~rootstaticscontroller#_parsefiles",
-    "class/src/controllers/common/rootStatics.js~RootStaticsController.html#instance-method-_parseFiles",
-    "src/controllers/common/rootStatics.js~RootStaticsController#_parseFiles",
+    "src/controllers/common/statics.js~staticscontroller#addroutes",
+    "class/src/controllers/common/statics.js~StaticsController.html#instance-method-addRoutes",
+    "src/controllers/common/statics.js~StaticsController#addRoutes",
     "method"
   ],
   [
-    "src/controllers/common/rootstatics.js~rootstaticscontroller#constructor",
-    "class/src/controllers/common/rootStatics.js~RootStaticsController.html#instance-constructor-constructor",
-    "src/controllers/common/rootStatics.js~RootStaticsController#constructor",
+    "src/controllers/common/statics.js~staticscontroller#constructor",
+    "class/src/controllers/common/statics.js~StaticsController.html#instance-constructor-constructor",
+    "src/controllers/common/statics.js~StaticsController#constructor",
     "method"
   ],
   [
-    "src/controllers/common/rootstatics.js~rootstaticscontroller#files",
-    "class/src/controllers/common/rootStatics.js~RootStaticsController.html#instance-member-files",
-    "src/controllers/common/rootStatics.js~RootStaticsController#files",
+    "src/controllers/common/statics.js~staticscontroller#options",
+    "class/src/controllers/common/statics.js~StaticsController.html#instance-get-options",
+    "src/controllers/common/statics.js~StaticsController#options",
     "member"
   ],
   [
-    "src/controllers/common/rootstatics.js~rootstaticscontroller#getfileentries",
-    "class/src/controllers/common/rootStatics.js~RootStaticsController.html#instance-method-getFileEntries",
-    "src/controllers/common/rootStatics.js~RootStaticsController#getFileEntries",
-    "method"
-  ],
-  [
-    "src/controllers/common/rootstatics.js~rootstaticscontroller#sendfile",
-    "class/src/controllers/common/rootStatics.js~RootStaticsController.html#instance-member-sendFile",
-    "src/controllers/common/rootStatics.js~RootStaticsController#sendFile",
-    "member"
-  ],
-  [
-    "src/controllers/common/rootstatics.js~rootstaticscontroller#servefile",
-    "class/src/controllers/common/rootStatics.js~RootStaticsController.html#instance-method-serveFile",
-    "src/controllers/common/rootStatics.js~RootStaticsController#serveFile",
-    "method"
+    "src/controllers/common/statics.js~staticscontrollerpathsoptions",
+    "typedef/index.html#static-typedef-StaticsControllerPathsOptions",
+    "src/controllers/common/statics.js~StaticsControllerPathsOptions",
+    "typedef"
   ],
   [
     "src/controllers/index.js",
     "file/src/controllers/index.js.html",
     "src/controllers/index.js",
+    "file"
+  ],
+  [
+    "src/controllers/utils/gateway.js",
+    "file/src/controllers/utils/gateway.js.html",
+    "src/controllers/utils/gateway.js",
+    "file"
+  ],
+  [
+    "src/controllers/utils/gateway.js~gatewayconfiguration",
+    "typedef/index.html#static-typedef-GatewayConfiguration",
+    "src/controllers/utils/gateway.js~GatewayConfiguration",
+    "typedef"
+  ],
+  [
+    "src/controllers/utils/gateway.js~gatewayconfigurationendpoint",
+    "typedef/index.html#static-typedef-GatewayConfigurationEndpoint",
+    "src/controllers/utils/gateway.js~GatewayConfigurationEndpoint",
+    "typedef"
+  ],
+  [
+    "src/controllers/utils/gateway.js~gatewayconfigurationendpoints",
+    "typedef/index.html#static-typedef-GatewayConfigurationEndpoints",
+    "src/controllers/utils/gateway.js~GatewayConfigurationEndpoints",
+    "typedef"
+  ],
+  [
+    "src/controllers/utils/gateway.js~gatewaycontroller#_apiclientconfiguration",
+    "class/src/controllers/utils/gateway.js~GatewayController.html#instance-member-_apiClientConfiguration",
+    "src/controllers/utils/gateway.js~GatewayController#_apiClientConfiguration",
+    "member"
+  ],
+  [
+    "src/controllers/utils/gateway.js~gatewaycontroller#_helperservice",
+    "class/src/controllers/utils/gateway.js~GatewayController.html#instance-member-_helperService",
+    "src/controllers/utils/gateway.js~GatewayController#_helperService",
+    "member"
+  ],
+  [
+    "src/controllers/utils/gateway.js~gatewaycontroller#addroutes",
+    "class/src/controllers/utils/gateway.js~GatewayController.html#instance-method-addRoutes",
+    "src/controllers/utils/gateway.js~GatewayController#addRoutes",
+    "method"
+  ],
+  [
+    "src/controllers/utils/gateway.js~gatewaycontroller#constructor",
+    "class/src/controllers/utils/gateway.js~GatewayController.html#instance-constructor-constructor",
+    "src/controllers/utils/gateway.js~GatewayController#constructor",
+    "method"
+  ],
+  [
+    "src/controllers/utils/gateway.js~gatewaycontroller#endpointsforapiclient",
+    "class/src/controllers/utils/gateway.js~GatewayController.html#instance-get-endpointsForAPIClient",
+    "src/controllers/utils/gateway.js~GatewayController#endpointsForAPIClient",
+    "member"
+  ],
+  [
+    "src/controllers/utils/gateway.js~gatewaycontroller#gatewayconfig",
+    "class/src/controllers/utils/gateway.js~GatewayController.html#instance-get-gatewayConfig",
+    "src/controllers/utils/gateway.js~GatewayController#gatewayConfig",
+    "member"
+  ],
+  [
+    "src/controllers/utils/gateway.js~gatewaycontroller#options",
+    "class/src/controllers/utils/gateway.js~GatewayController.html#instance-get-options",
+    "src/controllers/utils/gateway.js~GatewayController#options",
+    "member"
+  ],
+  [
+    "src/controllers/utils/gateway.js~gatewaycontrollercreatoroptions",
+    "typedef/index.html#static-typedef-GatewayControllerCreatorOptions",
+    "src/controllers/utils/gateway.js~GatewayControllerCreatorOptions",
+    "typedef"
+  ],
+  [
+    "src/controllers/utils/gateway.js~gatewaycontrollerendpointinformation",
+    "typedef/index.html#static-typedef-GatewayControllerEndpointInformation",
+    "src/controllers/utils/gateway.js~GatewayControllerEndpointInformation",
+    "typedef"
+  ],
+  [
+    "src/controllers/utils/gateway.js~gatewaycontrollerheadersoptions",
+    "typedef/index.html#static-typedef-GatewayControllerHeadersOptions",
+    "src/controllers/utils/gateway.js~GatewayControllerHeadersOptions",
+    "typedef"
+  ],
+  [
+    "src/controllers/utils/gateway.js~gatewaycontrolleroptions",
+    "typedef/index.html#static-typedef-GatewayControllerOptions",
+    "src/controllers/utils/gateway.js~GatewayControllerOptions",
+    "typedef"
+  ],
+  [
+    "src/controllers/utils/gateway.js~gatewaycontrollerrequest",
+    "typedef/index.html#static-typedef-GatewayControllerRequest",
+    "src/controllers/utils/gateway.js~GatewayControllerRequest",
+    "typedef"
+  ],
+  [
+    "src/controllers/utils/gateway.js~gatewayhelperservice",
+    "typedef/index.html#static-typedef-GatewayHelperService",
+    "src/controllers/utils/gateway.js~GatewayHelperService",
+    "typedef"
+  ],
+  [
+    "src/controllers/utils/gateway.js~gatewayhelperserviceerrorhandler",
+    "typedef/index.html#static-typedef-GatewayHelperServiceErrorHandler",
+    "src/controllers/utils/gateway.js~GatewayHelperServiceErrorHandler",
+    "typedef"
+  ],
+  [
+    "src/controllers/utils/gateway.js~gatewayhelperservicerequestreducer",
+    "typedef/index.html#static-typedef-GatewayHelperServiceRequestReducer",
+    "src/controllers/utils/gateway.js~GatewayHelperServiceRequestReducer",
+    "typedef"
+  ],
+  [
+    "src/controllers/utils/gateway.js~gatewayhelperserviceresponsehandler",
+    "typedef/index.html#static-typedef-GatewayHelperServiceResponseHandler",
+    "src/controllers/utils/gateway.js~GatewayHelperServiceResponseHandler",
+    "typedef"
+  ],
+  [
+    "src/controllers/utils/gateway.js~gatewayhelperserviceresponsereducer",
+    "typedef/index.html#static-typedef-GatewayHelperServiceResponseReducer",
+    "src/controllers/utils/gateway.js~GatewayHelperServiceResponseReducer",
+    "typedef"
+  ],
+  [
+    "src/controllers/utils/gateway.js~gatewayhelperservicestreamverification",
+    "typedef/index.html#static-typedef-GatewayHelperServiceStreamVerification",
+    "src/controllers/utils/gateway.js~GatewayHelperServiceStreamVerification",
+    "typedef"
+  ],
+  [
+    "src/controllers/utils/index.js",
+    "file/src/controllers/utils/index.js.html",
+    "src/controllers/utils/index.js",
     "file"
   ],
   [
@@ -846,18 +996,6 @@ window.esdocSearchIndex = [
     "file"
   ],
   [
-    "src/middlewares/common/errorhandler.js~errorhandler#apperror",
-    "class/src/middlewares/common/errorHandler.js~ErrorHandler.html#instance-member-AppError",
-    "src/middlewares/common/errorHandler.js~ErrorHandler#AppError",
-    "member"
-  ],
-  [
-    "src/middlewares/common/errorhandler.js~errorhandler#applogger",
-    "class/src/middlewares/common/errorHandler.js~ErrorHandler.html#instance-member-appLogger",
-    "src/middlewares/common/errorHandler.js~ErrorHandler#appLogger",
-    "member"
-  ],
-  [
     "src/middlewares/common/errorhandler.js~errorhandler#constructor",
     "class/src/middlewares/common/errorHandler.js~ErrorHandler.html#instance-constructor-constructor",
     "src/middlewares/common/errorHandler.js~ErrorHandler#constructor",
@@ -870,16 +1008,22 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
-    "src/middlewares/common/errorhandler.js~errorhandler#responsesbuilder",
-    "class/src/middlewares/common/errorHandler.js~ErrorHandler.html#instance-member-responsesBuilder",
-    "src/middlewares/common/errorHandler.js~ErrorHandler#responsesBuilder",
+    "src/middlewares/common/errorhandler.js~errorhandler#options",
+    "class/src/middlewares/common/errorHandler.js~ErrorHandler.html#instance-get-options",
+    "src/middlewares/common/errorHandler.js~ErrorHandler#options",
     "member"
   ],
   [
-    "src/middlewares/common/errorhandler.js~errorhandler#showerrors",
-    "class/src/middlewares/common/errorHandler.js~ErrorHandler.html#instance-member-showErrors",
-    "src/middlewares/common/errorHandler.js~ErrorHandler#showErrors",
-    "member"
+    "src/middlewares/common/errorhandler.js~errorhandlerdefaultoptions",
+    "typedef/index.html#static-typedef-ErrorHandlerDefaultOptions",
+    "src/middlewares/common/errorHandler.js~ErrorHandlerDefaultOptions",
+    "typedef"
+  ],
+  [
+    "src/middlewares/common/errorhandler.js~errorhandleroptions",
+    "typedef/index.html#static-typedef-ErrorHandlerOptions",
+    "src/middlewares/common/errorHandler.js~ErrorHandlerOptions",
+    "typedef"
   ],
   [
     "src/middlewares/common/forcehttps.js",
@@ -895,7 +1039,7 @@ window.esdocSearchIndex = [
   ],
   [
     "src/middlewares/common/forcehttps.js~forcehttps#ignoredroutes",
-    "class/src/middlewares/common/forceHTTPS.js~ForceHTTPS.html#instance-member-ignoredRoutes",
+    "class/src/middlewares/common/forceHTTPS.js~ForceHTTPS.html#instance-get-ignoredRoutes",
     "src/middlewares/common/forceHTTPS.js~ForceHTTPS#ignoredRoutes",
     "member"
   ],
@@ -918,28 +1062,16 @@ window.esdocSearchIndex = [
     "file"
   ],
   [
+    "src/middlewares/html/fasthtml.js~fasthtml#_options",
+    "class/src/middlewares/html/fastHTML.js~FastHTML.html#instance-member-_options",
+    "src/middlewares/html/fastHTML.js~FastHTML#_options",
+    "member"
+  ],
+  [
     "src/middlewares/html/fasthtml.js~fasthtml#constructor",
     "class/src/middlewares/html/fastHTML.js~FastHTML.html#instance-constructor-constructor",
     "src/middlewares/html/fastHTML.js~FastHTML#constructor",
     "method"
-  ],
-  [
-    "src/middlewares/html/fasthtml.js~fasthtml#file",
-    "class/src/middlewares/html/fastHTML.js~FastHTML.html#instance-member-file",
-    "src/middlewares/html/fastHTML.js~FastHTML#file",
-    "member"
-  ],
-  [
-    "src/middlewares/html/fasthtml.js~fasthtml#htmlgenerator",
-    "class/src/middlewares/html/fastHTML.js~FastHTML.html#instance-member-htmlGenerator",
-    "src/middlewares/html/fastHTML.js~FastHTML#htmlGenerator",
-    "member"
-  ],
-  [
-    "src/middlewares/html/fasthtml.js~fasthtml#ignoredroutes",
-    "class/src/middlewares/html/fastHTML.js~FastHTML.html#instance-member-ignoredRoutes",
-    "src/middlewares/html/fastHTML.js~FastHTML#ignoredRoutes",
-    "member"
   ],
   [
     "src/middlewares/html/fasthtml.js~fasthtml#middleware",
@@ -948,10 +1080,22 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
-    "src/middlewares/html/fasthtml.js~fasthtml#sendfile",
-    "class/src/middlewares/html/fastHTML.js~FastHTML.html#instance-member-sendFile",
-    "src/middlewares/html/fastHTML.js~FastHTML#sendFile",
+    "src/middlewares/html/fasthtml.js~fasthtml#options",
+    "class/src/middlewares/html/fastHTML.js~FastHTML.html#instance-get-options",
+    "src/middlewares/html/fastHTML.js~FastHTML#options",
     "member"
+  ],
+  [
+    "src/middlewares/html/fasthtml.js~fasthtmlmiddlewareoptions",
+    "typedef/index.html#static-typedef-FastHTMLMiddlewareOptions",
+    "src/middlewares/html/fastHTML.js~FastHTMLMiddlewareOptions",
+    "typedef"
+  ],
+  [
+    "src/middlewares/html/fasthtml.js~fasthtmloptions",
+    "typedef/index.html#static-typedef-FastHTMLOptions",
+    "src/middlewares/html/fastHTML.js~FastHTMLOptions",
+    "typedef"
   ],
   [
     "src/middlewares/html/index.js",
@@ -973,14 +1117,8 @@ window.esdocSearchIndex = [
   ],
   [
     "src/middlewares/html/showhtml.js~showhtml#file",
-    "class/src/middlewares/html/showHTML.js~ShowHTML.html#instance-member-file",
+    "class/src/middlewares/html/showHTML.js~ShowHTML.html#instance-get-file",
     "src/middlewares/html/showHTML.js~ShowHTML#file",
-    "member"
-  ],
-  [
-    "src/middlewares/html/showhtml.js~showhtml#htmlgenerator",
-    "class/src/middlewares/html/showHTML.js~ShowHTML.html#instance-member-htmlGenerator",
-    "src/middlewares/html/showHTML.js~ShowHTML#htmlGenerator",
     "member"
   ],
   [
@@ -990,10 +1128,10 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
-    "src/middlewares/html/showhtml.js~showhtml#sendfile",
-    "class/src/middlewares/html/showHTML.js~ShowHTML.html#instance-member-sendFile",
-    "src/middlewares/html/showHTML.js~ShowHTML#sendFile",
-    "member"
+    "src/middlewares/html/showhtml.js~showhtmlmiddlewareoptions",
+    "typedef/index.html#static-typedef-ShowHTMLMiddlewareOptions",
+    "src/middlewares/html/showHTML.js~ShowHTMLMiddlewareOptions",
+    "typedef"
   ],
   [
     "src/middlewares/index.js",
@@ -1002,124 +1140,100 @@ window.esdocSearchIndex = [
     "file"
   ],
   [
-    "src/services/api/client.js",
-    "file/src/services/api/client.js.html",
-    "src/services/api/client.js",
+    "src/middlewares/utils/index.js",
+    "file/src/middlewares/utils/index.js.html",
+    "src/middlewares/utils/index.js",
     "file"
   ],
   [
-    "src/services/api/client.js~apiclient#apperror",
-    "class/src/services/api/client.js~APIClient.html#instance-member-AppError",
-    "src/services/api/client.js~APIClient#AppError",
-    "member"
-  ],
-  [
-    "src/services/api/client.js~apiclient#apiconfig",
-    "class/src/services/api/client.js~APIClient.html#instance-member-apiConfig",
-    "src/services/api/client.js~APIClient#apiConfig",
-    "member"
-  ],
-  [
-    "src/services/api/client.js~apiclient#constructor",
-    "class/src/services/api/client.js~APIClient.html#instance-constructor-constructor",
-    "src/services/api/client.js~APIClient#constructor",
-    "method"
-  ],
-  [
-    "src/services/api/client.js~apiclient#error",
-    "class/src/services/api/client.js~APIClient.html#instance-method-error",
-    "src/services/api/client.js~APIClient#error",
-    "method"
-  ],
-  [
-    "src/services/api/ensurebearerauthentication.js",
-    "file/src/services/api/ensureBearerAuthentication.js.html",
-    "src/services/api/ensureBearerAuthentication.js",
+    "src/middlewares/utils/versionvalidator.js",
+    "file/src/middlewares/utils/versionValidator.js.html",
+    "src/middlewares/utils/versionValidator.js",
     "file"
   ],
   [
-    "src/services/api/ensurebearerauthentication.js~ensurebearerauthentication#apperror",
-    "class/src/services/api/ensureBearerAuthentication.js~EnsureBearerAuthentication.html#instance-member-AppError",
-    "src/services/api/ensureBearerAuthentication.js~EnsureBearerAuthentication#AppError",
-    "member"
-  ],
-  [
-    "src/services/api/ensurebearerauthentication.js~ensurebearerauthentication#bearerregex",
-    "class/src/services/api/ensureBearerAuthentication.js~EnsureBearerAuthentication.html#instance-member-bearerRegex",
-    "src/services/api/ensureBearerAuthentication.js~EnsureBearerAuthentication#bearerRegex",
-    "member"
-  ],
-  [
-    "src/services/api/ensurebearerauthentication.js~ensurebearerauthentication#constructor",
-    "class/src/services/api/ensureBearerAuthentication.js~EnsureBearerAuthentication.html#instance-constructor-constructor",
-    "src/services/api/ensureBearerAuthentication.js~EnsureBearerAuthentication#constructor",
+    "src/middlewares/utils/versionvalidator.js~versionvalidator#constructor",
+    "class/src/middlewares/utils/versionValidator.js~VersionValidator.html#instance-constructor-constructor",
+    "src/middlewares/utils/versionValidator.js~VersionValidator#constructor",
     "method"
   ],
   [
-    "src/services/api/ensurebearerauthentication.js~ensurebearerauthentication#middleware",
-    "class/src/services/api/ensureBearerAuthentication.js~EnsureBearerAuthentication.html#instance-method-middleware",
-    "src/services/api/ensureBearerAuthentication.js~EnsureBearerAuthentication#middleware",
+    "src/middlewares/utils/versionvalidator.js~versionvalidator#middleware",
+    "class/src/middlewares/utils/versionValidator.js~VersionValidator.html#instance-method-middleware",
+    "src/middlewares/utils/versionValidator.js~VersionValidator#middleware",
     "method"
   ],
   [
-    "src/services/api/index.js",
-    "file/src/services/api/index.js.html",
-    "src/services/api/index.js",
+    "src/middlewares/utils/versionvalidator.js~versionvalidator#options",
+    "class/src/middlewares/utils/versionValidator.js~VersionValidator.html#instance-get-options",
+    "src/middlewares/utils/versionValidator.js~VersionValidator#options",
+    "member"
+  ],
+  [
+    "src/middlewares/utils/versionvalidator.js~versionvalidatoroptions",
+    "typedef/index.html#static-typedef-VersionValidatorOptions",
+    "src/middlewares/utils/versionValidator.js~VersionValidatorOptions",
+    "typedef"
+  ],
+  [
+    "src/services/common/apperror.js",
+    "file/src/services/common/appError.js.html",
+    "src/services/common/appError.js",
     "file"
   ],
   [
-    "src/services/api/versionvalidator.js",
-    "file/src/services/api/versionValidator.js.html",
-    "src/services/api/versionValidator.js",
+    "src/services/common/apperror.js~apperror#_context",
+    "class/src/services/common/appError.js~AppError.html#instance-member-_context",
+    "src/services/common/appError.js~AppError#_context",
+    "member"
+  ],
+  [
+    "src/services/common/apperror.js~apperror#_date",
+    "class/src/services/common/appError.js~AppError.html#instance-member-_date",
+    "src/services/common/appError.js~AppError#_date",
+    "member"
+  ],
+  [
+    "src/services/common/apperror.js~apperror#constructor",
+    "class/src/services/common/appError.js~AppError.html#instance-constructor-constructor",
+    "src/services/common/appError.js~AppError#constructor",
+    "method"
+  ],
+  [
+    "src/services/common/apperror.js~apperror#context",
+    "class/src/services/common/appError.js~AppError.html#instance-get-context",
+    "src/services/common/appError.js~AppError#context",
+    "member"
+  ],
+  [
+    "src/services/common/apperror.js~apperror#date",
+    "class/src/services/common/appError.js~AppError.html#instance-get-date",
+    "src/services/common/appError.js~AppError#date",
+    "member"
+  ],
+  [
+    "src/services/common/apperror.js~apperror#response",
+    "class/src/services/common/appError.js~AppError.html#instance-get-response",
+    "src/services/common/appError.js~AppError#response",
+    "member"
+  ],
+  [
+    "src/services/common/apperror.js~apperror#status",
+    "class/src/services/common/appError.js~AppError.html#instance-get-status",
+    "src/services/common/appError.js~AppError#status",
+    "member"
+  ],
+  [
+    "src/services/common/httperror.js",
+    "file/src/services/common/httpError.js.html",
+    "src/services/common/httpError.js",
     "file"
   ],
   [
-    "src/services/api/versionvalidator.js~versionvalidator#apperror",
-    "class/src/services/api/versionValidator.js~VersionValidator.html#instance-member-AppError",
-    "src/services/api/versionValidator.js~VersionValidator#AppError",
-    "member"
-  ],
-  [
-    "src/services/api/versionvalidator.js~versionvalidator#appconfiguration",
-    "class/src/services/api/versionValidator.js~VersionValidator.html#instance-member-appConfiguration",
-    "src/services/api/versionValidator.js~VersionValidator#appConfiguration",
-    "member"
-  ],
-  [
-    "src/services/api/versionvalidator.js~versionvalidator#constructor",
-    "class/src/services/api/versionValidator.js~VersionValidator.html#instance-constructor-constructor",
-    "src/services/api/versionValidator.js~VersionValidator#constructor",
+    "src/services/common/httperror.js~httperror#constructor",
+    "class/src/services/common/httpError.js~HTTPError.html#instance-constructor-constructor",
+    "src/services/common/httpError.js~HTTPError#constructor",
     "method"
-  ],
-  [
-    "src/services/api/versionvalidator.js~versionvalidator#middleware",
-    "class/src/services/api/versionValidator.js~VersionValidator.html#instance-method-middleware",
-    "src/services/api/versionValidator.js~VersionValidator#middleware",
-    "method"
-  ],
-  [
-    "src/services/api/versionvalidator.js~versionvalidator#responsesbuilder",
-    "class/src/services/api/versionValidator.js~VersionValidator.html#instance-member-responsesBuilder",
-    "src/services/api/versionValidator.js~VersionValidator#responsesBuilder",
-    "member"
-  ],
-  [
-    "src/services/common/error.js",
-    "file/src/services/common/error.js.html",
-    "src/services/common/error.js",
-    "file"
-  ],
-  [
-    "src/services/common/error.js~apperror#constructor",
-    "class/src/services/common/error.js~AppError.html#instance-constructor-constructor",
-    "src/services/common/error.js~AppError#constructor",
-    "method"
-  ],
-  [
-    "src/services/common/error.js~apperror#extras",
-    "class/src/services/common/error.js~AppError.html#instance-member-extras",
-    "src/services/common/error.js~AppError#extras",
-    "member"
   ],
   [
     "src/services/common/index.js",
@@ -1158,12 +1272,6 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
-    "src/services/frontend/frontendfs.js~frontendfs#pathutils",
-    "class/src/services/frontend/frontendFs.js~FrontendFs.html#instance-member-pathUtils",
-    "src/services/frontend/frontendFs.js~FrontendFs#pathUtils",
-    "member"
-  ],
-  [
     "src/services/frontend/frontendfs.js~frontendfs#read",
     "class/src/services/frontend/frontendFs.js~FrontendFs.html#instance-method-read",
     "src/services/frontend/frontendFs.js~FrontendFs#read",
@@ -1188,15 +1296,9 @@ window.esdocSearchIndex = [
     "file"
   ],
   [
-    "src/services/html/htmlgenerator.js~htmlgenerator#appconfiguration",
-    "class/src/services/html/htmlGenerator.js~HTMLGenerator.html#instance-member-appConfiguration",
-    "src/services/html/htmlGenerator.js~HTMLGenerator#appConfiguration",
-    "member"
-  ],
-  [
-    "src/services/html/htmlgenerator.js~htmlgenerator#applogger",
-    "class/src/services/html/htmlGenerator.js~HTMLGenerator.html#instance-member-appLogger",
-    "src/services/html/htmlGenerator.js~HTMLGenerator#appLogger",
+    "src/services/html/htmlgenerator.js~htmlgenerator#_options",
+    "class/src/services/html/htmlGenerator.js~HTMLGenerator.html#instance-member-_options",
+    "src/services/html/htmlGenerator.js~HTMLGenerator#_options",
     "member"
   ],
   [
@@ -1204,12 +1306,6 @@ window.esdocSearchIndex = [
     "class/src/services/html/htmlGenerator.js~HTMLGenerator.html#instance-constructor-constructor",
     "src/services/html/htmlGenerator.js~HTMLGenerator#constructor",
     "method"
-  ],
-  [
-    "src/services/html/htmlgenerator.js~htmlgenerator#frontendfs",
-    "class/src/services/html/htmlGenerator.js~HTMLGenerator.html#instance-member-frontendFs",
-    "src/services/html/htmlGenerator.js~HTMLGenerator#frontendFs",
-    "member"
   ],
   [
     "src/services/html/htmlgenerator.js~htmlgenerator#generatehtml",
@@ -1231,14 +1327,8 @@ window.esdocSearchIndex = [
   ],
   [
     "src/services/html/htmlgenerator.js~htmlgenerator#options",
-    "class/src/services/html/htmlGenerator.js~HTMLGenerator.html#instance-member-options",
+    "class/src/services/html/htmlGenerator.js~HTMLGenerator.html#instance-get-options",
     "src/services/html/htmlGenerator.js~HTMLGenerator#options",
-    "member"
-  ],
-  [
-    "src/services/html/htmlgenerator.js~htmlgenerator#valuesservice",
-    "class/src/services/html/htmlGenerator.js~HTMLGenerator.html#instance-member-valuesService",
-    "src/services/html/htmlGenerator.js~HTMLGenerator#valuesService",
     "member"
   ],
   [
@@ -1254,6 +1344,12 @@ window.esdocSearchIndex = [
     "typedef"
   ],
   [
+    "src/services/html/htmlgenerator.js~htmlgeneratorprovideroptions",
+    "typedef/index.html#static-typedef-HTMLGeneratorProviderOptions",
+    "src/services/html/htmlGenerator.js~HTMLGeneratorProviderOptions",
+    "typedef"
+  ],
+  [
     "src/services/html/htmlgenerator.js~htmlgeneratorvaluesservice",
     "typedef/index.html#static-typedef-HTMLGeneratorValuesService",
     "src/services/html/htmlGenerator.js~HTMLGeneratorValuesService",
@@ -1264,6 +1360,42 @@ window.esdocSearchIndex = [
     "file/src/services/html/index.js.html",
     "src/services/html/index.js",
     "file"
+  ],
+  [
+    "src/services/http/apiclient.js",
+    "file/src/services/http/apiClient.js.html",
+    "src/services/http/apiClient.js",
+    "file"
+  ],
+  [
+    "src/services/http/apiclient.js~apiclient#apiconfig",
+    "class/src/services/http/apiClient.js~APIClient.html#instance-get-apiConfig",
+    "src/services/http/apiClient.js~APIClient#apiConfig",
+    "member"
+  ],
+  [
+    "src/services/http/apiclient.js~apiclient#constructor",
+    "class/src/services/http/apiClient.js~APIClient.html#instance-constructor-constructor",
+    "src/services/http/apiClient.js~APIClient#constructor",
+    "method"
+  ],
+  [
+    "src/services/http/apiclient.js~apiclient#error",
+    "class/src/services/http/apiClient.js~APIClient.html#instance-method-error",
+    "src/services/http/apiClient.js~APIClient#error",
+    "method"
+  ],
+  [
+    "src/services/http/apiclient.js~apiclient#geterrormessagefromresponse",
+    "class/src/services/http/apiClient.js~APIClient.html#instance-method-getErrorMessageFromResponse",
+    "src/services/http/apiClient.js~APIClient#getErrorMessageFromResponse",
+    "method"
+  ],
+  [
+    "src/services/http/apiclient.js~apiclientconfiguration",
+    "typedef/index.html#static-typedef-APIClientConfiguration",
+    "src/services/http/apiClient.js~APIClientConfiguration",
+    "typedef"
   ],
   [
     "src/services/http/http.js",
@@ -1282,12 +1414,6 @@ window.esdocSearchIndex = [
     "class/src/services/http/http.js~HTTP.html#instance-method-_logResponse",
     "src/services/http/http.js~HTTP#_logResponse",
     "method"
-  ],
-  [
-    "src/services/http/http.js~http#applogger",
-    "class/src/services/http/http.js~HTTP.html#instance-member-appLogger",
-    "src/services/http/http.js~HTTP#appLogger",
-    "member"
   ],
   [
     "src/services/http/http.js~http#constructor",
@@ -1315,9 +1441,15 @@ window.esdocSearchIndex = [
   ],
   [
     "src/services/http/http.js~http#logrequests",
-    "class/src/services/http/http.js~HTTP.html#instance-member-logRequests",
+    "class/src/services/http/http.js~HTTP.html#instance-get-logRequests",
     "src/services/http/http.js~HTTP#logRequests",
     "member"
+  ],
+  [
+    "src/services/http/http.js~http#normalizeheaders",
+    "class/src/services/http/http.js~HTTP.html#instance-method-normalizeHeaders",
+    "src/services/http/http.js~HTTP#normalizeHeaders",
+    "method"
   ],
   [
     "src/services/http/http.js~httpfetchoptions",
@@ -1342,12 +1474,6 @@ window.esdocSearchIndex = [
     "file/src/services/http/responsesBuilder.js.html",
     "src/services/http/responsesBuilder.js",
     "file"
-  ],
-  [
-    "src/services/http/responsesbuilder.js~responsesbuilder#appconfiguration",
-    "class/src/services/http/responsesBuilder.js~ResponsesBuilder.html#instance-member-appConfiguration",
-    "src/services/http/responsesBuilder.js~ResponsesBuilder#appConfiguration",
-    "member"
   ],
   [
     "src/services/http/responsesbuilder.js~responsesbuilder#constructor",
@@ -1380,6 +1506,48 @@ window.esdocSearchIndex = [
     "file"
   ],
   [
+    "src/services/utils/ensurebearertoken.js",
+    "file/src/services/utils/ensureBearerToken.js.html",
+    "src/services/utils/ensureBearerToken.js",
+    "file"
+  ],
+  [
+    "src/services/utils/ensurebearertoken.js~ensurebearertoken#constructor",
+    "class/src/services/utils/ensureBearerToken.js~EnsureBearerToken.html#instance-constructor-constructor",
+    "src/services/utils/ensureBearerToken.js~EnsureBearerToken#constructor",
+    "method"
+  ],
+  [
+    "src/services/utils/ensurebearertoken.js~ensurebearertoken#middleware",
+    "class/src/services/utils/ensureBearerToken.js~EnsureBearerToken.html#instance-method-middleware",
+    "src/services/utils/ensureBearerToken.js~EnsureBearerToken#middleware",
+    "method"
+  ],
+  [
+    "src/services/utils/ensurebearertoken.js~ensurebearertoken#options",
+    "class/src/services/utils/ensureBearerToken.js~EnsureBearerToken.html#instance-get-options",
+    "src/services/utils/ensureBearerToken.js~EnsureBearerToken#options",
+    "member"
+  ],
+  [
+    "src/services/utils/ensurebearertoken.js~ensurebearertokenerroroptions",
+    "typedef/index.html#static-typedef-EnsureBearerTokenErrorOptions",
+    "src/services/utils/ensureBearerToken.js~EnsureBearerTokenErrorOptions",
+    "typedef"
+  ],
+  [
+    "src/services/utils/ensurebearertoken.js~ensurebearertokenoptions",
+    "typedef/index.html#static-typedef-EnsureBearerTokenOptions",
+    "src/services/utils/ensureBearerToken.js~EnsureBearerTokenOptions",
+    "typedef"
+  ],
+  [
+    "src/services/utils/index.js",
+    "file/src/services/utils/index.js.html",
+    "src/services/utils/index.js",
+    "file"
+  ],
+  [
     "src/typedef.js",
     "file/src/typedef.js.html",
     "src/typedef.js",
@@ -1402,12 +1570,6 @@ window.esdocSearchIndex = [
     "https://homer0.github.io/wootils/class/wootils/node/appConfiguration.js~AppConfiguration.html",
     "src/typedef.js~AppConfiguration",
     "external"
-  ],
-  [
-    "src/typedef.js~controller",
-    "typedef/index.html#static-typedef-Controller",
-    "src/typedef.js~Controller",
-    "typedef"
   ],
   [
     "src/typedef.js~environmentutils",
@@ -1434,12 +1596,6 @@ window.esdocSearchIndex = [
     "external"
   ],
   [
-    "src/typedef.js~expressnext",
-    "typedef/index.html#static-typedef-ExpressNext",
-    "src/typedef.js~ExpressNext",
-    "typedef"
-  ],
-  [
     "src/typedef.js~expressrequest",
     "https://expressjs.com/en/4x/api.html#req",
     "src/typedef.js~ExpressRequest",
@@ -1452,9 +1608,9 @@ window.esdocSearchIndex = [
     "external"
   ],
   [
-    "src/typedef.js~expressresponse",
-    "https://expressjs.com/en/4x/api.html#res",
-    "src/typedef.js~ExpressResponse",
+    "src/typedef.js~expressrouter",
+    "https://expressjs.com/en/4x/api.html#router",
+    "src/typedef.js~ExpressRouter",
     "external"
   ],
   [
@@ -1464,22 +1620,10 @@ window.esdocSearchIndex = [
     "external"
   ],
   [
-    "src/typedef.js~middleware",
-    "typedef/index.html#static-typedef-Middleware",
-    "src/typedef.js~Middleware",
-    "typedef"
-  ],
-  [
     "src/typedef.js~pathutils",
     "https://homer0.github.io/wootils/class/wootils/node/pathUtils.js~PathUtils.html",
     "src/typedef.js~PathUtils",
     "external"
-  ],
-  [
-    "src/typedef.js~provider",
-    "typedef/index.html#static-typedef-Provider",
-    "src/typedef.js~Provider",
-    "typedef"
   ],
   [
     "src/typedef.js~rootrequire",
@@ -1488,9 +1632,87 @@ window.esdocSearchIndex = [
     "external"
   ],
   [
+    "src/utils/functions.js",
+    "file/src/utils/functions.js.html",
+    "src/utils/functions.js",
+    "file"
+  ],
+  [
     "src/utils/wrappers.js",
     "file/src/utils/wrappers.js.html",
     "src/utils/wrappers.js",
     "file"
+  ],
+  [
+    "src/utils/wrappers.js~controller",
+    "typedef/index.html#static-typedef-Controller",
+    "src/utils/wrappers.js~Controller",
+    "typedef"
+  ],
+  [
+    "src/utils/wrappers.js~controllercreator",
+    "typedef/index.html#static-typedef-ControllerCreator",
+    "src/utils/wrappers.js~ControllerCreator",
+    "typedef"
+  ],
+  [
+    "src/utils/wrappers.js~controllercreatorcallback",
+    "typedef/index.html#static-typedef-ControllerCreatorCallback",
+    "src/utils/wrappers.js~ControllerCreatorCallback",
+    "typedef"
+  ],
+  [
+    "src/utils/wrappers.js~controllermountcallback",
+    "typedef/index.html#static-typedef-ControllerMountCallback",
+    "src/utils/wrappers.js~ControllerMountCallback",
+    "typedef"
+  ],
+  [
+    "src/utils/wrappers.js~middleware",
+    "typedef/index.html#static-typedef-Middleware",
+    "src/utils/wrappers.js~Middleware",
+    "typedef"
+  ],
+  [
+    "src/utils/wrappers.js~middlewarecreator",
+    "typedef/index.html#static-typedef-MiddlewareCreator",
+    "src/utils/wrappers.js~MiddlewareCreator",
+    "typedef"
+  ],
+  [
+    "src/utils/wrappers.js~middlewarecreatorcallback",
+    "typedef/index.html#static-typedef-MiddlewareCreatorCallback",
+    "src/utils/wrappers.js~MiddlewareCreatorCallback",
+    "typedef"
+  ],
+  [
+    "src/utils/wrappers.js~middlewareusecallback",
+    "typedef/index.html#static-typedef-MiddlewareUseCallback",
+    "src/utils/wrappers.js~MiddlewareUseCallback",
+    "typedef"
+  ],
+  [
+    "src/utils/wrappers.js~provider",
+    "typedef/index.html#static-typedef-Provider",
+    "src/utils/wrappers.js~Provider",
+    "typedef"
+  ],
+  [
+    "src/utils/wrappers.js~providercreator",
+    "typedef/index.html#static-typedef-ProviderCreator",
+    "src/utils/wrappers.js~ProviderCreator",
+    "typedef"
+  ],
+  [
+    "src/utils/wrappers.js~providercreatorcallback",
+    "typedef/index.html#static-typedef-ProviderCreatorCallback",
+    "src/utils/wrappers.js~ProviderCreatorCallback",
+    "typedef"
+  ],
+  [
+    "src/utils/wrappers.js~providerregistrationcallback",
+    "typedef/index.html#static-typedef-ProviderRegistrationCallback",
+    "src/utils/wrappers.js~ProviderRegistrationCallback",
+    "typedef"
   ]
 ]

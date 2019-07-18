@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../../../">
+  <title data-ice="title">src/controllers/utils/gateway.js | jimpex</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="Express as dependency injection container."><meta property="twitter:card" content="summary"><meta property="twitter:title" content="jimpex"><meta property="twitter:description" content="Express as dependency injection container."></head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  <a href="./manual/index.html" data-ice="manualHeaderLink">Manual</a>
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+<a style="position:relative; top:3px;" href="https://github.com/homer0/jimpex"><img width="20px" src="./image/github.png"></a></header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="https://homer0.github.io/wootils/class/wootils/shared/apiClient.js~APIClient.html">APIClientBase</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="https://homer0.github.io/wootils/typedef/index.html#static-typedef-APIClientEndpoints">APIClientEndpoints</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="https://homer0.github.io/wootils/class/wootils/node/appConfiguration.js~AppConfiguration.html">AppConfiguration</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="https://homer0.github.io/wootils/class/wootils/node/environmentUtils.js~EnvironmentUtils.html">EnvironmentUtils</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="https://homer0.github.io/wootils/class/wootils/node/errorHandler.js~ErrorHandler.html">ErrorHandler</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="https://expressjs.com/en/4x/api.html">Express</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://expressjs.com/en/guide/using-middleware.html">ExpressMiddleware</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="https://expressjs.com/en/4x/api.html#req">ExpressRequest</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="https://expressjs.com/en/4x/api.html#res">ExpressResponse</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="https://expressjs.com/en/4x/api.html#router">ExpressRouter</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="https://homer0.github.io/wootils/class/wootils/node/logger.js~Logger.html">Logger</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="https://homer0.github.io/wootils/class/wootils/node/pathUtils.js~PathUtils.html">PathUtils</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="https://homer0.github.io/wootils/function/index.html#static-function-rootRequire">RootRequire</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#app">app</a><span data-ice="kind" class="kind-interface">I</span><span data-ice="name"><span><a href="class/src/app/index.js~Jimpex.html">Jimpex</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-JimpexConfigurationOptions">JimpexConfigurationOptions</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-JimpexDefaultServicesOptions">JimpexDefaultServicesOptions</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-JimpexExpressOptions">JimpexExpressOptions</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-JimpexOptions">JimpexOptions</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-JimpexStaticsOptions">JimpexStaticsOptions</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="https://yarnpkg.com/en/package/jimple">Jimple</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#constants">constants</a><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-eventNames">eventNames</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-JimpexEvents">JimpexEvents</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#controllers-common">controllers/common</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/controllers/common/configuration.js~ConfigurationController.html">ConfigurationController</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/controllers/common/health.js~HealthController.html">HealthController</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/controllers/common/statics.js~StaticsController.html">StaticsController</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-configurationController">configurationController</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-healthController">healthController</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-staticsController">staticsController</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-StaticsControllerPathsOptions">StaticsControllerPathsOptions</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#controllers-utils">controllers/utils</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/controllers/utils/gateway.js~GatewayController.html">GatewayController</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-gatewayController">gatewayController</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-GatewayConfiguration">GatewayConfiguration</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-GatewayConfigurationEndpoint">GatewayConfigurationEndpoint</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-GatewayConfigurationEndpoints">GatewayConfigurationEndpoints</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-GatewayControllerCreatorOptions">GatewayControllerCreatorOptions</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-GatewayControllerEndpointInformation">GatewayControllerEndpointInformation</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-GatewayControllerHeadersOptions">GatewayControllerHeadersOptions</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-GatewayControllerOptions">GatewayControllerOptions</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-GatewayControllerRequest">GatewayControllerRequest</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-GatewayHelperService">GatewayHelperService</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-GatewayHelperServiceErrorHandler">GatewayHelperServiceErrorHandler</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-GatewayHelperServiceRequestReducer">GatewayHelperServiceRequestReducer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-GatewayHelperServiceResponseHandler">GatewayHelperServiceResponseHandler</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-GatewayHelperServiceResponseReducer">GatewayHelperServiceResponseReducer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-GatewayHelperServiceStreamVerification">GatewayHelperServiceStreamVerification</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#middlewares-common">middlewares/common</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/middlewares/common/errorHandler.js~ErrorHandler.html">ErrorHandler</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/middlewares/common/forceHTTPS.js~ForceHTTPS.html">ForceHTTPS</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-errorHandler">errorHandler</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-forceHTTPS">forceHTTPS</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-ErrorHandlerDefaultOptions">ErrorHandlerDefaultOptions</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-ErrorHandlerOptions">ErrorHandlerOptions</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#middlewares-html">middlewares/html</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/middlewares/html/fastHTML.js~FastHTML.html">FastHTML</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/middlewares/html/showHTML.js~ShowHTML.html">ShowHTML</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-fastHTML">fastHTML</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-showHTML">showHTML</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-FastHTMLMiddlewareOptions">FastHTMLMiddlewareOptions</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-FastHTMLOptions">FastHTMLOptions</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-ShowHTMLMiddlewareOptions">ShowHTMLMiddlewareOptions</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#middlewares-utils">middlewares/utils</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/middlewares/utils/versionValidator.js~VersionValidator.html">VersionValidator</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-versionValidator">versionValidator</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-VersionValidatorOptions">VersionValidatorOptions</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#services-common">services/common</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/services/common/appError.js~AppError.html">AppError</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/services/common/httpError.js~HTTPError.html">HTTPError</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-sendFile">sendFile</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-appError">appError</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-httpError">httpError</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-commonServices">commonServices</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-sendFileProvider">sendFileProvider</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-SendFile">SendFile</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#services-frontend">services/frontend</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/services/frontend/frontendFs.js~FrontendFs.html">FrontendFs</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-frontendFs">frontendFs</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#services-html">services/html</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/services/html/htmlGenerator.js~HTMLGenerator.html">HTMLGenerator</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-htmlGenerator">htmlGenerator</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-HTMLGeneratorOptions">HTMLGeneratorOptions</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-HTMLGeneratorProviderOptions">HTMLGeneratorProviderOptions</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-HTMLGeneratorValuesService">HTMLGeneratorValuesService</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#services-http">services/http</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/services/http/apiClient.js~APIClient.html">APIClient</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/services/http/http.js~HTTP.html">HTTP</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/services/http/responsesBuilder.js~ResponsesBuilder.html">ResponsesBuilder</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-apiClient">apiClient</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-http">http</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-httpServices">httpServices</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-responsesBuilder">responsesBuilder</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-APIClientConfiguration">APIClientConfiguration</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-HTTPFetchOptions">HTTPFetchOptions</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-ResponsesBuilderPostMessageOptions">ResponsesBuilderPostMessageOptions</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Headers">Headers</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#services-utils">services/utils</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/services/utils/ensureBearerToken.js~EnsureBearerToken.html">EnsureBearerToken</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-ensureBearerToken">ensureBearerToken</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-utilsServices">utilsServices</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-EnsureBearerTokenErrorOptions">EnsureBearerTokenErrorOptions</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-EnsureBearerTokenOptions">EnsureBearerTokenOptions</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#utils">utils</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createRouteExpression">createRouteExpression</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-escapeForRegExp">escapeForRegExp</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-removeLeadingSlash">removeLeadingSlash</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-removeSlashes">removeSlashes</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-removeTrailingSlash">removeTrailingSlash</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-controller">controller</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-controllerCreator">controllerCreator</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-middleware">middleware</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-middlewareCreator">middlewareCreator</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-provider">provider</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-providerCreator">providerCreator</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-providers">providers</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-Controller">Controller</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-ControllerCreator">ControllerCreator</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-ControllerCreatorCallback">ControllerCreatorCallback</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-ControllerMountCallback">ControllerMountCallback</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-Middleware">Middleware</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-MiddlewareCreator">MiddlewareCreator</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-MiddlewareCreatorCallback">MiddlewareCreatorCallback</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-MiddlewareUseCallback">MiddlewareUseCallback</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-Provider">Provider</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-ProviderCreator">ProviderCreator</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-ProviderCreatorCallback">ProviderCreatorCallback</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-ProviderRegistrationCallback">ProviderRegistrationCallback</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">src/controllers/utils/gateway.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">const ObjectUtils = require(&apos;wootils/shared/objectUtils&apos;);
+const { removeSlashes, createRouteExpression } = require(&apos;../../utils/functions&apos;);
+const { controllerCreator } = require(&apos;../../utils/wrappers&apos;);
+
+/**
+ * @typedef {Object} GatewayControllerRouteMethod
+ * @description This object represets an HTTP method for a route the controller will mount.
+ * @property {string}                               method   The name of the HTTP method.
+ * @property {GatewayControllerEndpointInformation} endpoint The information for the endpoint
+ *                                                           responsible from creating the route.
+ * @ignore
+ */
+
+/**
+ * @typedef {Object} GatewayControllerRoute
+ * @description This object contains the information for an specific route the controller will
+ *              mount.
+ * @property {string}                              path    The path the route will have.
+ * @property {Array&lt;GatewayControllerRouteMethod&gt;} methods A list with all the methods the
+ *                                                         controller will use to mount the route.
+ * @ignore
+ */
+
+/**
+ * @typedef {Object} GatewayConfigurationEndpoint
+ * @description Normally, you would define an endpoint with just a string path, but you can use
+ *              this type of object to add extra settings.
+ * @property {string} path   The path to the endpoint relative to the entry point. It can include
+ *                           placeholders for parameters like `/:parameter/`.
+ * @property {string} method The HTTP method for the endpoint. This will tell the gateway the
+ *                           type of route it should mount. If is not specified, it will use
+ *                           `all`.
+ */
+
+/**
+ * @typedef {Object} GatewayConfigurationEndpoints
+ * @description A dictionary of endpoints or sub endpoints the gateway will use in order to mount
+ *              routes.
+ * @property {string|GatewayConfigurationEndpoints|GatewayConfigurationEndpoint} [endpointName]
+ * It can be the path to an actual endpoint, a dictionary of sub endpoints, or a definition of
+ * an endpoint with settings ({@link GatewayConfigurationEndpoint}).
+ */
+
+/**
+ * @typedef {Object} GatewayConfiguration
+ * @description This is a configuration object very similar to the one {@link APIClient} uses in
+ *              order to configure the endpoints; the controller uses it to create the routes and
+ *              to validate the HTTP methods.
+ * @property {string}                        url     The entry point to the API the controller
+ *                                                   will make the requests to.
+ * @property {GatewayConfigurationEndpoints} gateway A dictionary with the endpoints the gateway
+ *                                                   will make available.
+ */
+
+/**
+ * @typedef {Object} GatewayControllerHeadersOptions
+ * @description The options for how the gateway will handle the headers from the requests and the
+ *              responses.
+ * @property {boolean} [useXForwardedFor=true]
+ * Whether or not to include the header with the request&apos;s IP address.
+ * @property {boolean} [copyCustomHeaders=true]
+ * Whether or not to copy all custom headers from the request. By custom header, it means all the
+ * headers which names start with `x-`.
+ * @property {Array} [copy=[&apos;authorization&apos;,&apos;content-type&apos;, &apos;referer&apos;, &apos;user-agent&apos;]]
+ * A list of &quot;known&quot; headers the gateway will try to copy from the incoming request.
+ * @property {Array} [remove=[&apos;server&apos;, &apos;x-powered-by&apos;]]
+ * A list of &quot;known&quot; headers the gateway will try to remove the response.
+ */
+
+/**
+ * @typedef {Object} GatewayControllerOptions
+ * @description The options to configure how the gateway will manage the requests and the
+ *              responses.
+ * @property {string} [root=&apos;&apos;]
+ * This is really a helper for when the gateway is used with an API client. The idea is that,
+ * by default, the routes are mounted on the controller route, but with this option, you can
+ * specify another sub path. For example: The controller is mounted on `/routes`, if you set
+ * `root` to `gateway`, all the routes will be on `/routes/gateway`.
+ * This become important (and useful) when you get the API client configuration (with
+ * `endpointsForAPIClient`): The `url` will be the controller route, but all the endpoints will
+ * be modified and prefixed with the `root`.
+ * @property {string} [configurationSetting=&apos;api&apos;]
+ * This is another option for when the gateway is used with an API client. When calling
+ * `endpointsForAPIClient`, all the endpoints will be wrapped inside an object named after this
+ * option. For example: `{ url: &apos;...&apos;, endpoints: { api: { ... } } }`
+ * @property {GatewayControllerHeadersOptions} [headers]
+ * The options for how the gateway will handle the headers from the requests and the responses.
+ */
+
+/**
+ * @typedef {Object} GatewayControllerCreatorOptions
+ * @description This are the options sent to the controller creator that instantiates
+ *              {@link GatewayController}. They&apos;re basically the same as
+ *              {@link GatewayControllerOptions} but with a couple of extra ones.
+ * @param {string} [serviceName=&apos;apiGeteway&apos;]             The name of the creator will use to
+ *                                                        register the controller in the container.
+ *                                                        No, this is not a typo. The creator will
+ *                                                        register the controller so other
+ *                                                        services can access the
+ *                                                        `endpointsForAPIClient` getter. The
+ *                                                        service will be available after the app
+ *                                                        routes are mounted.
+ *                                                        If this is overwritten, the creator will
+ *                                                        ensure that the name ends with `Gateway`;
+ *                                                        and if overwritten, but it doesn&apos;t
+ *                                                        include `Gateway` at the end, and no
+ *                                                        `configurationSetting` was defined, the
+ *                                                        creator will use the custom name
+ *                                                        (without `Gatway`) for
+ *                                                        `configurationSetting`.
+ * @param {string} [helperServiceName=&apos;apiGatewayHelper&apos;] The name of the helper service the
+ *                                                        creator will try to obtain from the
+ *                                                        container. If `serviceName` is
+ *                                                        overwritten, the default for this will
+ *                                                        be `${serviceName}Helper`.
+ * @param {string} [configurationSetting=&apos;api&apos;]           The name of the configuration setting
+ *                                                        where the gateway configuration is
+ *                                                        stored. If not overwritten, check the
+ *                                                        description of `serviceName` to
+ *                                                        understand which will be its default
+ *                                                        value.
+ * @param {Class}  [gatewayClass=GatewayController]       The class the creator will instantiate.
+ *                                                        Similar to {@link APIClient}, this
+ *                                                        allows for extra customization in cases
+ *                                                        you may need multiple gateways.
+ */
+
+/**
+ * @typedef {Object} GatewayControllerRequest
+ * @description This is the information for a request the controller will make.
+ * @property {string}           url     The URL for the request.
+ * @property {HTTPFetchOptions} options The request options.
+ */
+
+/**
+ * @typedef {Object} GatewayControllerEndpointInformation
+ * @description This is the information for an specific endpoint that the gateway may use to
+ *              send to a helper method in order to give it context.
+ * @property {string}                              name     The name of the endpoint, which is
+ *                                                          actually the path inside the gateway
+ *                                                          configuration&apos;s `gateway` property.
+ * @property {string|GatewayConfigurationEndpoint} settings The path for the endpoint, or the
+ *                                                          dictionary of settings.
+ */
+
+/**
+ * @typedef {function} GatewayHelperServiceRequestReducer
+ * @description This is called in order to allow the helper to modify the information of a
+ *              request that is about the fired.
+ * @param {GatewayControllerRequest}             request  The information for a request the
+ *                                                        controller will make.
+ * @param {GatewayControllerEndpointInformation} endpoint The information for the endpoint
+ *                                                        responsible of creating the route.
+ * @param {ExpressRequest}                       req      The server&apos;s incoming request
+ *                                                        information.
+ * @param {ExpressResponse}                      res      The server&apos;s response information.
+ * @param {ExpressNext}                          next     The function to call the next
+ *                                                        middleware.
+ * @return {GatewayControllerRequest}
+ */
+
+/**
+ * @typedef {function} GatewayHelperServiceResponseReducer
+ * @description This is called in order to allow the helper to modify the information of a
+ *              response the gateway made.
+ * @param {Object}                               response The response generated by the fetch
+ *                                                        request.
+ * @param {GatewayControllerEndpointInformation} endpoint The information for the endpoint
+ *                                                        responsible of creating the route.
+ * @param {ExpressRequest}                       req      The server&apos;s incoming request
+ *                                                        information.
+ * @param {ExpressResponse}                      res      The server&apos;s response information.
+ * @param {ExpressNext}                          next     The function to call the next
+ *                                                        middleware.
+ * @return {Object}
+ */
+
+/**
+ * @typedef {function} GatewayHelperServiceStreamVerification
+ * @description This is called in order to allow the helper to decide whether a fetch request
+ *              response should be added to the server&apos;s response stream. This will only be
+ *              called if the helper also implements `handleEndpointResponse`.
+ * @param {Object}                               response The response generated by the fetch
+ *                                                        request.
+ * @param {GatewayControllerEndpointInformation} endpoint The information for the endpoint
+ *                                                        responsible of creating the route.
+ * @param {ExpressRequest}                       req      The server&apos;s incoming request
+ *                                                        information.
+ * @param {ExpressResponse}                      res      The server&apos;s response information.
+ * @param {ExpressNext}                          next     The function to call the next
+ *                                                        middleware.
+ * @return {boolean}
+ */
+
+/**
+ * @typedef {function} GatewayHelperServiceResponseHandler
+ * @description This is called in order for the helper to handle a response. This is only
+ *              called if `shouldStreamEndpointResponse` returned `false`.
+ * @param {Object}                               response The response generated by the fetch
+ *                                                        request.
+ * @param {GatewayControllerEndpointInformation} endpoint The information for the endpoint
+ *                                                        responsible of creating the route.
+ * @param {ExpressRequest}                       req      The server&apos;s incoming request
+ *                                                        information.
+ * @param {ExpressResponse}                      res      The server&apos;s response information.
+ * @param {ExpressNext}                          next     The function to call the next
+ *                                                        middleware.
+ */
+
+/**
+ * @typedef {function} GatewayHelperServiceErrorHandler
+ * @description This is called in order for the helper to handle a fetch request error.
+ * @param {Error}                                error    The fetch request error.
+ * @param {GatewayControllerEndpointInformation} endpoint The information for the endpoint
+ *                                                        responsible of creating the route.
+ * @param {ExpressRequest}                       req      The server&apos;s incoming request
+ *                                                        information.
+ * @param {ExpressResponse}                      res      The server&apos;s response information.
+ * @param {ExpressNext}                          next     The function to call the next
+ *                                                        middleware.
+ */
+
+/**
+ * @typedef {Object} GatewayHelperService
+ * @description A service that can have specific methods the gateway will call in order to
+ *              modify requests, responses, handle errors, etc.
+ * @property {?GatewayHelperServiceRequestReducer} reduceEndpointRequest
+ * This is called in order to allow the helper to modify the information of a request that is
+ * about the fired.
+ * @property {?GatewayHelperServiceResponseReducer} reduceEndpointResponse
+ * This is called in order to allow the helper to modify the information of a response the
+ * gateway made.
+ * @property {?GatewayHelperServiceStreamVerification} shouldStreamEndpointResponse
+ * This is called in order to allow the helper to decide whether a fetch request response should
+ * be added to the server&apos;s response stream. This will only be called if the helper also
+ * implements `handleEndpointResponse`.
+ * @property {?GatewayHelperServiceResponseHandler} handleEndpointResponse
+ * This is called in order for the helper to handle a response. This is only called if
+ * `shouldStreamEndpointResponse` returned `false`.
+ * @property {?GatewayHelperServiceErrorHandler} handleEndpointError
+ * This is called in order for the helper to handle a fetch request error.
+ */
+
+/**
+ * Geneters routes that will act as a gateway to an specific set of endpoints.
+ * @param {GatewayConfiguration}     gatewayConfig This is a configuration object very similar to
+ *                                                 the one {@link APIClient} uses in order to
+ *                                                 configure the endpoints; the controller uses it
+ *                                                 to create the routes and to validate the HTTP
+ *                                                 methods.
+ * @param {string}                   route         The route where the controller will be mounted.
+ * @param {HTTP}                     http          To make the fetch requests on the routes.
+ * @param {GatewayControllerOptions} [options={}]  The options to configure how the gateway will
+ *                                                 manage the requests and the responses.
+ * @param {?GatewayHelperService}    [helper=null] A service that can have specific methods the
+ *                                                 gateway will call in order to modify requests,
+ *                                                 responses, handle errors, etc.
+ */
+class GatewayController {
+  constructor(gatewayConfig, route, http, options = {}, helperService = null) {
+    /**
+     * The options to configure how the gateway will manage the requests and the responses.
+     * @type {GatewayControllerOptions}
+     * @access protected
+     * @ignore
+     */
+    this._options = this._normalizeOptions(ObjectUtils.merge(
+      {
+        root: &apos;&apos;,
+        configurationSetting: &apos;api&apos;,
+        headers: {
+          useXForwardedFor: true,
+          copyCustomHeaders: true,
+          copy: options.headers &amp;&amp; options.headers.copy ? options.headers.copy : [
+            &apos;authorization&apos;,
+            &apos;content-type&apos;,
+            &apos;referer&apos;,
+            &apos;user-agent&apos;,
+          ],
+          remove: options.headers &amp;&amp; options.headers.remove ? options.headers.remove : [
+            &apos;server&apos;,
+            &apos;x-powered-by&apos;,
+          ],
+        },
+      },
+      options
+    ));
+    /**
+     * The configuration for the API the controller will make requests to.
+     * @type {GatewayConfiguration}
+     * @access protected
+     * @ignore
+     */
+    this._gatewayConfig = Object.assign({}, gatewayConfig, {
+      url: removeSlashes(gatewayConfig.url, false, true),
+    });
+    /**
+     * A local reference for the `http` service.
+     * @type {HTTP}
+     * @access protected
+     * @ignore
+     */
+    this._http = http;
+    /**
+     * A list of the allowed HTTP methods an endpoint can have.
+     * @type {Array}
+     * @access protected
+     * @ignore
+     */
+    this._allowedHTTPMethods = [
+      &apos;get&apos;,
+      &apos;head&apos;,
+      &apos;post&apos;,
+      &apos;put&apos;,
+      &apos;delete&apos;,
+      &apos;connect&apos;,
+      &apos;options&apos;,
+      &apos;trace&apos;,
+    ];
+    /**
+     * A flat dictionary of the gateway endpoints. The key is the path on the original
+     * dictionary (`this._gatewayConfig.gateway`) and the value is either the path (`string`)
+     * or the endpoint settings ({@link GatewayConfigurationEndpoint}).
+     * @type {Object}
+     * @access protected
+     * @ignore
+     */
+    this._endpoints = this._getNormalizedEndpoints();
+    /**
+     * The route where the controller is mounted.
+     * @type {string}
+     * @access protected
+     * @ignore
+     */
+    this._route = removeSlashes(route);
+    /**
+     * A regular expression that will be used to remove the controller route from a request
+     * path. This will allow the main middleware to extract the path to where the request should
+     * be made.
+     * @type {RegExp}
+     * @access protected
+     * @ignore
+     */
+    this._routeExpression = this._createRouteExpression();
+    /**
+     * This is the list of routes the controller will define.
+     * @type {Array&lt;GatewayControllerRoute&gt;}
+     * @access protected
+     * @ignore
+     */
+    this._routes = this._createEndpointRoutes();
+    /**
+     * An {@link APIClient} configuration based on the controller routes.
+     * @type {APIClientConfiguration}
+     * @access protected
+     * @Ignore
+     */
+    this._apiClientConfiguration = this._createAPIClientConfiguration();
+    /**
+     * A service that can have specific methods the gateway will call in order to modify
+     * requests, responses, handle errors, etc.
+     * @type {?GatewayHelperService}
+     * @access protected
+     */
+    this._helperService = helperService;
+    /**
+     * A dictionary of boolean flags that specify if a helper service has method. This is to
+     * avoid checking if the helper is defined and if &quot;x method&quot; is a function. If no helper
+     * was specified, the object will have all the flags set to `false`.
+     * @type {Object}
+     * @access protected
+     * @ignore
+     */
+    this._helperServiceInfo = this._createHelperServiceInfo();
+  }
+  /**
+   * Defines all the routes on a given router.
+   * @param {ExpressRouter} router           The router where all the routes will be added.
+   * @param {Array}         [middlewares=[]] A list of custom middlewares that will be added before
+   *                                         the one that makes the request.
+   * @return {ExpressRouter}
+   */
+  addRoutes(router, middlewares = []) {
+    this._routes.forEach((route) =&gt; route.methods.forEach((info) =&gt; this._addRoute(
+      router,
+      info.method,
+      route.path,
+      this._getMiddleware(info.endpoint),
+      middlewares
+    )));
+
+    return router;
+  }
+  /**
+   * An {@link APIClient} configuration based on the controller routes.
+     * @type {APIClientConfiguration}
+   */
+  get endpointsForAPIClient() {
+    return this._apiClientConfiguration;
+  }
+  /**
+   * The configuration for the API the controller will make requests to.
+   * @type {GatewayConfiguration}
+   */
+  get gatewayConfig() {
+    return this._gatewayConfig;
+  }
+  /**
+   * The options to configure how the gateway will manage the requests and the responses.
+   * @type {GatewayControllerOptions}
+   */
+  get options() {
+    return this._options;
+  }
+  /**
+   * Normalizes the options recevied by the controller:
+   * - Removes any trailing and leading slashes from the `root` path, if defined.
+   * @param {GatewayControllerOptions} options The options to normalize.
+   * @return {GatewayControllerOptions}
+   * @access protected
+   * @ignore
+   */
+  _normalizeOptions(options) {
+    let newOptions;
+    if (options.root) {
+      const root = removeSlashes(options.root).trim();
+      newOptions = Object.assign({}, options, { root });
+    } else {
+      newOptions = options;
+    }
+
+    return newOptions;
+  }
+  /**
+   * Flattens all the endpoints from gateway configuration into a one level dictionary, where the
+   * key are the paths they used to have on the original configuration, and the values are the
+   * endpoints definitions.
+   * @return {Object}
+   * @access protected
+   * @ignore
+   */
+  _getNormalizedEndpoints() {
+    return ObjectUtils.flat(
+      this._gatewayConfig.gateway,
+      &apos;.&apos;,
+      &apos;&apos;,
+      (ignore, value) =&gt; typeof value.path === &apos;undefined&apos;
+    );
+  }
+  /**
+   * Creates a regular expression the main middleware will later use in order to remove the
+   * controller route from the request url. That&apos;s needed in order to build the URL where the
+   * request will be made.
+   * @return {RegExp}
+   * @access protected
+   * @ignore
+   */
+  _createRouteExpression() {
+    return createRouteExpression(
+      this._options.root ? `${this._route}/${this._options.root}` : this._route,
+      true,
+      true
+    );
+  }
+  /**
+   * This is a helper method used in order to validate if an HTTP method can be used in order to
+   * define a route in the router. If the given method is not on the list of allowed methods,
+   * it will be &quot;normalized&quot; to `all`. It also transforms the method into lower case.
+   * @param {string} method The method to validate.
+   * @return {string}
+   * @access protected
+   * @ignore
+   */
+  _normalizeHTTPMethod(method) {
+    const newMethod = method.toLowerCase();
+    return this._allowedHTTPMethods.includes(newMethod) ? newMethod : &apos;all&apos;;
+  }
+  /**
+   * Based on the information from the endpoints, this method will create the routes the
+   * controller will later add on a router.
+   * @return {Array&lt;GatewayControllerRoute&gt;}
+   * @throws {Error} If there&apos;s more than one endpoint using the same path with the same HTTP
+   *                 method.
+   * @access protected
+   * @ignore
+   */
+  _createEndpointRoutes() {
+    const routes = {};
+    Object.keys(this._endpoints).forEach((name) =&gt; {
+      const endpoint = this._endpoints[name];
+      let endpointPath;
+      let endpointMethod;
+      if (typeof endpoint === &apos;string&apos;) {
+        endpointPath = endpoint;
+        endpointMethod = &apos;all&apos;;
+      } else {
+        endpointPath = endpoint.path;
+        endpointMethod = endpoint.method ?
+          this._normalizeHTTPMethod(endpoint.method) :
+          &apos;all&apos;;
+      }
+
+      endpointPath = removeSlashes(endpointPath);
+      if (!routes[endpointPath]) {
+        routes[endpointPath] = {
+          path: endpointPath,
+          methods: {},
+        };
+      }
+
+      if (routes[endpointPath].methods[endpointMethod]) {
+        const repeatedEndpoint = routes[endpointPath].methods[endpointMethod];
+        throw new Error(
+          &apos;You can\&apos;t have two gateway endpoints to the same path and with the same &apos; +
+          `HTTP method: &apos;${repeatedEndpoint}&apos; and &apos;${name}&apos;`
+        );
+      }
+
+      routes[endpointPath].methods[endpointMethod] = name;
+    });
+
+    return Object.keys(routes)
+    .map((endpointPath) =&gt; ({
+      path: routes[endpointPath].path,
+      methods: Object.keys(routes[endpointPath].methods).map((methodName) =&gt; ({
+        method: methodName,
+        endpoint: {
+          name: routes[endpointPath].methods[methodName],
+          settings: this._endpoints[routes[endpointPath].methods[methodName]],
+        },
+      })),
+    }));
+  }
+  /**
+   * Based on the controller options and the gateway endpoints, this method will create an API
+   * client configuration that can be used to make requests to this controller.
+   * @return {APIClientConfiguration}
+   * @access protected
+   * @ignore
+   */
+  _createAPIClientConfiguration() {
+    let endpoints;
+    const { root } = this._options;
+    if (root) {
+      endpoints = Object.keys(this._endpoints).reduce(
+        (acc, name) =&gt; {
+          const endpoint = this._endpoints[name];
+          let newEndpoint;
+          if (typeof endpoint === &apos;string&apos;) {
+            newEndpoint = removeSlashes(endpoint);
+            newEndpoint = `${root}/${newEndpoint}`;
+          } else {
+            const endpointPath = removeSlashes(endpoint.path);
+            newEndpoint = Object.assign({}, endpoint, {
+              path: `${root}/${endpointPath}`,
+            });
+          }
+
+          return Object.assign({}, acc, {
+            [name]: newEndpoint,
+          });
+        },
+        {}
+      );
+    } else {
+      endpoints = this._endpoints;
+    }
+    return {
+      url: `/${this._route}`,
+      endpoints: {
+        [this._options.configurationSetting]: ObjectUtils.unflat(endpoints),
+      },
+    };
+  }
+  /**
+   * Validates if a server helper exists and creates a dictionary with flags for all the methods
+   * a helper can have; this will allow other methods to check if the &quot;helper method X&quot; is
+   * available without having to check if the helper is defined and if &quot;method X&quot; is a function.
+   * @return {Object}
+   * @access protected
+   * @ignore
+   */
+  _createHelperServiceInfo() {
+    const methods = [
+      &apos;reduceEndpointRequest&apos;,
+      &apos;reduceEndpointResponse&apos;,
+      &apos;shouldStreamEndpointResponse&apos;,
+      &apos;handleEndpointResponse&apos;,
+      &apos;handleEndpointError&apos;,
+    ];
+    let result;
+    if (this._helperService) {
+      result = methods.reduce(
+        (methodsDict, name) =&gt; Object.assign({}, methodsDict, {
+          [name]: typeof this._helperService[name] === &apos;function&apos;,
+        }),
+        {}
+      );
+    } else {
+      result = methods.reduce(
+        (methodsDict, name) =&gt; Object.assign({}, methodsDict, { [name]: false }),
+        {}
+      );
+    }
+
+    return result;
+  }
+  /**
+   * Adds a route on a given router.
+   * @param {ExpressRouter}     router              The router where the route will be added.
+   * @param {string}            method              The HTTP method for the route.
+   * @param {string}            route               The path for the route.
+   * @param {ExpressMiddleware} endpointMiddleware  The middleware that makes the request.
+   * @param {Array}             middlewares         Extra middlewares to add before the main one.
+   *
+   * @return {ExpressRouter}
+   * @access protected
+   * @ignore
+   */
+  _addRoute(router, method, route, endpointMiddleware, middlewares) {
+    return router[method](route, [...middlewares, endpointMiddleware]);
+  }
+  /**
+   * Generates a middleware that will make a request and stream back the response.
+   * @param {GatewayControllerEndpointInformation} endpoint The information for the enpdoint for
+   *                                                        which the middleware is being created.
+   * @return {ExpressMiddleware}
+   * @access protected
+   * @ignore
+   */
+  _getMiddleware(endpoint) {
+    return (req, res, next) =&gt; {
+      // Remove the controller route from the requested URL.
+      const reqPath = req.originalUrl.replace(this._routeExpression, &apos;&apos;);
+      // Define the request options.
+      const options = {
+        method: req.method.toUpperCase(),
+        headers: {},
+      };
+      // Copy the specified headers from the incoming request.
+      this._options.headers.copy.forEach((name) =&gt; {
+        if (req.headers[name]) {
+          options.headers[name] = req.headers[name];
+        }
+      });
+      // If enabled, copy the custom headers.
+      if (this._options.headers.copyCustomHeaders) {
+        options.headers = ObjectUtils.merge(
+          options.headers,
+          this._http.getCustomHeadersFromRequest(req)
+        );
+      }
+      // If enabled, add the header with the request&apos;s IP.
+      if (this._options.headers.useXForwardedFor) {
+        options.headers[&apos;x-forwarded-for&apos;] = this._http.getIPFromRequest(req);
+      }
+      /**
+       * If the request has a body and the method is not `GET`, stringify it and addit to
+       * the options.
+       */
+      if (options.method !== &apos;GET&apos; &amp;&amp; typeof req.body === &apos;object&apos;) {
+        options.body = JSON.stringify(req.body);
+        // If there&apos;s no `content-type`, let&apos;s assume it&apos;s JSON.
+        if (!options.headers[&apos;content-type&apos;]) {
+          options.headers[&apos;content-type&apos;] = &apos;application/json&apos;;
+        }
+      }
+      // Reduce the request information.
+      const request = this._reduceEndpointRequest(
+        {
+          url: `${this._gatewayConfig.url}/${reqPath}`,
+          options,
+        },
+        endpoint,
+        req,
+        res,
+        next
+      );
+      // Make the fetch request.
+      return this._http.fetch(request.url, request.options)
+      .then((response) =&gt; {
+        // Reduce the response.
+        const newResponse = this._reduceEndpointResponse(response, endpoint, req, res, next);
+        // If the response should be sent down on the stream...
+        if (this._shouldStreamEndpointResponse(newResponse, endpoint, req, res, next)) {
+          // Update the server&apos;s response status.
+          res.status(newResponse.status);
+          // Copy the headers.
+          newResponse.headers.forEach((value, name) =&gt; {
+            if (!this._options.headers.remove.includes(name)) {
+              res.setHeader(name, value);
+            }
+          });
+          // Pipe the server&apos;s response into the fetch response stream.
+          newResponse.body
+          .pipe(res)
+          .on(&apos;error&apos;, (error) =&gt; {
+            next(error);
+          });
+        } else {
+          // Otherwise, let the helper handle the response.
+          this._handleEndpointResponse(newResponse, endpoint, req, res, next);
+        }
+      })
+      .catch((error) =&gt; this._handleEndpointError(error, endpoint, req, res, next));
+    };
+  }
+  /**
+   * This method is called in order to reduce a fetch request information. It will check if a
+   * helper is defined and allow it to do it, or fallback and return the given information.
+   * @param {GatewayControllerRequest}             request  The information for a request the
+   *                                                        controller will make.
+   * @param {GatewayControllerEndpointInformation} endpoint The information for the endpoint
+   *                                                        responsible of creating the route.
+   * @param {ExpressRequest}                       req      The server&apos;s incoming request
+   *                                                        information.
+   * @param {ExpressResponse}                      res      The server&apos;s response information.
+   * @param {ExpressNext}                          next     The function to call the next
+   *                                                        middleware.
+   * @return {GatewayControllerRequest}
+   * @access protected
+   * @ignore
+   */
+  _reduceEndpointRequest(request, endpoint, req, res, next) {
+    return this._helperServiceInfo.reduceEndpointRequest ?
+      this._helperService.reduceEndpointRequest(request, endpoint, req, res, next) :
+      request;
+  }
+  /**
+   * This method is called in order to reduce a fetch response information. It will check if a
+   * helper is defined and allow it to do it, or fallback and return the given information.
+   * @param {Object}                               response The response generated by the fetch
+   *                                                        request.
+   * @param {GatewayControllerEndpointInformation} endpoint The information for the endpoint
+   *                                                        responsible of creating the route.
+   * @param {ExpressRequest}                       req      The server&apos;s incoming request
+   *                                                        information.
+   * @param {ExpressResponse}                      res      The server&apos;s response information.
+   * @param {ExpressNext}                          next     The function to call the next
+   *                                                        middleware.
+   * @return {Object}
+   * @access protected
+   * @ignore
+   */
+
+  _reduceEndpointResponse(response, endpoint, req, res, next) {
+    return this._helperServiceInfo.reduceEndpointResponse ?
+      this._helperService.reduceEndpointResponse(response, endpoint, req, res, next) :
+      response;
+  }
+  /**
+   * This method is called in order to validate if the main middleware should pipe the fetch
+   * response stream into the server&apos;s response or if the helper will handle the response.
+   * This method will only call the helper if it implements both `shouldStreamEndpointResponse`
+   * and `handleEndpointResponse`
+   * @param {Object}                               response The response generated by the fetch
+   *                                                        request.
+   * @param {GatewayControllerEndpointInformation} endpoint The information for the endpoint
+   *                                                        responsible of creating the route.
+   * @param {ExpressRequest}                       req      The server&apos;s incoming request
+   *                                                        information.
+   * @param {ExpressResponse}                      res      The server&apos;s response information.
+   * @param {ExpressNext}                          next     The function to call the next
+   *                                                        middleware.
+   * @return {boolean}
+   * @access protected
+   * @ignore
+   */
+  _shouldStreamEndpointResponse(response, endpoint, req, res, next) {
+    return (
+      this._helperServiceInfo.shouldStreamEndpointResponse &amp;&amp;
+      this._helperServiceInfo.handleEndpointResponse
+    ) ?
+      this._helperService.shouldStreamEndpointResponse(response, endpoint, req, res, next) :
+      true;
+  }
+  /**
+   * This is called when the helper say that a fetch response shouldn&apos;t be sent, so the controller
+   * will allow it to handle the response by itself.
+   * @param {Object}                               response The response generated by the fetch
+   *                                                        request.
+   * @param {GatewayControllerEndpointInformation} endpoint The information for the endpoint
+   *                                                        responsible of creating the route.
+   * @param {ExpressRequest}                       req      The server&apos;s incoming request
+   *                                                        information.
+   * @param {ExpressResponse}                      res      The server&apos;s response information.
+   * @param {ExpressNext}                          next     The function to call the next
+   *                                                        middleware.
+   * @return {*}
+   * @access protected
+   * @ignore
+   */
+  _handleEndpointResponse(response, endpoint, req, res, next) {
+    return this._helperService.handleEndpointResponse(response, endpoint, req, res, next);
+  }
+  /**
+   * This method is called in order to handle a fetch request error. It will check if a
+   * helper is defined and allow it to do it, or fallback and call the next middleware.
+   * @param {Error}                                error    The fetch request error.
+   * @param {GatewayControllerEndpointInformation} endpoint The information for the endpoint
+   *                                                        responsible of creating the route.
+   * @param {ExpressRequest}                       req      The server&apos;s incoming request
+   *                                                        information.
+   * @param {ExpressResponse}                      res      The server&apos;s response information.
+   * @param {ExpressNext}                          next     The function to call the next
+   *                                                        middleware.
+   * @return {*}
+   * @access protected
+   * @ignore
+   */
+  _handleEndpointError(error, endpoint, req, res, next) {
+    return this._helperServiceInfo.handleEndpointError ?
+      this._helperService.handleEndpointError(error, endpoint, req, res, next) :
+      next(error);
+  }
+}
+/**
+ * This controller allows you to have gateway routes that actually make requests and respond with
+ * the contents from an specified API.
+ * @type {ControllerCreator}
+ * @param {GatewayControllerCreatorOptions} [options]     The options to customize the controller.
+ * @param {Function():Array}                [middlewares] This function can be used to add custom
+ *                                                        middlewares on the gateway routes. If
+ *                                                        implemented, it must return a list of
+ *                                                        middlewares when executed.
+ */
+const gatewayController = controllerCreator((
+  options = {},
+  middlewares = null
+) =&gt; (app, route) =&gt; {
+  /**
+   * Formats the name in order to keep consistency with the helper service and the configuration
+   * setting: If the `serviceName` is different from the default, make sure it ends with
+   * `Gateway`, set the default helper service name to `${serviceName}Helper` and the default
+   * configuration setting to the same as the service name (without the `Gateway`).
+   * This way, if you just use `myApi`, the service name will be `myApiGateway`, the helper name
+   * will be `myApiGatewayHelper` and the configuration setting `myApi`.
+   */
+  const defaultServiceName = &apos;apiGateway&apos;;
+  let defaultHelperServiceName = &apos;apiGatewayHelper&apos;;
+  let defaultConfigurationSetting = &apos;api&apos;;
+  let { serviceName = defaultServiceName } = options;
+  if (serviceName !== defaultServiceName) {
+    defaultConfigurationSetting = serviceName;
+    if (!serviceName.match(/gateway$/i)) {
+      serviceName = `${serviceName}Gateway`;
+    }
+    defaultHelperServiceName = `${serviceName}Helper`;
+  }
+  /**
+   * Get the settings the controller needs in order to use with the container before creating
+   * the instance.
+   */
+  const {
+    helperServiceName = defaultHelperServiceName,
+    configurationSetting = defaultConfigurationSetting,
+    GatewayClass = GatewayController,
+  } = options;
+  /**
+   * Update the options with the resolved configuration setting name, because the class will
+   * needed when generating API Client endpoints.
+   */
+  const newOptions = Object.assign({}, options, {
+    configurationSetting,
+  });
+  // Get the gateway configuration.
+  const gatewayConfig = app.get(&apos;appConfiguration&apos;).get(configurationSetting);
+  // Generate the controller
+  const ctrl = new GatewayClass(
+    gatewayConfig,
+    app.get(&apos;http&apos;),
+    route,
+    newOptions,
+    helperServiceName ? app.try(helperServiceName) : null
+  );
+  /**
+   * Register a service for the controller so other services can ask for the endpoints formatted
+   * for an API Client.
+   */
+  app.set(serviceName, () =&gt; ctrl);
+  /**
+   * Check if there are actual middlewares to be included, and in case there are Jimpex
+   * middlewares, connect them
+   */
+  let useMiddlewares;
+  if (middlewares) {
+    useMiddlewares = middlewares(app).map((middleware) =&gt; (
+      middleware.connect ?
+        middleware.connect(app) :
+        middleware
+    ));
+  }
+  // Add the routes to the router and return it.
+  return ctrl.addRoutes(app.get(&apos;router&apos;), useMiddlewares);
+});
+
+module.exports = {
+  GatewayController,
+  gatewayController,
+};
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.1.0)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

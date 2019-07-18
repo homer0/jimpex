@@ -1,28 +1,28 @@
 {
   "type": "File",
   "start": 0,
-  "end": 307,
+  "end": 230,
   "loc": {
     "start": {
       "line": 1,
       "column": 0
     },
     "end": {
-      "line": 12,
+      "line": 8,
       "column": 0
     }
   },
   "program": {
     "type": "Program",
     "start": 0,
-    "end": 307,
+    "end": 230,
     "loc": {
       "start": {
         "line": 1,
         "column": 0
       },
       "end": {
-        "line": 12,
+        "line": 8,
         "column": 0
       }
     },
@@ -203,179 +203,130 @@
       {
         "type": "ImportDeclaration",
         "start": 104,
-        "end": 192,
+        "end": 150,
         "loc": {
           "start": {
             "line": 3,
             "column": 0
           },
           "end": {
-            "line": 6,
-            "column": 23
+            "line": 3,
+            "column": 46
           }
         },
         "specifiers": [
           {
             "type": "ImportSpecifier",
-            "start": 115,
-            "end": 136,
+            "start": 113,
+            "end": 130,
             "loc": {
               "start": {
-                "line": 4,
-                "column": 2
+                "line": 3,
+                "column": 9
               },
               "end": {
-                "line": 4,
-                "column": 23
+                "line": 3,
+                "column": 26
               }
             },
             "imported": {
               "type": "Identifier",
-              "start": 115,
-              "end": 136,
+              "start": 113,
+              "end": 130,
               "loc": {
                 "start": {
-                  "line": 4,
-                  "column": 2
+                  "line": 3,
+                  "column": 9
                 },
                 "end": {
-                  "line": 4,
-                  "column": 23
+                  "line": 3,
+                  "column": 26
                 },
-                "identifierName": "rootStaticsController"
+                "identifierName": "staticsController"
               },
-              "name": "rootStaticsController"
+              "name": "staticsController"
             },
             "local": {
               "type": "Identifier",
-              "start": 115,
-              "end": 136,
+              "start": 113,
+              "end": 130,
               "loc": {
                 "start": {
-                  "line": 4,
-                  "column": 2
+                  "line": 3,
+                  "column": 9
                 },
                 "end": {
-                  "line": 4,
-                  "column": 23
+                  "line": 3,
+                  "column": 26
                 },
-                "identifierName": "rootStaticsController"
+                "identifierName": "staticsController"
               },
-              "name": "rootStaticsController"
-            }
-          },
-          {
-            "type": "ImportSpecifier",
-            "start": 140,
-            "end": 167,
-            "loc": {
-              "start": {
-                "line": 5,
-                "column": 2
-              },
-              "end": {
-                "line": 5,
-                "column": 29
-              }
-            },
-            "imported": {
-              "type": "Identifier",
-              "start": 140,
-              "end": 167,
-              "loc": {
-                "start": {
-                  "line": 5,
-                  "column": 2
-                },
-                "end": {
-                  "line": 5,
-                  "column": 29
-                },
-                "identifierName": "rootStaticsControllerCustom"
-              },
-              "name": "rootStaticsControllerCustom"
-            },
-            "local": {
-              "type": "Identifier",
-              "start": 140,
-              "end": 167,
-              "loc": {
-                "start": {
-                  "line": 5,
-                  "column": 2
-                },
-                "end": {
-                  "line": 5,
-                  "column": 29
-                },
-                "identifierName": "rootStaticsControllerCustom"
-              },
-              "name": "rootStaticsControllerCustom"
+              "name": "staticsController"
             }
           }
         ],
         "source": {
           "type": "StringLiteral",
-          "start": 176,
-          "end": 191,
+          "start": 138,
+          "end": 149,
           "loc": {
             "start": {
-              "line": 6,
-              "column": 7
+              "line": 3,
+              "column": 34
             },
             "end": {
-              "line": 6,
-              "column": 22
+              "line": 3,
+              "column": 45
             }
           },
           "extra": {
-            "rawValue": "./rootStatics",
-            "raw": "'./rootStatics'"
+            "rawValue": "./statics",
+            "raw": "'./statics'"
           },
-          "value": "./rootStatics"
+          "value": "./statics"
         }
       },
       {
         "type": "ExportNamedDeclaration",
-        "start": 194,
-        "end": 306,
+        "start": 152,
+        "end": 229,
         "loc": {
           "start": {
-            "line": 8,
+            "line": 5,
             "column": 0
           },
           "end": {
-            "line": 11,
-            "column": 33
+            "line": 7,
+            "column": 23
           }
         },
         "declaration": null,
         "specifiers": [
           {
             "type": "ExportSpecifier",
-            "start": 203,
-            "end": 226,
+            "start": 161,
+            "end": 184,
             "loc": {
               "start": {
-                "line": 8,
+                "line": 5,
                 "column": 9
               },
               "end": {
-                "line": 8,
+                "line": 5,
                 "column": 32
               }
             },
             "local": {
               "type": "Identifier",
-              "start": 203,
-              "end": 226,
+              "start": 161,
+              "end": 184,
               "loc": {
                 "start": {
-                  "line": 8,
+                  "line": 5,
                   "column": 9
                 },
                 "end": {
-                  "line": 8,
+                  "line": 5,
                   "column": 32
                 },
                 "identifierName": "configurationController"
@@ -384,15 +335,15 @@
             },
             "exported": {
               "type": "Identifier",
-              "start": 203,
-              "end": 226,
+              "start": 161,
+              "end": 184,
               "loc": {
                 "start": {
-                  "line": 8,
+                  "line": 5,
                   "column": 9
                 },
                 "end": {
-                  "line": 8,
+                  "line": 5,
                   "column": 32
                 },
                 "identifierName": "configurationController"
@@ -402,29 +353,29 @@
           },
           {
             "type": "ExportSpecifier",
-            "start": 230,
-            "end": 246,
+            "start": 188,
+            "end": 204,
             "loc": {
               "start": {
-                "line": 9,
+                "line": 6,
                 "column": 2
               },
               "end": {
-                "line": 9,
+                "line": 6,
                 "column": 18
               }
             },
             "local": {
               "type": "Identifier",
-              "start": 230,
-              "end": 246,
+              "start": 188,
+              "end": 204,
               "loc": {
                 "start": {
-                  "line": 9,
+                  "line": 6,
                   "column": 2
                 },
                 "end": {
-                  "line": 9,
+                  "line": 6,
                   "column": 18
                 },
                 "identifierName": "healthController"
@@ -433,15 +384,15 @@
             },
             "exported": {
               "type": "Identifier",
-              "start": 230,
-              "end": 246,
+              "start": 188,
+              "end": 204,
               "loc": {
                 "start": {
-                  "line": 9,
+                  "line": 6,
                   "column": 2
                 },
                 "end": {
-                  "line": 9,
+                  "line": 6,
                   "column": 18
                 },
                 "identifierName": "healthController"
@@ -451,100 +402,51 @@
           },
           {
             "type": "ExportSpecifier",
-            "start": 250,
-            "end": 271,
+            "start": 208,
+            "end": 225,
             "loc": {
               "start": {
-                "line": 10,
+                "line": 7,
                 "column": 2
               },
               "end": {
-                "line": 10,
-                "column": 23
+                "line": 7,
+                "column": 19
               }
             },
             "local": {
               "type": "Identifier",
-              "start": 250,
-              "end": 271,
+              "start": 208,
+              "end": 225,
               "loc": {
                 "start": {
-                  "line": 10,
+                  "line": 7,
                   "column": 2
                 },
                 "end": {
-                  "line": 10,
-                  "column": 23
+                  "line": 7,
+                  "column": 19
                 },
-                "identifierName": "rootStaticsController"
+                "identifierName": "staticsController"
               },
-              "name": "rootStaticsController"
+              "name": "staticsController"
             },
             "exported": {
               "type": "Identifier",
-              "start": 250,
-              "end": 271,
+              "start": 208,
+              "end": 225,
               "loc": {
                 "start": {
-                  "line": 10,
+                  "line": 7,
                   "column": 2
                 },
                 "end": {
-                  "line": 10,
-                  "column": 23
+                  "line": 7,
+                  "column": 19
                 },
-                "identifierName": "rootStaticsController"
+                "identifierName": "staticsController"
               },
-              "name": "rootStaticsController"
-            }
-          },
-          {
-            "type": "ExportSpecifier",
-            "start": 275,
-            "end": 302,
-            "loc": {
-              "start": {
-                "line": 11,
-                "column": 2
-              },
-              "end": {
-                "line": 11,
-                "column": 29
-              }
-            },
-            "local": {
-              "type": "Identifier",
-              "start": 275,
-              "end": 302,
-              "loc": {
-                "start": {
-                  "line": 11,
-                  "column": 2
-                },
-                "end": {
-                  "line": 11,
-                  "column": 29
-                },
-                "identifierName": "rootStaticsControllerCustom"
-              },
-              "name": "rootStaticsControllerCustom"
-            },
-            "exported": {
-              "type": "Identifier",
-              "start": 275,
-              "end": 302,
-              "loc": {
-                "start": {
-                  "line": 11,
-                  "column": 2
-                },
-                "end": {
-                  "line": 11,
-                  "column": 29
-                },
-                "identifierName": "rootStaticsControllerCustom"
-              },
-              "name": "rootStaticsControllerCustom"
+              "name": "staticsController"
             }
           }
         ],
@@ -986,95 +888,17 @@
         "postfix": false,
         "binop": null
       },
-      "value": "rootStaticsController",
-      "start": 115,
-      "end": 136,
+      "value": "staticsController",
+      "start": 113,
+      "end": 130,
       "loc": {
         "start": {
-          "line": 4,
-          "column": 2
+          "line": 3,
+          "column": 9
         },
         "end": {
-          "line": 4,
-          "column": 23
-        }
-      }
-    },
-    {
-      "type": {
-        "label": ",",
-        "beforeExpr": true,
-        "startsExpr": false,
-        "rightAssociative": false,
-        "isLoop": false,
-        "isAssign": false,
-        "prefix": false,
-        "postfix": false,
-        "binop": null,
-        "updateContext": null
-      },
-      "start": 136,
-      "end": 137,
-      "loc": {
-        "start": {
-          "line": 4,
-          "column": 23
-        },
-        "end": {
-          "line": 4,
-          "column": 24
-        }
-      }
-    },
-    {
-      "type": {
-        "label": "name",
-        "beforeExpr": false,
-        "startsExpr": true,
-        "rightAssociative": false,
-        "isLoop": false,
-        "isAssign": false,
-        "prefix": false,
-        "postfix": false,
-        "binop": null
-      },
-      "value": "rootStaticsControllerCustom",
-      "start": 140,
-      "end": 167,
-      "loc": {
-        "start": {
-          "line": 5,
-          "column": 2
-        },
-        "end": {
-          "line": 5,
-          "column": 29
-        }
-      }
-    },
-    {
-      "type": {
-        "label": ",",
-        "beforeExpr": true,
-        "startsExpr": false,
-        "rightAssociative": false,
-        "isLoop": false,
-        "isAssign": false,
-        "prefix": false,
-        "postfix": false,
-        "binop": null,
-        "updateContext": null
-      },
-      "start": 167,
-      "end": 168,
-      "loc": {
-        "start": {
-          "line": 5,
-          "column": 29
-        },
-        "end": {
-          "line": 5,
-          "column": 30
+          "line": 3,
+          "column": 26
         }
       }
     },
@@ -1090,16 +914,16 @@
         "postfix": false,
         "binop": null
       },
-      "start": 169,
-      "end": 170,
+      "start": 131,
+      "end": 132,
       "loc": {
         "start": {
-          "line": 6,
-          "column": 0
+          "line": 3,
+          "column": 27
         },
         "end": {
-          "line": 6,
-          "column": 1
+          "line": 3,
+          "column": 28
         }
       }
     },
@@ -1116,16 +940,16 @@
         "binop": null
       },
       "value": "from",
-      "start": 171,
-      "end": 175,
+      "start": 133,
+      "end": 137,
       "loc": {
         "start": {
-          "line": 6,
-          "column": 2
+          "line": 3,
+          "column": 29
         },
         "end": {
-          "line": 6,
-          "column": 6
+          "line": 3,
+          "column": 33
         }
       }
     },
@@ -1142,17 +966,17 @@
         "binop": null,
         "updateContext": null
       },
-      "value": "./rootStatics",
-      "start": 176,
-      "end": 191,
+      "value": "./statics",
+      "start": 138,
+      "end": 149,
       "loc": {
         "start": {
-          "line": 6,
-          "column": 7
+          "line": 3,
+          "column": 34
         },
         "end": {
-          "line": 6,
-          "column": 22
+          "line": 3,
+          "column": 45
         }
       }
     },
@@ -1169,16 +993,16 @@
         "binop": null,
         "updateContext": null
       },
-      "start": 191,
-      "end": 192,
+      "start": 149,
+      "end": 150,
       "loc": {
         "start": {
-          "line": 6,
-          "column": 22
+          "line": 3,
+          "column": 45
         },
         "end": {
-          "line": 6,
-          "column": 23
+          "line": 3,
+          "column": 46
         }
       }
     },
@@ -1197,15 +1021,15 @@
         "updateContext": null
       },
       "value": "export",
-      "start": 194,
-      "end": 200,
+      "start": 152,
+      "end": 158,
       "loc": {
         "start": {
-          "line": 8,
+          "line": 5,
           "column": 0
         },
         "end": {
-          "line": 8,
+          "line": 5,
           "column": 6
         }
       }
@@ -1222,15 +1046,15 @@
         "postfix": false,
         "binop": null
       },
-      "start": 201,
-      "end": 202,
+      "start": 159,
+      "end": 160,
       "loc": {
         "start": {
-          "line": 8,
+          "line": 5,
           "column": 7
         },
         "end": {
-          "line": 8,
+          "line": 5,
           "column": 8
         }
       }
@@ -1248,15 +1072,15 @@
         "binop": null
       },
       "value": "configurationController",
-      "start": 203,
-      "end": 226,
+      "start": 161,
+      "end": 184,
       "loc": {
         "start": {
-          "line": 8,
+          "line": 5,
           "column": 9
         },
         "end": {
-          "line": 8,
+          "line": 5,
           "column": 32
         }
       }
@@ -1274,15 +1098,15 @@
         "binop": null,
         "updateContext": null
       },
-      "start": 226,
-      "end": 227,
+      "start": 184,
+      "end": 185,
       "loc": {
         "start": {
-          "line": 8,
+          "line": 5,
           "column": 32
         },
         "end": {
-          "line": 8,
+          "line": 5,
           "column": 33
         }
       }
@@ -1300,15 +1124,15 @@
         "binop": null
       },
       "value": "healthController",
-      "start": 230,
-      "end": 246,
+      "start": 188,
+      "end": 204,
       "loc": {
         "start": {
-          "line": 9,
+          "line": 6,
           "column": 2
         },
         "end": {
-          "line": 9,
+          "line": 6,
           "column": 18
         }
       }
@@ -1326,15 +1150,15 @@
         "binop": null,
         "updateContext": null
       },
-      "start": 246,
-      "end": 247,
+      "start": 204,
+      "end": 205,
       "loc": {
         "start": {
-          "line": 9,
+          "line": 6,
           "column": 18
         },
         "end": {
-          "line": 9,
+          "line": 6,
           "column": 19
         }
       }
@@ -1351,17 +1175,17 @@
         "postfix": false,
         "binop": null
       },
-      "value": "rootStaticsController",
-      "start": 250,
-      "end": 271,
+      "value": "staticsController",
+      "start": 208,
+      "end": 225,
       "loc": {
         "start": {
-          "line": 10,
+          "line": 7,
           "column": 2
         },
         "end": {
-          "line": 10,
-          "column": 23
+          "line": 7,
+          "column": 19
         }
       }
     },
@@ -1378,68 +1202,16 @@
         "binop": null,
         "updateContext": null
       },
-      "start": 271,
-      "end": 272,
+      "start": 225,
+      "end": 226,
       "loc": {
         "start": {
-          "line": 10,
-          "column": 23
+          "line": 7,
+          "column": 19
         },
         "end": {
-          "line": 10,
-          "column": 24
-        }
-      }
-    },
-    {
-      "type": {
-        "label": "name",
-        "beforeExpr": false,
-        "startsExpr": true,
-        "rightAssociative": false,
-        "isLoop": false,
-        "isAssign": false,
-        "prefix": false,
-        "postfix": false,
-        "binop": null
-      },
-      "value": "rootStaticsControllerCustom",
-      "start": 275,
-      "end": 302,
-      "loc": {
-        "start": {
-          "line": 11,
-          "column": 2
-        },
-        "end": {
-          "line": 11,
-          "column": 29
-        }
-      }
-    },
-    {
-      "type": {
-        "label": ",",
-        "beforeExpr": true,
-        "startsExpr": false,
-        "rightAssociative": false,
-        "isLoop": false,
-        "isAssign": false,
-        "prefix": false,
-        "postfix": false,
-        "binop": null,
-        "updateContext": null
-      },
-      "start": 302,
-      "end": 303,
-      "loc": {
-        "start": {
-          "line": 11,
-          "column": 29
-        },
-        "end": {
-          "line": 11,
-          "column": 30
+          "line": 7,
+          "column": 20
         }
       }
     },
@@ -1455,16 +1227,16 @@
         "postfix": false,
         "binop": null
       },
-      "start": 304,
-      "end": 305,
+      "start": 227,
+      "end": 228,
       "loc": {
         "start": {
-          "line": 11,
-          "column": 31
+          "line": 7,
+          "column": 21
         },
         "end": {
-          "line": 11,
-          "column": 32
+          "line": 7,
+          "column": 22
         }
       }
     },
@@ -1481,16 +1253,16 @@
         "binop": null,
         "updateContext": null
       },
-      "start": 305,
-      "end": 306,
+      "start": 228,
+      "end": 229,
       "loc": {
         "start": {
-          "line": 11,
-          "column": 32
+          "line": 7,
+          "column": 22
         },
         "end": {
-          "line": 11,
-          "column": 33
+          "line": 7,
+          "column": 23
         }
       }
     },
@@ -1507,15 +1279,15 @@
         "binop": null,
         "updateContext": null
       },
-      "start": 307,
-      "end": 307,
+      "start": 230,
+      "end": 230,
       "loc": {
         "start": {
-          "line": 12,
+          "line": 8,
           "column": 0
         },
         "end": {
-          "line": 12,
+          "line": 8,
           "column": 0
         }
       }

@@ -1,28 +1,28 @@
 {
   "type": "File",
   "start": 0,
-  "end": 3416,
+  "end": 1687,
   "loc": {
     "start": {
       "line": 1,
       "column": 0
     },
     "end": {
-      "line": 95,
+      "line": 67,
       "column": 0
     }
   },
   "program": {
     "type": "Program",
     "start": 0,
-    "end": 3416,
+    "end": 1687,
     "loc": {
       "start": {
         "line": 1,
         "column": 0
       },
       "end": {
-        "line": 95,
+        "line": 67,
         "column": 0
       }
     },
@@ -225,9 +225,9 @@
       },
       {
         "type": "CommentBlock",
-        "value": "*\n * @external {ExpressResponse} https://expressjs.com/en/4x/api.html#res\n ",
+        "value": "*\n * @external {ExpressRouter} https://expressjs.com/en/4x/api.html#router\n ",
         "start": 1326,
-        "end": 1405,
+        "end": 1406,
         "loc": {
           "start": {
             "line": 57,
@@ -241,64 +241,16 @@
       },
       {
         "type": "CommentBlock",
-        "value": "*\n * @typedef {function(err:?Error)} ExpressNext A function to call the next middleware. If an\n *                                            argument is specified, it will be handled as an error\n *                                            and sent to the `errorHandler` service.\n ",
-        "start": 1407,
-        "end": 1693,
+        "value": "*\n * @typdef {function} ExpressNext\n * @description A function to call the next middleware. If an argument is specified, it will be\n *              handled as an error and sent to the `errorHandler` service.\n * @param {?Error} error The error to sent to the error handler.\n ",
+        "start": 1408,
+        "end": 1686,
         "loc": {
           "start": {
             "line": 61,
             "column": 0
           },
           "end": {
-            "line": 65,
-            "column": 3
-          }
-        }
-      },
-      {
-        "type": "CommentBlock",
-        "value": "*\n * @typedef {Object} Provider An object that when registered on Jimpex will take care of setting up\n *                            services and/or configuring the app.\n *                            The method Jimpex uses to register a provider is `register(provider)`\n *                            and is inherit from Jimple.\n * @property {function(app:Jimpex)} register The method that gets called by Jimpex when registering\n *                                           the provider.\n ",
-        "start": 1695,
-        "end": 2186,
-        "loc": {
-          "start": {
-            "line": 67,
-            "column": 0
-          },
-          "end": {
-            "line": 74,
-            "column": 3
-          }
-        }
-      },
-      {
-        "type": "CommentBlock",
-        "value": "*\n * @typedef {Object} Controller An object that when mounted on Jimpex will return a list of routes\n *                              to handle an specific point.\n *                              The method Jimpex uses to mount a controller is\n *                              `mount(point, controller)`.\n * @property {function(app:Jimpex,point:String):Array} connect The method that gets called by\n *                                                             Jimpex when the controller is\n *                                                             mounted. It should return a list\n *                                                             of routes.\n ",
-        "start": 2188,
-        "end": 2852,
-        "loc": {
-          "start": {
-            "line": 76,
-            "column": 0
-          },
-          "end": {
-            "line": 85,
-            "column": 3
-          }
-        }
-      },
-      {
-        "type": "CommentBlock",
-        "value": "*\n * @typedef {Object} Middleware An object that when mounted on Jimpex will return an Express\n *                              middleware for the app to use.\n *                              The method Jimpex uses to mount a controller is `use(middleware)`.\n * @property {function(app:Jimpex):?ExpressMiddleware} connect The method that gets called by Jimpex\n *                                                             when the middleware is mounted. It\n *                                                             should return an Express middleware.\n ",
-        "start": 2854,
-        "end": 3415,
-        "loc": {
-          "start": {
-            "line": 87,
-            "column": 0
-          },
-          "end": {
-            "line": 94,
+            "line": 66,
             "column": 3
           }
         }
@@ -500,9 +452,9 @@
     },
     {
       "type": "CommentBlock",
-      "value": "*\n * @external {ExpressResponse} https://expressjs.com/en/4x/api.html#res\n ",
+      "value": "*\n * @external {ExpressRouter} https://expressjs.com/en/4x/api.html#router\n ",
       "start": 1326,
-      "end": 1405,
+      "end": 1406,
       "loc": {
         "start": {
           "line": 57,
@@ -516,64 +468,16 @@
     },
     {
       "type": "CommentBlock",
-      "value": "*\n * @typedef {function(err:?Error)} ExpressNext A function to call the next middleware. If an\n *                                            argument is specified, it will be handled as an error\n *                                            and sent to the `errorHandler` service.\n ",
-      "start": 1407,
-      "end": 1693,
+      "value": "*\n * @typdef {function} ExpressNext\n * @description A function to call the next middleware. If an argument is specified, it will be\n *              handled as an error and sent to the `errorHandler` service.\n * @param {?Error} error The error to sent to the error handler.\n ",
+      "start": 1408,
+      "end": 1686,
       "loc": {
         "start": {
           "line": 61,
           "column": 0
         },
         "end": {
-          "line": 65,
-          "column": 3
-        }
-      }
-    },
-    {
-      "type": "CommentBlock",
-      "value": "*\n * @typedef {Object} Provider An object that when registered on Jimpex will take care of setting up\n *                            services and/or configuring the app.\n *                            The method Jimpex uses to register a provider is `register(provider)`\n *                            and is inherit from Jimple.\n * @property {function(app:Jimpex)} register The method that gets called by Jimpex when registering\n *                                           the provider.\n ",
-      "start": 1695,
-      "end": 2186,
-      "loc": {
-        "start": {
-          "line": 67,
-          "column": 0
-        },
-        "end": {
-          "line": 74,
-          "column": 3
-        }
-      }
-    },
-    {
-      "type": "CommentBlock",
-      "value": "*\n * @typedef {Object} Controller An object that when mounted on Jimpex will return a list of routes\n *                              to handle an specific point.\n *                              The method Jimpex uses to mount a controller is\n *                              `mount(point, controller)`.\n * @property {function(app:Jimpex,point:String):Array} connect The method that gets called by\n *                                                             Jimpex when the controller is\n *                                                             mounted. It should return a list\n *                                                             of routes.\n ",
-      "start": 2188,
-      "end": 2852,
-      "loc": {
-        "start": {
-          "line": 76,
-          "column": 0
-        },
-        "end": {
-          "line": 85,
-          "column": 3
-        }
-      }
-    },
-    {
-      "type": "CommentBlock",
-      "value": "*\n * @typedef {Object} Middleware An object that when mounted on Jimpex will return an Express\n *                              middleware for the app to use.\n *                              The method Jimpex uses to mount a controller is `use(middleware)`.\n * @property {function(app:Jimpex):?ExpressMiddleware} connect The method that gets called by Jimpex\n *                                                             when the middleware is mounted. It\n *                                                             should return an Express middleware.\n ",
-      "start": 2854,
-      "end": 3415,
-      "loc": {
-        "start": {
-          "line": 87,
-          "column": 0
-        },
-        "end": {
-          "line": 94,
+          "line": 66,
           "column": 3
         }
       }
@@ -774,9 +678,9 @@
     },
     {
       "type": "CommentBlock",
-      "value": "*\n * @external {ExpressResponse} https://expressjs.com/en/4x/api.html#res\n ",
+      "value": "*\n * @external {ExpressRouter} https://expressjs.com/en/4x/api.html#router\n ",
       "start": 1326,
-      "end": 1405,
+      "end": 1406,
       "loc": {
         "start": {
           "line": 57,
@@ -790,64 +694,16 @@
     },
     {
       "type": "CommentBlock",
-      "value": "*\n * @typedef {function(err:?Error)} ExpressNext A function to call the next middleware. If an\n *                                            argument is specified, it will be handled as an error\n *                                            and sent to the `errorHandler` service.\n ",
-      "start": 1407,
-      "end": 1693,
+      "value": "*\n * @typdef {function} ExpressNext\n * @description A function to call the next middleware. If an argument is specified, it will be\n *              handled as an error and sent to the `errorHandler` service.\n * @param {?Error} error The error to sent to the error handler.\n ",
+      "start": 1408,
+      "end": 1686,
       "loc": {
         "start": {
           "line": 61,
           "column": 0
         },
         "end": {
-          "line": 65,
-          "column": 3
-        }
-      }
-    },
-    {
-      "type": "CommentBlock",
-      "value": "*\n * @typedef {Object} Provider An object that when registered on Jimpex will take care of setting up\n *                            services and/or configuring the app.\n *                            The method Jimpex uses to register a provider is `register(provider)`\n *                            and is inherit from Jimple.\n * @property {function(app:Jimpex)} register The method that gets called by Jimpex when registering\n *                                           the provider.\n ",
-      "start": 1695,
-      "end": 2186,
-      "loc": {
-        "start": {
-          "line": 67,
-          "column": 0
-        },
-        "end": {
-          "line": 74,
-          "column": 3
-        }
-      }
-    },
-    {
-      "type": "CommentBlock",
-      "value": "*\n * @typedef {Object} Controller An object that when mounted on Jimpex will return a list of routes\n *                              to handle an specific point.\n *                              The method Jimpex uses to mount a controller is\n *                              `mount(point, controller)`.\n * @property {function(app:Jimpex,point:String):Array} connect The method that gets called by\n *                                                             Jimpex when the controller is\n *                                                             mounted. It should return a list\n *                                                             of routes.\n ",
-      "start": 2188,
-      "end": 2852,
-      "loc": {
-        "start": {
-          "line": 76,
-          "column": 0
-        },
-        "end": {
-          "line": 85,
-          "column": 3
-        }
-      }
-    },
-    {
-      "type": "CommentBlock",
-      "value": "*\n * @typedef {Object} Middleware An object that when mounted on Jimpex will return an Express\n *                              middleware for the app to use.\n *                              The method Jimpex uses to mount a controller is `use(middleware)`.\n * @property {function(app:Jimpex):?ExpressMiddleware} connect The method that gets called by Jimpex\n *                                                             when the middleware is mounted. It\n *                                                             should return an Express middleware.\n ",
-      "start": 2854,
-      "end": 3415,
-      "loc": {
-        "start": {
-          "line": 87,
-          "column": 0
-        },
-        "end": {
-          "line": 94,
+          "line": 66,
           "column": 3
         }
       }
@@ -865,15 +721,15 @@
         "binop": null,
         "updateContext": null
       },
-      "start": 3416,
-      "end": 3416,
+      "start": 1687,
+      "end": 1687,
       "loc": {
         "start": {
-          "line": 95,
+          "line": 67,
           "column": 0
         },
         "end": {
-          "line": 95,
+          "line": 67,
           "column": 0
         }
       }

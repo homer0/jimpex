@@ -42,10 +42,10 @@
     <ul class="manual-toc">
       
     <li data-ice="manualNav" class="indent-h1" data-link="manual/controllers.html"><a href="manual/controllers.html" data-ice="link">Built-in Controllers</a></li>
-<li data-ice="manualNav" class="indent-h2" data-link="manual/controllers.html"><a href="manual/controllers.html#version-validator" data-ice="link">Version validator</a></li>
 <li data-ice="manualNav" class="indent-h2" data-link="manual/controllers.html"><a href="manual/controllers.html#configuration" data-ice="link">Configuration</a></li>
 <li data-ice="manualNav" class="indent-h2" data-link="manual/controllers.html"><a href="manual/controllers.html#health" data-ice="link">Health</a></li>
-<li data-ice="manualNav" class="indent-h2" data-link="manual/controllers.html"><a href="manual/controllers.html#root-statics" data-ice="link">Root Statics</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/controllers.html"><a href="manual/controllers.html#statics" data-ice="link">Statics</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/controllers.html"><a href="manual/controllers.html#gateway" data-ice="link">Gateway</a></li>
 </ul>
   </div>
 <div data-ice="manual">
@@ -56,6 +56,7 @@
 <li data-ice="manualNav" class="indent-h2" data-link="manual/middlewares.html"><a href="manual/middlewares.html#force-https" data-ice="link">Force HTTPS</a></li>
 <li data-ice="manualNav" class="indent-h2" data-link="manual/middlewares.html"><a href="manual/middlewares.html#fast-html" data-ice="link">Fast HTML</a></li>
 <li data-ice="manualNav" class="indent-h2" data-link="manual/middlewares.html"><a href="manual/middlewares.html#show-html" data-ice="link">Show HTML</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/middlewares.html"><a href="manual/middlewares.html#version-validator" data-ice="link">Version validator</a></li>
 </ul>
   </div>
 <div data-ice="manual">
@@ -63,9 +64,9 @@
       
     <li data-ice="manualNav" class="indent-h1" data-link="manual/services.html"><a href="manual/services.html" data-ice="link">Built-in Services</a></li>
 <li data-ice="manualNav" class="indent-h2" data-link="manual/services.html"><a href="manual/services.html#api-client" data-ice="link">API Client</a></li>
-<li data-ice="manualNav" class="indent-h2" data-link="manual/services.html"><a href="manual/services.html#ensure-bearer-authentication" data-ice="link">Ensure bearer authentication</a></li>
-<li data-ice="manualNav" class="indent-h2" data-link="manual/services.html"><a href="manual/services.html#version-validator" data-ice="link">Version validator</a></li>
-<li data-ice="manualNav" class="indent-h2" data-link="manual/services.html"><a href="manual/services.html#error" data-ice="link">Error</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/services.html"><a href="manual/services.html#app-error" data-ice="link">App Error</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/services.html"><a href="manual/services.html#ensure-bearer-token" data-ice="link">Ensure bearer token</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/services.html"><a href="manual/services.html#http-error" data-ice="link">HTTP Error</a></li>
 <li data-ice="manualNav" class="indent-h2" data-link="manual/services.html"><a href="manual/services.html#send-file" data-ice="link">Send File</a></li>
 <li data-ice="manualNav" class="indent-h2" data-link="manual/services.html"><a href="manual/services.html#frontend-fs" data-ice="link">Frontend Fs</a></li>
 <li data-ice="manualNav" class="indent-h2" data-link="manual/services.html"><a href="manual/services.html#html-generator" data-ice="link">HTML Generator</a></li>
@@ -80,15 +81,14 @@
 <p>In the case of the services from the modules <code>api</code>, <code>http</code> and <code>common</code>, you can register them when the app starts by using the <code>defaultService</code> option (Check the options document for more information).</p>
 <h2 id="api-client">API Client</h2><p>An implementation of the <a href="https://github.com/homer0/wootils/blob/master/documents/shared/APIClient.md">wootils API Client</a> but that is connected to the HTTP service, to allow logging and forwarding of the headers.</p>
 <ul>
-<li>Module: <code>api</code></li>
+<li>Module: <code>http</code></li>
 <li>Requires: <code>http</code> and <code>appError</code></li>
 </ul>
 <pre><code class="lang-js"><code class="source-code prettyprint">const {
   Jimpex,
   services: {
-    api: { apiClient },
     common: { appError },
-    http: { http },
+    http: { apiClient, http },
   },
 };
 
@@ -103,13 +103,27 @@ class App extends Jimpex {
   }
 }</code>
 </code></pre>
-<p>By default, the service is registered with the name <code>apiClient</code>, the API entry point is taken from the configuration setting <code>api.url</code> and the endpoints from <code>api.endpoints</code>, but you can use the <em>&quot;service generator&quot;</em> <code>apiClientCustom</code> to modify those options:</p>
+<p>The service has a few options that can be customized:</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">{
+  // The name the service will have in the container; in case you need more than one.
+  serviceName: &apos;apiClient&apos;,
+
+  // The name of the configuration setting that will contain the API `url` and `endpoints`.
+  // If this is not customized, but the `serviceName` is, this value will be set to the
+  // same as the `serviceName`.
+  configurationSetting: &apos;api&apos;,
+
+  // The class the service will instantiate. This is in case you end up extending the
+  // base one in order to add custommethods.
+  clientClass: APIClient,
+}</code>
+</code></pre>
+<p>You can use the provider as a function to modify the options:</p>
 <pre><code class="lang-js"><code class="source-code prettyprint">const {
   Jimpex,
   services: {
-    api: { apiClientCustom },
     common: { appError },
-    http: { http },
+    http: { apiClient, http },
   },
 };
 
@@ -120,92 +134,14 @@ class App extends Jimpex {
     this.register(appError);
 
     // Register the client
-    this.register({
-      &apos;myCustomAPIService&apos;,
-      &apos;myapi&apos;
+    this.register(apiClient({
+      serviceName: &apos;myCustomAPIService&apos;,
+      configurationSetting: &apos;myapi&apos;,
     });
   }
 }</code>
 </code></pre>
-<p>The first parameter is the name used to register the server and the second one is the setting key that has a <code>url</code> and an <code>endpoints</code> dictionary.</p>
-<h2 id="ensure-bearer-authentication">Ensure bearer authentication</h2><p>A service-middleware that allows you to validate the incoming requests <code>Authorization</code> header.</p>
-<p>It&apos;s a <em>&quot;service-middleware&quot;</em> because when you access the service, it doesn&apos;t return a class instance, but a middleware function for you to use on your controller routes.</p>
-<ul>
-<li>Module: <code>api</code></li>
-<li>Requires: <code>appError</code></li>
-</ul>
-<pre><code class="lang-js"><code class="source-code prettyprint">const {
-  Jimpex,
-  services: {
-    api: { ensureBearerAuthentication },
-    common: { appError },
-  },
-};
-
-class App extends Jimpex {
-  boot() {
-    // Register the dependencies...
-    this.register(appError);
-
-    // Register the service
-    this.register(apiClient);
-  }
-}</code>
-</code></pre>
-<p>Now, if the token process a request an detects a valid token, it will set that token on the request <code>bearerToken</code> property:</p>
-<pre><code class="lang-js"><code class="source-code prettyprint">const myCtrl = controller((app) =&gt; {
-  const router = app.get(&apos;router&apos;);
-  const ensureAuthentication = app.get(&apos;ensureBearerAuthentication&apos;);
-  return [router.get(&apos;/something&apos;, [
-    ensureAuthentication,
-    (req, res, next) =&gt; {
-      console.log(&apos;Token:&apos;, req.bearerToken);
-      next();
-    },
-  ])];
-});</code>
-</code></pre>
-<h2 id="version-validator">Version validator</h2><p>A service-middleware to validate a <code>version</code> parameter against the configuration <code>version</code> setting. It&apos;s what the version validator middleware internally uses.</p>
-<p>It&apos;s a <em>&quot;service-middleware&quot;</em> because when you access the service, it doesn&apos;t return a class instance, but a middleware function for you to use on your controller routes.</p>
-<ul>
-<li>Module: <code>api</code></li>
-<li>Requires: <code>responsesBuilder</code> and <code>appError</code></li>
-</ul>
-<pre><code class="lang-js"><code class="source-code prettyprint">const {
-  Jimpex,
-  services: {
-    api: { versionValidator },
-    common: { appError },
-    http: { responsesBuilder },
-  },
-};
-
-class App extends Jimpex {
-  boot() {
-    // Register the dependencies...
-    this.register(appError);
-    this.register(responsesBuilder);
-
-    // Register the service
-    this.register(versionValidator);
-  }
-}</code>
-</code></pre>
-<p>Now you can use it on your controllers routes to validate that the version being used is the same as the one the app is running on:</p>
-<pre><code class="lang-js"><code class="source-code prettyprint">const myCtrl = controller((app) =&gt; {
-  const router = app.get(&apos;router&apos;);
-  const versionValidator = app.get(&apos;versionValidator&apos;);
-  return [router.get(&apos;/:version/something&apos;, [
-    versionValidator,
-    (req, res, next) =&gt; {
-      console.log(&apos;The version is valid!&apos;);
-      next();
-    },
-  ])];
-});</code>
-</code></pre>
-<h2 id="error">Error</h2><p>A very simple subclass of <code>Error</code> to inject extra information on the errors so they can customize the error handler responses.</p>
-<p>Something important to remember is that the <code>appError</code> service doesn&apos;t return an instance of the service but the class so you can construct an error.</p>
+<h2 id="app-error">App Error</h2><p>A very simple subclass of <code>Error</code> but with support for context information. It can be used to customize the error handler responses.</p>
 <ul>
 <li>Module: <code>common</code></li>
 </ul>
@@ -223,12 +159,121 @@ class App extends Jimpex {
   }
 }</code>
 </code></pre>
-<p>That&apos;s all, now you can do <code>get(&apos;appError&apos;)</code>, inject <code>AppError</code> and generate your custom errors:</p>
-<pre><code class="lang-js"><code class="source-code prettyprint">new Error(&apos;Something happened&apos;, {
+<p>By registering the &quot;service&quot;, two things are added to the container: The class declaration, so you can construct the errors, and a shorthand function that does the same:</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">const AppError = app.get(&apos;AppError&apos;);
+throw new AppError(&apos;Something happened&apos;, {
   someProp: &apos;someValue&apos;,
-}):</code>
+});
+// or
+const appError = app.get(&apos;appError&apos;);
+throw appError(&apos;Something happened&apos;, {
+  someProp: &apos;someValue&apos;,
+});</code>
 </code></pre>
-<p>This is useful if you are building an app with multiple known exceptions, you can use the extra settings to send context information.</p>
+<p>This is useful if you are building an app with multiple known exceptions, you can use the context to send useful information.</p>
+<h2 id="ensure-bearer-token">Ensure bearer token</h2><p>A service-middleware that allows you to validate and retrieve a bearer token from the incoming requests <code>Authorization</code> header.</p>
+<p>It&apos;s a <em>&quot;service-middleware&quot;</em> because when you access the service, it doesn&apos;t return a class/service instance, but a middleware function for you to use on your controller routes.</p>
+<ul>
+<li>Module: <code>utils</code></li>
+<li>Requires: <code>appError</code></li>
+</ul>
+<pre><code class="lang-js"><code class="source-code prettyprint">const {
+  Jimpex,
+  services: {
+    common: { appError },
+    utils: { ensureBearerToken },
+  },
+};
+
+class App extends Jimpex {
+  boot() {
+    // Register the dependencies...
+    this.register(appError);
+
+    // Register the service
+    this.register(ensureBearerToken);
+  }
+}</code>
+</code></pre>
+<p>This service has a few default options:</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">{
+  // The information for the error generated when no token is found.
+  error: {
+    // The error message.
+    message: &apos;Unauthorized&apos;,
+    // The HTTP status associated to the error, this is for the error handler.
+    status: statuses.unauthorized,
+    // Extra context information for the error handler to add to the response.
+    response: {},
+  },
+  // The regular expression used to validate and extract the token.
+  expression: /bearer (.*?)(?:$|\s)/i,
+  // The name of the property on `res.locals` where the token will be saved.
+  local: &apos;token&apos;,
+}</code>
+</code></pre>
+<p>You modify those default values by using the provider as a function when registering:</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">const {
+  Jimpex,
+  services: {
+    common: { appError },
+    utils: { ensureBearerToken },
+  },
+};
+
+class App extends Jimpex {
+  boot() {
+    // Register the dependencies...
+    this.register(appError);
+
+    // Register the service
+    this.register(ensureBearerToken({
+      error: {
+        message: &apos;You are not authorized to access this route&apos;,
+      },
+      local: &apos;userToken&apos;,
+    }));
+  }
+}</code>
+</code></pre>
+<p>Now, if the token processes a request and detects a valid token, it will save it on <code>res.locals.token</code>:</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">const myCtrl = controller((app) =&gt; {
+  const router = app.get(&apos;router&apos;);
+  const ensureBearerToken = app.get(&apos;ensureBearerToken&apos;);
+  return [router.get(&apos;/something&apos;, [
+    ensureBearerToken,
+    (req, res, next) =&gt; {
+      console.log(&apos;Token:&apos;, res.locals.token);
+      next();
+    },
+  ])];
+});</code>
+</code></pre>
+<h2 id="http-error">HTTP Error</h2><p>Another type of error, but specific for the HTTP requests the app does with the API client. This is a subclass of <code>AppError</code>. The only advantage over <code>AppError</code> is that you know the that the type of error is specific to requests and that it has a paramter for an HTTP status.</p>
+<ul>
+<li>Module: <code>common</code></li>
+</ul>
+<pre><code class="lang-js"><code class="source-code prettyprint">const {
+  Jimpex,
+  services: {
+    common: { httpError },
+  },
+};
+
+class App extends Jimpex {
+  boot() {        
+    // Register the service
+    this.register(httpError);
+  }
+}</code>
+</code></pre>
+<p>By registering the &quot;service&quot;, two things are added to the container: The class declaration, so you can construct the errors, and a shorthand function that does the same:</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">const HTTPError = app.get(&apos;HTTPError&apos;);
+throw new AppError(&apos;Not found&apos;, 404);
+// or
+const httpError = app.get(&apos;httpError&apos;);
+throw httpError(&apos;Not found&apos;, 404);</code>
+</code></pre>
 <h2 id="send-file">Send File</h2><p>It allows you to send a file on a response with a path relative to the app executable.</p>
 <p>The <code>sendFile</code> doesn&apos;t return a class service instance but just a function.</p>
 <ul>
@@ -319,9 +364,18 @@ class App extends Jimpex {
   }
 }</code>
 </code></pre>
-<p>The service, after registering, it also hooks itself to the app event that gets fired when it starts so it can create the file automatically.</p>
+<p>The service, after registering, it hooks itself to the app event that gets fired when it starts, so it can create the file automatically.</p>
 <p>Now, this service has a few default options, so instead of explaining which are, we&apos;ll see each option on detail:</p>
 <pre><code class="lang-js"><code class="source-code prettyprint">{
+  // The name the service will have in the container; in case you need more than one.
+  serviceName: &apos;htmlGenerator&apos;,
+
+  // The name of a service from will it obtain the values for the template. When
+  // instantiated, it will look for it on the container, and if is not avaiable,
+  // it will just ignore it and use `configurationKeys`.
+  // You can completely by setting the value to `null`.
+  valuesService: &apos;htmlGeneratorValues&apos;,
+
   // The name of the file it should use as template.
   template: &apos;index.tpl.html&apos;,
 
@@ -345,13 +399,12 @@ class App extends Jimpex {
   configurationKeys: [&apos;features&apos;, &apos;version&apos;, &apos;postMessagesPrefix&apos;],
 }</code>
 </code></pre>
-<p>It also supports a custom service with a <code>getValues</code> method to obtain the information to inject instead of taking it from the configuration.</p>
-<p>To modify the options, you need to use the <em>&quot;service generator&quot;</em> <code>htmlGeneratorCustom</code>:</p>
+<p>To modify the options, you just need to use provider as a function:</p>
 <pre><code class="lang-js"><code class="source-code prettyprint">const {
   Jimpex,
   services: {
     frontend: { frontendFs },
-    html: { htmlGeneratorCustom },
+    html: { htmlGenerator },
   },
 };
 
@@ -361,7 +414,7 @@ class App extends Jimpex {
     this.register(frontendFs);
 
     // Register the service
-    this.register(htmlGeneratorCustom({
+    this.register(htmlGenerator({
       template: &apos;template.tpl&apos;,
       file: &apos;my-index.html&apos;,
       ...
@@ -369,7 +422,6 @@ class App extends Jimpex {
   }
 }</code>
 </code></pre>
-<p>The first parameter is the name of the service and the second the options to customize it. In case you want to use another service to get the values, you can send the name of that service as the third parameter.</p>
 <h2 id="http">HTTP</h2><p>A set of utilities to work with HTTP requests and responses.</p>
 <ul>
 <li>Module: <code>http</code></li>

@@ -1,28 +1,28 @@
 {
   "type": "File",
   "start": 0,
-  "end": 169,
+  "end": 131,
   "loc": {
     "start": {
       "line": 1,
       "column": 0
     },
     "end": {
-      "line": 7,
+      "line": 6,
       "column": 0
     }
   },
   "program": {
     "type": "Program",
     "start": 0,
-    "end": 169,
+    "end": 131,
     "loc": {
       "start": {
         "line": 1,
         "column": 0
       },
       "end": {
-        "line": 7,
+        "line": 6,
         "column": 0
       }
     },
@@ -117,7 +117,7 @@
       {
         "type": "ImportDeclaration",
         "start": 47,
-        "end": 107,
+        "end": 89,
         "loc": {
           "start": {
             "line": 2,
@@ -125,7 +125,7 @@
           },
           "end": {
             "line": 2,
-            "column": 60
+            "column": 42
           }
         },
         "specifiers": [
@@ -177,69 +177,20 @@
               },
               "name": "forceHTTPS"
             }
-          },
-          {
-            "type": "ImportSpecifier",
-            "start": 68,
-            "end": 84,
-            "loc": {
-              "start": {
-                "line": 2,
-                "column": 21
-              },
-              "end": {
-                "line": 2,
-                "column": 37
-              }
-            },
-            "imported": {
-              "type": "Identifier",
-              "start": 68,
-              "end": 84,
-              "loc": {
-                "start": {
-                  "line": 2,
-                  "column": 21
-                },
-                "end": {
-                  "line": 2,
-                  "column": 37
-                },
-                "identifierName": "forceHTTPSCustom"
-              },
-              "name": "forceHTTPSCustom"
-            },
-            "local": {
-              "type": "Identifier",
-              "start": 68,
-              "end": 84,
-              "loc": {
-                "start": {
-                  "line": 2,
-                  "column": 21
-                },
-                "end": {
-                  "line": 2,
-                  "column": 37
-                },
-                "identifierName": "forceHTTPSCustom"
-              },
-              "name": "forceHTTPSCustom"
-            }
           }
         ],
         "source": {
           "type": "StringLiteral",
-          "start": 92,
-          "end": 106,
+          "start": 74,
+          "end": 88,
           "loc": {
             "start": {
               "line": 2,
-              "column": 45
+              "column": 27
             },
             "end": {
               "line": 2,
-              "column": 59
+              "column": 41
             }
           },
           "extra": {
@@ -251,24 +202,24 @@
       },
       {
         "type": "ExportNamedDeclaration",
-        "start": 109,
-        "end": 168,
+        "start": 91,
+        "end": 130,
         "loc": {
           "start": {
             "line": 4,
             "column": 0
           },
           "end": {
-            "line": 6,
-            "column": 22
+            "line": 5,
+            "column": 16
           }
         },
         "declaration": null,
         "specifiers": [
           {
             "type": "ExportSpecifier",
-            "start": 118,
-            "end": 130,
+            "start": 100,
+            "end": 112,
             "loc": {
               "start": {
                 "line": 4,
@@ -281,8 +232,8 @@
             },
             "local": {
               "type": "Identifier",
-              "start": 118,
-              "end": 130,
+              "start": 100,
+              "end": 112,
               "loc": {
                 "start": {
                   "line": 4,
@@ -298,8 +249,8 @@
             },
             "exported": {
               "type": "Identifier",
-              "start": 118,
-              "end": 130,
+              "start": 100,
+              "end": 112,
               "loc": {
                 "start": {
                   "line": 4,
@@ -316,8 +267,8 @@
           },
           {
             "type": "ExportSpecifier",
-            "start": 134,
-            "end": 144,
+            "start": 116,
+            "end": 126,
             "loc": {
               "start": {
                 "line": 5,
@@ -330,8 +281,8 @@
             },
             "local": {
               "type": "Identifier",
-              "start": 134,
-              "end": 144,
+              "start": 116,
+              "end": 126,
               "loc": {
                 "start": {
                   "line": 5,
@@ -347,8 +298,8 @@
             },
             "exported": {
               "type": "Identifier",
-              "start": 134,
-              "end": 144,
+              "start": 116,
+              "end": 126,
               "loc": {
                 "start": {
                   "line": 5,
@@ -361,55 +312,6 @@
                 "identifierName": "forceHTTPS"
               },
               "name": "forceHTTPS"
-            }
-          },
-          {
-            "type": "ExportSpecifier",
-            "start": 148,
-            "end": 164,
-            "loc": {
-              "start": {
-                "line": 6,
-                "column": 2
-              },
-              "end": {
-                "line": 6,
-                "column": 18
-              }
-            },
-            "local": {
-              "type": "Identifier",
-              "start": 148,
-              "end": 164,
-              "loc": {
-                "start": {
-                  "line": 6,
-                  "column": 2
-                },
-                "end": {
-                  "line": 6,
-                  "column": 18
-                },
-                "identifierName": "forceHTTPSCustom"
-              },
-              "name": "forceHTTPSCustom"
-            },
-            "exported": {
-              "type": "Identifier",
-              "start": 148,
-              "end": 164,
-              "loc": {
-                "start": {
-                  "line": 6,
-                  "column": 2
-                },
-                "end": {
-                  "line": 6,
-                  "column": 18
-                },
-                "identifierName": "forceHTTPSCustom"
-              },
-              "name": "forceHTTPSCustom"
             }
           }
         ],
@@ -684,58 +586,6 @@
     },
     {
       "type": {
-        "label": ",",
-        "beforeExpr": true,
-        "startsExpr": false,
-        "rightAssociative": false,
-        "isLoop": false,
-        "isAssign": false,
-        "prefix": false,
-        "postfix": false,
-        "binop": null,
-        "updateContext": null
-      },
-      "start": 66,
-      "end": 67,
-      "loc": {
-        "start": {
-          "line": 2,
-          "column": 19
-        },
-        "end": {
-          "line": 2,
-          "column": 20
-        }
-      }
-    },
-    {
-      "type": {
-        "label": "name",
-        "beforeExpr": false,
-        "startsExpr": true,
-        "rightAssociative": false,
-        "isLoop": false,
-        "isAssign": false,
-        "prefix": false,
-        "postfix": false,
-        "binop": null
-      },
-      "value": "forceHTTPSCustom",
-      "start": 68,
-      "end": 84,
-      "loc": {
-        "start": {
-          "line": 2,
-          "column": 21
-        },
-        "end": {
-          "line": 2,
-          "column": 37
-        }
-      }
-    },
-    {
-      "type": {
         "label": "}",
         "beforeExpr": false,
         "startsExpr": false,
@@ -746,16 +596,16 @@
         "postfix": false,
         "binop": null
       },
-      "start": 85,
-      "end": 86,
+      "start": 67,
+      "end": 68,
       "loc": {
         "start": {
           "line": 2,
-          "column": 38
+          "column": 20
         },
         "end": {
           "line": 2,
-          "column": 39
+          "column": 21
         }
       }
     },
@@ -772,16 +622,16 @@
         "binop": null
       },
       "value": "from",
-      "start": 87,
-      "end": 91,
+      "start": 69,
+      "end": 73,
       "loc": {
         "start": {
           "line": 2,
-          "column": 40
+          "column": 22
         },
         "end": {
           "line": 2,
-          "column": 44
+          "column": 26
         }
       }
     },
@@ -799,16 +649,16 @@
         "updateContext": null
       },
       "value": "./forceHTTPS",
-      "start": 92,
-      "end": 106,
+      "start": 74,
+      "end": 88,
       "loc": {
         "start": {
           "line": 2,
-          "column": 45
+          "column": 27
         },
         "end": {
           "line": 2,
-          "column": 59
+          "column": 41
         }
       }
     },
@@ -825,16 +675,16 @@
         "binop": null,
         "updateContext": null
       },
-      "start": 106,
-      "end": 107,
+      "start": 88,
+      "end": 89,
       "loc": {
         "start": {
           "line": 2,
-          "column": 59
+          "column": 41
         },
         "end": {
           "line": 2,
-          "column": 60
+          "column": 42
         }
       }
     },
@@ -853,8 +703,8 @@
         "updateContext": null
       },
       "value": "export",
-      "start": 109,
-      "end": 115,
+      "start": 91,
+      "end": 97,
       "loc": {
         "start": {
           "line": 4,
@@ -878,8 +728,8 @@
         "postfix": false,
         "binop": null
       },
-      "start": 116,
-      "end": 117,
+      "start": 98,
+      "end": 99,
       "loc": {
         "start": {
           "line": 4,
@@ -904,8 +754,8 @@
         "binop": null
       },
       "value": "errorHandler",
-      "start": 118,
-      "end": 130,
+      "start": 100,
+      "end": 112,
       "loc": {
         "start": {
           "line": 4,
@@ -930,8 +780,8 @@
         "binop": null,
         "updateContext": null
       },
-      "start": 130,
-      "end": 131,
+      "start": 112,
+      "end": 113,
       "loc": {
         "start": {
           "line": 4,
@@ -956,8 +806,8 @@
         "binop": null
       },
       "value": "forceHTTPS",
-      "start": 134,
-      "end": 144,
+      "start": 116,
+      "end": 126,
       "loc": {
         "start": {
           "line": 5,
@@ -982,8 +832,8 @@
         "binop": null,
         "updateContext": null
       },
-      "start": 144,
-      "end": 145,
+      "start": 126,
+      "end": 127,
       "loc": {
         "start": {
           "line": 5,
@@ -992,58 +842,6 @@
         "end": {
           "line": 5,
           "column": 13
-        }
-      }
-    },
-    {
-      "type": {
-        "label": "name",
-        "beforeExpr": false,
-        "startsExpr": true,
-        "rightAssociative": false,
-        "isLoop": false,
-        "isAssign": false,
-        "prefix": false,
-        "postfix": false,
-        "binop": null
-      },
-      "value": "forceHTTPSCustom",
-      "start": 148,
-      "end": 164,
-      "loc": {
-        "start": {
-          "line": 6,
-          "column": 2
-        },
-        "end": {
-          "line": 6,
-          "column": 18
-        }
-      }
-    },
-    {
-      "type": {
-        "label": ",",
-        "beforeExpr": true,
-        "startsExpr": false,
-        "rightAssociative": false,
-        "isLoop": false,
-        "isAssign": false,
-        "prefix": false,
-        "postfix": false,
-        "binop": null,
-        "updateContext": null
-      },
-      "start": 164,
-      "end": 165,
-      "loc": {
-        "start": {
-          "line": 6,
-          "column": 18
-        },
-        "end": {
-          "line": 6,
-          "column": 19
         }
       }
     },
@@ -1059,16 +857,16 @@
         "postfix": false,
         "binop": null
       },
-      "start": 166,
-      "end": 167,
+      "start": 128,
+      "end": 129,
       "loc": {
         "start": {
-          "line": 6,
-          "column": 20
+          "line": 5,
+          "column": 14
         },
         "end": {
-          "line": 6,
-          "column": 21
+          "line": 5,
+          "column": 15
         }
       }
     },
@@ -1085,16 +883,16 @@
         "binop": null,
         "updateContext": null
       },
-      "start": 167,
-      "end": 168,
+      "start": 129,
+      "end": 130,
       "loc": {
         "start": {
-          "line": 6,
-          "column": 21
+          "line": 5,
+          "column": 15
         },
         "end": {
-          "line": 6,
-          "column": 22
+          "line": 5,
+          "column": 16
         }
       }
     },
@@ -1111,15 +909,15 @@
         "binop": null,
         "updateContext": null
       },
-      "start": 169,
-      "end": 169,
+      "start": 131,
+      "end": 131,
       "loc": {
         "start": {
-          "line": 7,
+          "line": 6,
           "column": 0
         },
         "end": {
-          "line": 7,
+          "line": 6,
           "column": 0
         }
       }

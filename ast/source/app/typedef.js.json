@@ -1,7 +1,7 @@
 {
   "type": "File",
   "start": 0,
-  "end": 5302,
+  "end": 5304,
   "loc": {
     "start": {
       "line": 1,
@@ -15,7 +15,7 @@
   "program": {
     "type": "Program",
     "start": 0,
-    "end": 5302,
+    "end": 5304,
     "loc": {
       "start": {
         "line": 1,
@@ -97,9 +97,9 @@
       },
       {
         "type": "CommentBlock",
-        "value": "*\n * @typedef {Object} JimpexDefaultServicesOptions\n * @property {boolean} [common=true] Whether or not to register all the `common` service providers.\n * @property {boolean} [http=true]   Whether or not to register all the `http` service providers.\n * @property {boolean} [api=true]    Whether or not to register all the `api` service providers.\n ",
+        "value": "*\n * @typedef {Object} JimpexDefaultServicesOptions\n * @property {boolean} [common=true] Whether or not to register all the `common` service providers.\n * @property {boolean} [http=true]   Whether or not to register all the `http` service providers.\n * @property {boolean} [utils=true]  Whether or not to register all the `utils` service providers.\n ",
         "start": 3814,
-        "end": 4166,
+        "end": 4168,
         "loc": {
           "start": {
             "line": 56,
@@ -114,8 +114,8 @@
       {
         "type": "CommentBlock",
         "value": "*\n * @typedef {Object} JimpexOptions\n * @property {string}                       [version='0.0.0']      The app version. To be used on\n *                                                                 the configuration.\n * @property {JimpexConfigurationOptions}   [configuration]        The options for the app\n *                                                                 configuration service.\n * @property {JimpexStaticsOptions}         [statics]              The options for the app static\n *                                                                 `middleware`.\n * @property {string}                       [filesizeLimit='15MB'] The size limit for the requests\n *                                                                 payload.\n * @property {JimpexExpressOptions}         [express]              The options for the Express app.\n * @property {JimpexDefaultServicesOptions} [defaultServices]      To tell the app which services\n *                                                                 should be registered when\n *                                                                 instantiated.\n ",
-        "start": 4168,
-        "end": 5301,
+        "start": 4170,
+        "end": 5303,
         "loc": {
           "start": {
             "line": 63,
@@ -196,9 +196,9 @@
     },
     {
       "type": "CommentBlock",
-      "value": "*\n * @typedef {Object} JimpexDefaultServicesOptions\n * @property {boolean} [common=true] Whether or not to register all the `common` service providers.\n * @property {boolean} [http=true]   Whether or not to register all the `http` service providers.\n * @property {boolean} [api=true]    Whether or not to register all the `api` service providers.\n ",
+      "value": "*\n * @typedef {Object} JimpexDefaultServicesOptions\n * @property {boolean} [common=true] Whether or not to register all the `common` service providers.\n * @property {boolean} [http=true]   Whether or not to register all the `http` service providers.\n * @property {boolean} [utils=true]  Whether or not to register all the `utils` service providers.\n ",
       "start": 3814,
-      "end": 4166,
+      "end": 4168,
       "loc": {
         "start": {
           "line": 56,
@@ -213,8 +213,8 @@
     {
       "type": "CommentBlock",
       "value": "*\n * @typedef {Object} JimpexOptions\n * @property {string}                       [version='0.0.0']      The app version. To be used on\n *                                                                 the configuration.\n * @property {JimpexConfigurationOptions}   [configuration]        The options for the app\n *                                                                 configuration service.\n * @property {JimpexStaticsOptions}         [statics]              The options for the app static\n *                                                                 `middleware`.\n * @property {string}                       [filesizeLimit='15MB'] The size limit for the requests\n *                                                                 payload.\n * @property {JimpexExpressOptions}         [express]              The options for the Express app.\n * @property {JimpexDefaultServicesOptions} [defaultServices]      To tell the app which services\n *                                                                 should be registered when\n *                                                                 instantiated.\n ",
-      "start": 4168,
-      "end": 5301,
+      "start": 4170,
+      "end": 5303,
       "loc": {
         "start": {
           "line": 63,
@@ -294,9 +294,9 @@
     },
     {
       "type": "CommentBlock",
-      "value": "*\n * @typedef {Object} JimpexDefaultServicesOptions\n * @property {boolean} [common=true] Whether or not to register all the `common` service providers.\n * @property {boolean} [http=true]   Whether or not to register all the `http` service providers.\n * @property {boolean} [api=true]    Whether or not to register all the `api` service providers.\n ",
+      "value": "*\n * @typedef {Object} JimpexDefaultServicesOptions\n * @property {boolean} [common=true] Whether or not to register all the `common` service providers.\n * @property {boolean} [http=true]   Whether or not to register all the `http` service providers.\n * @property {boolean} [utils=true]  Whether or not to register all the `utils` service providers.\n ",
       "start": 3814,
-      "end": 4166,
+      "end": 4168,
       "loc": {
         "start": {
           "line": 56,
@@ -311,8 +311,8 @@
     {
       "type": "CommentBlock",
       "value": "*\n * @typedef {Object} JimpexOptions\n * @property {string}                       [version='0.0.0']      The app version. To be used on\n *                                                                 the configuration.\n * @property {JimpexConfigurationOptions}   [configuration]        The options for the app\n *                                                                 configuration service.\n * @property {JimpexStaticsOptions}         [statics]              The options for the app static\n *                                                                 `middleware`.\n * @property {string}                       [filesizeLimit='15MB'] The size limit for the requests\n *                                                                 payload.\n * @property {JimpexExpressOptions}         [express]              The options for the Express app.\n * @property {JimpexDefaultServicesOptions} [defaultServices]      To tell the app which services\n *                                                                 should be registered when\n *                                                                 instantiated.\n ",
-      "start": 4168,
-      "end": 5301,
+      "start": 4170,
+      "end": 5303,
       "loc": {
         "start": {
           "line": 63,
@@ -337,8 +337,8 @@
         "binop": null,
         "updateContext": null
       },
-      "start": 5302,
-      "end": 5302,
+      "start": 5304,
+      "end": 5304,
       "loc": {
         "start": {
           "line": 78,
