@@ -29,7 +29,8 @@
       "esdoc-standard-plugin": "^1.0.0",
       "esdoc-node": "^1.0.4",
       "leasot": "^8.0.0",
-      "coveralls": "^3.0.6"
+      "coveralls": "^3.0.6",
+      "husky": "^3.0.4"
     },
     "engine-strict": true,
     "engines": {
@@ -37,6 +38,12 @@
       "npm": ">=3.0.0"
     },
     "main": "src/index.js",
+    "husky": {
+      "hooks": {
+        "pre-commit": "./utils/hooks/pre-commit",
+        "post-merge": "./utils/hooks/post-merge"
+      }
+    },
     "scripts": {
       "hooks": "./utils/hooks/install",
       "test": "./utils/scripts/test",
