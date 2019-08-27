@@ -15,7 +15,12 @@ const { controllerCreator } = require('../../utils/wrappers');
  * @typedef {Object} GatewayControllerRoute
  * @description This object contains the information for an specific route the controller will
  *              mount.
- * @property {string}                              path    The path the route will have.
+ * @property {string}                              path    The path to the endpoint relative to
+ *                                                         the entry point.
+ * @property {string}                              route   The path the route will have. This is
+ *                                                         different from `path` as it's possible
+ *                                                         for the gateway to be implemented using
+ *                                                         the `root` option.
  * @property {Array<GatewayControllerRouteMethod>} methods A list with all the methods the
  *                                                         controller will use to mount the route.
  * @ignore
@@ -384,7 +389,7 @@ class GatewayController {
     this._routes.forEach((route) => route.methods.forEach((info) => this._addRoute(
       router,
       info.method,
-      route.path,
+      route.route,
       this._getMiddleware(info.endpoint),
       middlewares
     )));
@@ -485,6 +490,9 @@ class GatewayController {
    * @ignore
    */
   _createEndpointRoutes() {
+    const routePrefixes = this._options.root ?
+      `/${this._options.root}/` :
+      '/';
     const routes = {};
     Object.keys(this._endpoints).forEach((name) => {
       const endpoint = this._endpoints[name];
@@ -520,16 +528,20 @@ class GatewayController {
     });
 
     return Object.keys(routes)
-    .map((endpointPath) => ({
-      path: routes[endpointPath].path,
-      methods: Object.keys(routes[endpointPath].methods).map((methodName) => ({
-        method: methodName,
-        endpoint: {
-          name: routes[endpointPath].methods[methodName],
-          settings: this._endpoints[routes[endpointPath].methods[methodName]],
-        },
-      })),
-    }));
+    .map((endpointPath) => {
+      const info = routes[endpointPath];
+      return {
+        path: info.path,
+        route: `${routePrefixes}${info.path}`,
+        methods: Object.keys(info.methods).map((methodName) => ({
+          method: methodName,
+          endpoint: {
+            name: info.methods[methodName],
+            settings: this._endpoints[info.methods[methodName]],
+          },
+        })),
+      };
+    });
   }
   /**
    * Based on the controller options and the gateway endpoints, this method will create an API

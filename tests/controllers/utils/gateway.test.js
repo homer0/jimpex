@@ -178,12 +178,49 @@ describe('controllers/utils:gateway', () => {
       sut.addRoutes(router);
       // Then
       expect(router.all).toHaveBeenCalledTimes(1);
-      expect(router.all).toHaveBeenCalledWith(gatewayConfig.gateway.endpointOne.substr(1), [
+      expect(router.all).toHaveBeenCalledWith(gatewayConfig.gateway.endpointOne, [
         expect.any(Function),
       ]);
       expect(router.post).toHaveBeenCalledTimes(1);
       expect(router.post).toHaveBeenCalledWith(
-        gatewayConfig.gateway.endpointTwo.path.substr(1),
+        gatewayConfig.gateway.endpointTwo.path,
+        [expect.any(Function)]
+      );
+    });
+
+    it('should add the gateway routes to the router with a custom root', () => {
+      // Given
+      const gatewayConfig = {
+        url: 'http://my-api.com',
+        gateway: {
+          endpointOne: '/my-path/one',
+          endpointTwo: {
+            path: '/my-path/two',
+            method: 'post',
+          },
+        },
+      };
+      const route = '/my-gateway';
+      const http = 'http';
+      const root = 'my-root';
+      const options = { root };
+      const router = {
+        all: jest.fn(),
+        post: jest.fn(),
+      };
+      let sut = null;
+      // When
+      sut = new GatewayController(gatewayConfig, route, http, options);
+      sut.addRoutes(router);
+      // Then
+      expect(router.all).toHaveBeenCalledTimes(1);
+      expect(router.all).toHaveBeenCalledWith(
+        `/${root}${gatewayConfig.gateway.endpointOne}`,
+        [expect.any(Function)]
+      );
+      expect(router.post).toHaveBeenCalledTimes(1);
+      expect(router.post).toHaveBeenCalledWith(
+        `/${root}${gatewayConfig.gateway.endpointTwo.path}`,
         [expect.any(Function)]
       );
     });
@@ -213,13 +250,13 @@ describe('controllers/utils:gateway', () => {
       sut.addRoutes(router, [middleware]);
       // Then
       expect(router.all).toHaveBeenCalledTimes(1);
-      expect(router.all).toHaveBeenCalledWith(gatewayConfig.gateway.endpointOne.substr(1), [
+      expect(router.all).toHaveBeenCalledWith(gatewayConfig.gateway.endpointOne, [
         middleware,
         expect.any(Function),
       ]);
       expect(router.post).toHaveBeenCalledTimes(1);
       expect(router.post).toHaveBeenCalledWith(
-        gatewayConfig.gateway.endpointTwo.path.substr(1),
+        gatewayConfig.gateway.endpointTwo.path,
         [
           middleware,
           expect.any(Function),
@@ -250,7 +287,7 @@ describe('controllers/utils:gateway', () => {
       // Then
       expect(router.all).toHaveBeenCalledTimes(1);
       expect(router.all).toHaveBeenCalledWith(
-        gatewayConfig.gateway.endpointOne.path.substr(1),
+        gatewayConfig.gateway.endpointOne.path,
         [expect.any(Function)]
       );
     });
@@ -1031,7 +1068,7 @@ describe('controllers/utils:gateway', () => {
       // Then
       expect(result).toBe(router);
       expect(router.all).toHaveBeenCalledTimes(1);
-      expect(router.all).toHaveBeenCalledWith(gatewayConfig.gateway.endpointOne.substr(1), [
+      expect(router.all).toHaveBeenCalledWith(gatewayConfig.gateway.endpointOne, [
         expect.any(Function),
       ]);
       expect(appConfiguration.get).toHaveBeenCalledTimes(1);
@@ -1088,7 +1125,7 @@ describe('controllers/utils:gateway', () => {
       // Then
       expect(result).toBe(router);
       expect(router.all).toHaveBeenCalledTimes(1);
-      expect(router.all).toHaveBeenCalledWith(gatewayConfig.gateway.endpointOne.substr(1), [
+      expect(router.all).toHaveBeenCalledWith(gatewayConfig.gateway.endpointOne, [
         expect.any(Function),
       ]);
       expect(appConfiguration.get).toHaveBeenCalledTimes(1);
@@ -1147,7 +1184,7 @@ describe('controllers/utils:gateway', () => {
       // Then
       expect(result).toBe(router);
       expect(router.all).toHaveBeenCalledTimes(1);
-      expect(router.all).toHaveBeenCalledWith(gatewayConfig.gateway.endpointOne.substr(1), [
+      expect(router.all).toHaveBeenCalledWith(gatewayConfig.gateway.endpointOne, [
         expect.any(Function),
       ]);
       expect(appConfiguration.get).toHaveBeenCalledTimes(1);
@@ -1206,7 +1243,7 @@ describe('controllers/utils:gateway', () => {
       // Then
       expect(result).toBe(router);
       expect(router.all).toHaveBeenCalledTimes(1);
-      expect(router.all).toHaveBeenCalledWith(gatewayConfig.gateway.endpointOne.substr(1), [
+      expect(router.all).toHaveBeenCalledWith(gatewayConfig.gateway.endpointOne, [
         expect.any(Function),
       ]);
       expect(appConfiguration.get).toHaveBeenCalledTimes(1);
@@ -1264,7 +1301,7 @@ describe('controllers/utils:gateway', () => {
       // Then
       expect(result).toBe(router);
       expect(router.all).toHaveBeenCalledTimes(1);
-      expect(router.all).toHaveBeenCalledWith(gatewayConfig.gateway.endpointOne.substr(1), [
+      expect(router.all).toHaveBeenCalledWith(gatewayConfig.gateway.endpointOne, [
         normalMiddleware,
         jimpexMiddlewareName,
         expect.any(Function),
