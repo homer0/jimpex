@@ -1,13 +1,18 @@
 const services = {};
+const servicesAsFunctions = {};
 
 const mocks = {
   set: jest.fn(),
   get: jest.fn((name) => {
     if (!services[name]) {
-      throw new Error();
+      throw new Error(`Identifier "${name}" is not defined.`);
     }
 
-    return services[name];
+    const result = services[name];
+
+    return servicesAsFunctions[name] ?
+      result() :
+      result;
   }),
   register: jest.fn(),
   factory: jest.fn((fn) => fn()),
@@ -18,8 +23,9 @@ class JimpleMock {
     mocks[name] = mock;
   }
 
-  static service(name, mock) {
+  static service(name, mock, asFunction = false) {
     services[name] = mock;
+    servicesAsFunctions[name] = asFunction;
   }
 
   static reset() {
@@ -29,6 +35,7 @@ class JimpleMock {
 
     Object.keys(services).forEach((name) => {
       delete services[name];
+      delete servicesAsFunctions[name];
     });
   }
 

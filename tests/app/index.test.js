@@ -15,6 +15,7 @@ jest.mock('/src/services/common', () => 'commonServices');
 jest.mock('/src/services/http', () => 'httpServices');
 jest.mock('/src/services/utils', () => 'utilsServices');
 jest.unmock('/src/app/index');
+jest.unmock('/src/utils/functions');
 
 const path = require('path');
 require('jasmine-expect');
@@ -964,7 +965,7 @@ describe('app:Jimpex', () => {
     expect(expressMock.mocks.closeInstance).toHaveBeenCalledTimes(0);
   });
 
-  it('should mount a controller', () => {
+  it('should try to access a service that may or may not be registered', () => {
     // Given
     class Sut extends Jimpex {
       boot() {}
@@ -1002,6 +1003,41 @@ describe('app:Jimpex', () => {
     // Then
     expect(resultAvailable).toBe(events);
     expect(resultUnavailable).toBeNull();
+  });
+
+  it('should throw an error when trying to access a service that failed to init', () => {
+    // Given
+    class Sut extends Jimpex {
+      boot() {}
+    }
+    const pathUtils = {
+      joinFrom: jest.fn((from, rest) => path.join(from, rest)),
+    };
+    JimpleMock.service('pathUtils', pathUtils);
+    const defaultConfig = {};
+    const rootRequire = jest.fn(() => defaultConfig);
+    JimpleMock.service('rootRequire', rootRequire);
+    const configuration = {
+      port: 2509,
+    };
+    const appConfiguration = {
+      loadFromEnvironment: jest.fn(),
+      get: jest.fn((prop) => configuration[prop]),
+    };
+    JimpleMock.service('appConfiguration', appConfiguration);
+    const error = new Error('Something went wrong!');
+    const events = () => {
+      throw error;
+    };
+    JimpleMock.service('events', events, true);
+    const appLogger = {
+      success: jest.fn(),
+    };
+    JimpleMock.service('appLogger', appLogger);
+    let sut = null;
+    // When/Then
+    sut = new Sut();
+    expect(() => sut.try('events')).toThrow(error.message);
   });
 
   it('should mount a controller', () => {
