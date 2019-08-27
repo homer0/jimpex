@@ -1017,6 +1017,7 @@ describe('controllers/utils:gateway', () => {
         set: jest.fn(),
         try: jest.fn(),
       };
+      const route = '/my-gateway';
       let result = null;
       let service = null;
       const expectedGetServices = [
@@ -1025,7 +1026,7 @@ describe('controllers/utils:gateway', () => {
         'router',
       ];
       // When
-      result = gatewayController.connect(app);
+      result = gatewayController.connect(app, route);
       [[, service]] = app.set.mock.calls;
       // Then
       expect(result).toBe(router);
@@ -1070,6 +1071,7 @@ describe('controllers/utils:gateway', () => {
         set: jest.fn(),
         try: jest.fn(),
       };
+      const route = '/my-gateway';
       let result = null;
       let service = null;
       const expectedGetServices = [
@@ -1081,7 +1083,7 @@ describe('controllers/utils:gateway', () => {
         serviceName: 'myService',
       };
       // When
-      result = gatewayController(options).connect(app);
+      result = gatewayController(options).connect(app, route);
       [[, service]] = app.set.mock.calls;
       // Then
       expect(result).toBe(router);
@@ -1126,6 +1128,7 @@ describe('controllers/utils:gateway', () => {
         set: jest.fn(),
         try: jest.fn(),
       };
+      const route = '/my-gateway';
       let result = null;
       let service = null;
       const expectedGetServices = [
@@ -1139,7 +1142,7 @@ describe('controllers/utils:gateway', () => {
         helperServiceName: 'myGatewayHelper',
       };
       // When
-      result = gatewayController(options).connect(app);
+      result = gatewayController(options).connect(app, route);
       [[, service]] = app.set.mock.calls;
       // Then
       expect(result).toBe(router);
@@ -1184,6 +1187,7 @@ describe('controllers/utils:gateway', () => {
         set: jest.fn(),
         try: jest.fn(),
       };
+      const route = '/my-gateway';
       let result = null;
       let service = null;
       const expectedGetServices = [
@@ -1197,7 +1201,7 @@ describe('controllers/utils:gateway', () => {
         helperServiceName: null,
       };
       // When
-      result = gatewayController(options).connect(app);
+      result = gatewayController(options).connect(app, route);
       [[, service]] = app.set.mock.calls;
       // Then
       expect(result).toBe(router);
@@ -1241,6 +1245,7 @@ describe('controllers/utils:gateway', () => {
         set: jest.fn(),
         try: jest.fn(),
       };
+      const route = '/my-gateway';
       let result = null;
       const options = {
         serviceName: 'myServiceGateway',
@@ -1255,7 +1260,7 @@ describe('controllers/utils:gateway', () => {
       const middlewares = [normalMiddleware, jimpexMiddleware];
       const middlewareGenerator = jest.fn(() => middlewares);
       // When
-      result = gatewayController(options, middlewareGenerator).connect(app);
+      result = gatewayController(options, middlewareGenerator).connect(app, route);
       // Then
       expect(result).toBe(router);
       expect(router.all).toHaveBeenCalledTimes(1);

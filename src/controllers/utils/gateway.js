@@ -868,8 +868,8 @@ const gatewayController = controllerCreator((
   // Generate the controller
   const ctrl = new GatewayClass(
     gatewayConfig,
-    app.get('http'),
     route,
+    app.get('http'),
     newOptions,
     helperServiceName ? app.try(helperServiceName) : null
   );
