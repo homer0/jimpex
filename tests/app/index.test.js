@@ -162,7 +162,7 @@ describe('app:Jimpex', () => {
     JimpleMock.service('appConfiguration', appConfiguration);
     // When/Then
     // eslint-disable-next-line no-new
-    expect(() => new Sut()).toThrow(/This method must to be overwritten/i);
+    expect(() => new Sut()).toThrow(/This method must be overwritten/i);
   });
 
   it('shouldn\'t call `boot` is the constructor flag is false', () => {

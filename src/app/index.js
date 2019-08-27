@@ -160,7 +160,7 @@ class Jimpex extends Jimple {
    * @abstract
    */
   boot() {
-    throw new Error('This method must to be overwritten');
+    throw new Error('This method must be overwritten');
   }
   /**
    * Tries to access a service on the container, but if is not present, it won't throw an error, it
