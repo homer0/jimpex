@@ -16,7 +16,7 @@ A couple of months after that, the same friend told me that we should do somethi
 |--------------|--------------------------------------------------------------------|
 | Package      | jimpex                                                             |
 | Description  | Express as dependency injection container.                         |
-| Node Version | >= v8.0.0                                                         |
+| Node Version | >= v10.0.0                                                         |
 
 ## Usage
 
