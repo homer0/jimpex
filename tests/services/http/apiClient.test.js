@@ -32,6 +32,30 @@ describe('services/http:client', () => {
     expect(sut.endpoints).toEqual(apiConfig.endpoints);
   });
 
+  it('should be instantiated using `gateway` if `endpoint` is not available', () => {
+    // Given
+    const apiConfig = {
+      url: 'my-api',
+      gateway: {
+        info: 'api-info',
+      },
+    };
+    const http = {
+      fetch: () => {},
+    };
+    const HTTPError = 'HTTPError';
+    let sut = null;
+    // When
+    sut = new APIClient(apiConfig, http, HTTPError);
+    // Then
+    expect(sut).toBeInstanceOf(APIClientBase);
+    expect(sut).toBeInstanceOf(APIClient);
+    expect(sut.apiConfig).toEqual(apiConfig);
+    expect(sut.url).toBe(apiConfig.url);
+    expect(sut.endpoints).toEqual(apiConfig.gateway);
+  });
+
+
   it('should format error responses using the HTTPError service', () => {
     // Given
     const apiConfig = {
