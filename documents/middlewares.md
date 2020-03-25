@@ -260,7 +260,9 @@ class App extends Jimpex {
     this.register(sendFile);
     
     // Add the middleware at the end.
-    this.use(showHTML('my-file.html'));
+    this.use(showHTML({
+      file: 'my-file.html',
+    }));
   }
 }
 ```
