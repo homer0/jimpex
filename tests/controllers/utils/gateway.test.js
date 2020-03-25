@@ -41,6 +41,7 @@ describe('controllers/utils:gateway', () => {
           remove: [
             'server',
             'x-powered-by',
+            'content-encoding',
           ],
         },
       });
