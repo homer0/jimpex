@@ -171,6 +171,7 @@ const { eventNames } = require(&apos;../constants&apos;);
 const commonServices = require(&apos;../services/common&apos;);
 const httpServices = require(&apos;../services/http&apos;);
 const utilsServices = require(&apos;../services/utils&apos;);
+const { escapeForRegExp } = require(&apos;../utils/functions&apos;);
 /**
  * Jimpex is a mix of Jimple, a Javascript port of Pimple dependency injection container, and
  * Express, one of the most popular web frameworks for Node.
@@ -312,7 +313,7 @@ class Jimpex extends Jimple {
    * @abstract
    */
   boot() {
-    throw new Error(&apos;This method must to be overwritten&apos;);
+    throw new Error(&apos;This method must be overwritten&apos;);
   }
   /**
    * Tries to access a service on the container, but if is not present, it won&apos;t throw an error, it
@@ -324,12 +325,17 @@ class Jimpex extends Jimple {
     let result;
     try {
       result = this.get(name);
-    } catch (ignore) {
+    } catch (error) {
       /**
-       * The only reason we are ignoring the error is because is expected to throw an error if
-       * the service is not registered.
+       * Validate if the received error is from Jimple not being able to find the service, or from
+       * something else; if it&apos;s not about the module not being registered, throw the error.
        */
-      result = null;
+      const expression = new RegExp(escapeForRegExp(`identifier &quot;${name}&quot; is not defined`), &apos;i&apos;);
+      if (error.message &amp;&amp; error.message.match(expression)) {
+        result = null;
+      } else {
+        throw error;
+      }
     }
 
     return result;

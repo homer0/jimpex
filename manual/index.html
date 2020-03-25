@@ -630,7 +630,9 @@ class App extends Jimpex {
     this.register(sendFile);
 
     // Add the middleware at the end.
-    this.use(showHTML(&apos;my-file.html&apos;));
+    this.use(showHTML({
+      file: &apos;my-file.html&apos;,
+    }));
   }
 }</code>
 </code></pre><p>Now, as mentioned on the requirements, you can optionally use the <code>htmlGenerator</code> or an <code>HTMLGenerator</code> service to show the generated file.</p><p>The default implementation checks if there&apos;s an <code>htmlGenerator</code> service registered on the app and uses that file; and in the case of <code>showHTML</code>, you can specify a second parameter with the name of the <code>HTMLGenerator</code> service name you want to use.</p><h2>Version validator</h2><p>This can be used as a middleware and as controller. The idea is that it validates a <code>version</code> parameter against the version defined on the configuration.</p><ul>

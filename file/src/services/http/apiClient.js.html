@@ -187,7 +187,11 @@ class APIClient extends APIClientBase {
    * @param {Class}                  HTTPError To format the received errors.
    */
   constructor(apiConfig, http, HTTPError) {
-    super(apiConfig.url, apiConfig.endpoints, http.fetch);
+    super(
+      apiConfig.url,
+      apiConfig.endpoints || apiConfig.gateway,
+      http.fetch
+    );
     /**
      * The configuration for the API the client will make requests to.
      * @type {APIClientConfiguration}
