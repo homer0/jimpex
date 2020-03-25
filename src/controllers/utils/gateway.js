@@ -285,6 +285,7 @@ class GatewayController {
           remove: options.headers && options.headers.remove ? options.headers.remove : [
             'server',
             'x-powered-by',
+            'content-encoding',
           ],
         },
       },
