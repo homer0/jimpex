@@ -102,7 +102,7 @@ const {
 class App extends Jimpex {
   boot() {
     // Add the middleware first.
-    this.use(errorHandler);
+    this.use(forceHTTPS);
   }
 }
 ```
@@ -129,6 +129,57 @@ class App extends Jimpex {
 ```
 
 **VERY IMPORTANT:** The forced redirection will only happen if your configuration has a setting named `forceHTTPS` with a value of `true`.
+
+## HSTS
+
+It configures a `Strict-Transport-Security` header and includes it on every response.
+
+- Module: `common`
+
+```js
+const {
+  Jimpex,
+  middlewares: {
+    common: { hsts },
+  },
+};
+
+class App extends Jimpex {
+  boot() {
+    // Add the middleware first.
+    this.use(hsts);
+  }
+}
+```
+
+You can also use it as a function and send the following options:
+
+- `maxAge`: The time, in seconds, that the browser should remember that a site is only to be accessed using HTTPS. The default value is `31536000` (one year).
+- `includeSubDomains`: Whether or not the rule should apply to all sub domains. The default value is `true`.
+- `preload`: Whether or not to include on the major browsers' preload list. This directive is not part of the specification, for more information about it, you should check the [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Strict-Transport-Security) for the header. The default value is `false`.
+
+```js
+const {
+  Jimpex,
+  middlewares: {
+    common: { hsts },
+  },
+};
+
+class App extends Jimpex {
+  boot() {
+    // Add the middleware first.
+    this.use(hsts({
+      maxAge: 5,
+      includeSubDomains: false,
+    }));
+  }
+}
+```
+
+> You can also send an `enabled` option, set to `false`, in case you want to disable the middleware.
+
+If you don't send options, before using the defaults, it will first try to obtain them for a `hsts` key on the `appConfiguration` service, so you can also manage how the feature works from your project configuration.
 
 ## Fast HTML
 
