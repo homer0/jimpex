@@ -1,7 +1,7 @@
 const { middlewareCreator } = require('../../utils/wrappers');
 
 /**
- * @typedef {Object} HSTSMiddlewareOptions
+ * @typedef {Object} HSTSOptions
  * @description The options to customize the HSTS header value.
  * @property {number}  [maxAge=31536000]        The time, in seconds, that the browser should
  *                                              remember that a site is only to be accessed using
@@ -19,9 +19,9 @@ const { middlewareCreator } = require('../../utils/wrappers');
  * It configures a `Strict-Transport-Security` header and includes it on every response.
  * @see https://tools.ietf.org/html/rfc6797
  */
-class HSTSMiddleware {
+class HSTS {
   /**
-   * @param {HSTSMiddlewareOptions} [options={}] The options to customize the header value.
+   * @param {HSTSOptions} [options={}] The options to customize the header value.
    */
   constructor(options = {}) {
     /**
@@ -58,7 +58,7 @@ class HSTSMiddleware {
   }
   /**
    * Creates the value for the header.
-   * @param {HSTSMiddlewareOptions} options The options to customize the header value.
+   * @param {HSTSOptions} options The options to customize the header value.
    * @return {string}
    * @access protected
    * @ignore
@@ -85,19 +85,19 @@ class HSTSMiddleware {
  * Both the `options` parameter and the `hsts` can include a `enabled` (boolean) flag to either
  * disable or enable the middleware.
  * @type {MiddlewareCreator}
- * @param {HSTSMiddlewareOptions} [options={}] The options to customize the header value.
+ * @param {HSTSOptions} [options={}] The options to customize the header value.
  */
-const hstsMiddleware = middlewareCreator((options = {}) => (app) => {
+const hsts = middlewareCreator((options = {}) => (app) => {
   const useOptions = typeof options.maxAge !== 'undefined' ?
     options :
     (app.get('appConfiguration').get('hsts') || {});
 
   return typeof useOptions.enabled === 'undefined' || useOptions.enabled ?
-    (new HSTSMiddleware(useOptions)).middleware() :
+    (new HSTS(useOptions)).middleware() :
     null;
 });
 
 module.exports = {
-  HSTSMiddleware,
-  hstsMiddleware,
+  HSTS,
+  hsts,
 };
