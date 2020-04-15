@@ -3,18 +3,18 @@ jest.unmock('/src/middlewares/common/hsts');
 
 require('jasmine-expect');
 const {
-  HSTSMiddleware,
-  hstsMiddleware,
+  HSTS,
+  hsts,
 } = require('/src/middlewares/common/hsts');
 
-describe('middlewares/common:hstsMiddleware', () => {
+describe('middlewares/common:hsts', () => {
   it('should be instantiated with its default options', () => {
     // Given
     let sut = null;
     // When
-    sut = new HSTSMiddleware();
+    sut = new HSTS();
     // Then
-    expect(sut).toBeInstanceOf(HSTSMiddleware);
+    expect(sut).toBeInstanceOf(HSTS);
     expect(sut.header).toBe('max-age=31536000; includeSubDomains');
   });
 
@@ -25,7 +25,7 @@ describe('middlewares/common:hstsMiddleware', () => {
     const includeSubDomains = false;
     const preload = true;
     // When
-    sut = new HSTSMiddleware({
+    sut = new HSTS({
       maxAge,
       includeSubDomains,
       preload,
@@ -46,7 +46,7 @@ describe('middlewares/common:hstsMiddleware', () => {
     const response = { setHeader };
     const next = jest.fn();
     // When
-    sut = new HSTSMiddleware({
+    sut = new HSTS({
       maxAge,
       includeSubDomains,
       preload,
@@ -73,8 +73,8 @@ describe('middlewares/common:hstsMiddleware', () => {
     let middleware = null;
     let toCompare = null;
     // When
-    toCompare = new HSTSMiddleware();
-    middleware = hstsMiddleware.connect(app);
+    toCompare = new HSTS();
+    middleware = hsts.connect(app);
     // Then
     expect(middleware.toString()).toEqual(toCompare.middleware().toString());
     expect(app.get).toHaveBeenCalledTimes(1);
@@ -98,8 +98,8 @@ describe('middlewares/common:hstsMiddleware', () => {
     const response = { setHeader };
     const next = jest.fn();
     // When
-    toCompare = new HSTSMiddleware();
-    middleware = hstsMiddleware.connect(app);
+    toCompare = new HSTS();
+    middleware = hsts.connect(app);
     middleware(request, response, next);
     // Then
     expect(middleware.toString()).toEqual(toCompare.middleware().toString());
@@ -127,7 +127,7 @@ describe('middlewares/common:hstsMiddleware', () => {
     };
     let middleware = null;
     // When
-    middleware = hstsMiddleware.connect(app);
+    middleware = hsts.connect(app);
     // Then
     expect(middleware).toBeNull();
   });
@@ -145,7 +145,7 @@ describe('middlewares/common:hstsMiddleware', () => {
     const response = { setHeader };
     const next = jest.fn();
     // When
-    middleware = hstsMiddleware({ maxAge, includeSubDomains }).connect(app);
+    middleware = hsts({ maxAge, includeSubDomains }).connect(app);
     middleware(request, response, next);
     // Then
     expect(setHeader).toHaveBeenCalledTimes(1);
