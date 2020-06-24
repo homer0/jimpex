@@ -18,6 +18,7 @@ jest.unmock('/src/app/index');
 jest.unmock('/src/utils/functions');
 
 const path = require('path');
+const statuses = require('statuses');
 require('jasmine-expect');
 
 const Jimpex = require('/src/app');
@@ -68,6 +69,7 @@ describe('app:Jimpex', () => {
     JimpleMock.service('appConfiguration', appConfiguration);
     let sut = null;
     let eventsService = null;
+    let statusesService = null;
     const expectedServices = [
       'appLogger',
       'environmentUtils',
@@ -82,6 +84,7 @@ describe('app:Jimpex', () => {
     const expectedSetServices = [
       'router',
       'events',
+      'statuses',
     ];
     const expectedStaticsFolder = 'app/statics';
     const expectedMiddlewares = [
@@ -128,8 +131,9 @@ describe('app:Jimpex', () => {
     expect(sut.set).toHaveBeenCalledTimes(expectedSetServices.length);
     expect(sut.set).toHaveBeenCalledWith('router', 'router');
     expect(sut.set).toHaveBeenCalledWith('events', expect.any(Function));
-    [, [, eventsService]] = sut.set.mock.calls;
+    [, [, eventsService], [, statusesService]] = sut.set.mock.calls;
     expect(eventsService()).toBeInstanceOf(EventsHub);
+    expect(statusesService()).toEqual(statuses);
     expect(wootilsMock.appConfiguration).toHaveBeenCalledTimes(1);
     expect(wootilsMock.appConfiguration).toHaveBeenCalledWith(
       sut.options.configuration.name,
