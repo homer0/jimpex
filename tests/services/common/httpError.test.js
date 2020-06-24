@@ -1,4 +1,4 @@
-const statuses = require('statuses');
+const { code: statuses } = require('statuses');
 
 jest.unmock('/src/utils/wrappers');
 jest.unmock('/src/services/common/appError');

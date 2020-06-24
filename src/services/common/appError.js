@@ -1,3 +1,4 @@
+const { code: statuses } = require('statuses');
 const { provider } = require('../../utils/wrappers');
 /**
  * A simple subclass of `Error` but with support for context information.
@@ -20,7 +21,7 @@ class AppError extends Error {
      * @type {Object}
      * @access protected
      */
-    this._context = Object.freeze(context);
+    this._context = Object.freeze(this._parseContext(context));
     /**
      * The date of when the error was generated.
      * @type {Date}
@@ -64,6 +65,23 @@ class AppError extends Error {
    */
   get status() {
     return this._context.status || null;
+  }
+  /**
+   * Utility method that formats the context before saving it in the instance:
+   * - If the context includes a `status` as a `string`, it will try to replace it with its status
+   * code from the `statuses` package.
+   * @param {Object} original The original context to format.
+   * @return {Object}
+   * @access protected
+   * @ignore
+   */
+  _parseContext(original) {
+    const result = Object.assign({}, original);
+    if (typeof result.status === 'string') {
+      result.status = statuses[result.status.toLowerCase()] || result.status;
+    }
+
+    return result;
   }
 }
 /**

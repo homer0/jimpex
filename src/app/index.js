@@ -4,6 +4,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const compression = require('compression');
 const multer = require('multer');
+const statuses = require('statuses');
 
 const {
   appConfiguration,
@@ -403,6 +404,11 @@ class Jimpex extends Jimple {
     }
 
     this.set('events', () => new EventsHub());
+    /**
+     * This package is heavily used when implementing a Jimpex app, so it makes sense to register
+     * it on the container, so the implementations won't need to manually install it.
+     */
+    this.set('statuses', () => statuses);
   }
   /**
    * Creates the configuration service.

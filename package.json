@@ -2,34 +2,35 @@
     "name": "jimpex",
     "description": "Express as dependency injection container.",
     "homepage": "https://homer0.github.io/jimpex/",
-    "version": "5.1.1",
+    "version": "5.2.0",
     "repository": "homer0/jimpex",
     "author": "Leonardo Apiwan (@homer0) <me@homer0.com>",
     "license": "MIT",
     "dependencies": {
-      "wootils": "^3.0.3",
+      "wootils": "^3.0.4",
       "jimple": "^1.5.0",
       "express": "^4.17.1",
       "body-parser": "^1.19.0",
       "compression": "^1.7.4",
       "node-fetch": "^2.6.0",
       "urijs": "^1.19.2",
-      "statuses": "^1.5.0",
-      "fs-extra": "^9.0.0",
+      "statuses": "^2.0.0",
+      "fs-extra": "^9.0.1",
       "multer": "^1.4.2",
-      "mime": "^2.4.4"
+      "mime": "^2.4.6"
     },
     "devDependencies": {
-      "eslint": "^6.8.0",
-      "eslint-plugin-homer0": "^3.0.3",
-      "jest-ex": "^8.0.1",
-      "jest-cli": "^25.3.0",
+      "eslint": "^7.3.1",
+      "eslint-plugin-homer0": "^4.0.0",
+      "jest-ex": "^9.0.0",
+      "jest-cli": "^26.1.0",
       "jasmine-expect": "^4.0.3",
       "esdoc": "^1.1.0",
       "esdoc-standard-plugin": "^1.0.0",
       "esdoc-node": "1.0.4",
-      "leasot": "^10.2.0",
-      "coveralls": "^3.0.11",
+      "leasot": "^11.0.0",
+      "lint-staged": "^10.2.11",
+      "coveralls": "^3.1.0",
       "husky": "^4.2.5"
     },
     "engine-strict": true,
@@ -42,6 +43,9 @@
         "pre-commit": "./utils/hooks/pre-commit",
         "post-merge": "./utils/hooks/post-merge"
       }
+    },
+    "lint-staged": {
+      "*.js": "eslint"
     },
     "scripts": {
       "hooks": "./utils/hooks/install",

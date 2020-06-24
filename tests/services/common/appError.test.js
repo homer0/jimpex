@@ -1,6 +1,7 @@
 jest.unmock('/src/utils/wrappers');
 jest.unmock('/src/services/common/appError');
 
+const { code: statuses } = require('statuses');
 require('jasmine-expect');
 const {
   AppError,
@@ -47,6 +48,35 @@ describe('services/common:appError', () => {
     expect(sut.context).toEqual(context);
     expect(sut.response).toEqual(context.response);
     expect(sut.status).toEqual(context.status);
+  });
+
+  it('should format a status code sent as string', () => {
+    // Given
+    const message = 'Something went wrong!';
+    const context = {
+      status: 'internal server error',
+    };
+    let sut = null;
+    // When
+    sut = new AppError(message, context);
+    // Then
+    expect(sut).toBeInstanceOf(AppError);
+    expect(sut.status).toBeNumber();
+    expect(sut.status).toBe(statuses[context.status]);
+  });
+
+  it('shouldn\'t format a status code sent as string if is not a valid status', () => {
+    // Given
+    const message = 'Something went wrong!';
+    const context = {
+      status: 'wooo',
+    };
+    let sut = null;
+    // When
+    sut = new AppError(message, context);
+    // Then
+    expect(sut).toBeInstanceOf(AppError);
+    expect(sut.status).toBe(context.status);
   });
 
   it('should use `captureStackTrace` when avaiable', () => {

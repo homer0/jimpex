@@ -1,5 +1,5 @@
 const ObjectUtils = require('wootils/shared/objectUtils');
-const statuses = require('statuses');
+const { code: statuses } = require('statuses');
 const { middlewareCreator } = require('../../utils/wrappers');
 
 /**
@@ -114,7 +114,7 @@ class ErrorHandler {
             // Try to get any extra information that should be included on the response.
             data = Object.assign(data, err.response);
             // Try to obtain the response status from the error
-            status = err.status || statuses['Bad Request'];
+            status = err.status || statuses['bad request'];
           }
           // If the `showErrors` flag is enabled...
           if (this._showErrors) {

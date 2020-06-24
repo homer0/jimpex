@@ -2,7 +2,7 @@ jest.unmock('/src/utils/wrappers');
 jest.unmock('/src/controllers/common/health');
 
 require('jasmine-expect');
-const statuses = require('statuses');
+const { code: statuses } = require('statuses');
 const {
   HealthController,
   healthController,

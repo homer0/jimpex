@@ -1,4 +1,4 @@
-const statuses = require('statuses');
+const { code: statuses } = require('statuses');
 const { provider } = require('../../utils/wrappers');
 /**
  * @typedef {Object} ResponsesBuilderPostMessageOptions It allows customization of a post message
@@ -40,22 +40,19 @@ class ResponsesBuilder {
    *   data: [...],
    * }
    * ```
-   * @param {ExpressResponse} res                  The Express response object necessary to write
-   *                                               the JSON.
-   * @param {Object}          data                 The information for the `data` key.
-   * @param {number}          [status=statuses.ok] The HTTP status. Jimpex uses the `statuses`
-   *                                               package to reference HTTP statuses, that's why
-   *                                               the default is `statuses.ok`(200).
-   * @param {Object}          [metadata={}]        Extra information to include on the `metadata`
-   *                                               key.
+   * @param {ExpressResponse} res           The Express response object necessary to write the JSON.
+   * @param {Object}          data          The information for the `data` key.
+   * @param {number}          [status=200]  The HTTP status.
+   * @param {Object}          [metadata={}] Extra information to include on the `metadata` key.
    */
   json(res, data, status = statuses.ok, metadata = {}) {
+    const useStatus = this._normalizeStatus(status);
     res
-    .status(status)
+    .status(useStatus)
     .json({
       metadata: Object.assign({
         version: this._appConfiguration.get('version'),
-        status,
+        status: useStatus,
       }, metadata),
       data,
     })
@@ -65,18 +62,12 @@ class ResponsesBuilder {
    * Generates and send an HTML response that emits a post message.
    * The post message will be prefixed with the value of the configuration setting
    * `postMessagesPrefix`.
-   * @param {ExpressResponse}                   res                  The Express response object
-   *                                                                 necessary to write the HTML.
-   * @param {string}                            title                The title for the HTML.
-   * @param {string}                            message              The contents of the post
-   *                                                                 message.
-   * @param {number}                            [status=statuses.ok] The HTTP status. Jimpex uses
-   *                                                                 the `statuses` package to
-   *                                                                 reference HTTP statuses,
-   *                                                                 that's why the default is
-   *                                                                 `statuses.ok`(200). Custom
-   *                                                                 options for the HTML.
-   * @param {ResponsesBuilderPostMessageOptions} [options={}]        Options to customize the HTML.
+   * @param {ExpressResponse}                    res          The Express response object
+   *                                                          necessary to write the HTML.
+   * @param {string}                             title        The title for the HTML.
+   * @param {string}                             message      The contents of the post message.
+   * @param {number}                             [status=200] The HTTP status.
+   * @param {ResponsesBuilderPostMessageOptions} [options={}] Options to customize the HTML.
    */
   htmlPostMessage(
     res,
@@ -104,7 +95,7 @@ class ResponsesBuilder {
 
     res.setHeader('Content-Type', 'text/html');
     res.setHeader('Cache-Control', 'no-cache, max-age=0, must-revalidate, no-store');
-    res.status(status);
+    res.status(this._normalizeStatus(status));
     res.write(html);
     res.end();
   }
@@ -133,6 +124,26 @@ class ResponsesBuilder {
       </body>
     </html>
     `;
+  }
+  /**
+   * Utility method used to make sure a recevied status is a valid status code. If the status
+   * is a string, the method will try to find the code from the `statuses` package.
+   * @param {string|number} status The status to normalize.
+   * @return {string|number} If `status` is a string, but there's no valid code, it will return it
+   *                         as it was received.
+   * @access protected
+   * @ignore
+   * @todo On the next breaking version, if there's no valid code, it will be transformed to `200`.
+   */
+  _normalizeStatus(status) {
+    let result;
+    if (typeof status === 'string') {
+      result = statuses[status] || status;
+    } else {
+      result = status;
+    }
+
+    return result;
   }
 }
 /**

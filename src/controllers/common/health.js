@@ -1,4 +1,4 @@
-const statuses = require('statuses');
+const { code: statuses } = require('statuses');
 const { controller } = require('../../utils/wrappers');
 /**
  * Provides the handler to show a some minimal health information about the app:

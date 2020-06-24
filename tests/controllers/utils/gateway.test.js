@@ -2,7 +2,7 @@ jest.unmock('/src/utils/functions');
 jest.unmock('/src/utils/wrappers');
 jest.unmock('/src/controllers/utils/gateway');
 
-const statuses = require('statuses');
+const { code: statuses } = require('statuses');
 require('jasmine-expect');
 const {
   GatewayController,
