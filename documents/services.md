@@ -91,7 +91,7 @@ const {
 };
 
 class App extends Jimpex {
-  boot() {        
+  boot() {
     // Register the service
     this.register(appError);
   }
@@ -152,7 +152,7 @@ This service has a few default options:
     // The error message.
     message: 'Unauthorized',
     // The HTTP status associated to the error, this is for the error handler.
-    status: statuses.unauthorized,
+    status: 401,
     // Extra context information for the error handler to add to the response.
     response: {},
   },
@@ -221,7 +221,7 @@ const {
 };
 
 class App extends Jimpex {
-  boot() {        
+  boot() {
     // Register the service
     this.register(httpError);
   }
@@ -254,7 +254,7 @@ const {
 };
 
 class App extends Jimpex {
-  boot() {        
+  boot() {
     // Register the service
     this.register(sendFile);
   }
@@ -308,7 +308,7 @@ const {
 };
 
 class App extends Jimpex {
-  boot() {        
+  boot() {
     // Register the service
     this.register(frontendFs);
   }
@@ -479,6 +479,6 @@ This service has only two methods:
   close: true,
 
   // How many ms should it wait before closing the window, if `options.close` is `true`.
-  closeDelay: 700,  
+  closeDelay: 700,
 }
 ```

@@ -1,4 +1,4 @@
-const statuses = require('statuses');
+const { code: statuses } = require('statuses');
 const ObjectUtils = require('wootils/shared/objectUtils');
 const { provider } = require('../../utils/wrappers');
 const { AppError } = require('./appError');

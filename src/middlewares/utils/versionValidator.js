@@ -1,5 +1,5 @@
 const ObjectUtils = require('wootils/shared/objectUtils');
-const statuses = require('statuses');
+const { code: statuses } = require('statuses');
 const { middlewareCreator } = require('../../utils/wrappers');
 
 /**

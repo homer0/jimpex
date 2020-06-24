@@ -2,7 +2,7 @@ jest.unmock('/src/utils/wrappers');
 jest.unmock('/src/middlewares/common/errorHandler');
 
 require('jasmine-expect');
-const statuses = require('statuses');
+const { code: statuses } = require('statuses');
 const {
   ErrorHandler,
   errorHandler,
@@ -69,7 +69,7 @@ describe('middlewares/common:errorHandler', () => {
       error: true,
       message: error.message,
     };
-    const expectedStatus = statuses['Bad Request'];
+    const expectedStatus = statuses['bad request'];
     // When
     sut = new ErrorHandler(appLogger, responsesBuilder, showErrors, AppError);
     middleware = sut.middleware();
@@ -108,7 +108,7 @@ describe('middlewares/common:errorHandler', () => {
       error: true,
       message: options.default.message,
     };
-    const expectedStatus = statuses['Internal Server Error'];
+    const expectedStatus = statuses['internal server error'];
     // When
     sut = new ErrorHandler(appLogger, responsesBuilder, showErrors, AppError, options);
     middleware = sut.middleware();
@@ -149,7 +149,7 @@ describe('middlewares/common:errorHandler', () => {
       message: error.message,
       stack: [errorStackMessage],
     };
-    const expectedStatus = statuses['Internal Server Error'];
+    const expectedStatus = statuses['internal server error'];
     // When
     sut = new ErrorHandler(appLogger, responsesBuilder, showErrors, AppError);
     middleware = sut.middleware();

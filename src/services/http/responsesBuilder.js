@@ -1,4 +1,4 @@
-const statuses = require('statuses');
+const { code: statuses } = require('statuses');
 const { provider } = require('../../utils/wrappers');
 /**
  * @typedef {Object} ResponsesBuilderPostMessageOptions It allows customization of a post message
@@ -40,14 +40,10 @@ class ResponsesBuilder {
    *   data: [...],
    * }
    * ```
-   * @param {ExpressResponse} res                  The Express response object necessary to write
-   *                                               the JSON.
-   * @param {Object}          data                 The information for the `data` key.
-   * @param {number}          [status=statuses.ok] The HTTP status. Jimpex uses the `statuses`
-   *                                               package to reference HTTP statuses, that's why
-   *                                               the default is `statuses.ok`(200).
-   * @param {Object}          [metadata={}]        Extra information to include on the `metadata`
-   *                                               key.
+   * @param {ExpressResponse} res           The Express response object necessary to write the JSON.
+   * @param {Object}          data          The information for the `data` key.
+   * @param {number}          [status=200]  The HTTP status.
+   * @param {Object}          [metadata={}] Extra information to include on the `metadata` key.
    */
   json(res, data, status = statuses.ok, metadata = {}) {
     res
@@ -65,18 +61,12 @@ class ResponsesBuilder {
    * Generates and send an HTML response that emits a post message.
    * The post message will be prefixed with the value of the configuration setting
    * `postMessagesPrefix`.
-   * @param {ExpressResponse}                   res                  The Express response object
-   *                                                                 necessary to write the HTML.
-   * @param {string}                            title                The title for the HTML.
-   * @param {string}                            message              The contents of the post
-   *                                                                 message.
-   * @param {number}                            [status=statuses.ok] The HTTP status. Jimpex uses
-   *                                                                 the `statuses` package to
-   *                                                                 reference HTTP statuses,
-   *                                                                 that's why the default is
-   *                                                                 `statuses.ok`(200). Custom
-   *                                                                 options for the HTML.
-   * @param {ResponsesBuilderPostMessageOptions} [options={}]        Options to customize the HTML.
+   * @param {ExpressResponse}                    res          The Express response object
+   *                                                          necessary to write the HTML.
+   * @param {string}                             title        The title for the HTML.
+   * @param {string}                             message      The contents of the post message.
+   * @param {number}                             [status=200] The HTTP status.
+   * @param {ResponsesBuilderPostMessageOptions} [options={}] Options to customize the HTML.
    */
   htmlPostMessage(
     res,
