@@ -52,6 +52,74 @@ describe('services/http:responsesBuilder', () => {
     expect(response.end).toHaveBeenCalledTimes(1);
   });
 
+  it('should normalize a status sent as string', () => {
+    // Given
+    const version = 'latest';
+    const appConfiguration = {
+      get: jest.fn(() => version),
+    };
+    const response = {
+      status: jest.fn(() => response),
+      json: jest.fn(() => response),
+      end: jest.fn(() => response),
+    };
+    const data = {
+      dataProp: 'dataValue',
+    };
+    const status = 'bad request';
+    let sut = null;
+    const expectedResponse = {
+      metadata: {
+        version,
+        status: statuses[status],
+      },
+      data,
+    };
+    // When
+    sut = new ResponsesBuilder(appConfiguration);
+    sut.json(response, data, status);
+    // Then
+    expect(response.status).toHaveBeenCalledTimes(1);
+    expect(response.status).toHaveBeenCalledWith(statuses[status]);
+    expect(response.json).toHaveBeenCalledTimes(1);
+    expect(response.json).toHaveBeenCalledWith(expectedResponse);
+    expect(response.end).toHaveBeenCalledTimes(1);
+  });
+
+  it('shouldn\'t normalize an invalid string status', () => {
+    // Given
+    const version = 'latest';
+    const appConfiguration = {
+      get: jest.fn(() => version),
+    };
+    const response = {
+      status: jest.fn(() => response),
+      json: jest.fn(() => response),
+      end: jest.fn(() => response),
+    };
+    const data = {
+      dataProp: 'dataValue',
+    };
+    const status = 'woo';
+    let sut = null;
+    const expectedResponse = {
+      metadata: {
+        version,
+        status,
+      },
+      data,
+    };
+    // When
+    sut = new ResponsesBuilder(appConfiguration);
+    sut.json(response, data, status);
+    // Then
+    expect(response.status).toHaveBeenCalledTimes(1);
+    expect(response.status).toHaveBeenCalledWith(status);
+    expect(response.json).toHaveBeenCalledTimes(1);
+    expect(response.json).toHaveBeenCalledWith(expectedResponse);
+    expect(response.end).toHaveBeenCalledTimes(1);
+  });
+
   it('should generate and send a JSON response with custom status and metadata', () => {
     // Given
     const version = 'latest';
