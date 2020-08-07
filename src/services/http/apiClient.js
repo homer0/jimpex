@@ -2,7 +2,7 @@ const ObjectUtils = require('wootils/shared/objectUtils');
 const APIClientBase = require('wootils/shared/apiClient');
 const { providerCreator } = require('../../utils/wrappers');
 /**
- * @typdef {Object} APIClientProviderOptions
+ * @typedef {Object} APIClientProviderOptions
  * @description The options to customize how the service gets registered.
  * @property {string} [serviceName='apiClient']    The name of the service that will be registered
  *                                                 into the app.
@@ -24,7 +24,8 @@ const { providerCreator } = require('../../utils/wrappers');
  * An API client for the app to use. What makes this service special is that its that it formats
  * the received errors using the `AppError` service class and as fetch function it uses the
  * `http` service, allowing the app to to internally handle all the requests and responses.
- * @extends {APIClientBase}
+ *
+ * @augments APIClientBase
  */
 class APIClient extends APIClientBase {
   /**
@@ -42,6 +43,7 @@ class APIClient extends APIClientBase {
     );
     /**
      * The configuration for the API the client will make requests to.
+     *
      * @type {APIClientConfiguration}
      * @access protected
      * @ignore
@@ -49,6 +51,7 @@ class APIClient extends APIClientBase {
     this._apiConfig = ObjectUtils.copy(apiConfig);
     /**
      * A local reference for the class the app uses to generate HTTP errors.
+     *
      * @type {Class}
      * @access protected
      * @ignore
@@ -57,19 +60,21 @@ class APIClient extends APIClientBase {
   }
   /**
    * Formats a response error with the App error class.
+   *
    * @param {Object} response A received response from a request.
    * @param {number} status   The HTTP status of the request.
-   * @return {HTTPError}
+   * @returns {HTTPError}
    */
   error(response, status) {
     return new this._HTTPError(this.getErrorMessageFromResponse(response), status);
   }
   /**
    * Helper method that tries to get an error message from a given response.
+   *
    * @param {Object} response                      A received response from a request.
    * @param {string} [fallback='Unexpected error'] A fallback message in case the method doesn't
    *                                               found one on the response.
-   * @return {string}
+   * @returns {string}
    */
   getErrorMessageFromResponse(response, fallback = 'Unexpected error') {
     let message;
@@ -87,6 +92,7 @@ class APIClient extends APIClientBase {
   }
   /**
    * The configuration for the API the client will make requests to.
+   *
    * @type {Object}
    * @property {string} url       The API entry point.
    * @property {Object} endpoints A dictionary of named endpoints relative to the API
@@ -99,6 +105,7 @@ class APIClient extends APIClientBase {
 /**
  * An API Client service to make requests to an API using endpoints defined on the app
  * configuration.
+ *
  * @type {ProviderCreator}
  * @param {APIClientProviderOptions} [options] The options to customize how the service gets
  *                                             registered.

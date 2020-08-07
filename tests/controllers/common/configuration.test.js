@@ -33,9 +33,8 @@ describe('controllers/common:configuration', () => {
       get: jest.fn(() => appConfiguration.name),
       getConfig: jest.fn(() => appConfiguration.config),
     };
-    const message = 'success';
     const responsesBuilder = {
-      json: jest.fn(() => message),
+      json: jest.fn(),
     };
     const response = 'response';
     const expectedData = {
@@ -43,12 +42,10 @@ describe('controllers/common:configuration', () => {
       ...appConfiguration.config,
     };
     let sut = null;
-    let result = null;
     // When
     sut = new ConfigurationController(appConfiguration, responsesBuilder);
-    result = sut.getConfigurationResponse(response);
+    sut.getConfigurationResponse(response);
     // Then
-    expect(result).toBe(message);
     expect(appConfiguration.get).toHaveBeenCalledTimes(1);
     expect(appConfiguration.get).toHaveBeenCalledWith('name');
     expect(responsesBuilder.json).toHaveBeenCalledTimes(1);

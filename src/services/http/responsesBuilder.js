@@ -1,14 +1,14 @@
 const { code: statuses } = require('statuses');
 const { provider } = require('../../utils/wrappers');
 /**
- * @typedef {Object} ResponsesBuilderPostMessageOptions It allows customization of a post message
- *                                                      HTML template
- * @property {?string}  [options.target='window.opener'] The target that will emit the
- *                                                       `postMessage`.
- * @property {?Boolean} [options.close=true]             Whether or not to do a `window.close`
- *                                                       after sending the message.
- * @property {?number}  [options.closeDelay=700]         How many ms should it wait before closing
- *                                                       the window, if `options.close` is `true`.
+ * It allows customization of a post message HTML template.
+ *
+ * @typedef {Object} ResponsesBuilderPostMessageOptions
+ * @property {?string}  [target='window.opener'] The target that will emit the `postMessage`.
+ * @property {?boolean} [close=true]             Whether or not to do a `window.close` after
+ *                                               sending the message.
+ * @property {?number}  [closeDelay=700]         How many ms should it wait before closing the
+ *                                               window, if `options.close` is `true`.
  */
 
 /**
@@ -16,12 +16,12 @@ const { provider } = require('../../utils/wrappers');
  */
 class ResponsesBuilder {
   /**
-   * Class constructor.
    * @param {AppConfiguration} appConfiguration To get the app version.
    */
   constructor(appConfiguration) {
     /**
      * A local reference for the `appConfiguration` service.
+     *
      * @type {AppConfiguration}
      * @access protected
      * @ignore
@@ -32,6 +32,7 @@ class ResponsesBuilder {
    * Generates and send an HTML response that emits a post message.
    * The post message will be prefixed with the value of the configuration setting
    * `postMessagesPrefix`.
+   *
    * @param {ExpressResponse}                    res          The Express response object
    *                                                          necessary to write the HTML.
    * @param {string}                             title        The title for the HTML.
@@ -71,8 +72,9 @@ class ResponsesBuilder {
   }
   /**
    * Generates and sends a JSON response.
-   * The generated looks like this:
-   * ```
+   *
+   * @example
+   * <caption>The generated looks like this.</caption>
    * {
    *   metadata: {
    *     version: '[app-version]',
@@ -80,7 +82,7 @@ class ResponsesBuilder {
    *   },
    *   data: [...],
    * }
-   * ```
+   *
    * @param {ExpressResponse} res           The Express response object necessary to write the JSON.
    * @param {Object}          data          The information for the `data` key.
    * @param {number}          [status=200]  The HTTP status.
@@ -102,9 +104,10 @@ class ResponsesBuilder {
   }
   /**
    * Generates a basic HTML template for other services to use.
+   *
    * @param {string} title The HTML `<title />` attribute.
    * @param {string} code  Javascript code to be wrapped on a `<script />` tag.
-   * @return {string}
+   * @returns {string}
    * @ignore
    * @access protected
    */
@@ -129,8 +132,9 @@ class ResponsesBuilder {
   /**
    * Utility method used to make sure a recevied status is a valid status code. If the status
    * is a string, the method will try to find the code from the `statuses` package.
+   *
    * @param {string|number} status The status to normalize.
-   * @return {string|number} If `status` is a string, but there's no valid code, it will return it
+   * @returns {string|number} If `status` is a string, but there's no valid code, it will return it
    *                         as it was received.
    * @access protected
    * @ignore
@@ -150,6 +154,7 @@ class ResponsesBuilder {
 /**
  * The service provider that once registered on the app container will set an instance of
  * `ResponsesBuilder` as the `responsesBuilder` service.
+ *
  * @example
  * // Register it on the container
  * container.register(responsesBuilder);

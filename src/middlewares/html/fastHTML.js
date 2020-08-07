@@ -22,7 +22,7 @@ const { createRouteExpression, removeSlashes } = require('../../utils/functions'
 
 /**
  * @typedef {Object} FastHTMLMiddlewareOptions
- * @extends {FastHTMLOptions}
+ * @augments FastHTMLOptions
  * @description The only difference with {@link FastHTMLOptions} is that in this options, you can
  *              specify an {@link HTMLGenerator} service name.
  * @property {string} [htmlGenerator='htmlGenerator'] The name of a {@link HTMLGenerator} service
@@ -56,6 +56,7 @@ class FastHTML {
   constructor(events, sendFile, options = {}, htmlGenerator = null) {
     /**
      * A local reference for the `events` service.
+     *
      * @type {EventsHub}
      * @access protected
      * @ignore
@@ -63,6 +64,7 @@ class FastHTML {
     this._events = events;
     /**
      * A local reference for the `sendFile` service.
+     *
      * @type {SendFile}
      * @access protected
      * @ignore
@@ -70,6 +72,7 @@ class FastHTML {
     this._sendFile = sendFile;
     /**
      * If specified, a reference for a service that generates HTML files.
+     *
      * @type {?HTMLGenerator}
      * @access protected
      * @ignore
@@ -78,6 +81,7 @@ class FastHTML {
     /**
      * The options that tell the middleware which routes should be ignored and which is the file
      * to serve.
+     *
      * @type {FastHTMLOptions}
      */
     this._options = this._normalizeOptions(ObjectUtils.merge(
@@ -92,6 +96,7 @@ class FastHTML {
      * Whether or not the file is ready to be served, in case there's an
      * {@link HTMLGenerator}. If the service is used, the HTML is generated after the app starts,
      * so the middleware will have to wait for it to be ready before being able to serve it.
+     *
      * @type {boolean}
      * @access protected
      * @ignore
@@ -102,6 +107,7 @@ class FastHTML {
      * the `useAppRoutes` option is set to `true`; when the app gets started, an event listener
      * will obtain all the top controlled routes, create regular expressions and save them on
      * this property.
+     *
      * @type {Array}
      * @access protected
      * @ignore
@@ -117,7 +123,8 @@ class FastHTML {
   }
   /**
    * Returns the Express middleware that validates the routes and serves the HTML file if necessary.
-   * @return {ExpressMiddleware}
+   *
+   * @returns {ExpressMiddleware}
    */
   middleware() {
     return (req, res, next) => {
@@ -146,6 +153,7 @@ class FastHTML {
   /**
    * The options that tell the middleware which routes should be ignored and which is the file
    * to serve.
+   *
    * @type {FastHTMLOptions}
    */
   get options() {
@@ -155,8 +163,9 @@ class FastHTML {
    * Normalizes and validates the options recevied on the constructor.
    * If the class is using a {@link HTMLGenerator} service, the method will overwrite the `file`
    * option with the result of the service's `getFile()` method.
+   *
    * @param {FastHTMLOptions} options The received options.
-   * @return {FastHTMLOptions}
+   * @returns {FastHTMLOptions}
    * @throws {Error} If no file and no {@link HTMLGenerator} service are specified.
    * @throws {Error} If no routes to ignore are specified and `useAppRoutes` is set to `false`.
    * @access protected
@@ -177,6 +186,7 @@ class FastHTML {
   }
   /**
    * Serves the file on the response.
+   *
    * @param {ExpressResponse} res  The server response.
    * @param {ExpressNext}     next The function to call the next middleware.
    * @access protected
@@ -189,6 +199,7 @@ class FastHTML {
   /**
    * Adds the event listener that obtains the controlled routes when `useAppRoutes` is set to
    * `true`.
+   *
    * @access protected
    * @ignore
    */
@@ -210,8 +221,9 @@ class FastHTML {
    * Checks whether a route should be ignored or not. The method checks first against the `ignore`
    * option, and then against the controlled routes (if `useAppRoutes` is `false`, the list
    * will be empty).
+   *
    * @param {string} route The route to validate.
-   * @return {boolean}
+   * @returns {boolean}
    * @access protected
    * @ignore
    */
@@ -224,6 +236,7 @@ class FastHTML {
  * A middleware for filtering routes so you can serve an HTML before the app gets to evaluate
  * whether there's a controller for the requested route or not. For more information about the
  * reason of this middleware, please read the description of {@link FastHTML}.
+ *
  * @type {MiddlewareCreator}
  * @param {FastHTMLOptions|FastHTMLMiddlewareOptions} [options={}] The options to customize the
  *                                                                 middleware behavior.

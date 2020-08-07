@@ -8,7 +8,7 @@ const { providerCreator } = require('../../utils/wrappers');
  * @property {string}  [template='index.tpl.html']                 The name of the file it should
  *                                                                 use as template.
  * @property {string}  [file='index.html']                         The name of the generated file.
- * @property {Boolean} [deleteTemplateAfter=true]                  Whether or not to delete the
+ * @property {boolean} [deleteTemplateAfter=true]                  Whether or not to delete the
  *                                                                 tempalte after generating the
  *                                                                 file.
  * @property {string}  [replacePlaceholder='{{appConfiguration}}'] The placeholder string where the
@@ -27,7 +27,7 @@ const { providerCreator } = require('../../utils/wrappers');
 
 /**
  * @typedef {Object} HTMLGeneratorProviderOptions
- * @extends {HTMLGeneratorOptions}
+ * @augments HTMLGeneratorOptions
  * @description These are the options specific for the service provider that registers
  *              {@link HTMLGenerator}. It's the same as {@link HTMLGeneratorOptions} but with a
  *              couple extras settings.
@@ -55,7 +55,6 @@ const { providerCreator } = require('../../utils/wrappers');
  */
 class HTMLGenerator {
   /**
-   * Class constructor.
    * @param {AppConfiguration}            appConfiguration     To read the values of the settings
    *                                                           that are going to be send to the
    *                                                           file.
@@ -69,7 +68,7 @@ class HTMLGenerator {
    *                                                           the values from the app
    *                                                           configuration, they'll be retrieved
    *                                                           from this service `getValues` method.
-   * @throws {Error} if `valuesService` is specified but it doesn't have a `getValues` method.
+   * @throws {Error} If `valuesService` is specified but it doesn't have a `getValues` method.
    */
   constructor(
     appConfiguration,
@@ -80,7 +79,10 @@ class HTMLGenerator {
   ) {
     /**
      * The service options.
+     *
      * @type {HTMLGeneratorOptions}
+     * @access protected
+     * @ignore
      */
     this._options = ObjectUtils.merge({
       template: 'index.tpl.html',
@@ -106,6 +108,7 @@ class HTMLGenerator {
     }
     /**
      * A local reference for the `appConfiguration` service.
+     *
      * @type {AppConfiguration}
      * @access protected
      * @ignore
@@ -113,6 +116,7 @@ class HTMLGenerator {
     this._appConfiguration = appConfiguration;
     /**
      * A local reference for the `appLogger` service.
+     *
      * @type {Logger}
      * @access protected
      * @ignore
@@ -120,6 +124,7 @@ class HTMLGenerator {
     this._appLogger = appLogger;
     /**
      * A local reference for the `frontendFs` service.
+     *
      * @type {FrontendFs}
      * @access protected
      * @ignore
@@ -127,6 +132,7 @@ class HTMLGenerator {
     this._frontendFs = frontendFs;
     /**
      * A local reference for the recieved `valuesService` service.
+     *
      * @type {?HTMLGeneratorValuesService}
      * @access protected
      * @ignore
@@ -134,7 +140,8 @@ class HTMLGenerator {
     this._valuesService = valuesService;
     /**
      * Whether or not the file has been generated.
-     * @type {Boolean}
+     *
+     * @type {boolean}
      * @access protected
      * @ignore
      */
@@ -142,6 +149,7 @@ class HTMLGenerator {
     /**
      * A deferred promise to return when another service asks if the file has been generated. Once
      * this sevice finishes generating the file, the promise will be resolved.
+     *
      * @type {Object}
      * @access protected
      * @ignore
@@ -150,7 +158,8 @@ class HTMLGenerator {
   }
   /**
    * Generate the HTML file.
-   * @return {Promise<undefined,Error>}
+   *
+   * @returns {Promise<undefined,Error>}
    */
   generateHTML() {
     // Get the service options.
@@ -203,14 +212,16 @@ class HTMLGenerator {
   }
   /**
    * Get the name of the file the service generates.
-   * @return {string}
+   *
+   * @returns {string}
    */
   getFile() {
     return this._options.file;
   }
   /**
    * Get the values that are going to be injected on the file.
-   * @return {Promise<Object,?Error>}
+   *
+   * @returns {Promise<Object,?Error>}
    */
   getValues() {
     let valuesPromise;
@@ -235,7 +246,8 @@ class HTMLGenerator {
   }
   /**
    * Returns a promise that will be resolved when the file has been generated.
-   * @return {Promise<undefined,undefined>}
+   *
+   * @returns {Promise<undefined,undefined>}
    */
   whenReady() {
     return this._fileReady ?
@@ -244,6 +256,7 @@ class HTMLGenerator {
   }
   /**
    * The service options.
+   *
    * @type {HTMLGeneratorOptions}
    */
   get options() {
@@ -252,9 +265,10 @@ class HTMLGenerator {
   /**
    * Get a value from an object dictionary using a string _"object path"_ (`prop.sub.otherProp`).
    * If the property doesn't exist or the path is invalid, it will return `null`.
+   *
    * @param {Object} values    The dictionary from where the value will be read.
    * @param {string} valuePath The path to the value.
-   * @return {*}
+   * @returns {*}
    * @ignore
    * @access protected
    */
@@ -281,9 +295,10 @@ class HTMLGenerator {
   }
   /**
    * Creates the code for the HTML file.
+   *
    * @param {string} template The template code where the values are going to be injected.
    * @param {Object} values   The dictionary of values to inject.
-   * @return {string}
+   * @returns {string}
    * @ignore
    * @access protected
    */
@@ -321,6 +336,7 @@ class HTMLGenerator {
 /**
  * A service that hooks itself to the `after-start` event of the app server in order to trigger
  * the generation an the html file when the server starts.
+ *
  * @type {ProviderCreator}
  * @param {HTMLGeneratorProviderOptions|HTMLGeneratorOptions} [options] The options to customize
  *                                                                      the service behavior.

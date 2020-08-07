@@ -12,12 +12,12 @@ const { provider } = require('../../utils/wrappers');
  */
 class FrontendFs {
   /**
-   * Class constructor.
    * @param {PathUtils} pathUtils To generate the relative paths.
    */
   constructor(pathUtils) {
     /**
      * A local reference for the `pathUtils` service.
+     *
      * @type {PathUtils}
      * @access protected
      * @ignore
@@ -26,26 +26,29 @@ class FrontendFs {
   }
   /**
    * Delete a file from the file system.
+   *
    * @param {string} filepath The path to the file.
-   * @return {Promise<undefined,Error>}
+   * @returns {Promise<undefined,Error>}
    */
   delete(filepath) {
     return fs.unlink(this._pathUtils.joinFrom('app', filepath));
   }
   /**
    * Read a file from the file system.
+   *
    * @param {string} filepath           The path to the file.
    * @param {string} [encoding='utf-8'] The text encoding in which the file should be read.
-   * @return {Promise<string,Error>}
+   * @returns {Promise<string,Error>}
    */
   read(filepath, encoding = 'utf-8') {
     return fs.readFile(this._pathUtils.joinFrom('app', filepath), encoding);
   }
   /**
    * Write a file on the file system.
+   *
    * @param {string} filepath The path to the file.
    * @param {string} data     The contents of the file.
-   * @return {Promise<undefined,Error>}
+   * @returns {Promise<undefined,Error>}
    */
   write(filepath, data) {
     return fs.writeFile(this._pathUtils.joinFrom('app', filepath), data);
@@ -54,6 +57,7 @@ class FrontendFs {
 /**
  * The service provider that once registered on the app container will set an instance of
  * `FrontendFs` as the `frontendFs` service.
+ *
  * @example
  * // Register it on the container
  * container.register(frontendFs);

@@ -3,7 +3,7 @@ const { code: statuses } = require('statuses');
 const { middlewareCreator } = require('../../utils/wrappers');
 
 /**
- * @typdef {Object} VersionValidatorLatestOptions
+ * @typedef {Object} VersionValidatorLatestOptions
  * @description The options for how the middleware should behave if the requested version is
  *              `latest`.
  * @property {boolean} [allow=true]    Whether or not the middleware should validate the _"latest
@@ -14,7 +14,7 @@ const { middlewareCreator } = require('../../utils/wrappers');
  */
 
 /**
- * @typdef {Object} VersionValidatorPopupOptions
+ * @typedef {Object} VersionValidatorPopupOptions
  * @description The options for how to detect if the request comes from a popup and how to compose
  *              the post message the middleware will use to respond.
  * @property {string} [variable='popup']          The name of the query string variable the
@@ -80,6 +80,7 @@ class VersionValidator {
   ) {
     /**
      * A local reference for the `responsesBuilder` service.
+     *
      * @type {ResponsesBuilder}
      * @access protected
      * @ignore
@@ -87,6 +88,7 @@ class VersionValidator {
     this._responsesBuilder = responsesBuilder;
     /**
      * A local reference for the class the app uses to generate errors.
+     *
      * @type {Class}
      * @access protected
      * @ignore
@@ -94,6 +96,7 @@ class VersionValidator {
     this._AppError = AppError;
     /**
      * These are the "settings" the middleware will use in order to validate the requests.
+     *
      * @type {VersionValidatorOptions}
      * @access protected
      * @ignore
@@ -121,7 +124,8 @@ class VersionValidator {
   }
   /**
    * Returns the Express middleware that will validate the `version` parameter.
-   * @return {ExpressMiddleware}
+   *
+   * @returns {ExpressMiddleware}
    */
   middleware() {
     return (req, res, next) => {
@@ -163,15 +167,17 @@ class VersionValidator {
   }
   /**
    * The options used to customize the middleware behavior.
-   * @return {VersionValidatorOptions}
+   *
+   * @returns {VersionValidatorOptions}
    */
   get options() {
     return this._options;
   }
   /**
    * Helper method that checks if the incoming request is from a popup.
+   *
    * @param {ExpressRequest} req The request information.
-   * @return {Boolean}
+   * @returns {boolean}
    * @access protected
    * @ignore
    */
@@ -182,8 +188,9 @@ class VersionValidator {
   /**
    * Helper method that checks if the "latest version" is enabled and if the given version is
    * "the latest" (comparing it with the option name).
+   *
    * @param {string|number} version The version to validate.
-   * @return {Boolean}
+   * @returns {boolean}
    * @access protected
    * @ignore
    */
@@ -201,6 +208,7 @@ class VersionValidator {
  * to use the middleware by itself or as a route middleware.
  * If used as middleware, it will just return the result of {@link VersionValidator#middleware};
  * but if used as controller, it will mount it on `[route]/:version/*`.
+ *
  * @type {MiddlewareCreator}
  * @param {VersionValidatorOptions} [options] Custom options to modify the middleware behavior.
  */

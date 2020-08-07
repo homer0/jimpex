@@ -17,6 +17,7 @@ const { middlewareCreator } = require('../../utils/wrappers');
 
 /**
  * It configures a `Strict-Transport-Security` header and includes it on every response.
+ *
  * @see https://tools.ietf.org/html/rfc6797
  */
 class HSTS {
@@ -26,6 +27,7 @@ class HSTS {
   constructor(options = {}) {
     /**
      * The value of the header that will be included on every response.
+     *
      * @type {string}
      * @access protected
      * @ignore
@@ -39,7 +41,8 @@ class HSTS {
   }
   /**
    * Returns the Express middleware that includes the header on the response.
-   * @return {ExpressMiddleware}
+   *
+   * @returns {ExpressMiddleware}
    */
   middleware() {
     return (req, res, next) => {
@@ -49,6 +52,7 @@ class HSTS {
   }
   /**
    * The value of the header that will be included on every response.
+   *
    * @type {string}
    */
   get header() {
@@ -56,8 +60,9 @@ class HSTS {
   }
   /**
    * Creates the value for the header.
+   *
    * @param {HSTSOptions} options The options to customize the header value.
-   * @return {string}
+   * @returns {string}
    * @access protected
    * @ignore
    */
@@ -82,6 +87,7 @@ class HSTS {
  * configuration.
  * Both the `options` parameter and the `hsts` can include a `enabled` (boolean) flag to either
  * disable or enable the middleware.
+ *
  * @type {MiddlewareCreator}
  * @param {HSTSOptions} [options={}] The options to customize the header value.
  */

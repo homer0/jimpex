@@ -25,10 +25,9 @@ const { middlewareCreator } = require('../../utils/wrappers');
  */
 class ErrorHandler {
   /**
-   * Class constructor.
    * @param {Logger}              appLogger        To log the received errors.
    * @param {ResponsesBuilder}    responsesBuilder To generate the JSON response.
-   * @param {Boolean}             showErrors       If `false`, unknown errors will show a generic
+   * @param {boolean}             showErrors       If `false`, unknown errors will show a generic
    *                                               message instead of real message. And if `true`,
    *                                               it will not only show all kind of errors but it
    *                                               will also show the error stack.
@@ -46,6 +45,7 @@ class ErrorHandler {
   ) {
     /**
      * A local reference for the `appLogger` service.
+     *
      * @type {Logger}
      * @access protected
      * @ignore
@@ -53,6 +53,7 @@ class ErrorHandler {
     this._appLogger = appLogger;
     /**
      * A local reference for the `responsesBuilder` service.
+     *
      * @type {ResponsesBuilder}
      * @access protected
      * @ignore
@@ -60,13 +61,15 @@ class ErrorHandler {
     this._responsesBuilder = responsesBuilder;
     /**
      * Whether or not to show unknown errors real messages.
-     * @type {Boolean}
+     *
+     * @type {boolean}
      * @access protected
      * @ignore
      */
     this._showErrors = showErrors;
     /**
      * A local reference for the class the app uses to generate errors.
+     *
      * @type {Class}
      * @access protected
      * @ignore
@@ -74,6 +77,7 @@ class ErrorHandler {
     this._AppError = AppError;
     /**
      * These are the "settings" the middleware will use in order to display the errors.
+     *
      * @type {ErrorHandlerOptions}
      * @access protected
      * @ignore
@@ -90,7 +94,8 @@ class ErrorHandler {
   }
   /**
    * Returns the Express middleware that shows the errors.
-   * @return {ExpressMiddleware}
+   *
+   * @returns {ExpressMiddleware}
    */
   middleware() {
     return (err, req, res, next) => {
@@ -139,7 +144,8 @@ class ErrorHandler {
   }
   /**
    * The options used to customize the middleware behavior.
-   * @return {ErrorHandlerOptions}
+   *
+   * @returns {ErrorHandlerOptions}
    */
   get options() {
     return this._options;
@@ -147,6 +153,7 @@ class ErrorHandler {
 }
 /**
  * Generates a middleware that show responses for unhandled errors thrown by the app.
+ *
  * @type {MiddlewareCreator}
  * @param {ErrorHandlerOptions} [options] Custom options to modify the middleware behavior.
  */

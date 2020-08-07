@@ -4,13 +4,13 @@ const { controller } = require('../../utils/wrappers');
  */
 class ConfigurationController {
   /**
-   * Class constructor.
    * @param {AppConfiguration} appConfiguration To read the app configuration.
    * @param {ResponsesBuilder} responsesBuilder To generate the JSON responses.
    */
   constructor(appConfiguration, responsesBuilder) {
     /**
      * A local reference for the `appConfiguration` service.
+     *
      * @type {AppConfiguration}
      * @access protected
      * @ignore
@@ -18,6 +18,7 @@ class ConfigurationController {
     this._appConfiguration = appConfiguration;
     /**
      * A local reference for the `responsesBuilder` service.
+     *
      * @type {ResponsesBuilder}
      * @access protected
      * @ignore
@@ -26,6 +27,7 @@ class ConfigurationController {
   }
   /**
    * Send a response with the current app configuration as a body.
+   *
    * @param {ExpressResponse} res The server response.
    */
   getConfigurationResponse(res) {
@@ -34,11 +36,13 @@ class ConfigurationController {
       name,
       ...this._appConfiguration.getConfig(),
     };
-    return this._responsesBuilder.json(res, data);
+
+    this._responsesBuilder.json(res, data);
   }
   /**
    * Returns the middleware to show the current configuration.
-   * @return {ExpressMiddleware}
+   *
+   * @returns {ExpressMiddleware}
    */
   showConfiguration() {
     return (req, res) => {
@@ -47,7 +51,8 @@ class ConfigurationController {
   }
   /**
    * Returns the middleware to switch the current configuration.
-   * @return {ExpressMiddleware}
+   *
+   * @returns {ExpressMiddleware}
    */
   switchConfiguration() {
     return (req, res, next) => {
@@ -70,6 +75,7 @@ class ConfigurationController {
  * It provides routes for:
  * - Showing the current configuration.
  * - Switching the configuration, but only if the service allows it.
+ *
  * @type {Controller}
  */
 const configurationController = controller((app) => {
