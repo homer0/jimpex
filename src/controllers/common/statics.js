@@ -70,7 +70,7 @@ class StaticsController {
           source: './',
         },
       },
-      options
+      options,
     ));
     /**
      * A dictionary of all the formatted files ({@link StaticsControllerFile}). It uses the files
@@ -101,7 +101,7 @@ class StaticsController {
         method,
         file,
         fileMiddleware,
-        middlewares
+        middlewares,
       ));
     });
 
@@ -113,6 +113,80 @@ class StaticsController {
    */
   get options() {
     return Object.freeze(this._options);
+  }
+  /**
+   * Generates a route for an specific file.
+   * @param {ExpressRouter}         router         To create the actual route.
+   * @param {string}                method         The HTTP method for the route.
+   * @param {StaticsControllerFile} file           The file information.
+   * @param {ExpressMiddleware}     fileMiddleware The middleware that serves the file.
+   * @param {Array}                 middlewares    A list of custom middlewares to add before the
+   *                                               one that serves the file.
+   * @return {ExpressRouter}
+   * @access protected
+   * @ignore
+   */
+  _addRoute(router, method, file, fileMiddleware, middlewares) {
+    return router[method](file.route, [...middlewares, fileMiddleware]);
+  }
+  /**
+   * Parses each of the received files in order to create a {@link StaticsControllerFile}.
+   * @return {Object} A dictionary with the definitions as values and the routes as keys.
+   * @access protected
+   * @ignore
+   */
+  _createFiles() {
+    const { files, paths } = this._options;
+    const routePath = removeSlashes(paths.route, false, true);
+    return files.reduce(
+      (formatted, file) => {
+        let source;
+        let route;
+        let headers;
+        if (typeof file === 'object') {
+          ({ route, source, headers } = file);
+        } else {
+          source = file;
+          route = file;
+        }
+
+        source = path.join(paths.source, source);
+        route = removeSlashes(route, true, false);
+        route = `${routePath}/${route}`;
+
+        return {
+          ...formatted,
+          [route]: {
+            source,
+            route,
+            headers: headers || {},
+          },
+        };
+      },
+      {},
+    );
+  }
+  /**
+   * Generates the middleware to serve a specific file.
+   * @param {StaticsControllerFile} file The file information.
+   * @return {ExpressMiddleware}
+   * @access protected
+   * @ignore
+   */
+  _getMiddleware(file) {
+    return (req, res, next) => {
+      const extension = path.parse(file.source).ext.substr(1);
+      const headers = ObjectUtils.merge(
+        { 'Content-Type': mime.getType(extension) },
+        file.headers,
+      );
+
+      Object.keys(headers).forEach((headerName) => {
+        res.setHeader(headerName, headers[headerName]);
+      });
+
+      this._sendFile(res, file.source, next);
+    };
   }
   /**
    * Helper method that validates and normalizes the options received by the controller.
@@ -156,89 +230,17 @@ class StaticsController {
       throw new Error(`${invalid} is not a valid HTTP method`);
     }
 
-
     const newMethods = methods.reduce(
-      (acc, method) => Object.assign({}, acc, {
+      (acc, method) => ({
+        ...acc,
         [method.toLowerCase()]: options.methods[method],
       }),
-      {}
+      {},
     );
 
-    return Object.assign({}, options, {
+    return {
+      ...options,
       methods: newMethods,
-    });
-  }
-  /**
-   * Parses each of the received files in order to create a {@link StaticsControllerFile}.
-   * @return {Object} A dictionary with the definitions as values and the routes as keys.
-   * @access protected
-   * @ignore
-   */
-  _createFiles() {
-    const { files, paths } = this._options;
-    const routePath = removeSlashes(paths.route, false, true);
-    return files.reduce(
-      (formatted, file) => {
-        let source;
-        let route;
-        let headers;
-        if (typeof file === 'object') {
-          ({ route, source, headers } = file);
-        } else {
-          source = file;
-          route = file;
-        }
-
-        source = path.join(paths.source, source);
-        route = removeSlashes(route, true, false);
-        route = `${routePath}/${route}`;
-
-        return Object.assign({}, formatted, {
-          [route]: {
-            source,
-            route,
-            headers: headers || {},
-          },
-        });
-      },
-      {}
-    );
-  }
-  /**
-   * Generates a route for an specific file.
-   * @param {ExpressRouter}         router         To create the actual route.
-   * @param {string}                method         The HTTP method for the route.
-   * @param {StaticsControllerFile} file           The file information.
-   * @param {ExpressMiddleware}     fileMiddleware The middleware that serves the file.
-   * @param {Array}                 middlewares    A list of custom middlewares to add before the
-   *                                               one that serves the file.
-   * @return {ExpressRouter}
-   * @access protected
-   * @ignore
-   */
-  _addRoute(router, method, file, fileMiddleware, middlewares) {
-    return router[method](file.route, [...middlewares, fileMiddleware]);
-  }
-  /**
-   * Generates the middleware to serve a specific file.
-   * @param {StaticsControllerFile} file The file information.
-   * @return {ExpressMiddleware}
-   * @access protected
-   * @ignore
-   */
-  _getMiddleware(file) {
-    return (req, res, next) => {
-      const extension = path.parse(file.source).ext.substr(1);
-      const headers = ObjectUtils.merge(
-        { 'Content-Type': mime.getType(extension) },
-        file.headers
-      );
-
-      Object.keys(headers).forEach((headerName) => {
-        res.setHeader(headerName, headers[headerName]);
-      });
-
-      this._sendFile(res, file.source, next);
     };
   }
 }

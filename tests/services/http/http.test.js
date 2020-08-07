@@ -333,10 +333,11 @@ describe('services/http:http', () => {
         method,
         body,
         headers: Object.keys(request.headers).reduce(
-          (newHeaders, name) => Object.assign({}, newHeaders, {
+          (newHeaders, name) => ({
+            ...newHeaders,
             [headersFixedNames[name]]: request.headers[name],
           }),
-          {}
+          {},
         ),
       });
       expect(appLogger.info).toHaveBeenCalledTimes(['request', 'response'].length);

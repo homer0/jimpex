@@ -264,7 +264,7 @@ describe('controllers/common:statics', () => {
     expect(sendFile).toHaveBeenCalledWith(
       response,
       path.join(options.paths.source, file),
-      next
+      next,
     );
   });
 
@@ -298,7 +298,7 @@ describe('controllers/common:statics', () => {
     expect(router.get).toHaveBeenCalledTimes(1);
     expect(router.get).toHaveBeenCalledWith(
       `${options.paths.route}/${file}`,
-      [expect.any(Function)]
+      [expect.any(Function)],
     );
     expect(response.setHeader).toHaveBeenCalledTimes(1);
     expect(response.setHeader).toHaveBeenCalledWith('Content-Type', 'text/html');
@@ -306,7 +306,7 @@ describe('controllers/common:statics', () => {
     expect(sendFile).toHaveBeenCalledWith(
       response,
       path.join(options.paths.source, file),
-      next
+      next,
     );
   });
 
@@ -343,7 +343,7 @@ describe('controllers/common:statics', () => {
     expect(router.get).toHaveBeenCalledTimes(1);
     expect(router.get).toHaveBeenCalledWith(
       `${options.paths.route}/${file.route}`,
-      [expect.any(Function)]
+      [expect.any(Function)],
     );
     expect(response.setHeader).toHaveBeenCalledTimes(1);
     expect(response.setHeader).toHaveBeenCalledWith('Content-Type', 'image/png');
@@ -351,7 +351,7 @@ describe('controllers/common:statics', () => {
     expect(sendFile).toHaveBeenCalledWith(
       response,
       path.join(options.paths.source, file.source),
-      next
+      next,
     );
   });
 
@@ -397,7 +397,7 @@ describe('controllers/common:statics', () => {
     expect(router.get).toHaveBeenCalledTimes(1);
     expect(router.get).toHaveBeenCalledWith(
       `${options.paths.route}/${file.route}`,
-      [expect.any(Function)]
+      [expect.any(Function)],
     );
     expect(response.setHeader).toHaveBeenCalledTimes(expectedHeaders.length);
     expectedHeaders.forEach((setHeaderCall) => {
@@ -407,7 +407,7 @@ describe('controllers/common:statics', () => {
     expect(sendFile).toHaveBeenCalledWith(
       response,
       path.join(options.paths.source, file.source),
-      next
+      next,
     );
   });
 

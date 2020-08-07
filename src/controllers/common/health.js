@@ -54,7 +54,7 @@ const healthController = controller((app) => {
   const router = app.get('router');
   const ctrl = new HealthController(
     app.get('appConfiguration'),
-    app.get('responsesBuilder')
+    app.get('responsesBuilder'),
   );
 
   return [

@@ -57,7 +57,7 @@ describe('middlewares/common:hsts', () => {
     expect(setHeader).toHaveBeenCalledTimes(1);
     expect(setHeader).toHaveBeenCalledWith(
       'Strict-Transport-Security',
-      `max-age=${maxAge}; preload`
+      `max-age=${maxAge}; preload`,
     );
     expect(next).toHaveBeenCalledTimes(1);
   });
@@ -110,7 +110,7 @@ describe('middlewares/common:hsts', () => {
     expect(setHeader).toHaveBeenCalledTimes(1);
     expect(setHeader).toHaveBeenCalledWith(
       'Strict-Transport-Security',
-      'max-age=31536000; includeSubDomains'
+      'max-age=31536000; includeSubDomains',
     );
     expect(next).toHaveBeenCalledTimes(1);
   });
@@ -151,7 +151,7 @@ describe('middlewares/common:hsts', () => {
     expect(setHeader).toHaveBeenCalledTimes(1);
     expect(setHeader).toHaveBeenCalledWith(
       'Strict-Transport-Security',
-      `max-age=${maxAge}`
+      `max-age=${maxAge}`,
     );
     expect(next).toHaveBeenCalledTimes(1);
   });

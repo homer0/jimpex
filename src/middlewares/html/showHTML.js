@@ -133,7 +133,7 @@ const showHTML = middlewareCreator((options = {}) => (app) => {
     new ShowHTML(
       app.get('sendFile'),
       options.file,
-      htmlGeneratorServiceName ? app.try(htmlGeneratorServiceName) : null
+      htmlGeneratorServiceName ? app.try(htmlGeneratorServiceName) : null,
     )
   ).middleware();
 });

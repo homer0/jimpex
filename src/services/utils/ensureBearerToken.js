@@ -66,7 +66,7 @@ class EnsureBearerToken {
         expression: /bearer (.*?)(?:$|\s)/i,
         local: 'token',
       },
-      options
+      options,
     );
   }
   /**
@@ -118,7 +118,7 @@ class EnsureBearerToken {
 const ensureBearerToken = providerCreator((options) => (app) => {
   app.set(
     'ensureBearerToken',
-    () => (new EnsureBearerToken(app.get('AppError'), options)).middleware()
+    () => (new EnsureBearerToken(app.get('AppError'), options)).middleware(),
   );
 });
 

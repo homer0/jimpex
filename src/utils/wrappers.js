@@ -155,7 +155,7 @@ const resourceCreator = (name, key, creatorFn) => new Proxy(
 
       return result;
     },
-  }
+  },
 );
 /**
  * Generates a service provider for the app container.
@@ -186,7 +186,7 @@ const providers = (items) => {
   ));
   if (invalidNames) {
     throw new Error(
-      'You can\'t create a collection with a providers called `register` or `providers`'
+      'You can\'t create a collection with a providers called `register` or `providers`',
     );
   }
 
@@ -196,9 +196,9 @@ const providers = (items) => {
       'register',
       (app) => Object.keys(items).forEach((item) => {
         app.register(items[item]);
-      })
+      }),
     ),
-    items
+    items,
   );
 };
 /**

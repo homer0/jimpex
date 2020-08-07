@@ -84,7 +84,7 @@ describe('middlewares/html:showHTML', () => {
     })
     .catch(() => {
       expect(true).toBeFalse();
-    })
+    }),
   );
 
   it(
@@ -119,7 +119,7 @@ describe('middlewares/html:showHTML', () => {
     })
     .catch(() => {
       expect(true).toBeFalse();
-    })
+    }),
   );
 
   it('should include a middleware shorthand to return its function', () => {

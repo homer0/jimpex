@@ -42,7 +42,7 @@ class ErrorHandler {
     responsesBuilder,
     showErrors,
     AppError,
-    options = {}
+    options = {},
   ) {
     /**
      * A local reference for the `appLogger` service.
@@ -85,7 +85,7 @@ class ErrorHandler {
           status: statuses['internal server error'],
         },
       },
-      options
+      options,
     );
   }
   /**
@@ -157,7 +157,7 @@ const errorHandler = middlewareCreator((options) => (app) => {
     app.get('responsesBuilder'),
     showErrors,
     app.get('AppError'),
-    options
+    options,
   )
   .middleware();
 });

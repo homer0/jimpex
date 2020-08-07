@@ -45,57 +45,6 @@ class HTTP {
     this.fetch = this.fetch.bind(this);
   }
   /**
-   * Try to get the IP from a given request.
-   * @param {ExpressRequest} req The request from which it will try to obtain the IP address.
-   * @return {?string}
-   */
-  getIPFromRequest(req) {
-    return req.headers['x-forwarded-for'] ||
-      req.connection.remoteAddress ||
-      req.socket.remoteAddress ||
-      req.connection.socket.remoteAddress;
-  }
-  /**
-   * Creates a dictionary with all the custom headers a request has. By custom header it means all
-   * the headers which name start with `x-`.
-   * This method doesn't copy `x-forwarded-for` as the `fetch` method generates it by calling
-   * `getIPFromRequest`.
-   * @param {ExpressRequest} req The request from which it will try to get the headers.
-   * @return {Object}
-   */
-  getCustomHeadersFromRequest(req) {
-    const headers = {};
-    Object.keys(req.headers).forEach((headerName) => {
-      if (headerName.startsWith('x-') && !headerName.startsWith('x-forwarded-for')) {
-        headers[headerName] = req.headers[headerName];
-      }
-    });
-
-    return headers;
-  }
-  /**
-   * It takes a dictionary of headers and normalize the names so each word will start with an
-   * upper case character. This is helpful in case you added custom headers and didn't care about
-   * the casing, or when copying headers from a server request, in which case they are all
-   * tranformed to lower case.
-   * @param {Object} headers The dictionary of headers to normalize.
-   * @return {Object}
-   */
-  normalizeHeaders(headers) {
-    return Object.keys(headers).reduce(
-      (newHeaders, name) => {
-        const newName = name
-        .split('-')
-        .map((part) => part.replace(/^(\w)/, (ignore, letter) => letter.toUpperCase()))
-        .join('-');
-        return Object.assign({}, newHeaders, {
-          [newName]: headers[name],
-        });
-      },
-      {}
-    );
-  }
-  /**
    * Make a request.
    * @param {string}           url          The request URL.
    * @param {HTTPFetchOptions} [options={}] The request options.
@@ -126,19 +75,16 @@ class HTTP {
        * Overwrite the base headers with the request original IP as `x-forwarded-for` and all the
        * received custom headers that request may have.
        */
-      defaultHeaders = Object.assign(
-        {
-          'x-forwarded-for': this.getIPFromRequest(options.req),
-        },
-        this.getCustomHeadersFromRequest(options.req)
-      );
+      defaultHeaders = {
+        'x-forwarded-for': this.getIPFromRequest(options.req),
+        ...this.getCustomHeadersFromRequest(options.req),
+      };
     }
     // Merge the base headers with the ones received on the `options`.
-    const headers = Object.assign(
-      {},
-      defaultHeaders,
-      (options.headers || {})
-    );
+    const headers = {
+      ...defaultHeaders,
+      ...(options.headers || {}),
+    };
     /**
      * If there's at least one header on the dictionary, add it to the new options. This check is
      * to avoid sending an empty object.
@@ -162,6 +108,58 @@ class HTTP {
     }
     // Return the request promise.
     return result;
+  }
+  /**
+   * Creates a dictionary with all the custom headers a request has. By custom header it means all
+   * the headers which name start with `x-`.
+   * This method doesn't copy `x-forwarded-for` as the `fetch` method generates it by calling
+   * `getIPFromRequest`.
+   * @param {ExpressRequest} req The request from which it will try to get the headers.
+   * @return {Object}
+   */
+  getCustomHeadersFromRequest(req) {
+    const headers = {};
+    Object.keys(req.headers).forEach((headerName) => {
+      if (headerName.startsWith('x-') && !headerName.startsWith('x-forwarded-for')) {
+        headers[headerName] = req.headers[headerName];
+      }
+    });
+
+    return headers;
+  }
+  /**
+   * Try to get the IP from a given request.
+   * @param {ExpressRequest} req The request from which it will try to obtain the IP address.
+   * @return {?string}
+   */
+  getIPFromRequest(req) {
+    return req.headers['x-forwarded-for'] ||
+      req.connection.remoteAddress ||
+      req.socket.remoteAddress ||
+      req.connection.socket.remoteAddress;
+  }
+  /**
+   * It takes a dictionary of headers and normalize the names so each word will start with an
+   * upper case character. This is helpful in case you added custom headers and didn't care about
+   * the casing, or when copying headers from a server request, in which case they are all
+   * tranformed to lower case.
+   * @param {Object} headers The dictionary of headers to normalize.
+   * @return {Object}
+   */
+  normalizeHeaders(headers) {
+    return Object.keys(headers).reduce(
+      (newHeaders, name) => {
+        const newName = name
+        .split('-')
+        .map((part) => part.replace(/^(\w)/, (ignore, letter) => letter.toUpperCase()))
+        .join('-');
+        return {
+          ...newHeaders,
+          [newName]: headers[name],
+        };
+      },
+      {},
+    );
   }
   /**
    * Whether or not to log the requests and their responses.

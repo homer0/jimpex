@@ -38,12 +38,10 @@ describe('controllers/common:configuration', () => {
       json: jest.fn(() => message),
     };
     const response = 'response';
-    const expectedData = Object.assign(
-      {
-        name: appConfiguration.name,
-      },
-      appConfiguration.config
-    );
+    const expectedData = {
+      name: appConfiguration.name,
+      ...appConfiguration.config,
+    };
     let sut = null;
     let result = null;
     // When
@@ -73,12 +71,10 @@ describe('controllers/common:configuration', () => {
     };
     const request = 'request';
     const response = 'response';
-    const expectedData = Object.assign(
-      {
-        name: appConfiguration.name,
-      },
-      appConfiguration.config
-    );
+    const expectedData = {
+      name: appConfiguration.name,
+      ...appConfiguration.config,
+    };
     let sut = null;
     let middleware = null;
     // When
@@ -117,12 +113,10 @@ describe('controllers/common:configuration', () => {
     };
     const response = 'response';
     const next = jest.fn();
-    const expectedData = Object.assign(
-      {
-        name: appConfiguration.name,
-      },
-      appConfiguration.config
-    );
+    const expectedData = {
+      name: appConfiguration.name,
+      ...appConfiguration.config,
+    };
     let sut = null;
     let middleware = null;
     // When

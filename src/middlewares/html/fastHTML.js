@@ -86,7 +86,7 @@ class FastHTML {
         ignore: options.ignore || [/\.ico$/i],
         useAppRoutes: true,
       },
-      options
+      options,
     ));
     /**
      * Whether or not the file is ready to be served, in case there's an
@@ -167,13 +167,24 @@ class FastHTML {
       throw new Error('You need to either define an HTMLGenerator service or a file');
     } else if (!options.ignore.length && !options.useAppRoutes) {
       throw new Error(
-        'You need to either define a list of routes to ignore or use `useAppRoutes`'
+        'You need to either define a list of routes to ignore or use `useAppRoutes`',
       );
     }
 
     return this._htmlGenerator ?
-      Object.assign({}, options, { file: this._htmlGenerator.getFile() }) :
+      { ...options, file: this._htmlGenerator.getFile() } :
       options;
+  }
+  /**
+   * Serves the file on the response.
+   * @param {ExpressResponse} res  The server response.
+   * @param {ExpressNext}     next The function to call the next middleware.
+   * @access protected
+   * @ignore
+   */
+  _sendHTML(res, next) {
+    res.setHeader('Content-Type', mime.getType('html'));
+    this._sendFile(res, this._options.file, next);
   }
   /**
    * Adds the event listener that obtains the controlled routes when `useAppRoutes` is set to
@@ -208,17 +219,6 @@ class FastHTML {
     return this._options.ignore.some((expression) => expression.test(route)) ||
       this._routeExpressions.some((expression) => expression.test(route));
   }
-  /**
-   * Serves the file on the response.
-   * @param {ExpressResponse} res  The server response.
-   * @param {ExpressNext}     next The function to call the next middleware.
-   * @access protected
-   * @ignore
-   */
-  _sendHTML(res, next) {
-    res.setHeader('Content-Type', mime.getType('html'));
-    this._sendFile(res, this._options.file, next);
-  }
 }
 /**
  * A middleware for filtering routes so you can serve an HTML before the app gets to evaluate
@@ -237,7 +237,7 @@ const fastHTML = middlewareCreator((options = {}) => (app) => {
       app.get('events'),
       app.get('sendFile'),
       options,
-      htmlGeneratorServiceName ? app.try(htmlGeneratorServiceName) : null
+      htmlGeneratorServiceName ? app.try(htmlGeneratorServiceName) : null,
     )
   ).middleware();
 });

@@ -25,7 +25,7 @@ class HTTPError extends AppError {
 const httpErrorGenerator = (message, status, context) => new HTTPError(
   message,
   status,
-  context
+  context,
 );
 /**
  * A service provider that will register both the {@link HTTPError} and a generator function on

@@ -29,36 +29,6 @@ class ResponsesBuilder {
     this._appConfiguration = appConfiguration;
   }
   /**
-   * Generates and sends a JSON response.
-   * The generated looks like this:
-   * ```
-   * {
-   *   metadata: {
-   *     version: '[app-version]',
-   *     status: [http-status],
-   *   },
-   *   data: [...],
-   * }
-   * ```
-   * @param {ExpressResponse} res           The Express response object necessary to write the JSON.
-   * @param {Object}          data          The information for the `data` key.
-   * @param {number}          [status=200]  The HTTP status.
-   * @param {Object}          [metadata={}] Extra information to include on the `metadata` key.
-   */
-  json(res, data, status = statuses.ok, metadata = {}) {
-    const useStatus = this._normalizeStatus(status);
-    res
-    .status(useStatus)
-    .json({
-      metadata: Object.assign({
-        version: this._appConfiguration.get('version'),
-        status: useStatus,
-      }, metadata),
-      data,
-    })
-    .end();
-  }
-  /**
    * Generates and send an HTML response that emits a post message.
    * The post message will be prefixed with the value of the configuration setting
    * `postMessagesPrefix`.
@@ -74,7 +44,7 @@ class ResponsesBuilder {
     title,
     message,
     status = statuses.ok,
-    options = {}
+    options = {},
   ) {
     const prefix = this._appConfiguration.get('postMessagesPrefix') || '';
     const target = options.target || 'window.opener';
@@ -98,6 +68,37 @@ class ResponsesBuilder {
     res.status(this._normalizeStatus(status));
     res.write(html);
     res.end();
+  }
+  /**
+   * Generates and sends a JSON response.
+   * The generated looks like this:
+   * ```
+   * {
+   *   metadata: {
+   *     version: '[app-version]',
+   *     status: [http-status],
+   *   },
+   *   data: [...],
+   * }
+   * ```
+   * @param {ExpressResponse} res           The Express response object necessary to write the JSON.
+   * @param {Object}          data          The information for the `data` key.
+   * @param {number}          [status=200]  The HTTP status.
+   * @param {Object}          [metadata={}] Extra information to include on the `metadata` key.
+   */
+  json(res, data, status = statuses.ok, metadata = {}) {
+    const useStatus = this._normalizeStatus(status);
+    res
+    .status(useStatus)
+    .json({
+      metadata: {
+        version: this._appConfiguration.get('version'),
+        status: useStatus,
+        ...metadata,
+      },
+      data,
+    })
+    .end();
   }
   /**
    * Generates a basic HTML template for other services to use.
@@ -158,7 +159,7 @@ class ResponsesBuilder {
  */
 const responsesBuilder = provider((app) => {
   app.set('responsesBuilder', () => new ResponsesBuilder(
-    app.get('appConfiguration')
+    app.get('appConfiguration'),
   ));
 });
 

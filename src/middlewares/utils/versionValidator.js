@@ -76,7 +76,7 @@ class VersionValidator {
     version,
     responsesBuilder,
     AppError,
-    options = {}
+    options = {},
   ) {
     /**
      * A local reference for the `responsesBuilder` service.
@@ -112,7 +112,7 @@ class VersionValidator {
         },
         version,
       },
-      options
+      options,
     );
 
     if (!this._options.version) {
@@ -145,7 +145,7 @@ class VersionValidator {
           res,
           this._options.popup.title,
           this._options.popup.message,
-          statuses.conflict
+          statuses.conflict,
         );
       } else {
         // Finally, if it doesn't match and is not from a popup, move to the error handler.
@@ -156,7 +156,7 @@ class VersionValidator {
             response: {
               validation: true,
             },
-          }
+          },
         ));
       }
     };
@@ -210,7 +210,7 @@ const versionValidator = middlewareCreator((options) => (app, route) => {
     app.get('appConfiguration').get('version'),
     app.get('responsesBuilder'),
     app.get('AppError'),
-    options
+    options,
   )).middleware();
   // Set the variable to be returned.
   let result;

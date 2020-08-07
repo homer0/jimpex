@@ -27,7 +27,7 @@ describe('services/html:htmlGenerator', () => {
       appConfiguration,
       appLogger,
       frontendFs,
-      options
+      options,
     );
     // Then
     expect(sut).toBeInstanceOf(HTMLGenerator);
@@ -58,7 +58,7 @@ describe('services/html:htmlGenerator', () => {
       appLogger,
       frontendFs,
       options,
-      valuesService
+      valuesService,
     );
     // Then
     expect(sut).toBeInstanceOf(HTMLGenerator);
@@ -77,7 +77,7 @@ describe('services/html:htmlGenerator', () => {
       appLogger,
       frontendFs,
       options,
-      valuesService
+      valuesService,
     ))
     .toThrow(/The HTMLGenerator values service must have a `getValues` method/i);
   });
@@ -96,7 +96,7 @@ describe('services/html:htmlGenerator', () => {
       appConfiguration,
       appLogger,
       frontendFs,
-      options
+      options,
     );
     result = sut.getFile();
     // Then
@@ -118,7 +118,7 @@ describe('services/html:htmlGenerator', () => {
       appConfiguration,
       appLogger,
       frontendFs,
-      options
+      options,
     );
     return sut.getValues()
     .then((result) => {
@@ -149,7 +149,7 @@ describe('services/html:htmlGenerator', () => {
       appLogger,
       frontendFs,
       options,
-      valuesService
+      valuesService,
     );
     return sut.getValues()
     .then((result) => {
@@ -177,7 +177,7 @@ describe('services/html:htmlGenerator', () => {
       appConfiguration,
       appLogger,
       frontendFs,
-      options
+      options,
     );
     return sut.getValues()
     .then((result) => {
@@ -202,7 +202,7 @@ describe('services/html:htmlGenerator', () => {
       appConfiguration,
       appLogger,
       frontendFs,
-      options
+      options,
     );
     result = sut.whenReady();
     // Then
@@ -241,7 +241,7 @@ describe('services/html:htmlGenerator', () => {
       appConfiguration,
       appLogger,
       frontendFs,
-      options
+      options,
     );
     return sut.generateHTML()
     .then(() => {
@@ -313,7 +313,7 @@ describe('services/html:htmlGenerator', () => {
       appConfiguration,
       appLogger,
       frontendFs,
-      options
+      options,
     );
     return sut.generateHTML()
     .then(() => {
@@ -370,7 +370,7 @@ describe('services/html:htmlGenerator', () => {
       appConfiguration,
       appLogger,
       frontendFs,
-      options
+      options,
     );
     return sut.generateHTML()
     .then(() => {
@@ -413,7 +413,7 @@ describe('services/html:htmlGenerator', () => {
       appConfiguration,
       appLogger,
       frontendFs,
-      options
+      options,
     );
     return sut.generateHTML()
     .then(() => {

@@ -38,7 +38,7 @@ class APIClient extends APIClientBase {
     super(
       apiConfig.url,
       apiConfig.endpoints || apiConfig.gateway,
-      http.fetch
+      http.fetch,
     );
     /**
      * The configuration for the API the client will make requests to.
@@ -116,7 +116,7 @@ const apiClient = providerCreator((options = {}) => (app) => {
   app.set(serviceName, () => new ClientClass(
     app.get('appConfiguration').get(configurationSetting),
     app.get('http'),
-    app.get('HTTPError')
+    app.get('HTTPError'),
   ));
 });
 

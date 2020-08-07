@@ -76,7 +76,7 @@ class AppError extends Error {
    * @ignore
    */
   _parseContext(original) {
-    const result = Object.assign({}, original);
+    const result = { ...original };
     if (typeof result.status === 'string') {
       result.status = statuses[result.status.toLowerCase()] || result.status;
     }

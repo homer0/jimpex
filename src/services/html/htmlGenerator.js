@@ -76,7 +76,7 @@ class HTMLGenerator {
     appLogger,
     frontendFs,
     options,
-    valuesService = null
+    valuesService = null,
   ) {
     /**
      * The service options.
@@ -149,47 +149,6 @@ class HTMLGenerator {
     this._fileDeferred = deferred();
   }
   /**
-   * Returns a promise that will be resolved when the file has been generated.
-   * @return {Promise<undefined,undefined>}
-   */
-  whenReady() {
-    return this._fileReady ?
-      Promise.resolve() :
-      this._fileDeferred.promise;
-  }
-  /**
-   * Get the name of the file the service generates.
-   * @return {string}
-   */
-  getFile() {
-    return this._options.file;
-  }
-  /**
-   * Get the values that are going to be injected on the file.
-   * @return {Promise<Object,?Error>}
-   */
-  getValues() {
-    let valuesPromise;
-    // If an `HTMLGeneratorValuesService` was specified...
-    if (this._valuesService) {
-      // ...get the values from there.
-      valuesPromise = this._valuesService.getValues();
-    } else if (this._options.configurationKeys.length) {
-      /**
-       * ...if there are configuration keys to be copied, set to return an already resolved
-       * promise with the settings from the configuration.
-       */
-      valuesPromise = Promise.resolve(
-        this._appConfiguration.get(this._options.configurationKeys)
-      );
-    } else {
-      // ...otherwsie, return an already resolved promise with an empty object.
-      valuesPromise = Promise.resolve({});
-    }
-
-    return valuesPromise;
-  }
-  /**
    * Generate the HTML file.
    * @return {Promise<undefined,Error>}
    */
@@ -243,49 +202,52 @@ class HTMLGenerator {
     });
   }
   /**
+   * Get the name of the file the service generates.
+   * @return {string}
+   */
+  getFile() {
+    return this._options.file;
+  }
+  /**
+   * Get the values that are going to be injected on the file.
+   * @return {Promise<Object,?Error>}
+   */
+  getValues() {
+    let valuesPromise;
+    // If an `HTMLGeneratorValuesService` was specified...
+    if (this._valuesService) {
+      // ...get the values from there.
+      valuesPromise = this._valuesService.getValues();
+    } else if (this._options.configurationKeys.length) {
+      /**
+       * ...if there are configuration keys to be copied, set to return an already resolved
+       * promise with the settings from the configuration.
+       */
+      valuesPromise = Promise.resolve(
+        this._appConfiguration.get(this._options.configurationKeys),
+      );
+    } else {
+      // ...otherwsie, return an already resolved promise with an empty object.
+      valuesPromise = Promise.resolve({});
+    }
+
+    return valuesPromise;
+  }
+  /**
+   * Returns a promise that will be resolved when the file has been generated.
+   * @return {Promise<undefined,undefined>}
+   */
+  whenReady() {
+    return this._fileReady ?
+      Promise.resolve() :
+      this._fileDeferred.promise;
+  }
+  /**
    * The service options.
    * @type {HTMLGeneratorOptions}
    */
   get options() {
     return Object.freeze(this._options);
-  }
-  /**
-   * Creates the code for the HTML file.
-   * @param {string} template The template code where the values are going to be injected.
-   * @param {Object} values   The dictionary of values to inject.
-   * @return {string}
-   * @ignore
-   * @access protected
-   */
-  _processHTML(template, values) {
-    const {
-      replacePlaceholder,
-      valuesExpression,
-      variable,
-    } = this._options;
-    const htmlObject = JSON.stringify(values);
-    let code = template
-    .replace(
-      replacePlaceholder,
-      `window.${variable} = ${htmlObject}`
-    );
-    const matches = [];
-    let match = valuesExpression.exec(code);
-    while (match) {
-      const [string, value] = match;
-      matches.push({
-        string,
-        value,
-      });
-
-      match = valuesExpression.exec(code);
-    }
-
-    matches.forEach((info) => {
-      code = code.replace(info.string, this._getFromValues(values, info.value));
-    });
-
-    return code;
   }
   /**
    * Get a value from an object dictionary using a string _"object path"_ (`prop.sub.otherProp`).
@@ -317,6 +279,44 @@ class HTMLGenerator {
 
     return currentElement;
   }
+  /**
+   * Creates the code for the HTML file.
+   * @param {string} template The template code where the values are going to be injected.
+   * @param {Object} values   The dictionary of values to inject.
+   * @return {string}
+   * @ignore
+   * @access protected
+   */
+  _processHTML(template, values) {
+    const {
+      replacePlaceholder,
+      valuesExpression,
+      variable,
+    } = this._options;
+    const htmlObject = JSON.stringify(values);
+    let code = template
+    .replace(
+      replacePlaceholder,
+      `window.${variable} = ${htmlObject}`,
+    );
+    const matches = [];
+    let match = valuesExpression.exec(code);
+    while (match) {
+      const [string, value] = match;
+      matches.push({
+        string,
+        value,
+      });
+
+      match = valuesExpression.exec(code);
+    }
+
+    matches.forEach((info) => {
+      code = code.replace(info.string, this._getFromValues(values, info.value));
+    });
+
+    return code;
+  }
 }
 /**
  * A service that hooks itself to the `after-start` event of the app server in order to trigger
@@ -334,7 +334,7 @@ const htmlGenerator = providerCreator((options = {}) => (app) => {
       app.get('appLogger'),
       app.get('frontendFs'),
       options,
-      valuesService ? app.try(valuesService) : null
+      valuesService ? app.try(valuesService) : null,
     );
   });
 

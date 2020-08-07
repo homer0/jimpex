@@ -30,7 +30,10 @@ class ConfigurationController {
    */
   getConfigurationResponse(res) {
     const name = this._appConfiguration.get('name');
-    const data = Object.assign({ name }, this._appConfiguration.getConfig());
+    const data = {
+      name,
+      ...this._appConfiguration.getConfig(),
+    };
     return this._responsesBuilder.json(res, data);
   }
   /**
@@ -76,7 +79,7 @@ const configurationController = controller((app) => {
     const router = app.get('router');
     const ctrl = new ConfigurationController(
       appConfiguration,
-      app.get('responsesBuilder')
+      app.get('responsesBuilder'),
     );
     routes.push(...[
       router.get('/', ctrl.showConfiguration()),

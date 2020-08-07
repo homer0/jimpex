@@ -30,14 +30,12 @@ class HSTS {
      * @access protected
      * @ignore
      */
-    this._header = this._buildHeader(Object.assign(
-      {
-        maxAge: 31536000,
-        includeSubDomains: true,
-        preload: false,
-      },
-      options
-    ));
+    this._header = this._buildHeader({
+      maxAge: 31536000,
+      includeSubDomains: true,
+      preload: false,
+      ...options,
+    });
   }
   /**
    * Returns the Express middleware that includes the header on the response.

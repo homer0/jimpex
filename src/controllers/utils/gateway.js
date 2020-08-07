@@ -289,7 +289,7 @@ class GatewayController {
           ],
         },
       },
-      options
+      options,
     ));
     /**
      * The configuration for the API the controller will make requests to.
@@ -297,9 +297,10 @@ class GatewayController {
      * @access protected
      * @ignore
      */
-    this._gatewayConfig = Object.assign({}, gatewayConfig, {
+    this._gatewayConfig = {
+      ...gatewayConfig,
       url: removeSlashes(gatewayConfig.url, false, true),
-    });
+    };
     /**
      * A local reference for the `http` service.
      * @type {HTTP}
@@ -392,7 +393,7 @@ class GatewayController {
       info.method,
       route.route,
       this._getMiddleware(info.endpoint),
-      middlewares
+      middlewares,
     )));
 
     return router;
@@ -419,67 +420,62 @@ class GatewayController {
     return this._options;
   }
   /**
-   * Normalizes the options recevied by the controller:
-   * - Removes any trailing and leading slashes from the `root` path, if defined.
-   * @param {GatewayControllerOptions} options The options to normalize.
-   * @return {GatewayControllerOptions}
+   * Adds a route on a given router.
+   * @param {ExpressRouter}     router              The router where the route will be added.
+   * @param {string}            method              The HTTP method for the route.
+   * @param {string}            route               The path for the route.
+   * @param {ExpressMiddleware} endpointMiddleware  The middleware that makes the request.
+   * @param {Array}             middlewares         Extra middlewares to add before the main one.
+   *
+   * @return {ExpressRouter}
    * @access protected
    * @ignore
    */
-  _normalizeOptions(options) {
-    let newOptions;
-    if (options.root) {
-      const root = removeSlashes(options.root).trim();
-      newOptions = Object.assign({}, options, { root });
-    } else {
-      newOptions = options;
-    }
+  _addRoute(router, method, route, endpointMiddleware, middlewares) {
+    return router[method](route, [...middlewares, endpointMiddleware]);
+  }
+  /**
+   * Based on the controller options and the gateway endpoints, this method will create an API
+   * client configuration that can be used to make requests to this controller.
+   * @return {APIClientConfiguration}
+   * @access protected
+   * @ignore
+   */
+  _createAPIClientConfiguration() {
+    let endpoints;
+    const { root } = this._options;
+    if (root) {
+      endpoints = Object.keys(this._endpoints).reduce(
+        (acc, name) => {
+          const endpoint = this._endpoints[name];
+          let newEndpoint;
+          if (typeof endpoint === 'string') {
+            newEndpoint = removeSlashes(endpoint);
+            newEndpoint = `${root}/${newEndpoint}`;
+          } else {
+            const endpointPath = removeSlashes(endpoint.path);
+            newEndpoint = {
+              ...endpoint,
+              path: `${root}/${endpointPath}`,
+            };
+          }
 
-    return newOptions;
-  }
-  /**
-   * Flattens all the endpoints from gateway configuration into a one level dictionary, where the
-   * key are the paths they used to have on the original configuration, and the values are the
-   * endpoints definitions.
-   * @return {Object}
-   * @access protected
-   * @ignore
-   */
-  _getNormalizedEndpoints() {
-    return ObjectUtils.flat(
-      this._gatewayConfig.gateway,
-      '.',
-      '',
-      (ignore, value) => typeof value.path === 'undefined'
-    );
-  }
-  /**
-   * Creates a regular expression the main middleware will later use in order to remove the
-   * controller route from the request url. That's needed in order to build the URL where the
-   * request will be made.
-   * @return {RegExp}
-   * @access protected
-   * @ignore
-   */
-  _createRouteExpression() {
-    return createRouteExpression(
-      this._options.root ? `${this._route}/${this._options.root}` : this._route,
-      true,
-      true
-    );
-  }
-  /**
-   * This is a helper method used in order to validate if an HTTP method can be used in order to
-   * define a route in the router. If the given method is not on the list of allowed methods,
-   * it will be "normalized" to `all`. It also transforms the method into lower case.
-   * @param {string} method The method to validate.
-   * @return {string}
-   * @access protected
-   * @ignore
-   */
-  _normalizeHTTPMethod(method) {
-    const newMethod = method.toLowerCase();
-    return this._allowedHTTPMethods.includes(newMethod) ? newMethod : 'all';
+          return {
+            ...acc,
+            [name]: newEndpoint,
+          };
+        },
+        {},
+      );
+    } else {
+      endpoints = this._endpoints;
+    }
+    return {
+      url: `/${this._route}`,
+      endpoints: {
+        [this._options.configurationSetting]: ObjectUtils.unflat(endpoints),
+      },
+    };
   }
   /**
    * Based on the information from the endpoints, this method will create the routes the
@@ -521,7 +517,7 @@ class GatewayController {
         const repeatedEndpoint = routes[endpointPath].methods[endpointMethod];
         throw new Error(
           'You can\'t have two gateway endpoints to the same path and with the same ' +
-          `HTTP method: '${repeatedEndpoint}' and '${name}'`
+          `HTTP method: '${repeatedEndpoint}' and '${name}'`,
         );
       }
 
@@ -545,47 +541,6 @@ class GatewayController {
     });
   }
   /**
-   * Based on the controller options and the gateway endpoints, this method will create an API
-   * client configuration that can be used to make requests to this controller.
-   * @return {APIClientConfiguration}
-   * @access protected
-   * @ignore
-   */
-  _createAPIClientConfiguration() {
-    let endpoints;
-    const { root } = this._options;
-    if (root) {
-      endpoints = Object.keys(this._endpoints).reduce(
-        (acc, name) => {
-          const endpoint = this._endpoints[name];
-          let newEndpoint;
-          if (typeof endpoint === 'string') {
-            newEndpoint = removeSlashes(endpoint);
-            newEndpoint = `${root}/${newEndpoint}`;
-          } else {
-            const endpointPath = removeSlashes(endpoint.path);
-            newEndpoint = Object.assign({}, endpoint, {
-              path: `${root}/${endpointPath}`,
-            });
-          }
-
-          return Object.assign({}, acc, {
-            [name]: newEndpoint,
-          });
-        },
-        {}
-      );
-    } else {
-      endpoints = this._endpoints;
-    }
-    return {
-      url: `/${this._route}`,
-      endpoints: {
-        [this._options.configurationSetting]: ObjectUtils.unflat(endpoints),
-      },
-    };
-  }
-  /**
    * Validates if a server helper exists and creates a dictionary with flags for all the methods
    * a helper can have; this will allow other methods to check if the "helper method X" is
    * available without having to check if the helper is defined and if "method X" is a function.
@@ -604,34 +559,35 @@ class GatewayController {
     let result;
     if (this._helperService) {
       result = methods.reduce(
-        (methodsDict, name) => Object.assign({}, methodsDict, {
+        (methodsDict, name) => ({
+          ...methodsDict,
           [name]: typeof this._helperService[name] === 'function',
         }),
-        {}
+        {},
       );
     } else {
       result = methods.reduce(
-        (methodsDict, name) => Object.assign({}, methodsDict, { [name]: false }),
-        {}
+        (methodsDict, name) => ({ ...methodsDict, [name]: false }),
+        {},
       );
     }
 
     return result;
   }
   /**
-   * Adds a route on a given router.
-   * @param {ExpressRouter}     router              The router where the route will be added.
-   * @param {string}            method              The HTTP method for the route.
-   * @param {string}            route               The path for the route.
-   * @param {ExpressMiddleware} endpointMiddleware  The middleware that makes the request.
-   * @param {Array}             middlewares         Extra middlewares to add before the main one.
-   *
-   * @return {ExpressRouter}
+   * Creates a regular expression the main middleware will later use in order to remove the
+   * controller route from the request url. That's needed in order to build the URL where the
+   * request will be made.
+   * @return {RegExp}
    * @access protected
    * @ignore
    */
-  _addRoute(router, method, route, endpointMiddleware, middlewares) {
-    return router[method](route, [...middlewares, endpointMiddleware]);
+  _createRouteExpression() {
+    return createRouteExpression(
+      this._options.root ? `${this._route}/${this._options.root}` : this._route,
+      true,
+      true,
+    );
   }
   /**
    * Generates a middleware that will make a request and stream back the response.
@@ -660,7 +616,7 @@ class GatewayController {
       if (this._options.headers.copyCustomHeaders) {
         options.headers = ObjectUtils.merge(
           options.headers,
-          this._http.getCustomHeadersFromRequest(req)
+          this._http.getCustomHeadersFromRequest(req),
         );
       }
       // If enabled, add the header with the request's IP.
@@ -687,7 +643,7 @@ class GatewayController {
         endpoint,
         req,
         res,
-        next
+        next,
       );
       // Make the fetch request.
       return this._http.fetch(request.url, request.options)
@@ -717,6 +673,93 @@ class GatewayController {
       })
       .catch((error) => this._handleEndpointError(error, endpoint, req, res, next));
     };
+  }
+  /**
+   * Flattens all the endpoints from gateway configuration into a one level dictionary, where the
+   * key are the paths they used to have on the original configuration, and the values are the
+   * endpoints definitions.
+   * @return {Object}
+   * @access protected
+   * @ignore
+   */
+  _getNormalizedEndpoints() {
+    return ObjectUtils.flat(
+      this._gatewayConfig.gateway,
+      '.',
+      '',
+      (ignore, value) => typeof value.path === 'undefined',
+    );
+  }
+  /**
+   * This method is called in order to handle a fetch request error. It will check if a
+   * helper is defined and allow it to do it, or fallback and call the next middleware.
+   * @param {Error}                                error    The fetch request error.
+   * @param {GatewayControllerEndpointInformation} endpoint The information for the endpoint
+   *                                                        responsible of creating the route.
+   * @param {ExpressRequest}                       req      The server's incoming request
+   *                                                        information.
+   * @param {ExpressResponse}                      res      The server's response information.
+   * @param {ExpressNext}                          next     The function to call the next
+   *                                                        middleware.
+   * @return {*}
+   * @access protected
+   * @ignore
+   */
+  _handleEndpointError(error, endpoint, req, res, next) {
+    return this._helperServiceInfo.handleEndpointError ?
+      this._helperService.handleEndpointError(error, endpoint, req, res, next) :
+      next(error);
+  }
+  /**
+   * This is called when the helper say that a fetch response shouldn't be sent, so the controller
+   * will allow it to handle the response by itself.
+   * @param {Object}                               response The response generated by the fetch
+   *                                                        request.
+   * @param {GatewayControllerEndpointInformation} endpoint The information for the endpoint
+   *                                                        responsible of creating the route.
+   * @param {ExpressRequest}                       req      The server's incoming request
+   *                                                        information.
+   * @param {ExpressResponse}                      res      The server's response information.
+   * @param {ExpressNext}                          next     The function to call the next
+   *                                                        middleware.
+   * @return {*}
+   * @access protected
+   * @ignore
+   */
+  _handleEndpointResponse(response, endpoint, req, res, next) {
+    return this._helperService.handleEndpointResponse(response, endpoint, req, res, next);
+  }
+  /**
+   * This is a helper method used in order to validate if an HTTP method can be used in order to
+   * define a route in the router. If the given method is not on the list of allowed methods,
+   * it will be "normalized" to `all`. It also transforms the method into lower case.
+   * @param {string} method The method to validate.
+   * @return {string}
+   * @access protected
+   * @ignore
+   */
+  _normalizeHTTPMethod(method) {
+    const newMethod = method.toLowerCase();
+    return this._allowedHTTPMethods.includes(newMethod) ? newMethod : 'all';
+  }
+  /**
+   * Normalizes the options recevied by the controller:
+   * - Removes any trailing and leading slashes from the `root` path, if defined.
+   * @param {GatewayControllerOptions} options The options to normalize.
+   * @return {GatewayControllerOptions}
+   * @access protected
+   * @ignore
+   */
+  _normalizeOptions(options) {
+    let newOptions;
+    if (options.root) {
+      const root = removeSlashes(options.root).trim();
+      newOptions = { ...options, root };
+    } else {
+      newOptions = options;
+    }
+
+    return newOptions;
   }
   /**
    * This method is called in order to reduce a fetch request information. It will check if a
@@ -787,45 +830,6 @@ class GatewayController {
       this._helperService.shouldStreamEndpointResponse(response, endpoint, req, res, next) :
       true;
   }
-  /**
-   * This is called when the helper say that a fetch response shouldn't be sent, so the controller
-   * will allow it to handle the response by itself.
-   * @param {Object}                               response The response generated by the fetch
-   *                                                        request.
-   * @param {GatewayControllerEndpointInformation} endpoint The information for the endpoint
-   *                                                        responsible of creating the route.
-   * @param {ExpressRequest}                       req      The server's incoming request
-   *                                                        information.
-   * @param {ExpressResponse}                      res      The server's response information.
-   * @param {ExpressNext}                          next     The function to call the next
-   *                                                        middleware.
-   * @return {*}
-   * @access protected
-   * @ignore
-   */
-  _handleEndpointResponse(response, endpoint, req, res, next) {
-    return this._helperService.handleEndpointResponse(response, endpoint, req, res, next);
-  }
-  /**
-   * This method is called in order to handle a fetch request error. It will check if a
-   * helper is defined and allow it to do it, or fallback and call the next middleware.
-   * @param {Error}                                error    The fetch request error.
-   * @param {GatewayControllerEndpointInformation} endpoint The information for the endpoint
-   *                                                        responsible of creating the route.
-   * @param {ExpressRequest}                       req      The server's incoming request
-   *                                                        information.
-   * @param {ExpressResponse}                      res      The server's response information.
-   * @param {ExpressNext}                          next     The function to call the next
-   *                                                        middleware.
-   * @return {*}
-   * @access protected
-   * @ignore
-   */
-  _handleEndpointError(error, endpoint, req, res, next) {
-    return this._helperServiceInfo.handleEndpointError ?
-      this._helperService.handleEndpointError(error, endpoint, req, res, next) :
-      next(error);
-  }
 }
 /**
  * This controller allows you to have gateway routes that actually make requests and respond with
@@ -839,7 +843,7 @@ class GatewayController {
  */
 const gatewayController = controllerCreator((
   options = {},
-  middlewares = null
+  middlewares = null,
 ) => (app, route) => {
   /**
    * Formats the name in order to keep consistency with the helper service and the configuration
@@ -873,9 +877,10 @@ const gatewayController = controllerCreator((
    * Update the options with the resolved configuration setting name, because the class will
    * needed when generating API Client endpoints.
    */
-  const newOptions = Object.assign({}, options, {
+  const newOptions = {
+    ...options,
     configurationSetting,
-  });
+  };
   // Get the gateway configuration.
   const gatewayConfig = app.get('appConfiguration').get(configurationSetting);
   // Generate the controller
@@ -884,7 +889,7 @@ const gatewayController = controllerCreator((
     route,
     app.get('http'),
     newOptions,
-    helperServiceName ? app.try(helperServiceName) : null
+    helperServiceName ? app.try(helperServiceName) : null,
   );
   /**
    * Register a service for the controller so other services can ask for the endpoints formatted

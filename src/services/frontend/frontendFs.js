@@ -25,6 +25,14 @@ class FrontendFs {
     this._pathUtils = pathUtils;
   }
   /**
+   * Delete a file from the file system.
+   * @param {string} filepath The path to the file.
+   * @return {Promise<undefined,Error>}
+   */
+  delete(filepath) {
+    return fs.unlink(this._pathUtils.joinFrom('app', filepath));
+  }
+  /**
    * Read a file from the file system.
    * @param {string} filepath           The path to the file.
    * @param {string} [encoding='utf-8'] The text encoding in which the file should be read.
@@ -41,14 +49,6 @@ class FrontendFs {
    */
   write(filepath, data) {
     return fs.writeFile(this._pathUtils.joinFrom('app', filepath), data);
-  }
-  /**
-   * Delete a file from the file system.
-   * @param {string} filepath The path to the file.
-   * @return {Promise<undefined,Error>}
-   */
-  delete(filepath) {
-    return fs.unlink(this._pathUtils.joinFrom('app', filepath));
   }
 }
 /**
