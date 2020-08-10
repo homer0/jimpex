@@ -1,5 +1,6 @@
+const { providers } = require('../../utils/wrappers');
 const { htmlGenerator } = require('./htmlGenerator');
 
-module.exports = {
+module.exports = providers({
   htmlGenerator,
-};
+});
