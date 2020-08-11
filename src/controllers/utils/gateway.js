@@ -390,10 +390,10 @@ class GatewayController {
   /**
    * Defines all the routes on a given router.
    *
-   * @param {ExpressRouter} router           The router where all the routes will be added.
-   * @param {Array}         [middlewares=[]] A list of custom middlewares that will be added before
-   *                                         the one that makes the request.
-   * @returns {ExpressRouter}
+   * @param {Router} router           The router where all the routes will be added.
+   * @param {Array}  [middlewares=[]] A list of custom middlewares that will be added before the
+   *                                  one that makes the request.
+   * @returns {Router}
    */
   addRoutes(router, middlewares = []) {
     this._routes.forEach((route) => route.methods.forEach((info) => this._addRoute(
@@ -433,13 +433,13 @@ class GatewayController {
   /**
    * Adds a route on a given router.
    *
-   * @param {ExpressRouter}     router              The router where the route will be added.
+   * @param {Router}            router              The router where the route will be added.
    * @param {string}            method              The HTTP method for the route.
    * @param {string}            route               The path for the route.
    * @param {ExpressMiddleware} endpointMiddleware  The middleware that makes the request.
    * @param {Array}             middlewares         Extra middlewares to add before the main one.
    *
-   * @returns {ExpressRouter}
+   * @returns {Router}
    * @access protected
    * @ignore
    */
@@ -937,7 +937,5 @@ const gatewayController = controllerCreator((
   return ctrl.addRoutes(app.get('router'), useMiddlewares);
 });
 
-module.exports = {
-  GatewayController,
-  gatewayController,
-};
+module.exports.GatewayController = GatewayController;
+module.exports.gatewayController = gatewayController;

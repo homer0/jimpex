@@ -127,7 +127,5 @@ const apiClient = providerCreator((options = {}) => (app) => {
   ));
 });
 
-module.exports = {
-  APIClient,
-  apiClient,
-};
+module.exports.APIClient = APIClient;
+module.exports.apiClient = apiClient;

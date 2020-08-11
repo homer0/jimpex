@@ -255,7 +255,5 @@ const fastHTML = middlewareCreator((options = {}) => (app) => {
   ).middleware();
 });
 
-module.exports = {
-  FastHTML,
-  fastHTML,
-};
+module.exports.FastHTML = FastHTML;
+module.exports.fastHTML = fastHTML;

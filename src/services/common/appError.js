@@ -120,7 +120,5 @@ const appError = provider((app) => {
   app.set('appError', () => appErrorGenerator);
 });
 
-module.exports = {
-  AppError,
-  appError,
-};
+module.exports.AppError = AppError;
+module.exports.appError = appError;

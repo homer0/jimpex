@@ -357,7 +357,5 @@ const htmlGenerator = providerCreator((options = {}) => (app) => {
   app.get('events').once(eventNames.afterStart, () => app.get(serviceName).generateHTML());
 });
 
-module.exports = {
-  HTMLGenerator,
-  htmlGenerator,
-};
+module.exports.HTMLGenerator = HTMLGenerator;
+module.exports.htmlGenerator = htmlGenerator;

@@ -30,12 +30,13 @@ const { escapeForRegExp } = require('../utils/functions');
  */
 class Jimpex extends Jimple {
   /**
-   * @param {boolean}        [boot=true]  If `true`, after initializing the server, it will
-   *                                      immediately call the `boot` method. This can be used on
-   *                                      a development environment where you would want to
-   *                                      register development services/middlewares/controllers
-   *                                      before the app starts.
-   * @param {JimpexOptions}  [options={}] Preferences to customize the app.
+   * @param {boolean}                [boot=true]  If `true`, after initializing the server, it will
+   *                                              immediately call the `boot` method. This can be
+   *                                              used on a development environment where you
+   *                                              would want to register development
+   *                                              services/middlewares/controllers before the
+   *                                              application starts.
+   * @param {Partial<JimpexOptions>} [options={}] Preferences to customize the application.
    * @throws {TypeError} If instantiated directly.
    */
   constructor(boot = true, options = {}) {
@@ -47,7 +48,7 @@ class Jimpex extends Jimple {
 
     super();
     /**
-     * The app options.
+     * The application options.
      *
      * @type {JimpexOptions}
      * @access protected
@@ -86,7 +87,7 @@ class Jimpex extends Jimple {
       },
     }, options);
     /**
-     * The Express app Jimpex uses under the hood.
+     * The Express application Jimpex uses under the hood.
      *
      * @type {Express}
      * @access protected
@@ -94,30 +95,31 @@ class Jimpex extends Jimple {
      */
     this._express = express();
     /**
-     * When the app starts, this will be running instance.
+     * When the application starts, this will be the instance of the server.
      *
-     * @type {?Object}
+     * @type {?Server}
      * @access protected
      * @ignore
      */
     this._instance = null;
     /**
-     * A list of functions that return controllers and middlewares. When the app starts, the
-     * queue will be processed and those controllers and middlewares added to the app.
+     * A list of functions that return controllers and middlewares. When the application starts,
+     * the queue will be processed and those controllers and middlewares will be added to the
+     * server instance
      * The reason they are not added directly like with a regular Express implementation is that
      * services on Jimple use lazy loading, and adding middlewares and controllers as they come
      * could cause errors if they depend on services that are not yet registered.
      *
-     * @type {Array}
+     * @type {Function[]}
      * @access protected
      * @ignore
      */
     this._mountQueue = [];
     /**
-     * A list of all the top routes controlled by the app. Every time a controller is mounted,
-     * its route will be added here.
+     * A list with all the top routes controlled by the application. Every time a controller is
+     * mounted, its route will be added here.
      *
-     * @type {Array}
+     * @type {string[]}
      * @access protected
      * @ignore
      */
@@ -157,7 +159,7 @@ class Jimpex extends Jimple {
    *                                   needs to be aware of the port, this method will overwrite
    *                                   the `port` setting on the configuration.
    * @param {JimpexStartCallback} [fn] A callback function to be called when the server starts.
-   * @returns {Object} The server instance.
+   * @returns {Server} The server instance.
    */
   listen(port, fn = () => {}) {
     const config = this.get('appConfiguration');
@@ -167,8 +169,8 @@ class Jimpex extends Jimple {
   /**
    * Mounts a controller on a specific route.
    *
-   * @param {string}                       route      The route for the controller.
-   * @param {Controller|ControllerCreator} controller The route controller.
+   * @param {string}     route      The route for the controller.
+   * @param {Controller} controller The route controller.
    */
   mount(route, controller) {
     this._mountQueue.push((server) => {
@@ -226,12 +228,12 @@ class Jimpex extends Jimple {
     }
   }
   /**
-   * Tries to access a service on the container, but if is not present, it won't throw an error, it
-   * will just return `null`.
+   * Tries to access a resource on the container, but if is not present, it won't throw an error,
+   * it will just return `null`.
    *
-   * @param {string} name The name of the service.
+   * @param {string} name The name of the resource.
    * @returns {*}
-   * @throws {Error} If there's an error other than the one generated when the service doesn't
+   * @throws {Error} If there's an error other than the one generated when the resource doesn't
    *                 exist.
    */
   try(name) {
@@ -256,7 +258,7 @@ class Jimpex extends Jimple {
   /**
    * Adds a middleware.
    *
-   * @param {Middleware|MiddlewareCreator|ExpressMiddleware} middleware The middleware to use.
+   * @param {Middleware|ExpressMiddleware} middleware The middleware to use.
    */
   use(middleware) {
     this._mountQueue.push((server) => {
@@ -291,7 +293,7 @@ class Jimpex extends Jimple {
   /**
    * The server instance that gets created when the app is started.
    *
-   * @returns {?Object}
+   * @returns {?Server}
    */
   get instance() {
     return this._instance;
@@ -307,7 +309,7 @@ class Jimpex extends Jimple {
   /**
    * A list of all the top routes controlled by the app.
    *
-   * @type {Array}
+   * @type {string[]}
    */
   get routes() {
     return ObjectUtils.copy(this._controlledRoutes);
@@ -339,6 +341,7 @@ class Jimpex extends Jimple {
    * @param {string} name The name of the event on {@link JimpexEvents}.
    * @param {...*}   args   Extra parameters for the listeners.
    * @access protected
+   * @ignore
    */
   _emitEvent(name, ...args) {
     this.get('events').emit(eventNames[name], ...[...args, this]);
@@ -346,8 +349,8 @@ class Jimpex extends Jimple {
   /**
    * Processes and mount all the resources on the `mountQueue`.
    *
-   * @ignore
    * @access protected
+   * @ignore
    */
   _mountResources() {
     this._mountQueue.forEach((mountFn) => mountFn(this._express));
@@ -362,6 +365,7 @@ class Jimpex extends Jimple {
    * @param {...*}   args   Extra parameters for the listeners.
    * @returns {*} An object of the same type as the `target`.
    * @access protected
+   * @ignore
    */
   _reduceWithEvent(name, target, ...args) {
     return this.get('events').reduce(eventNames[name], target, ...[...args, this]);
@@ -369,8 +373,8 @@ class Jimpex extends Jimple {
   /**
    * Creates the configuration service.
    *
-   * @ignore
    * @access protected
+   * @ignore
    */
   _setupConfiguration() {
     const { version, configuration: options } = this._options;
@@ -420,8 +424,8 @@ class Jimpex extends Jimple {
   /**
    * Registers the _'core services'_.
    *
-   * @ignore
    * @access protected
+   * @ignore
    */
   _setupCoreServices() {
     // The logger service.
@@ -438,8 +442,8 @@ class Jimpex extends Jimple {
   /**
    * Based on the constructor received options, register or not the default services.
    *
-   * @ignore
    * @access protected
+   * @ignore
    */
   _setupDefaultServices() {
     const { defaultServices } = this._options;

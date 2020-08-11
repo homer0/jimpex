@@ -168,7 +168,5 @@ const responsesBuilder = provider((app) => {
   ));
 });
 
-module.exports = {
-  ResponsesBuilder,
-  responsesBuilder,
-};
+module.exports.ResponsesBuilder = ResponsesBuilder;
+module.exports.responsesBuilder = responsesBuilder;

@@ -58,7 +58,5 @@ const forceHTTPS = middlewareCreator((ignoredRoutes) => (app) => (
     null
 ));
 
-module.exports = {
-  ForceHTTPS,
-  forceHTTPS,
-};
+module.exports.ForceHTTPS = ForceHTTPS;
+module.exports.forceHTTPS = forceHTTPS;

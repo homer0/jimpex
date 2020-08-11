@@ -48,7 +48,5 @@ const sendFileProvider = provider((app) => {
   app.set('sendFile', () => sendFile(app.get('pathUtils')));
 });
 
-module.exports = {
-  sendFile,
-  sendFileProvider,
-};
+module.exports.sendFile = sendFile;
+module.exports.sendFileProvider = sendFileProvider;

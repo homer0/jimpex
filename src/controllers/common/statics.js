@@ -92,10 +92,10 @@ class StaticsController {
   /**
    * Defines all the needed routes to serve the files.
    *
-   * @param {ExpressRouter} router           To generate the routes.
-   * @param {Array}         [middlewares=[]] A list of custom middlewares that will be added
-   *                                         before the one that serves a file.
-   * @returns {ExpressRouter}
+   * @param {Router} router           To generate the routes.
+   * @param {Array}  [middlewares=[]] A list of custom middlewares that will be added before the
+   *                                  one that serves a file.
+   * @returns {Router}
    */
   addRoutes(router, middlewares = []) {
     const { methods } = this._options;
@@ -128,13 +128,13 @@ class StaticsController {
   /**
    * Generates a route for an specific file.
    *
-   * @param {ExpressRouter}         router         To create the actual route.
+   * @param {Router}                router         To create the actual route.
    * @param {string}                method         The HTTP method for the route.
    * @param {StaticsControllerFile} file           The file information.
    * @param {ExpressMiddleware}     fileMiddleware The middleware that serves the file.
    * @param {Array}                 middlewares    A list of custom middlewares to add before the
    *                                               one that serves the file.
-   * @returns {ExpressRouter}
+   * @returns {Router}
    * @access protected
    * @ignore
    */
@@ -285,7 +285,5 @@ const staticsController = controllerCreator((options, middlewares) => (app) => {
   return ctrl.addRoutes(router, useMiddlewares);
 });
 
-module.exports = {
-  StaticsController,
-  staticsController,
-};
+module.exports.StaticsController = StaticsController;
+module.exports.staticsController = staticsController;

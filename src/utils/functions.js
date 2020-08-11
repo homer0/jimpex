@@ -60,10 +60,8 @@ const createRouteExpression = (route, leadingSlash = true, trailingSlash = false
   return new RegExp(expression);
 };
 
-module.exports = {
-  createRouteExpression,
-  escapeForRegExp,
-  removeLeadingSlash,
-  removeSlashes,
-  removeTrailingSlash,
-};
+module.exports.createRouteExpression = createRouteExpression;
+module.exports.escapeForRegExp = escapeForRegExp;
+module.exports.removeLeadingSlash = removeLeadingSlash;
+module.exports.removeSlashes = removeSlashes;
+module.exports.removeTrailingSlash = removeTrailingSlash;

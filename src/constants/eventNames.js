@@ -1,6 +1,7 @@
 /**
+ * The name of all the events {@link Jimpex} can trigger.
+ *
  * @typedef {Object} JimpexEvents
- * @description The name of all the events {@link Jimpex} can trigger.
  * @property {string} beforeStart              Called before `listen` is executed on the Express
  *                                             app.
  * @property {string} start                    Called from the `listen` callback, when the app is

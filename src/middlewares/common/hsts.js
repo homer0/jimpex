@@ -101,7 +101,5 @@ const hsts = middlewareCreator((options = {}) => (app) => {
     null;
 });
 
-module.exports = {
-  HSTS,
-  hsts,
-};
+module.exports.HSTS = HSTS;
+module.exports.hsts = hsts;

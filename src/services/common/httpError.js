@@ -49,7 +49,5 @@ const httpError = provider((app) => {
   app.set('httpError', () => httpErrorGenerator);
 });
 
-module.exports = {
-  HTTPError,
-  httpError,
-};
+module.exports.HTTPError = HTTPError;
+module.exports.httpError = httpError;

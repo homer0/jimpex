@@ -245,7 +245,5 @@ const http = provider((app) => {
   });
 });
 
-module.exports = {
-  HTTP,
-  http,
-};
+module.exports.HTTP = HTTP;
+module.exports.http = http;

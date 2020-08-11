@@ -127,7 +127,5 @@ const ensureBearerToken = providerCreator((options) => (app) => {
   );
 });
 
-module.exports = {
-  EnsureBearerToken,
-  ensureBearerToken,
-};
+module.exports.EnsureBearerToken = EnsureBearerToken;
+module.exports.ensureBearerToken = ensureBearerToken;

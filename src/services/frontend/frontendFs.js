@@ -69,7 +69,5 @@ const frontendFs = provider((app) => {
   app.set('frontendFs', () => new FrontendFs(app.get('pathUtils')));
 });
 
-module.exports = {
-  FrontendFs,
-  frontendFs,
-};
+module.exports.FrontendFs = FrontendFs;
+module.exports.frontendFs = frontendFs;

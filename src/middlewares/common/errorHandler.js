@@ -169,7 +169,5 @@ const errorHandler = middlewareCreator((options) => (app) => {
   .middleware();
 });
 
-module.exports = {
-  ErrorHandler,
-  errorHandler,
-};
+module.exports.ErrorHandler = ErrorHandler;
+module.exports.errorHandler = errorHandler;

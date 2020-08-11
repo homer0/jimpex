@@ -96,7 +96,5 @@ const configurationController = controller((app) => {
   return routes;
 });
 
-module.exports = {
-  ConfigurationController,
-  configurationController,
-};
+module.exports.ConfigurationController = ConfigurationController;
+module.exports.configurationController = configurationController;

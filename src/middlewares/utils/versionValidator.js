@@ -238,7 +238,5 @@ const versionValidator = middlewareCreator((options) => (app, route) => {
   return result;
 });
 
-module.exports = {
-  VersionValidator,
-  versionValidator,
-};
+module.exports.VersionValidator = VersionValidator;
+module.exports.versionValidator = versionValidator;

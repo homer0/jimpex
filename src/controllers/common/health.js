@@ -65,7 +65,5 @@ const healthController = controller((app) => {
   ];
 });
 
-module.exports = {
-  HealthController,
-  healthController,
-};
+module.exports.HealthController = HealthController;
+module.exports.healthController = healthController;

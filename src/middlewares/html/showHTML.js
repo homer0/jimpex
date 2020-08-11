@@ -146,7 +146,5 @@ const showHTML = middlewareCreator((options = {}) => (app) => {
   ).middleware();
 });
 
-module.exports = {
-  ShowHTML,
-  showHTML,
-};
+module.exports.ShowHTML = ShowHTML;
+module.exports.showHTML = showHTML;
