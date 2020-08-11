@@ -1,5 +1,12 @@
 /**
- * @external {Jimple} https://yarnpkg.com/en/package/jimple
+ * @external Jimple
+ * @see https://yarnpkg.com/en/package/jimple
+ */
+
+/**
+ * @callback JimpexStartCallback
+ * @param {AppConfiguration} appConfiguration The service that handles the application
+ *                                            configuration.
  */
 
 /**

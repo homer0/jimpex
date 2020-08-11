@@ -185,7 +185,7 @@ describe('controllers/utils:gateway', () => {
       expect(router.post).toHaveBeenCalledTimes(1);
       expect(router.post).toHaveBeenCalledWith(
         gatewayConfig.gateway.endpointTwo.path,
-        [expect.any(Function)]
+        [expect.any(Function)],
       );
     });
 
@@ -217,12 +217,12 @@ describe('controllers/utils:gateway', () => {
       expect(router.all).toHaveBeenCalledTimes(1);
       expect(router.all).toHaveBeenCalledWith(
         `/${root}${gatewayConfig.gateway.endpointOne}`,
-        [expect.any(Function)]
+        [expect.any(Function)],
       );
       expect(router.post).toHaveBeenCalledTimes(1);
       expect(router.post).toHaveBeenCalledWith(
         `/${root}${gatewayConfig.gateway.endpointTwo.path}`,
-        [expect.any(Function)]
+        [expect.any(Function)],
       );
     });
 
@@ -261,7 +261,7 @@ describe('controllers/utils:gateway', () => {
         [
           middleware,
           expect.any(Function),
-        ]
+        ],
       );
     });
 
@@ -289,7 +289,7 @@ describe('controllers/utils:gateway', () => {
       expect(router.all).toHaveBeenCalledTimes(1);
       expect(router.all).toHaveBeenCalledWith(
         gatewayConfig.gateway.endpointOne.path,
-        [expect.any(Function)]
+        [expect.any(Function)],
       );
     });
   });
@@ -371,7 +371,7 @@ describe('controllers/utils:gateway', () => {
               [customHeaderName]: customHeaderValue,
               'x-forwarded-for': ip,
             },
-          }
+          },
         );
         expect(response.status).toHaveBeenCalledTimes(1);
         expect(response.status).toHaveBeenCalledWith(httpResponse.status);
@@ -445,7 +445,7 @@ describe('controllers/utils:gateway', () => {
           {
             method: request.method,
             headers: {},
-          }
+          },
         );
       });
     });
@@ -513,7 +513,7 @@ describe('controllers/utils:gateway', () => {
               [headerToCopy]: [headerToCopyValue],
             },
             body: JSON.stringify(request.body),
-          }
+          },
         );
       });
     });
@@ -577,7 +577,7 @@ describe('controllers/utils:gateway', () => {
               'content-type': 'application/json',
             },
             body: JSON.stringify(request.body),
-          }
+          },
         );
       });
     });
@@ -645,7 +645,7 @@ describe('controllers/utils:gateway', () => {
               'content-type': 'application/json',
             },
             body: JSON.stringify(request.body),
-          }
+          },
         );
         expect(next).toHaveBeenCalledTimes(1);
         expect(next).toHaveBeenCalledWith(error);
@@ -739,7 +739,8 @@ describe('controllers/utils:gateway', () => {
         },
       };
       const helper = {
-        reduceEndpointRequest: jest.fn((request) => Object.assign({}, request, {
+        reduceEndpointRequest: jest.fn((request) => ({
+          ...request,
           url: `${request.url}-by-helper`,
           options: request.options,
         })),
@@ -793,7 +794,7 @@ describe('controllers/utils:gateway', () => {
           },
           request,
           response,
-          next
+          next,
         );
         expect(http.fetch).toHaveBeenCalledTimes(1);
         expect(http.fetch).toHaveBeenCalledWith(
@@ -805,7 +806,7 @@ describe('controllers/utils:gateway', () => {
               [customHeaderName]: customHeaderValue,
               'x-forwarded-for': ip,
             },
-          }
+          },
         );
         expect(response.status).toHaveBeenCalledTimes(1);
         expect(response.status).toHaveBeenCalledWith(httpResponse.status);
@@ -848,7 +849,8 @@ describe('controllers/utils:gateway', () => {
         },
       };
       const helper = {
-        reduceEndpointResponse: jest.fn((response) => Object.assign({}, response, {
+        reduceEndpointResponse: jest.fn((response) => ({
+          ...response,
           status: statuses.conflict,
         })),
       };
@@ -883,7 +885,7 @@ describe('controllers/utils:gateway', () => {
           },
           request,
           response,
-          next
+          next,
         );
         expect(response.status).toHaveBeenCalledTimes(1);
         expect(response.status).toHaveBeenCalledWith(statuses.conflict);
@@ -954,7 +956,7 @@ describe('controllers/utils:gateway', () => {
           },
           request,
           response,
-          next
+          next,
         );
         expect(helper.handleEndpointResponse).toHaveBeenCalledTimes(1);
         expect(helper.handleEndpointResponse).toHaveBeenCalledWith(
@@ -965,7 +967,7 @@ describe('controllers/utils:gateway', () => {
           },
           request,
           response,
-          next
+          next,
         );
       });
     });
@@ -1025,7 +1027,7 @@ describe('controllers/utils:gateway', () => {
           },
           request,
           response,
-          next
+          next,
         );
       });
     });

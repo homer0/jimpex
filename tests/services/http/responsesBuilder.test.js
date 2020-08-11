@@ -140,10 +140,11 @@ describe('services/http:responsesBuilder', () => {
     };
     let sut = null;
     const expectedResponse = {
-      metadata: Object.assign({
+      metadata: {
         version,
         status,
-      }, metadata),
+        ...metadata,
+      },
       data,
     };
     // When

@@ -54,7 +54,7 @@ describe('services/common:httpError', () => {
     expect(sut).toBeInstanceOf(HTTPError);
     expect(sut.message).toBe(message);
     expect(sut.status).toBe(status);
-    expect(sut.context).toEqual(Object.assign({ status }, context));
+    expect(sut.context).toEqual({ status, ...context });
   });
 
   describe('DIC provider', () => {

@@ -4,13 +4,13 @@ const { middlewareCreator } = require('../../utils/wrappers');
  */
 class ForceHTTPS {
   /**
-   * Class constructor.
    * @param {Array} [ignoredRoutes=[/^\/service\//]] A list of regular expressions to match routes
    *                                                 that should be ignored.
    */
   constructor(ignoredRoutes = [/^\/service\//]) {
     /**
      * A list of regular expressions to match routes that should be ignored.
+     *
      * @type {Array}
      * @access protected
      * @ignore
@@ -19,7 +19,8 @@ class ForceHTTPS {
   }
   /**
    * Returns the Express middleware that forces the redirection to HTTPS.
-   * @return {ExpressMiddleware}
+   *
+   * @returns {ExpressMiddleware}
    */
   middleware() {
     return (req, res, next) => {
@@ -37,6 +38,7 @@ class ForceHTTPS {
   }
   /**
    * A list of regular expressions to match routes that should be ignored.
+   *
    * @type {Array}
    */
   get ignoredRoutes() {
@@ -45,6 +47,7 @@ class ForceHTTPS {
 }
 /**
  * A middleware to force HTTPS redirections to all the routes.
+ *
  * @type {MiddlewareCreator}
  * @param {Array} ignoredRoutes A list of regular expressions to match routes that should be
  *                              ignored.

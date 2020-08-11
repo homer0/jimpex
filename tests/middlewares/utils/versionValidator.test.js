@@ -1,3 +1,4 @@
+/* eslint-disable max-classes-per-file */
 jest.unmock('/src/utils/wrappers');
 jest.unmock('/src/middlewares/utils/versionValidator');
 
@@ -158,7 +159,7 @@ describe('services/api:versionValidator', () => {
           response: {
             validation: true,
           },
-        }
+        },
       );
     });
 
@@ -223,7 +224,7 @@ describe('services/api:versionValidator', () => {
           response: {
             validation: true,
           },
-        }
+        },
       );
     });
 
@@ -269,7 +270,7 @@ describe('services/api:versionValidator', () => {
         response,
         options.popup.title,
         options.popup.message,
-        statuses.conflict
+        statuses.conflict,
       );
     });
   });

@@ -23,9 +23,8 @@ class JimpleMock {
     mocks[name] = mock;
   }
 
-  static service(name, mock, asFunction = false) {
-    services[name] = mock;
-    servicesAsFunctions[name] = asFunction;
+  static provider(register) {
+    return register;
   }
 
   static reset() {
@@ -39,8 +38,9 @@ class JimpleMock {
     });
   }
 
-  static provider(register) {
-    return register;
+  static service(name, mock, asFunction = false) {
+    services[name] = mock;
+    servicesAsFunctions[name] = asFunction;
   }
 
   constructor() {

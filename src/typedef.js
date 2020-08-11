@@ -1,65 +1,70 @@
 /**
- * @external {AppConfiguration}
- * https://homer0.github.io/wootils/class/wootils/node/appConfiguration.js~AppConfiguration.html
+ * @external AppConfiguration
+ * @see https://homer0.github.io/wootils/class/wootils/node/appConfiguration.js~AppConfiguration.html
  */
 
 /**
- * @external {APIClientBase}
- * https://homer0.github.io/wootils/class/wootils/shared/apiClient.js~APIClient.html
+ * @external APIClientBase
+ * @see https://homer0.github.io/wootils/class/wootils/shared/apiClient.js~APIClient.html
  */
 
 /**
- * @external {APIClientEndpoints}
- * https://homer0.github.io/wootils/typedef/index.html#static-typedef-APIClientEndpoints
+ * @external APIClientEndpoints
+ * @see https://homer0.github.io/wootils/typedef/index.html#static-typedef-APIClientEndpoints
  */
 
 /**
- * @external {PathUtils}
- * https://homer0.github.io/wootils/class/wootils/node/pathUtils.js~PathUtils.html
+ * @external PathUtils
+ * @see https://homer0.github.io/wootils/class/wootils/node/pathUtils.js~PathUtils.html
  */
 
 /**
- * @external {Logger}
- * https://homer0.github.io/wootils/class/wootils/node/logger.js~Logger.html
+ * @external Logger
+ * @see https://homer0.github.io/wootils/class/wootils/node/logger.js~Logger.html
  */
 
 /**
- * @external {EnvironmentUtils}
- * https://homer0.github.io/wootils/class/wootils/node/environmentUtils.js~EnvironmentUtils.html
+ * @external EnvironmentUtils
+ * @see https://homer0.github.io/wootils/class/wootils/node/environmentUtils.js~EnvironmentUtils.html
  */
 
 /**
- * @external {ErrorHandler}
- * https://homer0.github.io/wootils/class/wootils/node/errorHandler.js~ErrorHandler.html
+ * @external ErrorHandler
+ * @see https://homer0.github.io/wootils/class/wootils/node/errorHandler.js~ErrorHandler.html
  */
 
 /**
- * @external {RootRequire}
- * https://homer0.github.io/wootils/function/index.html#static-function-rootRequire
+ * @external RootRequire
+ * @see https://homer0.github.io/wootils/function/index.html#static-function-rootRequire
  */
 
 /**
- * @external {Express} https://expressjs.com/en/4x/api.html
+ * @external Express
+ * @see https://expressjs.com/en/4x/api.html
  */
 
 /**
- * @external {ExpressMiddleware} http://expressjs.com/en/guide/using-middleware.html
+ * @external ExpressMiddleware
+ * @see http://expressjs.com/en/guide/using-middleware.html
  */
 
 /**
- * @external {ExpressRequest} https://expressjs.com/en/4x/api.html#req
+ * @external ExpressRequest
+ * @see https://expressjs.com/en/4x/api.html#req
  */
 
 /**
- * @external {ExpressResponse} https://expressjs.com/en/4x/api.html#res
+ * @external ExpressResponse
+ * @see https://expressjs.com/en/4x/api.html#res
  */
 
 /**
- * @external {ExpressRouter} https://expressjs.com/en/4x/api.html#router
+ * @external ExpressRouter
+ * @see https://expressjs.com/en/4x/api.html#router
  */
 
 /**
- * @typdef {function} ExpressNext
+ * @typedef {Function} ExpressNext
  * @description A function to call the next middleware. If an argument is specified, it will be
  *              handled as an error and sent to the `errorHandler` service.
  * @param {?Error} error The error to sent to the error handler.

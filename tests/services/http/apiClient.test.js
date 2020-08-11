@@ -55,7 +55,6 @@ describe('services/http:client', () => {
     expect(sut.endpoints).toEqual(apiConfig.gateway);
   });
 
-
   it('should format error responses using the HTTPError service', () => {
     // Given
     const apiConfig = {

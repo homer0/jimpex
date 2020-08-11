@@ -1,3 +1,4 @@
+/* eslint-disable max-classes-per-file */
 jest.unmock('/src/utils/wrappers');
 jest.unmock('/src/services/utils/ensureBearerToken');
 

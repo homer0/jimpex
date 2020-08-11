@@ -1,3 +1,4 @@
+/* eslint-disable max-classes-per-file */
 const JimpleMock = require('/tests/mocks/jimple.mock');
 const expressMock = require('/tests/mocks/express.mock');
 const compressionMock = require('/tests/mocks/compression.mock');
@@ -142,7 +143,7 @@ describe('app:Jimpex', () => {
         environmentVariable: sut.options.configuration.environmentVariable,
         path: `${sut.options.configuration.path}${sut.options.configuration.name}/`,
         filenameFormat: `${sut.options.configuration.name}.[name].config.js`,
-      }
+      },
     );
     expect(pathUtils.joinFrom).toHaveBeenCalledTimes(1);
     expect(pathUtils.joinFrom).toHaveBeenCalledWith('app', sut.options.statics.route);
@@ -581,7 +582,7 @@ describe('app:Jimpex', () => {
         environmentVariable: sut.options.configuration.environmentVariable,
         path: sut.options.configuration.path,
         filenameFormat: `${sut.options.configuration.name}.[name].config.js`,
-      }
+      },
     );
     expect(appConfiguration.loadFromEnvironment).toHaveBeenCalledTimes(1);
     expect(sut.options.version).toBe(version);
@@ -618,12 +619,12 @@ describe('app:Jimpex', () => {
     expect(wootilsMock.appConfiguration).toHaveBeenCalledTimes(1);
     expect(wootilsMock.appConfiguration).toHaveBeenCalledWith(
       sut.options.configuration.name,
-      Object.assign({}, defaultConfig, { version }),
+      { ...defaultConfig, version },
       {
         environmentVariable: sut.options.configuration.environmentVariable,
         path: sut.options.configuration.path,
         filenameFormat: `${sut.options.configuration.name}.[name].config.js`,
-      }
+      },
     );
     expect(appConfiguration.loadFromEnvironment).toHaveBeenCalledTimes(1);
   });
@@ -662,7 +663,7 @@ describe('app:Jimpex', () => {
         environmentVariable: sut.options.configuration.environmentVariable,
         path: `${sut.options.configuration.path}${sut.options.configuration.name}/`,
         filenameFormat: `${sut.options.configuration.name}.[name].config.js`,
-      }
+      },
     );
     expect(appConfiguration.loadFromEnvironment).toHaveBeenCalledTimes(1);
     expect(sut.options.version).toBe(version);
@@ -703,7 +704,7 @@ describe('app:Jimpex', () => {
         environmentVariable: sut.options.configuration.environmentVariable,
         path: `${sut.options.configuration.path}${sut.options.configuration.name}/`,
         filenameFormat: `${sut.options.configuration.name}.[name].config.js`,
-      }
+      },
     );
     expect(appConfiguration.loadFromEnvironment).toHaveBeenCalledTimes(0);
     expect(sut.options.version).toBe(version);
@@ -797,7 +798,7 @@ describe('app:Jimpex', () => {
     expect(expressMock.mocks.listen).toHaveBeenCalledTimes(1);
     expect(expressMock.mocks.listen).toHaveBeenCalledWith(
       configuration.port,
-      expect.any(Function)
+      expect.any(Function),
     );
     expect(expressMock.mocks.closeInstance).toHaveBeenCalledTimes(1);
   });
@@ -1119,7 +1120,7 @@ describe('app:Jimpex', () => {
       routes,
       route,
       controller,
-      sut
+      sut,
     );
     expect(routesList).toEqual([route]);
   });
@@ -1199,7 +1200,7 @@ describe('app:Jimpex', () => {
       router,
       route,
       controller,
-      sut
+      sut,
     );
     expect(routesList).toEqual([route]);
   });
@@ -1264,7 +1265,7 @@ describe('app:Jimpex', () => {
       eventNames.middlewareWillBeUsed,
       middlewareFn,
       middleware,
-      sut
+      sut,
     );
   });
 
@@ -1325,7 +1326,7 @@ describe('app:Jimpex', () => {
       eventNames.middlewareWillBeUsed,
       middleware,
       null,
-      sut
+      sut,
     );
   });
 

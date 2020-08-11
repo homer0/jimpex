@@ -5,7 +5,7 @@ const { controllerCreator } = require('../../utils/wrappers');
 const { removeSlashes } = require('../../utils/functions');
 
 /**
- * @typdef {Object} StaticsControllerFile
+ * @typedef {Object} StaticsControllerFile
  * @description If you wan to customize how, to, and from where files are served, instead of just
  *              sending a list of strings, you can use an object with these properties.
  * @property {string} route   The route the controller will use for the file.
@@ -22,7 +22,7 @@ const { removeSlashes } = require('../../utils/functions');
  */
 
 /**
- * @typdef {Object} StaticsControllerOptions
+ * @typedef {Object} StaticsControllerOptions
  * @description These are the options that allow you to customize the controller, how, to and from
  *              where the files are served.
  * @property {Array}                         files   A list of filenames or
@@ -33,6 +33,12 @@ const { removeSlashes } = require('../../utils/functions');
  *                                                   flags will be ignored.
  * @property {StaticsControllerPathsOptions} paths   The "master paths" the controller uses to
  *                                                   prefix all file routes and paths.
+ */
+
+/**
+ * @callback StaticsControllerMiddlewaresFn
+ * @param {Jimpex} app A reference for the container.
+ * @returns {Array<ExpressMiddleware|Middleware>}
  */
 
 /**
@@ -47,6 +53,7 @@ class StaticsController {
   constructor(sendFile, options = {}) {
     /**
      * A local reference for the `sendFile` service.
+     *
      * @type {SendFile}
      * @access protected
      * @ignore
@@ -54,6 +61,7 @@ class StaticsController {
     this._sendFile = sendFile;
     /**
      * The controller configuration options.
+     *
      * @type {StaticsControllerOptions}
      * @access protected
      * @ignore
@@ -70,11 +78,12 @@ class StaticsController {
           source: './',
         },
       },
-      options
+      options,
     ));
     /**
      * A dictionary of all the formatted files ({@link StaticsControllerFile}). It uses the files
      * routes as keys.
+     *
      * @access protected
      * @ignore
      */
@@ -82,10 +91,11 @@ class StaticsController {
   }
   /**
    * Defines all the needed routes to serve the files.
+   *
    * @param {ExpressRouter} router           To generate the routes.
    * @param {Array}         [middlewares=[]] A list of custom middlewares that will be added
    *                                         before the one that serves a file.
-   * @return {ExpressRouter}
+   * @returns {ExpressRouter}
    */
   addRoutes(router, middlewares = []) {
     const { methods } = this._options;
@@ -101,7 +111,7 @@ class StaticsController {
         method,
         file,
         fileMiddleware,
-        middlewares
+        middlewares,
       ));
     });
 
@@ -109,15 +119,94 @@ class StaticsController {
   }
   /**
    * The controller configuration options.
+   *
    * @type {StaticsControllerOptions}
    */
   get options() {
     return Object.freeze(this._options);
   }
   /**
+   * Generates a route for an specific file.
+   *
+   * @param {ExpressRouter}         router         To create the actual route.
+   * @param {string}                method         The HTTP method for the route.
+   * @param {StaticsControllerFile} file           The file information.
+   * @param {ExpressMiddleware}     fileMiddleware The middleware that serves the file.
+   * @param {Array}                 middlewares    A list of custom middlewares to add before the
+   *                                               one that serves the file.
+   * @returns {ExpressRouter}
+   * @access protected
+   * @ignore
+   */
+  _addRoute(router, method, file, fileMiddleware, middlewares) {
+    return router[method](file.route, [...middlewares, fileMiddleware]);
+  }
+  /**
+   * Parses each of the received files in order to create a {@link StaticsControllerFile}.
+   *
+   * @returns {Object} A dictionary with the definitions as values and the routes as keys.
+   * @access protected
+   * @ignore
+   */
+  _createFiles() {
+    const { files, paths } = this._options;
+    const routePath = removeSlashes(paths.route, false, true);
+    return files.reduce(
+      (formatted, file) => {
+        let source;
+        let route;
+        let headers;
+        if (typeof file === 'object') {
+          ({ route, source, headers } = file);
+        } else {
+          source = file;
+          route = file;
+        }
+
+        source = path.join(paths.source, source);
+        route = removeSlashes(route, true, false);
+        route = `${routePath}/${route}`;
+
+        return {
+          ...formatted,
+          [route]: {
+            source,
+            route,
+            headers: headers || {},
+          },
+        };
+      },
+      {},
+    );
+  }
+  /**
+   * Generates the middleware to serve a specific file.
+   *
+   * @param {StaticsControllerFile} file The file information.
+   * @returns {ExpressMiddleware}
+   * @access protected
+   * @ignore
+   */
+  _getMiddleware(file) {
+    return (req, res, next) => {
+      const extension = path.parse(file.source).ext.substr(1);
+      const headers = ObjectUtils.merge(
+        { 'Content-Type': mime.getType(extension) },
+        file.headers,
+      );
+
+      Object.keys(headers).forEach((headerName) => {
+        res.setHeader(headerName, headers[headerName]);
+      });
+
+      this._sendFile(res, file.source, next);
+    };
+  }
+  /**
    * Helper method that validates and normalizes the options received by the controller.
+   *
    * @param {StaticsControllerOptions} options The options to validate.
-   * @return {StaticsControllerOptions}
+   * @returns {StaticsControllerOptions}
    * @throws {Error} If no files are specified.
    * @throws {Error} If methods is not defined.
    * @throws {Error} If no methods are enabled.
@@ -156,101 +245,30 @@ class StaticsController {
       throw new Error(`${invalid} is not a valid HTTP method`);
     }
 
-
     const newMethods = methods.reduce(
-      (acc, method) => Object.assign({}, acc, {
+      (acc, method) => ({
+        ...acc,
         [method.toLowerCase()]: options.methods[method],
       }),
-      {}
+      {},
     );
 
-    return Object.assign({}, options, {
+    return {
+      ...options,
       methods: newMethods,
-    });
-  }
-  /**
-   * Parses each of the received files in order to create a {@link StaticsControllerFile}.
-   * @return {Object} A dictionary with the definitions as values and the routes as keys.
-   * @access protected
-   * @ignore
-   */
-  _createFiles() {
-    const { files, paths } = this._options;
-    const routePath = removeSlashes(paths.route, false, true);
-    return files.reduce(
-      (formatted, file) => {
-        let source;
-        let route;
-        let headers;
-        if (typeof file === 'object') {
-          ({ route, source, headers } = file);
-        } else {
-          source = file;
-          route = file;
-        }
-
-        source = path.join(paths.source, source);
-        route = removeSlashes(route, true, false);
-        route = `${routePath}/${route}`;
-
-        return Object.assign({}, formatted, {
-          [route]: {
-            source,
-            route,
-            headers: headers || {},
-          },
-        });
-      },
-      {}
-    );
-  }
-  /**
-   * Generates a route for an specific file.
-   * @param {ExpressRouter}         router         To create the actual route.
-   * @param {string}                method         The HTTP method for the route.
-   * @param {StaticsControllerFile} file           The file information.
-   * @param {ExpressMiddleware}     fileMiddleware The middleware that serves the file.
-   * @param {Array}                 middlewares    A list of custom middlewares to add before the
-   *                                               one that serves the file.
-   * @return {ExpressRouter}
-   * @access protected
-   * @ignore
-   */
-  _addRoute(router, method, file, fileMiddleware, middlewares) {
-    return router[method](file.route, [...middlewares, fileMiddleware]);
-  }
-  /**
-   * Generates the middleware to serve a specific file.
-   * @param {StaticsControllerFile} file The file information.
-   * @return {ExpressMiddleware}
-   * @access protected
-   * @ignore
-   */
-  _getMiddleware(file) {
-    return (req, res, next) => {
-      const extension = path.parse(file.source).ext.substr(1);
-      const headers = ObjectUtils.merge(
-        { 'Content-Type': mime.getType(extension) },
-        file.headers
-      );
-
-      Object.keys(headers).forEach((headerName) => {
-        res.setHeader(headerName, headers[headerName]);
-      });
-
-      this._sendFile(res, file.source, next);
     };
   }
 }
 /**
  * This controller allows you to serve specific files from any folder to any route without the
  * need of mounting directories as "static".
+ *
  * @type {ControllerCreator}
- * @param {StaticsControllerOptions} [options]     The options to customize the controller.
- * @param {Function():Array}         [middlewares] This function can be used to add custom
- *                                                 middlewares on the file routes. If implemented,
- *                                                 it must return a list of middlewares when
- *                                                 executed.
+ * @param {StaticsControllerOptions} [options]
+ * The options to customize the controller.
+ * @param {StaticsControllerMiddlewaresFn} [middlewares]
+ * This function can be used to add custom middlewares on the file routes. If implemented, it must
+ * return a list of middlewares when executed.
  */
 const staticsController = controllerCreator((options, middlewares) => (app) => {
   const router = app.get('router');

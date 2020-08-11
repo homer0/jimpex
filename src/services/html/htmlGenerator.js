@@ -8,7 +8,7 @@ const { providerCreator } = require('../../utils/wrappers');
  * @property {string}  [template='index.tpl.html']                 The name of the file it should
  *                                                                 use as template.
  * @property {string}  [file='index.html']                         The name of the generated file.
- * @property {Boolean} [deleteTemplateAfter=true]                  Whether or not to delete the
+ * @property {boolean} [deleteTemplateAfter=true]                  Whether or not to delete the
  *                                                                 tempalte after generating the
  *                                                                 file.
  * @property {string}  [replacePlaceholder='{{appConfiguration}}'] The placeholder string where the
@@ -27,7 +27,7 @@ const { providerCreator } = require('../../utils/wrappers');
 
 /**
  * @typedef {Object} HTMLGeneratorProviderOptions
- * @extends {HTMLGeneratorOptions}
+ * @augments HTMLGeneratorOptions
  * @description These are the options specific for the service provider that registers
  *              {@link HTMLGenerator}. It's the same as {@link HTMLGeneratorOptions} but with a
  *              couple extras settings.
@@ -55,7 +55,6 @@ const { providerCreator } = require('../../utils/wrappers');
  */
 class HTMLGenerator {
   /**
-   * Class constructor.
    * @param {AppConfiguration}            appConfiguration     To read the values of the settings
    *                                                           that are going to be send to the
    *                                                           file.
@@ -69,18 +68,21 @@ class HTMLGenerator {
    *                                                           the values from the app
    *                                                           configuration, they'll be retrieved
    *                                                           from this service `getValues` method.
-   * @throws {Error} if `valuesService` is specified but it doesn't have a `getValues` method.
+   * @throws {Error} If `valuesService` is specified but it doesn't have a `getValues` method.
    */
   constructor(
     appConfiguration,
     appLogger,
     frontendFs,
     options,
-    valuesService = null
+    valuesService = null,
   ) {
     /**
      * The service options.
+     *
      * @type {HTMLGeneratorOptions}
+     * @access protected
+     * @ignore
      */
     this._options = ObjectUtils.merge({
       template: 'index.tpl.html',
@@ -106,6 +108,7 @@ class HTMLGenerator {
     }
     /**
      * A local reference for the `appConfiguration` service.
+     *
      * @type {AppConfiguration}
      * @access protected
      * @ignore
@@ -113,6 +116,7 @@ class HTMLGenerator {
     this._appConfiguration = appConfiguration;
     /**
      * A local reference for the `appLogger` service.
+     *
      * @type {Logger}
      * @access protected
      * @ignore
@@ -120,6 +124,7 @@ class HTMLGenerator {
     this._appLogger = appLogger;
     /**
      * A local reference for the `frontendFs` service.
+     *
      * @type {FrontendFs}
      * @access protected
      * @ignore
@@ -127,6 +132,7 @@ class HTMLGenerator {
     this._frontendFs = frontendFs;
     /**
      * A local reference for the recieved `valuesService` service.
+     *
      * @type {?HTMLGeneratorValuesService}
      * @access protected
      * @ignore
@@ -134,7 +140,8 @@ class HTMLGenerator {
     this._valuesService = valuesService;
     /**
      * Whether or not the file has been generated.
-     * @type {Boolean}
+     *
+     * @type {boolean}
      * @access protected
      * @ignore
      */
@@ -142,6 +149,7 @@ class HTMLGenerator {
     /**
      * A deferred promise to return when another service asks if the file has been generated. Once
      * this sevice finishes generating the file, the promise will be resolved.
+     *
      * @type {Object}
      * @access protected
      * @ignore
@@ -149,49 +157,9 @@ class HTMLGenerator {
     this._fileDeferred = deferred();
   }
   /**
-   * Returns a promise that will be resolved when the file has been generated.
-   * @return {Promise<undefined,undefined>}
-   */
-  whenReady() {
-    return this._fileReady ?
-      Promise.resolve() :
-      this._fileDeferred.promise;
-  }
-  /**
-   * Get the name of the file the service generates.
-   * @return {string}
-   */
-  getFile() {
-    return this._options.file;
-  }
-  /**
-   * Get the values that are going to be injected on the file.
-   * @return {Promise<Object,?Error>}
-   */
-  getValues() {
-    let valuesPromise;
-    // If an `HTMLGeneratorValuesService` was specified...
-    if (this._valuesService) {
-      // ...get the values from there.
-      valuesPromise = this._valuesService.getValues();
-    } else if (this._options.configurationKeys.length) {
-      /**
-       * ...if there are configuration keys to be copied, set to return an already resolved
-       * promise with the settings from the configuration.
-       */
-      valuesPromise = Promise.resolve(
-        this._appConfiguration.get(this._options.configurationKeys)
-      );
-    } else {
-      // ...otherwsie, return an already resolved promise with an empty object.
-      valuesPromise = Promise.resolve({});
-    }
-
-    return valuesPromise;
-  }
-  /**
    * Generate the HTML file.
-   * @return {Promise<undefined,Error>}
+   *
+   * @returns {Promise<undefined,Error>}
    */
   generateHTML() {
     // Get the service options.
@@ -243,56 +211,64 @@ class HTMLGenerator {
     });
   }
   /**
+   * Get the name of the file the service generates.
+   *
+   * @returns {string}
+   */
+  getFile() {
+    return this._options.file;
+  }
+  /**
+   * Get the values that are going to be injected on the file.
+   *
+   * @returns {Promise<Object,?Error>}
+   */
+  getValues() {
+    let valuesPromise;
+    // If an `HTMLGeneratorValuesService` was specified...
+    if (this._valuesService) {
+      // ...get the values from there.
+      valuesPromise = this._valuesService.getValues();
+    } else if (this._options.configurationKeys.length) {
+      /**
+       * ...if there are configuration keys to be copied, set to return an already resolved
+       * promise with the settings from the configuration.
+       */
+      valuesPromise = Promise.resolve(
+        this._appConfiguration.get(this._options.configurationKeys),
+      );
+    } else {
+      // ...otherwsie, return an already resolved promise with an empty object.
+      valuesPromise = Promise.resolve({});
+    }
+
+    return valuesPromise;
+  }
+  /**
+   * Returns a promise that will be resolved when the file has been generated.
+   *
+   * @returns {Promise<undefined,undefined>}
+   */
+  whenReady() {
+    return this._fileReady ?
+      Promise.resolve() :
+      this._fileDeferred.promise;
+  }
+  /**
    * The service options.
+   *
    * @type {HTMLGeneratorOptions}
    */
   get options() {
     return Object.freeze(this._options);
   }
   /**
-   * Creates the code for the HTML file.
-   * @param {string} template The template code where the values are going to be injected.
-   * @param {Object} values   The dictionary of values to inject.
-   * @return {string}
-   * @ignore
-   * @access protected
-   */
-  _processHTML(template, values) {
-    const {
-      replacePlaceholder,
-      valuesExpression,
-      variable,
-    } = this._options;
-    const htmlObject = JSON.stringify(values);
-    let code = template
-    .replace(
-      replacePlaceholder,
-      `window.${variable} = ${htmlObject}`
-    );
-    const matches = [];
-    let match = valuesExpression.exec(code);
-    while (match) {
-      const [string, value] = match;
-      matches.push({
-        string,
-        value,
-      });
-
-      match = valuesExpression.exec(code);
-    }
-
-    matches.forEach((info) => {
-      code = code.replace(info.string, this._getFromValues(values, info.value));
-    });
-
-    return code;
-  }
-  /**
    * Get a value from an object dictionary using a string _"object path"_ (`prop.sub.otherProp`).
    * If the property doesn't exist or the path is invalid, it will return `null`.
+   *
    * @param {Object} values    The dictionary from where the value will be read.
    * @param {string} valuePath The path to the value.
-   * @return {*}
+   * @returns {*}
    * @ignore
    * @access protected
    */
@@ -317,10 +293,50 @@ class HTMLGenerator {
 
     return currentElement;
   }
+  /**
+   * Creates the code for the HTML file.
+   *
+   * @param {string} template The template code where the values are going to be injected.
+   * @param {Object} values   The dictionary of values to inject.
+   * @returns {string}
+   * @ignore
+   * @access protected
+   */
+  _processHTML(template, values) {
+    const {
+      replacePlaceholder,
+      valuesExpression,
+      variable,
+    } = this._options;
+    const htmlObject = JSON.stringify(values);
+    let code = template
+    .replace(
+      replacePlaceholder,
+      `window.${variable} = ${htmlObject}`,
+    );
+    const matches = [];
+    let match = valuesExpression.exec(code);
+    while (match) {
+      const [string, value] = match;
+      matches.push({
+        string,
+        value,
+      });
+
+      match = valuesExpression.exec(code);
+    }
+
+    matches.forEach((info) => {
+      code = code.replace(info.string, this._getFromValues(values, info.value));
+    });
+
+    return code;
+  }
 }
 /**
  * A service that hooks itself to the `after-start` event of the app server in order to trigger
  * the generation an the html file when the server starts.
+ *
  * @type {ProviderCreator}
  * @param {HTMLGeneratorProviderOptions|HTMLGeneratorOptions} [options] The options to customize
  *                                                                      the service behavior.
@@ -334,7 +350,7 @@ const htmlGenerator = providerCreator((options = {}) => (app) => {
       app.get('appLogger'),
       app.get('frontendFs'),
       options,
-      valuesService ? app.try(valuesService) : null
+      valuesService ? app.try(valuesService) : null,
     );
   });
 

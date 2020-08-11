@@ -7,13 +7,13 @@ const { controller } = require('../../utils/wrappers');
  */
 class HealthController {
   /**
-   * Class constructor.
    * @param {AppConfiguration} appConfiguration To read the app version and the configuration name.
    * @param {ResponsesBuilder} responsesBuilder To generate the JSON response.
    */
   constructor(appConfiguration, responsesBuilder) {
     /**
      * A local reference for the `appConfiguration` service.
+     *
      * @type {AppConfiguration}
      * @access protected
      * @ignore
@@ -21,6 +21,7 @@ class HealthController {
     this._appConfiguration = appConfiguration;
     /**
      * A local reference for the `responsesBuilder` service.
+     *
      * @type {ResponsesBuilder}
      * @access protected
      * @ignore
@@ -29,7 +30,8 @@ class HealthController {
   }
   /**
    * Returns the middleware that shows the health information.
-   * @return {ExpressMiddleware}
+   *
+   * @returns {ExpressMiddleware}
    */
   health() {
     return (req, res) => {
@@ -48,13 +50,14 @@ class HealthController {
 }
 /**
  * Mounts the health route.
+ *
  * @type {Controller}
  */
 const healthController = controller((app) => {
   const router = app.get('router');
   const ctrl = new HealthController(
     app.get('appConfiguration'),
-    app.get('responsesBuilder')
+    app.get('responsesBuilder'),
   );
 
   return [

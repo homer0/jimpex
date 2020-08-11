@@ -243,7 +243,7 @@ const { controllerCreator } = require('jimpex');
 // (Optional) Define a class to organize your route handlers.
 class HealthController {
   constructor(settings = {});
-  
+
   health() {
     return (req, res) => {
       res.write('Everything works!');
@@ -416,7 +416,7 @@ The service also implements a few other services from the [wootils](https://gith
 |-------------------------|-------------------------------------|
 | `yarn test`             | Run the project unit tests.         |
 | `yarn run lint`         | Lint the modified files.            |
-| `yarn run lint:full`    | Lint the project code.              |
+| `yarn run lint:all`     | Lint the project code.              |
 | `yarn run docs`         | Generate the project documentation. |
 | `yarn run todo`         | List all the pending to-do's.       |
 

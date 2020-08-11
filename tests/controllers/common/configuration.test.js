@@ -33,24 +33,19 @@ describe('controllers/common:configuration', () => {
       get: jest.fn(() => appConfiguration.name),
       getConfig: jest.fn(() => appConfiguration.config),
     };
-    const message = 'success';
     const responsesBuilder = {
-      json: jest.fn(() => message),
+      json: jest.fn(),
     };
     const response = 'response';
-    const expectedData = Object.assign(
-      {
-        name: appConfiguration.name,
-      },
-      appConfiguration.config
-    );
+    const expectedData = {
+      name: appConfiguration.name,
+      ...appConfiguration.config,
+    };
     let sut = null;
-    let result = null;
     // When
     sut = new ConfigurationController(appConfiguration, responsesBuilder);
-    result = sut.getConfigurationResponse(response);
+    sut.getConfigurationResponse(response);
     // Then
-    expect(result).toBe(message);
     expect(appConfiguration.get).toHaveBeenCalledTimes(1);
     expect(appConfiguration.get).toHaveBeenCalledWith('name');
     expect(responsesBuilder.json).toHaveBeenCalledTimes(1);
@@ -73,12 +68,10 @@ describe('controllers/common:configuration', () => {
     };
     const request = 'request';
     const response = 'response';
-    const expectedData = Object.assign(
-      {
-        name: appConfiguration.name,
-      },
-      appConfiguration.config
-    );
+    const expectedData = {
+      name: appConfiguration.name,
+      ...appConfiguration.config,
+    };
     let sut = null;
     let middleware = null;
     // When
@@ -117,12 +110,10 @@ describe('controllers/common:configuration', () => {
     };
     const response = 'response';
     const next = jest.fn();
-    const expectedData = Object.assign(
-      {
-        name: appConfiguration.name,
-      },
-      appConfiguration.config
-    );
+    const expectedData = {
+      name: appConfiguration.name,
+      ...appConfiguration.config,
+    };
     let sut = null;
     let middleware = null;
     // When

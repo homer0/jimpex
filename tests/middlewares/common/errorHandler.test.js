@@ -44,7 +44,7 @@ describe('middlewares/common:errorHandler', () => {
       'responsesBuilder',
       'showErrors',
       'AppError',
-      customOptions
+      customOptions,
     );
     // Then
     expect(sut).toBeInstanceOf(ErrorHandler);
@@ -79,7 +79,7 @@ describe('middlewares/common:errorHandler', () => {
     expect(responsesBuilder.json).toHaveBeenCalledWith(
       response,
       expectedData,
-      expectedStatus
+      expectedStatus,
     );
   });
 
@@ -118,7 +118,7 @@ describe('middlewares/common:errorHandler', () => {
     expect(responsesBuilder.json).toHaveBeenCalledWith(
       response,
       expectedData,
-      expectedStatus
+      expectedStatus,
     );
   });
 
@@ -159,7 +159,7 @@ describe('middlewares/common:errorHandler', () => {
     expect(responsesBuilder.json).toHaveBeenCalledWith(
       response,
       expectedData,
-      expectedStatus
+      expectedStatus,
     );
     expect(appLogger.error).toHaveBeenCalledTimes(1);
     expect(appLogger.error).toHaveBeenCalledWith(`ERROR: ${error.message}`);
@@ -196,18 +196,19 @@ describe('middlewares/common:errorHandler', () => {
       errorMessage,
       errorStackMessage,
       errorStatus,
-      errorResponse
+      errorResponse,
     );
     const request = 'request';
     const response = 'response';
     const next = 'next';
     let sut = null;
     let middleware = null;
-    const expectedData = Object.assign({
+    const expectedData = {
       error: true,
       message: errorMessage,
       stack: [errorStackMessage],
-    }, errorResponse);
+      ...errorResponse,
+    };
     // When
     sut = new ErrorHandler(appLogger, responsesBuilder, showErrors, AppError);
     middleware = sut.middleware();
@@ -217,7 +218,7 @@ describe('middlewares/common:errorHandler', () => {
     expect(responsesBuilder.json).toHaveBeenCalledWith(
       response,
       expectedData,
-      errorStatus
+      errorStatus,
     );
     expect(appLogger.error).toHaveBeenCalledTimes(1);
     expect(appLogger.error).toHaveBeenCalledWith(`ERROR: ${error.message}`);
@@ -274,7 +275,7 @@ describe('middlewares/common:errorHandler', () => {
       'appLogger',
       'responsesBuilder',
       'showErrors',
-      'AppError'
+      'AppError',
     );
     // Then
     expect(middleware.toString()).toEqual(toCompare.middleware().toString());
@@ -312,7 +313,7 @@ describe('middlewares/common:errorHandler', () => {
       'appLogger',
       'responsesBuilder',
       'showErrors',
-      'AppError'
+      'AppError',
     );
     // Then
     expect(middleware.toString()).toEqual(toCompare.middleware().toString());
