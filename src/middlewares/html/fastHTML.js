@@ -5,28 +5,36 @@ const { middlewareCreator } = require('../../utils/wrappers');
 const { createRouteExpression, removeSlashes } = require('../../utils/functions');
 
 /**
- * @typedef {Object} FastHTMLOptions
- * @description The options to customize the behavior of the middleware.
- * @property {string}  [file='index.html'] The name of the file the middleware will serve. It can
- *                                         get overwritten if {@link FastHTML} receives an
- *                                         {@link HTMLGenerator}, in that case, the file will be
- *                                         obtained from that service.
- * @property {Array}   [ignore]            A list of regular expressions to match requests paths
- *                                         that should be ignored.
- * @property {boolean} [useAppRoutes=true] If `true`, {@link FastHTML} will get the list of all
- *                                         routes controlled by {@link Jimpex} and will use them
- *                                         to validate the incoming requests (in addition to
- *                                         `ignore`): If a request URL doesn't match with any of
- *                                         the controlled routes, it will show the HTML file.
+ * @typedef {import('../../services/common/sendFile').SendFile} SendFile
+ * @typedef {import('../../services/html/htmlGenerator').HTMLGenerator} HTMLGenerator
  */
 
 /**
- * @typedef {Object} FastHTMLMiddlewareOptions
- * @augments FastHTMLOptions
- * @description The only difference with {@link FastHTMLOptions} is that in this options, you can
- *              specify an {@link HTMLGenerator} service name.
- * @property {string} [htmlGenerator='htmlGenerator'] The name of a {@link HTMLGenerator} service
- *                                                    for the middleware to use.
+ * The options to customize the behavior of the middleware.
+ *
+ * @typedef {Object} FastHTMLOptions
+ * @property {string}  file          The name of the file the middleware will serve. It can get
+ *                                   overwritten if {@link FastHTML} receives an
+ *                                   {@link HTMLGenerator}, in that case, the file will be obtained
+ *                                   from that service. Default `index.html`.
+ * @property {RegExp[]} ignore       A list of regular expressions to match requests paths that
+ *                                   should be ignored.
+ * @property {boolean}  useAppRoutes If `true`, {@link FastHTML} will get the list of all routes
+ *                                   controlled by {@link Jimpex} and will use them to validate the
+ *                                   incoming requests (in addition to `ignore`): If a request URL
+ *                                   doesn't match with any of the controlled routes, it will show
+ *                                   the HTML file. Default `true`.
+ */
+
+/**
+ * @typedef {FastHTMLOptions & FastHTMLMiddlewareOptionsProperties} FastHTMLMiddlewareOptions
+ */
+
+/**
+ * @typedef {Object} FastHTMLMiddlewareOptionsProperties
+ * @property {string} htmlGenerator The name of a {@link HTMLGenerator} service for the middleware
+ *                                  to use. Default `htmlGenerator`.
+ * @augments FastHTMLMiddlewareOptions
  */
 
 /**
@@ -108,7 +116,7 @@ class FastHTML {
      * will obtain all the top controlled routes, create regular expressions and save them on
      * this property.
      *
-     * @type {Array}
+     * @type {RegExp[]}
      * @access protected
      * @ignore
      */
@@ -155,6 +163,7 @@ class FastHTML {
    * to serve.
    *
    * @type {FastHTMLOptions}
+   * @todo Remove Object.freeze.
    */
   get options() {
     return Object.freeze(this._options);
@@ -237,9 +246,7 @@ class FastHTML {
  * whether there's a controller for the requested route or not. For more information about the
  * reason of this middleware, please read the description of {@link FastHTML}.
  *
- * @type {MiddlewareCreator}
- * @param {FastHTMLOptions|FastHTMLMiddlewareOptions} [options={}] The options to customize the
- *                                                                 middleware behavior.
+ * @type {MiddlewareCreator<FastHTMLMiddlewareOptions>}
  */
 const fastHTML = middlewareCreator((options = {}) => (app) => {
   const htmlGeneratorServiceName = typeof options.htmlGenerator === 'undefined' ?
@@ -255,7 +262,5 @@ const fastHTML = middlewareCreator((options = {}) => (app) => {
   ).middleware();
 });
 
-module.exports = {
-  FastHTML,
-  fastHTML,
-};
+module.exports.FastHTML = FastHTML;
+module.exports.fastHTML = fastHTML;

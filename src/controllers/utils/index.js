@@ -1,5 +1,3 @@
 const { gatewayController } = require('./gateway');
 
-module.exports = {
-  gatewayController,
-};
+module.exports.gatewayController = gatewayController;

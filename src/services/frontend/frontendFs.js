@@ -28,7 +28,7 @@ class FrontendFs {
    * Delete a file from the file system.
    *
    * @param {string} filepath The path to the file.
-   * @returns {Promise<undefined,Error>}
+   * @returns {Promise}
    */
   delete(filepath) {
     return fs.unlink(this._pathUtils.joinFrom('app', filepath));
@@ -38,7 +38,7 @@ class FrontendFs {
    *
    * @param {string} filepath           The path to the file.
    * @param {string} [encoding='utf-8'] The text encoding in which the file should be read.
-   * @returns {Promise<string,Error>}
+   * @returns {Promise<string>}
    */
   read(filepath, encoding = 'utf-8') {
     return fs.readFile(this._pathUtils.joinFrom('app', filepath), encoding);
@@ -48,7 +48,7 @@ class FrontendFs {
    *
    * @param {string} filepath The path to the file.
    * @param {string} data     The contents of the file.
-   * @returns {Promise<undefined,Error>}
+   * @returns {Promise}
    */
   write(filepath, data) {
     return fs.writeFile(this._pathUtils.joinFrom('app', filepath), data);
@@ -69,7 +69,5 @@ const frontendFs = provider((app) => {
   app.set('frontendFs', () => new FrontendFs(app.get('pathUtils')));
 });
 
-module.exports = {
-  FrontendFs,
-  frontendFs,
-};
+module.exports.FrontendFs = FrontendFs;
+module.exports.frontendFs = frontendFs;

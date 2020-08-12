@@ -21,7 +21,7 @@ const { provider } = require('../../utils/wrappers');
  * send(res, 'some-file.html', next);
  * // If your app is on `/app/index.js`, this will send `/app/some-file.html`.
  *
- * @param  {PathUtils} pathUtils To generate the relative paths.
+ * @param {PathUtils} pathUtils To generate the relative paths.
  * @returns {SendFile}
  */
 const sendFile = (pathUtils) => (res, filepath, next = () => {}, from = 'app') => {
@@ -42,13 +42,12 @@ const sendFile = (pathUtils) => (res, filepath, next = () => {}, from = 'app') =
  * container.register(sendFileProvider);
  * // Getting access to the service instance
  * const sendFile = container.get('sendFile');
+ *
  * @type {Provider}
  */
 const sendFileProvider = provider((app) => {
   app.set('sendFile', () => sendFile(app.get('pathUtils')));
 });
 
-module.exports = {
-  sendFile,
-  sendFileProvider,
-};
+module.exports.sendFile = sendFile;
+module.exports.sendFileProvider = sendFileProvider;

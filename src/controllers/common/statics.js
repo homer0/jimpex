@@ -5,29 +5,42 @@ const { controllerCreator } = require('../../utils/wrappers');
 const { removeSlashes } = require('../../utils/functions');
 
 /**
- * @typedef {Object} StaticsControllerFile
- * @description If you wan to customize how, to, and from where files are served, instead of just
- *              sending a list of strings, you can use an object with these properties.
- * @property {string} route   The route the controller will use for the file.
- * @property {string} path    The path for the file, relative to the root of the app.
- * @property {Object} headers A dictionary of custom headers to send on the file response.
+ * @typedef {import('../../services/common/sendFile').SendFile} SendFile
  */
 
 /**
+ * If you wan to customize how, to, and from where files are served, instead of just sending a list
+ * of strings, you can use an object with these properties.
+ *
+ * @typedef {Object} StaticsControllerFile
+ * @property {string}                 route   The route the controller will use for the file.
+ * @property {string}                 path    The path for the file, relative to the root of the
+ *                                            app.
+ * @property {Object.<string,string>} headers A dictionary of custom headers to send on the file
+ *                                            response.
+ */
+
+/**
+ * They are like "master paths" that get prepended to all the file paths and routes the controller
+ * use.
+ *
  * @typedef {Object} StaticsControllerPathsOptions
- * @description They are like "master paths" that get prepended to all the file paths and routes
- *              the controller use.
  * @property {string} route  A custom route to prefix all the file routes.
  * @property {string} source A custom path to prefix all the file paths.
  */
 
 /**
+ * @typedef {string|StaticsControllerFile} StaticsControllerFileLike
+ */
+
+/**
+ * These are the options that allow you to customize the controller, how, to and from where the
+ * files are served.
+ *
  * @typedef {Object} StaticsControllerOptions
- * @description These are the options that allow you to customize the controller, how, to and from
- *              where the files are served.
- * @property {Array}                         files   A list of filenames or
+ * @property {StaticsControllerFileLike[]}   files   A list of filenames or
  *                                                   {@link StaticsControllerFile} definitions.
- * @property {Object}                        methods A dictionary of all the HTTP methods the
+ * @property {Object.<string,boolean>}       methods A dictionary of all the HTTP methods the
  *                                                   controller will use in order to serve the
  *                                                   files. If `all` is set to true, all the other
  *                                                   flags will be ignored.
@@ -36,9 +49,22 @@ const { removeSlashes } = require('../../utils/functions');
  */
 
 /**
+ * @typedef {StaticsControllerOptions & StaticsControllerWrapperOptionsProperties}
+ * StaticsControllerWrapperOptions
+ */
+
+/**
+ * @typedef {Object} StaticsControllerWrapperOptionsProperties
+ * @property {StaticsControllerMiddlewaresFn} middlewares
+ * function can be used to add custom middlewares on the file routes. If implemented, it must
+ * return a list of middlewares when executed.
+ * @augments StaticsControllerWrapperOptions
+ */
+
+/**
  * @callback StaticsControllerMiddlewaresFn
  * @param {Jimpex} app A reference for the container.
- * @returns {Array<ExpressMiddleware|Middleware>}
+ * @returns {MiddlewareLike[]}
  */
 
 /**
@@ -47,8 +73,8 @@ const { removeSlashes } = require('../../utils/functions');
  */
 class StaticsController {
   /**
-   * @param {SendFile}                 sendFile To send the responses for the files.
-   * @param {StaticsControllerOptions} options  The options to customize the controller.
+   * @param {SendFile}                          sendFile To send the responses for the files.
+   * @param {Partial<StaticsControllerOptions>} options  The options to customize the controller.
    */
   constructor(sendFile, options = {}) {
     /**
@@ -84,6 +110,7 @@ class StaticsController {
      * A dictionary of all the formatted files ({@link StaticsControllerFile}). It uses the files
      * routes as keys.
      *
+     * @type {Object.<string,StaticsControllerFile>}
      * @access protected
      * @ignore
      */
@@ -92,10 +119,10 @@ class StaticsController {
   /**
    * Defines all the needed routes to serve the files.
    *
-   * @param {ExpressRouter} router           To generate the routes.
-   * @param {Array}         [middlewares=[]] A list of custom middlewares that will be added
-   *                                         before the one that serves a file.
-   * @returns {ExpressRouter}
+   * @param {Router}              router           To generate the routes.
+   * @param {ExpressMiddleware[]} [middlewares=[]] A list of custom middlewares that will be added
+   *                                               before the one that serves a file.
+   * @returns {Router}
    */
   addRoutes(router, middlewares = []) {
     const { methods } = this._options;
@@ -121,6 +148,7 @@ class StaticsController {
    * The controller configuration options.
    *
    * @type {StaticsControllerOptions}
+   * @todo Remove Object.freeze.
    */
   get options() {
     return Object.freeze(this._options);
@@ -128,13 +156,13 @@ class StaticsController {
   /**
    * Generates a route for an specific file.
    *
-   * @param {ExpressRouter}         router         To create the actual route.
+   * @param {Router}                router         To create the actual route.
    * @param {string}                method         The HTTP method for the route.
    * @param {StaticsControllerFile} file           The file information.
    * @param {ExpressMiddleware}     fileMiddleware The middleware that serves the file.
-   * @param {Array}                 middlewares    A list of custom middlewares to add before the
+   * @param {ExpressMiddleware[]}   middlewares    A list of custom middlewares to add before the
    *                                               one that serves the file.
-   * @returns {ExpressRouter}
+   * @returns {Router}
    * @access protected
    * @ignore
    */
@@ -144,7 +172,7 @@ class StaticsController {
   /**
    * Parses each of the received files in order to create a {@link StaticsControllerFile}.
    *
-   * @returns {Object} A dictionary with the definitions as values and the routes as keys.
+   * @returns {Object.<string,StaticsControllerFile>}
    * @access protected
    * @ignore
    */
@@ -263,19 +291,14 @@ class StaticsController {
  * This controller allows you to serve specific files from any folder to any route without the
  * need of mounting directories as "static".
  *
- * @type {ControllerCreator}
- * @param {StaticsControllerOptions} [options]
- * The options to customize the controller.
- * @param {StaticsControllerMiddlewaresFn} [middlewares]
- * This function can be used to add custom middlewares on the file routes. If implemented, it must
- * return a list of middlewares when executed.
+ * @type {ControllerCreator<StaticsControllerWrapperOptions>}
  */
-const staticsController = controllerCreator((options, middlewares) => (app) => {
+const staticsController = controllerCreator((options = {}) => (app) => {
   const router = app.get('router');
   const ctrl = new StaticsController(app.get('sendFile'), options);
   let useMiddlewares;
-  if (middlewares) {
-    useMiddlewares = middlewares(app).map((middleware) => (
+  if (options.middlewares) {
+    useMiddlewares = options.middlewares(app).map((middleware) => (
       middleware.connect ?
         middleware.connect(app) :
         middleware
@@ -285,7 +308,5 @@ const staticsController = controllerCreator((options, middlewares) => (app) => {
   return ctrl.addRoutes(router, useMiddlewares);
 });
 
-module.exports = {
-  StaticsController,
-  staticsController,
-};
+module.exports.StaticsController = StaticsController;
+module.exports.staticsController = staticsController;

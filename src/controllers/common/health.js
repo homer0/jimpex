@@ -1,6 +1,10 @@
 const { code: statuses } = require('statuses');
 const { controller } = require('../../utils/wrappers');
 /**
+ * @typedef {import('../../services/http/responsesBuilder').ResponsesBuilder} ResponsesBuilder
+ */
+
+/**
  * Provides the handler to show a some minimal health information about the app:
  * - app version.
  * - configuration name.
@@ -65,7 +69,5 @@ const healthController = controller((app) => {
   ];
 });
 
-module.exports = {
-  HealthController,
-  healthController,
-};
+module.exports.HealthController = HealthController;
+module.exports.healthController = healthController;

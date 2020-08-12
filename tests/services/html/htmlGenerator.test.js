@@ -17,7 +17,6 @@ describe('services/html:htmlGenerator', () => {
 
   it('should be instantiated', () => {
     // Given
-    const options = {};
     const appConfiguration = 'appConfiguration';
     const appLogger = 'appLogger';
     const frontendFs = 'frontendFs';
@@ -27,7 +26,6 @@ describe('services/html:htmlGenerator', () => {
       appConfiguration,
       appLogger,
       frontendFs,
-      options,
     );
     // Then
     expect(sut).toBeInstanceOf(HTMLGenerator);

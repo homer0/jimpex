@@ -1,20 +1,30 @@
 const ObjectUtils = require('wootils/shared/objectUtils');
 const APIClientBase = require('wootils/shared/apiClient');
 const { providerCreator } = require('../../utils/wrappers');
+
 /**
- * @typedef {Object} APIClientProviderOptions
- * @description The options to customize how the service gets registered.
- * @property {string} [serviceName='apiClient']    The name of the service that will be registered
- *                                                 into the app.
- * @property {string} [configurationSetting='api'] The name of the configuration setting that has
- *                                                 the API information.
- * @property {Class}  [clientClass=APIClient]      The class the service will instantiate. It has
- *                                                 to extend from {@link APIClient}.
+ * @typedef {import('./http').HTTP} HTTP
+ * @typedef {import('../common/httpError').HTTPError} HTTPError
  */
 
 /**
+ * The options to customize how the service gets registered.
+ *
+ * @typedef {Object} APIClientProviderOptions
+ * @property {string}           serviceName          The name of the service that will be
+ *                                                   registered into the app. Default
+ *                                                   `'apiClient'`.
+ * @property {string}           configurationSetting The name of the configuration setting that
+ *                                                   has the API information. Default `'api'`.
+ * @property {typeof APIClient} clientClass          The class the service will instantiate. It
+ *                                                   has to extend from {@link APIClient}, which
+ *                                                   is the default value.
+ */
+
+/**
+ * The configuration for the API the client will make requests to.
+ *
  * @typedef {Object} APIClientConfiguration
- * @description The configuration for the API the client will make requests to.
  * @property {string}             url       The API entry point.
  * @property {APIClientEndpoints} endpoints A dictionary of named endpoints relative to the API
  *                                          entry point.
@@ -33,7 +43,7 @@ class APIClient extends APIClientBase {
    *                                           make requests to.
    * @param {HTTP}                   http      To get the `fetch` function for this service
    *                                           to use on all the requests.
-   * @param {Class}                  HTTPError To format the received errors.
+   * @param {ClassHTTPError}         HTTPError To format the received errors.
    */
   constructor(apiConfig, http, HTTPError) {
     super(
@@ -52,7 +62,7 @@ class APIClient extends APIClientBase {
     /**
      * A local reference for the class the app uses to generate HTTP errors.
      *
-     * @type {Class}
+     * @type {ClassHTTPError}
      * @access protected
      * @ignore
      */
@@ -93,10 +103,8 @@ class APIClient extends APIClientBase {
   /**
    * The configuration for the API the client will make requests to.
    *
-   * @type {Object}
-   * @property {string} url       The API entry point.
-   * @property {Object} endpoints A dictionary of named endpoints relative to the API
-   *                              entry point.
+   * @type {APIClientConfiguration}
+   * @todo Remove Object.freeze.
    */
   get apiConfig() {
     return Object.freeze(this._apiConfig);
@@ -106,9 +114,7 @@ class APIClient extends APIClientBase {
  * An API Client service to make requests to an API using endpoints defined on the app
  * configuration.
  *
- * @type {ProviderCreator}
- * @param {APIClientProviderOptions} [options] The options to customize how the service gets
- *                                             registered.
+ * @type {ProviderCreator<APIClientProviderOptions>}
  */
 const apiClient = providerCreator((options = {}) => (app) => {
   const defaultName = 'apiClient';
@@ -127,7 +133,5 @@ const apiClient = providerCreator((options = {}) => (app) => {
   ));
 });
 
-module.exports = {
-  APIClient,
-  apiClient,
-};
+module.exports.APIClient = APIClient;
+module.exports.apiClient = apiClient;

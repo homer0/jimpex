@@ -1287,11 +1287,6 @@ describe('controllers/utils:gateway', () => {
       };
       const route = '/my-gateway';
       let result = null;
-      const options = {
-        serviceName: 'myServiceGateway',
-        configurationSetting: 'myConfigSetting',
-        helperServiceName: null,
-      };
       const normalMiddleware = 'middlewareOne';
       const jimpexMiddlewareName = 'middlewareTwo';
       const jimpexMiddleware = {
@@ -1299,8 +1294,14 @@ describe('controllers/utils:gateway', () => {
       };
       const middlewares = [normalMiddleware, jimpexMiddleware];
       const middlewareGenerator = jest.fn(() => middlewares);
+      const options = {
+        serviceName: 'myServiceGateway',
+        configurationSetting: 'myConfigSetting',
+        helperServiceName: null,
+        middlewares: middlewareGenerator,
+      };
       // When
-      result = gatewayController(options, middlewareGenerator).connect(app, route);
+      result = gatewayController(options).connect(app, route);
       // Then
       expect(result).toBe(router);
       expect(router.all).toHaveBeenCalledTimes(1);

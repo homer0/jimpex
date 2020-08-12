@@ -4,11 +4,12 @@ const { provider } = require('../../utils/wrappers');
  * It allows customization of a post message HTML template.
  *
  * @typedef {Object} ResponsesBuilderPostMessageOptions
- * @property {?string}  [target='window.opener'] The target that will emit the `postMessage`.
- * @property {?boolean} [close=true]             Whether or not to do a `window.close` after
- *                                               sending the message.
- * @property {?number}  [closeDelay=700]         How many ms should it wait before closing the
- *                                               window, if `options.close` is `true`.
+ * @property {?string}  target     The target that will emit the `postMessage`.
+ *                                 Default `'window.opener'`.
+ * @property {?boolean} close      Whether or not to do a `window.close` after sending the message.
+ *                                 Default `true`.
+ * @property {?number}  closeDelay How many ms should it wait before closing the window, if
+ *                                 `options.close` is `true`. Default `700`.
  */
 
 /**
@@ -33,12 +34,16 @@ class ResponsesBuilder {
    * The post message will be prefixed with the value of the configuration setting
    * `postMessagesPrefix`.
    *
-   * @param {ExpressResponse}                    res          The Express response object
-   *                                                          necessary to write the HTML.
-   * @param {string}                             title        The title for the HTML.
-   * @param {string}                             message      The contents of the post message.
-   * @param {number}                             [status=200] The HTTP status.
-   * @param {ResponsesBuilderPostMessageOptions} [options={}] Options to customize the HTML.
+   * @param {ExpressResponse} res
+   * The Express response object necessary to write the HTML.
+   * @param {string} title
+   * The title for the HTML.
+   * @param {string} message
+   * The contents of the post message.
+   * @param {number} [status=200]
+   * The HTTP status.
+   * @param {Partial<ResponsesBuilderPostMessageOptions>} [options={}]
+   * Options to customize the HTML.
    */
   htmlPostMessage(
     res,
@@ -160,6 +165,7 @@ class ResponsesBuilder {
  * container.register(responsesBuilder);
  * // Getting access to the service instance
  * const responsesBuilder = container.get('responsesBuilder');
+ *
  * @type {Provider}
  */
 const responsesBuilder = provider((app) => {
@@ -168,7 +174,5 @@ const responsesBuilder = provider((app) => {
   ));
 });
 
-module.exports = {
-  ResponsesBuilder,
-  responsesBuilder,
-};
+module.exports.ResponsesBuilder = ResponsesBuilder;
+module.exports.responsesBuilder = responsesBuilder;
