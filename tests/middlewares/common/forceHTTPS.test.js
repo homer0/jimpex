@@ -164,7 +164,7 @@ describe('middlewares/common:forceHTTPS', () => {
       'appConfiguration',
     ];
     // When
-    middleware = forceHTTPS().connect(app);
+    middleware = forceHTTPS.connect(app);
     // Then
     expect(middleware).toBeNull();
     expect(app.get).toHaveBeenCalledTimes(expectedGets.length);
@@ -173,5 +173,39 @@ describe('middlewares/common:forceHTTPS', () => {
     });
     expect(appConfiguration.get).toHaveBeenCalledTimes(1);
     expect(appConfiguration.get).toHaveBeenCalledWith('forceHTTPS');
+  });
+
+  it('should support custom options on its wrapper', () => {
+    // Given
+    const appConfiguration = {
+      forceHTTPS: true,
+      get: jest.fn(() => appConfiguration.forceHTTPS),
+    };
+    const services = {
+      appConfiguration,
+    };
+    const app = {
+      get: jest.fn((service) => (services[service] || service)),
+    };
+    const ignoredRoutes = [/^\/index\.html$/];
+    const request = {
+      secure: false,
+      'X-Forwarded-Proto': 'http',
+      Host: 'jimpex.github.io',
+      get: jest.fn((prop) => request[prop]),
+      url: '/index.html',
+      originalUrl: '/index.html',
+    };
+    const response = {
+      redirect: jest.fn(),
+    };
+    const next = jest.fn();
+    let middleware = null;
+    // When
+    middleware = forceHTTPS({ ignoredRoutes }).connect(app);
+    middleware(request, response, next);
+    // Then
+    expect(response.redirect).toHaveBeenCalledTimes(0);
+    expect(next).toHaveBeenCalledTimes(1);
   });
 });

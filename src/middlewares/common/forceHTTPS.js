@@ -1,17 +1,23 @@
 const { middlewareCreator } = require('../../utils/wrappers');
 /**
+ * @typedef {Object} ForceHTTPSMiddlewareOptions
+ * @property {RegExp[]} ignoredRoutes A list of regular expressions to match routes that should be
+ *                                    ignored.
+ */
+
+/**
  * Force all the app traffice to be through HTTPS.
  */
 class ForceHTTPS {
   /**
-   * @param {Array} [ignoredRoutes=[/^\/service\//]] A list of regular expressions to match routes
-   *                                                 that should be ignored.
+   * @param {RegExp[]} [ignoredRoutes=[/^\/service\//]] A list of regular expressions to match
+   *                                                    routes that should be ignored.
    */
   constructor(ignoredRoutes = [/^\/service\//]) {
     /**
      * A list of regular expressions to match routes that should be ignored.
      *
-     * @type {Array}
+     * @type {RegExp[]}
      * @access protected
      * @ignore
      */
@@ -39,7 +45,7 @@ class ForceHTTPS {
   /**
    * A list of regular expressions to match routes that should be ignored.
    *
-   * @type {Array}
+   * @type {RegExp[]}
    */
   get ignoredRoutes() {
     return this._ignoredRoutes.slice();
@@ -48,13 +54,11 @@ class ForceHTTPS {
 /**
  * A middleware to force HTTPS redirections to all the routes.
  *
- * @type {MiddlewareCreator}
- * @param {Array} ignoredRoutes A list of regular expressions to match routes that should be
- *                              ignored.
+ * @type {MiddlewareCreator<ForceHTTPSMiddlewareOptions>}
  */
-const forceHTTPS = middlewareCreator((ignoredRoutes) => (app) => (
+const forceHTTPS = middlewareCreator((options = {}) => (app) => (
   app.get('appConfiguration').get('forceHTTPS') ?
-    new ForceHTTPS(ignoredRoutes).middleware() :
+    new ForceHTTPS(options.ignoredRoutes).middleware() :
     null
 ));
 
