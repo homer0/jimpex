@@ -441,9 +441,6 @@ describe('controllers/common:statics', () => {
 
   it('should include a controller creator to send custom options and middlewares', () => {
     // Given
-    const options = {
-      files: ['rosario.html'],
-    };
     const normalMiddleware = 'middlewareOne';
     const jimpexMiddlewareName = 'middlewareTwo';
     const jimpexMiddleware = {
@@ -451,6 +448,10 @@ describe('controllers/common:statics', () => {
     };
     const middlewares = [normalMiddleware, jimpexMiddleware];
     const middlewareGenerator = jest.fn(() => middlewares);
+    const options = {
+      files: ['rosario.html'],
+      middlewares: middlewareGenerator,
+    };
     const router = {
       get: jest.fn(),
     };
@@ -463,7 +464,7 @@ describe('controllers/common:statics', () => {
     let result = null;
     const expectedGets = ['router', 'sendFile'];
     // When
-    result = staticsController(options, middlewareGenerator).connect(app);
+    result = staticsController(options).connect(app);
     // Then
     expect(result).toBe(router);
     expect(router.get).toHaveBeenCalledTimes(options.files.length);
