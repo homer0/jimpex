@@ -258,7 +258,7 @@ class Jimpex extends Jimple {
   /**
    * Adds a middleware.
    *
-   * @param {Middleware|ExpressMiddleware} middleware The middleware to use.
+   * @param {MiddlewareLike} middleware The middleware to use.
    */
   use(middleware) {
     this._mountQueue.push((server) => {

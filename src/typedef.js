@@ -46,6 +46,12 @@
  */
 
 /**
+ * @typedef {import('wootils/esm/shared/eventsHub').default} EventsHub
+ * @external EventsHub
+ * @see https://homer0.github.io/wootils/module-shared_eventsHub.html
+ */
+
+/**
  * @typedef {import('wootils/esm/node/rootRequire').RootRequireFn} RootRequire
  * @external RootRequire
  * @see https://homer0.github.io/wootils/module-node_rootRequire.html#.RootRequireFn
@@ -116,6 +122,13 @@
  * @external ProviderCreator
  * @see https://homer0.github.io/wootils/module-shared_jimpleFns.html#~providerCreator
  */
+
+/* eslint-disable jsdoc/valid-types */
+/**
+ * @typedef {import('./services/common/httpError')['HTTPError']} ClassHTTPError
+ * @typedef {import('./services/common/appError')['AppError']} ClassAppError
+ */
+/* eslint-enable jsdoc/valid-types */
 
 /**
  * @callback JimpexStartCallback
@@ -205,7 +218,7 @@
  */
 
 /**
- * @typedef {import('../app')} Jimpex
+ * @typedef {import('./app')} Jimpex
  */
 
 /**
@@ -284,4 +297,8 @@
  * @param {Partial<O>} [options={}] The options to create the controller.
  * @returns {Middleware}
  * @template O
+ */
+
+/**
+ * @typedef {Middleware|ExpressMiddleware} MiddlewareLike
  */

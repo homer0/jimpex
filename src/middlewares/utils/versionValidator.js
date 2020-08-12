@@ -3,47 +3,52 @@ const { code: statuses } = require('statuses');
 const { middlewareCreator } = require('../../utils/wrappers');
 
 /**
+ * @typedef {import('../../services/http/responsesBuilder').ResponsesBuilder} ResponsesBuilder
+ */
+
+/**
+ * The options for how the middleware should behave if the requested version is `latest`.
+ *
  * @typedef {Object} VersionValidatorLatestOptions
- * @description The options for how the middleware should behave if the requested version is
- *              `latest`.
- * @property {boolean} [allow=true]    Whether or not the middleware should validate the _"latest
- *                                     version"_.
- * @property {string}  [name='latest'] The name of the _"latest version"_. Basically,
- *                                     `req.params.version` must match with this property in order
- *                                     to be consider "latest".
+ * @property {boolean} allow Whether or not the middleware should validate the _"latest version"_.
+ *                           Default `true`.
+ * @property {string}  name  The name of the _"latest version"_. Basically, `req.params.version`
+ *                           must match with this property in order to be consider "latest".
+ *                           Default `'latest'`.
  */
 
 /**
+ * The options for how to detect if the request comes from a popup and how to compose the post
+ * message the middleware will use to respond.
+ *
  * @typedef {Object} VersionValidatorPopupOptions
- * @description The options for how to detect if the request comes from a popup and how to compose
- *              the post message the middleware will use to respond.
- * @property {string} [variable='popup']          The name of the query string variable the
- *                                                middleware will check in order to indentify
- *                                                whether the request comes from a popup or not.
- *                                                The variable must have `'true'` as its value.
- * @property {string} [title='Conflict']          The title of the page that will be generated to
- *                                                respond in case the versions don't match.
- * @property {string} [message='vesion:conflict'] The contents of the post message the generated
- *                                                page will send if the versions don't match.
+ * @property {string} variable The name of the query string variable the middleware will check in
+ *                             order to indentify whether the request comes from a popup or not.
+ *                             The variable must have `'true'` as its value. Default `'popup'`.
+ * @property {string} title    The title of the page that will be generated to respond in case the
+ *                             versions don't match. Default `'Conflict'`.
+ * @property {string} message  The contents of the post message the generated page will send if
+ *                             the versions don't match. Default `'vesion:conflict'`.
  */
 
 /**
+ * The options used to customize a {@link VersionValidator} instance.
+ *
  * @typedef {Object} VersionValidatorOptions
- * @description The options used to customize a {@link VersionValidator} instance.
- * @property {string}                        [error]   The error message to show when the version
- *                                                     is invalid.
- * @property {VersionValidatorLatestOptions} [latest]  The options for how the middleware should
- *                                                     behave if the requested version is
- *                                                     `latest`.
- * @property {VersionValidatorPopupOptions}  [popup]   The options for how to detect if the request
- *                                                     comes from a popup and how to compose the
- *                                                     post message the middleware will use to
- *                                                     respond.
- * @property {string|number}                 [version] The version used to validate the requests.
- *                                                     On the {@link VersionValidator}
- *                                                     constructor, if specified via parameter,
- *                                                     the class will take care of automatically
- *                                                     add it to the options.
+ * @property {string}                        error   The error message to show when the version
+ *                                                   is invalid.
+ * @property {VersionValidatorLatestOptions} latest  The options for how the middleware should
+ *                                                   behave if the requested version is
+ *                                                   `latest`.
+ * @property {VersionValidatorPopupOptions}  popup   The options for how to detect if the request
+ *                                                   comes from a popup and how to compose the
+ *                                                   post message the middleware will use to
+ *                                                   respond.
+ * @property {string|number}                 version The version used to validate the requests.
+ *                                                   On the {@link VersionValidator}
+ *                                                   constructor, if specified via parameter,
+ *                                                   the class will take care of automatically
+ *                                                   add it to the options.
  */
 
 /**
@@ -57,19 +62,16 @@ const { middlewareCreator } = require('../../utils/wrappers');
  */
 class VersionValidator {
   /**
-   * @param {?string|?number}         version          The current version of the app. The reason
-   *                                                   this is nullable is because this comes
-   *                                                   directly from the app configuration, but
-   *                                                   you may want to re use this to validate
-   *                                                   "another version", so you can use the
-   *                                                   custom shorthand and send the version using
-   *                                                   the `options` parameter.
-   * @param {ResponsesBuilder}        responsesBuilder To generate post message responses for
-   *                                                   popups.
-   * @param {Class}                   AppError         To generate the error in case the version is
-   *                                                   invalid.
-   * @param {VersionValidatorOptions} [options={}]     Custom options to modify the middleware
-   *                                                   behavior.
+   * @param {?string|?number} version
+   * The current version of the app. The reason this is nullable is because this comes directly
+   * from the app configuration, but you may want to re use this to validate "another version", so
+   * you can use the custom shorthand and send the version using the `options` parameter.
+   * @param {ResponsesBuilder} responsesBuilder
+   * To generate post message responses for popups.
+   * @param {ClassAppError} AppError
+   * To generate the error in case the version is invalid.
+   * @param {Partial<VersionValidatorOptions>} [options={}]
+   * Custom options to modify the middleware behavior.
    * @throws {Error} If the version is `null` and the `options` don't include one either.
    */
   constructor(
@@ -89,7 +91,7 @@ class VersionValidator {
     /**
      * A local reference for the class the app uses to generate errors.
      *
-     * @type {Class}
+     * @type {ClassAppError}
      * @access protected
      * @ignore
      */
@@ -209,10 +211,9 @@ class VersionValidator {
  * If used as middleware, it will just return the result of {@link VersionValidator#middleware};
  * but if used as controller, it will mount it on `[route]/:version/*`.
  *
- * @type {MiddlewareCreator}
- * @param {VersionValidatorOptions} [options] Custom options to modify the middleware behavior.
+ * @type {MiddlewareCreator<VersionValidatorOptions>}
  */
-const versionValidator = middlewareCreator((options) => (app, route) => {
+const versionValidator = middlewareCreator((options = {}) => (app, route) => {
   // Get the middleware function.
   const middlewareValidator = (new VersionValidator(
     app.get('appConfiguration').get('version'),

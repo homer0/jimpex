@@ -1,4 +1,9 @@
 const { controller } = require('../../utils/wrappers');
+
+/**
+ * @typedef {import('../../services/http/responsesBuilder').ResponsesBuilder} ResponsesBuilder
+ */
+
 /**
  * Provides the handlers and middlwares to show and switch configurations.
  */
@@ -77,6 +82,7 @@ class ConfigurationController {
  * - Switching the configuration, but only if the service allows it.
  *
  * @type {Controller}
+ * @todo Don't use an array to return the routes.
  */
 const configurationController = controller((app) => {
   const routes = [];

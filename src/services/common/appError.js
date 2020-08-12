@@ -22,6 +22,7 @@ class AppError extends Error {
      *
      * @type {Object}
      * @access protected
+     * @todo Remove Object.freeze.
      */
     this._context = Object.freeze(this._parseContext(context));
     /**
@@ -34,6 +35,7 @@ class AppError extends Error {
     /**
      * Overwrite the name of the `Error` with the one from the class.
      *
+     * @type {string}
      * @ignore
      */
     this.name = this.constructor.name;

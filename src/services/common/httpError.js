@@ -10,7 +10,7 @@ const { AppError } = require('./appError');
 class HTTPError extends AppError {
   /**
    * @param {string} message      The error message.
-   * @param {number} status       The HTTP status code of the request response.
+   * @param {number} [status=200] The HTTP status code of the request response.
    * @param {Object} [context={}] Context information related to the error.
    */
   constructor(message, status = statuses.ok, context = {}) {
@@ -21,7 +21,7 @@ class HTTPError extends AppError {
  * A generator function to create {@link HTTPError} instances.
  *
  * @param {string} message   The error message.
- * @param {number} status    The HTTP status code of the request response.
+ * @param {number} [status]  The HTTP status code of the request response.
  * @param {Object} [context] Context information related to the error.
  * @returns {HTTPError}
  */

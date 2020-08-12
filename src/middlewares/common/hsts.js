@@ -1,8 +1,9 @@
 const { middlewareCreator } = require('../../utils/wrappers');
 
 /**
+ * The options to customize the HSTS header value.
+ *
  * @typedef {Object} HSTSOptions
- * @description The options to customize the HSTS header value.
  * @property {number}  [maxAge=31536000]        The time, in seconds, that the browser should
  *                                              remember that a site is only to be accessed using
  *                                              HTTPS.
@@ -22,7 +23,7 @@ const { middlewareCreator } = require('../../utils/wrappers');
  */
 class HSTS {
   /**
-   * @param {HSTSOptions} [options={}] The options to customize the header value.
+   * @param {Partial<HSTSOptions>} [options={}] The options to customize the header value.
    */
   constructor(options = {}) {
     /**
@@ -88,8 +89,7 @@ class HSTS {
  * Both the `options` parameter and the `hsts` can include a `enabled` (boolean) flag to either
  * disable or enable the middleware.
  *
- * @type {MiddlewareCreator}
- * @param {HSTSOptions} [options={}] The options to customize the header value.
+ * @type {MiddlewareCreator<HSTSOptions>}
  */
 const hsts = middlewareCreator((options = {}) => (app) => {
   const useOptions = typeof options.maxAge !== 'undefined' ?

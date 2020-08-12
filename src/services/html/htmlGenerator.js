@@ -3,34 +3,37 @@ const { deferred } = require('wootils/shared');
 const { eventNames } = require('../../constants');
 const { providerCreator } = require('../../utils/wrappers');
 /**
- * @typedef {Object} HTMLGeneratorOptions
- * @description The options to customize the an `HTMLGenerator` service.
- * @property {string}  [template='index.tpl.html']                 The name of the file it should
- *                                                                 use as template.
- * @property {string}  [file='index.html']                         The name of the generated file.
- * @property {boolean} [deleteTemplateAfter=true]                  Whether or not to delete the
- *                                                                 tempalte after generating the
- *                                                                 file.
- * @property {string}  [replacePlaceholder='{{appConfiguration}}'] The placeholder string where the
- *                                                                 information will be written.
- * @property {RegExp}  [valuesExpression='{{(.*?)}}']              A regular expression for dynamic
- *                                                                 placeholders that will be
- *                                                                 replaced by values when the file
- *                                                                 is generated.
- * @property {string}  [variable='appConfiguration']               The name of the variable that
- *                                                                 will have the information on
- *                                                                 the file.
- * @property {Array} [configurationKeys=['features', 'version', 'postMessagesPrefix']] A list of
- * settings from the app configuration that will be used as the information to inject on
- * the file.
+ * @typedef {import('../frontend/frontendFs').FrontendFs} FrontendFs
  */
 
 /**
- * @typedef {Object} HTMLGeneratorProviderOptions
- * @augments HTMLGeneratorOptions
- * @description These are the options specific for the service provider that registers
- *              {@link HTMLGenerator}. It's the same as {@link HTMLGeneratorOptions} but with a
- *              couple extras settings.
+ * The options to customize the an `HTMLGenerator` service.
+ *
+ * @typedef {Object} HTMLGeneratorOptions
+ * @property {string}   template            The name of the file it should use as template.
+ *                                          Default `'index.tpl.html'`.
+ * @property {string}   file                The name of the generated file. Default `'index.html'`.
+ * @property {boolean}  deleteTemplateAfter Whether or not to delete the tempalte after generating
+ *                                          the file. Default `true`.
+ * @property {string}   replacePlaceholder  The placeholder string where the information will be
+ *                                          written. Default `'{{appConfiguration}}'`.
+ * @property {RegExp}   valuesExpression    A regular expression for dynamic placeholders that will
+ *                                          be replaced by values when the file is generated.
+ *                                          Default `'{{(.*?)}}'`.
+ * @property {string}   variable            The name of the variable that will have the information
+ *                                          on the file. Default `'appConfiguration'`.
+ * @property {string[]} configurationKeys   A list of settings from the app configuration that will
+ *                                          be used as the information to inject on the file.
+ *                                          Default `['features', 'version', 'postMessagesPrefix']`.
+ */
+
+/**
+ * @typedef {HTMLGeneratorOptions & HTMLGeneratorProviderOptionsProperties}
+ * HTMLGeneratorProviderOptions
+ */
+
+/**
+ * @typedef {Object} HTMLGeneratorProviderOptionsProperties
  * @property {string}  [serviceName='htmlGenerator'] The name that will be used to register the
  * service on the app container. This is to allow multiple "instances" of the service to be
  * created.
@@ -38,15 +41,22 @@ const { providerCreator } = require('../../utils/wrappers');
  * The name of a service that the generator will use in order to read the values that will be
  * injected on the template. If the service is available, the values from `configurationKeys`
  * will be ignored.
+ * @augments HTMLGeneratorProviderOptions
  */
+
 /**
- * @typedef {Object} HTMLGeneratorValuesService A service to provide the information value to an
- *                                              `HTMLGenerator` service to use on the generated
- *                                              file.
- * @property {function():Promise<Object,Error>} getValues This is the method an `HTMLGenerator`
- *                                                        service will call in order to retrieve
- *                                                        the values that should be injected on
- *                                                        the generated file.
+ * @callback HTMLGeneratorValuesServiceGetValues
+ * @returns {Promise<Object>}
+ */
+
+/**
+ * A service to provide the information value to an `HTMLGenerator` service to use on the
+ * generated file.
+ *
+ * @typedef {Object} HTMLGeneratorValuesService
+ * @property {HTMLGeneratorValuesServiceGetValues} getValues
+ * This is the method an `HTMLGenerator` service will call in order to retrieve the values that
+ * should be injected on the generated file.
  */
 
 /**
@@ -55,26 +65,25 @@ const { providerCreator } = require('../../utils/wrappers');
  */
 class HTMLGenerator {
   /**
-   * @param {AppConfiguration}            appConfiguration     To read the values of the settings
-   *                                                           that are going to be send to the
-   *                                                           file.
-   * @param {Logger}                      appLogger            To log messages when the file is
-   *                                                           generated, when the template is
-   *                                                           removed, and if it happens, when
-   *                                                           an error is thrown.
-   * @param {FrontendFs}                  frontendFs           To read the contents of the template.
-   * @param {HTMLGeneratorOptions}        [options]            To customize the service.
-   * @param {?HTMLGeneratorValuesService} [valuesService=null] If specified, instead of getting
-   *                                                           the values from the app
-   *                                                           configuration, they'll be retrieved
-   *                                                           from this service `getValues` method.
+   * @param {AppConfiguration} appConfiguration
+   * To read the values of the settings that are going to be send to the file.
+   * @param {Logger} appLogger
+   * To log messages when the file is generated, when the template is removed, and if it happens,
+   * when an error is thrown.
+   * @param {FrontendFs} frontendFs
+   * To read the contents of the template.
+   * @param {Partial<HTMLGeneratorOptions>} [options={}]
+   * To customize the service.
+   * @param {?HTMLGeneratorValuesService} [valuesService=null]
+   * If specified, instead of getting the values from the app configuration, they'll be retrieved
+   * from this service `getValues` method.
    * @throws {Error} If `valuesService` is specified but it doesn't have a `getValues` method.
    */
   constructor(
     appConfiguration,
     appLogger,
     frontendFs,
-    options,
+    options = {},
     valuesService = null,
   ) {
     /**
@@ -159,7 +168,7 @@ class HTMLGenerator {
   /**
    * Generate the HTML file.
    *
-   * @returns {Promise<undefined,Error>}
+   * @returns {Promise}
    */
   generateHTML() {
     // Get the service options.
@@ -221,7 +230,7 @@ class HTMLGenerator {
   /**
    * Get the values that are going to be injected on the file.
    *
-   * @returns {Promise<Object,?Error>}
+   * @returns {Promise<Object>}
    */
   getValues() {
     let valuesPromise;
@@ -247,7 +256,7 @@ class HTMLGenerator {
   /**
    * Returns a promise that will be resolved when the file has been generated.
    *
-   * @returns {Promise<undefined,undefined>}
+   * @returns {Promise}
    */
   whenReady() {
     return this._fileReady ?
@@ -258,6 +267,7 @@ class HTMLGenerator {
    * The service options.
    *
    * @type {HTMLGeneratorOptions}
+   * @todo Remove Object.freeze.
    */
   get options() {
     return Object.freeze(this._options);
@@ -271,6 +281,7 @@ class HTMLGenerator {
    * @returns {*}
    * @ignore
    * @access protected
+   * @todo Use ObjectUtils.get for this.
    */
   _getFromValues(values, valuePath) {
     const pathParts = valuePath.split('.');
@@ -337,9 +348,7 @@ class HTMLGenerator {
  * A service that hooks itself to the `after-start` event of the app server in order to trigger
  * the generation an the html file when the server starts.
  *
- * @type {ProviderCreator}
- * @param {HTMLGeneratorProviderOptions|HTMLGeneratorOptions} [options] The options to customize
- *                                                                      the service behavior.
+ * @type {ProviderCreator<HTMLGeneratorProviderOptions>}
  */
 const htmlGenerator = providerCreator((options = {}) => (app) => {
   const { serviceName = 'htmlGenerator' } = options;
