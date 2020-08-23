@@ -134,7 +134,7 @@ describe('services/http:http', () => {
     expect(result).toEqual(expectedResult);
   });
 
-  it('should make a fetch request', () => {
+  it('should make a fetch request', async () => {
     // Given
     const url = 'http://charito';
     const response = 'Hello!';
@@ -142,20 +142,19 @@ describe('services/http:http', () => {
     const logRequests = false;
     const appLogger = 'appLogger';
     let sut = null;
+    let result = null;
     // When
     sut = new HTTP(logRequests, appLogger);
-    return sut.fetch(url)
-    .then((result) => {
-      // Then
-      expect(result).toBe(response);
-      expect(fetch).toHaveBeenCalledTimes(1);
-      expect(fetch).toHaveBeenCalledWith(url, {
-        method: 'GET',
-      });
+    result = await sut.fetch(url);
+    // Then
+    expect(result).toBe(response);
+    expect(fetch).toHaveBeenCalledTimes(1);
+    expect(fetch).toHaveBeenCalledWith(url, {
+      method: 'GET',
     });
   });
 
-  it('should make a fetch request with a custom method', () => {
+  it('should make a fetch request with a custom method', async () => {
     // Given
     const url = 'http://charito';
     const response = 'Hello!';
@@ -164,18 +163,17 @@ describe('services/http:http', () => {
     const logRequests = false;
     const appLogger = 'appLogger';
     let sut = null;
+    let result = null;
     // When
     sut = new HTTP(logRequests, appLogger);
-    return sut.fetch(url, { method })
-    .then((result) => {
-      // Then
-      expect(result).toBe(response);
-      expect(fetch).toHaveBeenCalledTimes(1);
-      expect(fetch).toHaveBeenCalledWith(url, { method });
-    });
+    result = await sut.fetch(url, { method });
+    // Then
+    expect(result).toBe(response);
+    expect(fetch).toHaveBeenCalledTimes(1);
+    expect(fetch).toHaveBeenCalledWith(url, { method });
   });
 
-  it('should make a fetch request with a query string object', () => {
+  it('should make a fetch request with a query string object', async () => {
     // Given
     const url = 'http://charito/index.html';
     const qsVariable = 'sort';
@@ -188,20 +186,19 @@ describe('services/http:http', () => {
     const logRequests = false;
     const appLogger = 'appLogger';
     let sut = null;
+    let result = null;
     // When
     sut = new HTTP(logRequests, appLogger);
-    return sut.fetch(url, { qs })
-    .then((result) => {
-      // Then
-      expect(result).toBe(response);
-      expect(fetch).toHaveBeenCalledTimes(1);
-      expect(fetch).toHaveBeenCalledWith(`${url}?${qsVariable}=${qsValue}`, {
-        method: 'GET',
-      });
+    result = await sut.fetch(url, { qs });
+    // Then
+    expect(result).toBe(response);
+    expect(fetch).toHaveBeenCalledTimes(1);
+    expect(fetch).toHaveBeenCalledWith(`${url}?${qsVariable}=${qsValue}`, {
+      method: 'GET',
     });
   });
 
-  it('should make a fetch request with a body', () => {
+  it('should make a fetch request with a body', async () => {
     // Given
     const url = 'http://charito';
     const method = 'POST';
@@ -213,21 +210,20 @@ describe('services/http:http', () => {
     const logRequests = false;
     const appLogger = 'appLogger';
     let sut = null;
+    let result = null;
     // When
     sut = new HTTP(logRequests, appLogger);
-    return sut.fetch(url, { method, body })
-    .then((result) => {
-      // Then
-      expect(result).toBe(response);
-      expect(fetch).toHaveBeenCalledTimes(1);
-      expect(fetch).toHaveBeenCalledWith(url, {
-        method,
-        body,
-      });
+    result = await sut.fetch(url, { method, body });
+    // Then
+    expect(result).toBe(response);
+    expect(fetch).toHaveBeenCalledTimes(1);
+    expect(fetch).toHaveBeenCalledWith(url, {
+      method,
+      body,
     });
   });
 
-  it('should make a fetch request with the headers from an incoming server request', () => {
+  it('should make a fetch request with the headers from an incoming server request', async () => {
     // Given
     const url = 'http://charito';
     const response = 'Hello!';
@@ -241,24 +237,23 @@ describe('services/http:http', () => {
     const logRequests = false;
     const appLogger = 'appLogger';
     let sut = null;
+    let result = null;
     // When
     sut = new HTTP(logRequests, appLogger);
-    return sut.fetch(url, { req: request })
-    .then((result) => {
-      // Then
-      expect(result).toBe(response);
-      expect(fetch).toHaveBeenCalledTimes(1);
-      expect(fetch).toHaveBeenCalledWith(url, {
-        method: 'GET',
-        headers: {
-          'X-Forwarded-For': request.headers['x-forwarded-for'],
-          'X-Custom-Header': request.headers['x-custom-header'],
-        },
-      });
+    result = await sut.fetch(url, { req: request });
+    // Then
+    expect(result).toBe(response);
+    expect(fetch).toHaveBeenCalledTimes(1);
+    expect(fetch).toHaveBeenCalledWith(url, {
+      method: 'GET',
+      headers: {
+        'X-Forwarded-For': request.headers['x-forwarded-for'],
+        'X-Custom-Header': request.headers['x-custom-header'],
+      },
     });
   });
 
-  it('should make a fetch request and log it', () => {
+  it('should make a fetch request and log it', async () => {
     // Given
     const url = 'http://charito';
     const response = {
@@ -272,30 +267,29 @@ describe('services/http:http', () => {
       info: jest.fn(),
     };
     let sut = null;
+    let result = null;
     // When
     sut = new HTTP(logRequests, appLogger);
-    return sut.fetch(url)
-    .then((result) => {
-      // Then
-      expect(result).toBe(response);
-      expect(fetch).toHaveBeenCalledTimes(1);
-      expect(fetch).toHaveBeenCalledWith(url, {
-        method: 'GET',
-      });
-      expect(appLogger.info).toHaveBeenCalledTimes(['request', 'response'].length);
-      expect(appLogger.info).toHaveBeenCalledWith([
-        '--->>',
-        `REQUEST> GET ${url}`,
-      ]);
-      expect(appLogger.info).toHaveBeenCalledWith([
-        '<<---',
-        `RESPONSE> ${url}`,
-        `RESPONSE> status: ${response.status}`,
-      ]);
+    result = await sut.fetch(url);
+    // Then
+    expect(result).toBe(response);
+    expect(fetch).toHaveBeenCalledTimes(1);
+    expect(fetch).toHaveBeenCalledWith(url, {
+      method: 'GET',
     });
+    expect(appLogger.info).toHaveBeenCalledTimes(['request', 'response'].length);
+    expect(appLogger.info).toHaveBeenCalledWith([
+      '--->>',
+      `REQUEST> GET ${url}`,
+    ]);
+    expect(appLogger.info).toHaveBeenCalledWith([
+      '<<---',
+      `RESPONSE> ${url}`,
+      `RESPONSE> status: ${response.status}`,
+    ]);
   });
 
-  it('should make a fetch request with custom header, body and log it', () => {
+  it('should make a fetch request with custom header, body and log it', async () => {
     // Given
     const url = 'http://charito';
     const method = 'POST';
@@ -322,42 +316,41 @@ describe('services/http:http', () => {
       info: jest.fn(),
     };
     let sut = null;
+    let result = null;
     // When
     sut = new HTTP(logRequests, appLogger);
-    return sut.fetch(url, { method, body, req: request })
-    .then((result) => {
-      // Then
-      expect(result).toBe(response);
-      expect(fetch).toHaveBeenCalledTimes(1);
-      expect(fetch).toHaveBeenCalledWith(url, {
-        method,
-        body,
-        headers: Object.keys(request.headers).reduce(
-          (newHeaders, name) => ({
-            ...newHeaders,
-            [headersFixedNames[name]]: request.headers[name],
-          }),
-          {},
-        ),
-      });
-      expect(appLogger.info).toHaveBeenCalledTimes(['request', 'response'].length);
-      expect(appLogger.info).toHaveBeenCalledWith([
-        '--->>',
-        `REQUEST> ${method} ${url}`,
-        ...Object.keys(request.headers)
-        .map((headerName) => (
-          `REQUEST> ${headersFixedNames[headerName]}: ` +
-            `${request.headers[headerName]}`
-        )),
-        `REQUEST> body: "${body}"`,
-      ]);
-      expect(appLogger.info).toHaveBeenCalledWith([
-        '<<---',
-        `RESPONSE> ${url}`,
-        `RESPONSE> status: ${response.status}`,
-        ...response.headers.map((value, index) => `RESPONSE> ${index}: ${value}`),
-      ]);
+    result = await sut.fetch(url, { method, body, req: request });
+    // Then
+    expect(result).toBe(response);
+    expect(fetch).toHaveBeenCalledTimes(1);
+    expect(fetch).toHaveBeenCalledWith(url, {
+      method,
+      body,
+      headers: Object.keys(request.headers).reduce(
+        (newHeaders, name) => ({
+          ...newHeaders,
+          [headersFixedNames[name]]: request.headers[name],
+        }),
+        {},
+      ),
     });
+    expect(appLogger.info).toHaveBeenCalledTimes(['request', 'response'].length);
+    expect(appLogger.info).toHaveBeenCalledWith([
+      '--->>',
+      `REQUEST> ${method} ${url}`,
+      ...Object.keys(request.headers)
+      .map((headerName) => (
+        `REQUEST> ${headersFixedNames[headerName]}: ` +
+          `${request.headers[headerName]}`
+      )),
+      `REQUEST> body: "${body}"`,
+    ]);
+    expect(appLogger.info).toHaveBeenCalledWith([
+      '<<---',
+      `RESPONSE> ${url}`,
+      `RESPONSE> status: ${response.status}`,
+      ...response.headers.map((value, index) => `RESPONSE> ${index}: ${value}`),
+    ]);
   });
 
   it('should turn on the requests log when registered if the configuration flag is `true`', () => {

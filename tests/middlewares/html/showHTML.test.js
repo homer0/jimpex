@@ -81,9 +81,6 @@ describe('middlewares/html:showHTML', () => {
         expect(sendFile).toHaveBeenCalledWith(response, file, expect.any(Function));
         resolve();
       });
-    })
-    .catch(() => {
-      expect(true).toBeFalse();
     }),
   );
 
