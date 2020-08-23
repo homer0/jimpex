@@ -80,6 +80,15 @@ class Jimpex extends Jimple {
         bodyParser: true,
         multer: true,
       },
+      http2: {
+        enabled: false,
+        credentials: {
+          onHome: true,
+          cert: '',
+          key: '',
+        },
+        spdyOptions: null,
+      },
       defaultServices: {
         common: true,
         http: true,
