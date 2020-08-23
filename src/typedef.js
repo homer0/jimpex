@@ -64,8 +64,8 @@
  */
 
 /**
- * @typedef {import('http').Server} Server
- * @external Server
+ * @typedef {import('http').Server} HTTPServer
+ * @external HTTPServer
  * @see https://nodejs.org/docs/latest-v10.x/api/http.html#http_class_http_server
  */
 
@@ -73,6 +73,16 @@
  * @typedef {import('spdy').ServerOptions} SpdyOptions
  * @external SpdyOptions
  * @see https://github.com/spdy-http2/node-spdy#options
+ */
+
+/**
+ * @typedef {import('spdy').Server} SpdyServer
+ * @external SpdyServer
+ * @see https://github.com/spdy-http2/node-spdy
+ */
+
+/**
+ * @typedef {HTTPServer|SpdyServer} Server
  */
 
 /**
@@ -203,8 +213,9 @@
  * @property {boolean} onHome If `true`, the path to the files will be relative to the project root
  *                            directory, otherwise, it will be relative to the directory where the
  *                            app executable file is located. Default `true`.
- * @property {string}  cert   The path to the certificate file.
- * @property {string}  key    The path to the key file.
+ * @property {string}  cert   The path to the certificate file. Default `''`.
+ * @property {string}  key    The path to the key file. Default `''`.
+ * @property {string}  ca     The path to the CA file. Default `''`.
  */
 
 /**

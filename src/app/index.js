@@ -3,8 +3,10 @@ const ObjectUtils = require('wootils/shared/objectUtils');
 const express = require('express');
 const bodyParser = require('body-parser');
 const compression = require('compression');
+const fs = require('fs-extra');
 const multer = require('multer');
 const statuses = require('statuses');
+const spdy = require('spdy');
 
 const {
   appConfiguration,
@@ -86,6 +88,7 @@ class Jimpex extends Jimple {
           onHome: true,
           cert: '',
           key: '',
+          ca: '',
         },
         spdyOptions: null,
       },
@@ -103,6 +106,15 @@ class Jimpex extends Jimple {
      * @ignore
      */
     this._express = express();
+    /**
+     * When Jimpex is used with HTTP2 enabled, this property will be used to store the "patched"
+     * version of Express that uses Spdy.
+     *
+     * @type {SpdyServer}
+     * @access protected
+     * @ignore
+     */
+    this._spdy = null;
     /**
      * When the application starts, this will be the instance of the server.
      *
@@ -213,7 +225,8 @@ class Jimpex extends Jimple {
     const config = this.get('appConfiguration');
     const port = config.get('port');
     this._emitEvent('beforeStart');
-    this._instance = this._express.listen(port, () => {
+    const useServer = this._options.http2.enabled ? this._createSpdy() : this._express;
+    this._instance = useServer.listen(port, () => {
       this._emitEvent('start');
       this._mountResources();
       this.get('appLogger').success(`Starting on port ${port}`);
@@ -343,6 +356,35 @@ class Jimpex extends Jimple {
       folder || staticRoute,
     );
     this._express.use(`/${staticRoute}`, express.static(staticFolder));
+  }
+  /**
+   * This gets called when the application it's about to start the server and HTTP2 is enabled. It
+   * creates the options Spdy, "patches" the Express application and saves the instance.
+   *
+   * @returns {SpdyServer}
+   * @access protected
+   * @ignore
+   */
+  _createSpdy() {
+    const { http2 } = this._options;
+    const location = http2.credentials.onHome ? 'home' : 'app';
+    const usePathUtils = this.get('pathUtils');
+    const options = ['cert', 'key']
+    .filter((key) => http2.credentials[key])
+    .reduce(
+      (acc, key) => ({
+        ...acc,
+        [key]: fs.readFileSync(usePathUtils.joinFrom(location, http2.credentials[key])),
+      }),
+      {},
+    );
+
+    if (http2.spdyOptions) {
+      options.spdy = http2.spdyOptions;
+    }
+
+    this._spdy = spdy.createServer(options, this._express);
+    return this._spdy;
   }
   /**
    * Emits an app event with a reference to this class instance.
