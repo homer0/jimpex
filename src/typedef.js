@@ -64,9 +64,25 @@
  */
 
 /**
- * @typedef {import('http').Server} Server
- * @external Server
+ * @typedef {import('http').Server} HTTPServer
+ * @external HTTPServer
  * @see https://nodejs.org/docs/latest-v10.x/api/http.html#http_class_http_server
+ */
+
+/**
+ * @typedef {import('spdy').ServerOptions} SpdyOptions
+ * @external SpdyOptions
+ * @see https://github.com/spdy-http2/node-spdy#options
+ */
+
+/**
+ * @typedef {import('spdy').Server} SpdyServer
+ * @external SpdyServer
+ * @see https://github.com/spdy-http2/node-spdy
+ */
+
+/**
+ * @typedef {HTTPServer|SpdyServer} Server
  */
 
 /**

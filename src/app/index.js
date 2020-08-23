@@ -1,10 +1,13 @@
+const https = require('https');
 const Jimple = require('jimple');
 const ObjectUtils = require('wootils/shared/objectUtils');
 const express = require('express');
 const bodyParser = require('body-parser');
 const compression = require('compression');
+const fs = require('fs-extra');
 const multer = require('multer');
 const statuses = require('statuses');
+const spdy = require('spdy');
 
 const {
   appConfiguration,
@@ -94,6 +97,15 @@ class Jimpex extends Jimple {
      * @ignore
      */
     this._express = express();
+    /**
+     * When Jimpex is used with HTTP2 enabled, this property will be used to store the "patched"
+     * version of Express that uses Spdy.
+     *
+     * @type {SpdyServer}
+     * @access protected
+     * @ignore
+     */
+    this._spdy = null;
     /**
      * When the application starts, this will be the instance of the server.
      *
@@ -204,7 +216,8 @@ class Jimpex extends Jimple {
     const config = this.get('appConfiguration');
     const port = config.get('port');
     this._emitEvent('beforeStart');
-    this._instance = this._express.listen(port, () => {
+    this._server = this._getServer();
+    this._instance = this._server.listen(port, () => {
       this._emitEvent('start');
       this._mountResources();
       this.get('appLogger').success(`Starting on port ${port}`);
@@ -347,6 +360,89 @@ class Jimpex extends Jimple {
     this.get('events').emit(eventNames[name], ...[...args, this]);
   }
   /**
+   * Validates the configuration and chooses the server the application needs to use: If HTTP2 is
+   * enabled, it will use Spdy; if HTTP is enabled but HTTP is not, it will use the native HTTPS
+   * server; otherwise, it will be just the Express instance.
+   *
+   * @returns {Server}
+   * @throws {Error} If HTTP2 is enabled but HTTPS is not.
+   * @throws {Error} If HTTPS is enabled but there's no `https.credentials` object.
+   * @throws {Error} If HTTPS is enabled and no creadentials are found.
+   * @access protected
+   * @ignore
+   */
+  _getServer() {
+    let [http2Config, httpsConfig] = this.get('appConfiguration').get(
+      ['http2', 'https'],
+      true,
+    );
+
+    // Just in case any of those settings are `null` - which overwrites destructuring.
+    http2Config = http2Config || {};
+    httpsConfig = httpsConfig || {};
+
+    let result;
+    if (!http2Config.enabled && !httpsConfig.enabled) {
+      result = this._express;
+    } else {
+      if (http2Config.enabled && !httpsConfig.enabled) {
+        throw new Error('HTTP2 requires for HTTPS to be enabled');
+      } else if (!httpsConfig.credentials) {
+        throw new Error('The `credentials` object on the HTTPS settings is missing');
+      }
+
+      const credentials = this._loadCredentials(
+        httpsConfig.credentials.onHome,
+        httpsConfig.credentials,
+      );
+
+      if (!Object.keys(credentials).length) {
+        throw new Error('No credentials were found for HTTPS');
+      }
+
+      if (http2Config.enabled) {
+        if (http2Config.spdy) {
+          credentials.spdy = http2Config.spdy;
+        }
+
+        result = spdy.createServer(credentials, this._express);
+      } else {
+        result = https.createServer(credentials, this._express);
+      }
+    }
+
+    return result;
+  }
+  /**
+   * Loads the contents of a dictionary of files that need to be used for HTTPS credentials.
+   *
+   * @param {boolean}                onHome          If this is `true`, the path of the files will
+   *                                                 be relative to the project root directory;
+   *                                                 otherwise, it will be relative to the
+   *                                                 directory where the application executable
+   *                                                 is located.
+   * @param {Object.<string,string>} credentialsInfo The dictionary where the keys are the type of
+   *                                                 credentials (`ca`, `cert` and/or `key`) and
+   *                                                 the values the paths to the files.
+   *
+   * @returns {Object.<string,string>}
+   * @access protected
+   * @ignore
+   */
+  _loadCredentials(onHome, credentialsInfo) {
+    const location = onHome === false ? 'app' : 'home';
+    const usePathUtils = this.get('pathUtils');
+    return ['ca', 'cert', 'key']
+    .filter((key) => typeof credentialsInfo[key] === 'string')
+    .reduce(
+      (acc, key) => ({
+        ...acc,
+        [key]: fs.readFileSync(usePathUtils.joinFrom(location, credentialsInfo[key])),
+      }),
+      {},
+    );
+  }
+  /**
    * Processes and mount all the resources on the `mountQueue`.
    *
    * @access protected
@@ -403,15 +499,15 @@ class Jimpex extends Jimple {
       defaultConfig = { version, ...defaultConfig };
     }
 
-    this.register(appConfiguration(
-      name,
-      defaultConfig,
-      {
+    this.register(appConfiguration({
+      appName: name,
+      defaultConfiguration: defaultConfig,
+      options: {
         environmentVariable,
         path: configsPath,
         filenameFormat,
       },
-    ));
+    }));
 
     if (options.loadFromEnvironment) {
       this.get('appConfiguration').loadFromEnvironment();

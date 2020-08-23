@@ -1,3 +1,6 @@
+jest.mock('https');
+jest.mock('fs-extra');
+jest.mock('spdy');
 jest.mock('jimple', () => require('../mocks/jimple.mock'));
 jest.mock('express', () => require('../mocks/express.mock'));
 jest.mock('compression', () => require('../mocks/compression.mock'));
@@ -11,7 +14,11 @@ jest.unmock('../../src/app');
 jest.unmock('../../src/utils/functions');
 
 const path = require('path');
+const https = require('https');
 const statuses = require('statuses');
+const fs = require('fs-extra');
+const spdy = require('spdy');
+
 const { EventsHub } = require('wootils/shared');
 
 const JimpleMock = require('jimple');
@@ -20,6 +27,7 @@ const compressionMock = require('compression');
 const multerMock = require('multer');
 const bodyParserMock = require('body-parser');
 const wootilsMock = require('wootils/node/providers');
+
 const Jimpex = require('../../src/app');
 const { eventNames } = require('../../src/constants');
 
@@ -34,6 +42,9 @@ describe('app:Jimpex', () => {
     multerMock.reset();
     bodyParserMock.reset();
     wootilsMock.reset();
+    fs.readFileSync.mockReset();
+    https.createServer.mockReset();
+    spdy.createServer.mockReset();
   });
 
   it('should throw an error if used without subclassing it', () => {
@@ -133,15 +144,15 @@ describe('app:Jimpex', () => {
     expect(eventsService()).toBeInstanceOf(EventsHub);
     expect(statusesService()).toEqual(statuses);
     expect(wootilsMock.appConfiguration).toHaveBeenCalledTimes(1);
-    expect(wootilsMock.appConfiguration).toHaveBeenCalledWith(
-      sut.options.configuration.name,
-      defaultConfig,
-      {
+    expect(wootilsMock.appConfiguration).toHaveBeenCalledWith({
+      appName: sut.options.configuration.name,
+      defaultConfiguration: defaultConfig,
+      options: {
         environmentVariable: sut.options.configuration.environmentVariable,
         path: `${sut.options.configuration.path}${sut.options.configuration.name}/`,
         filenameFormat: `${sut.options.configuration.name}.[name].config.js`,
       },
-    );
+    });
     expect(pathUtils.joinFrom).toHaveBeenCalledTimes(1);
     expect(pathUtils.joinFrom).toHaveBeenCalledWith('app', sut.options.statics.route);
     expect(appConfiguration.get).toHaveBeenCalledTimes(1);
@@ -572,15 +583,15 @@ describe('app:Jimpex', () => {
     });
     // Then
     expect(wootilsMock.appConfiguration).toHaveBeenCalledTimes(1);
-    expect(wootilsMock.appConfiguration).toHaveBeenCalledWith(
-      sut.options.configuration.name,
-      defaultConfig,
-      {
+    expect(wootilsMock.appConfiguration).toHaveBeenCalledWith({
+      appName: sut.options.configuration.name,
+      defaultConfiguration: defaultConfig,
+      options: {
         environmentVariable: sut.options.configuration.environmentVariable,
         path: sut.options.configuration.path,
         filenameFormat: `${sut.options.configuration.name}.[name].config.js`,
       },
-    );
+    });
     expect(appConfiguration.loadFromEnvironment).toHaveBeenCalledTimes(1);
     expect(sut.options.version).toBe(version);
   });
@@ -614,15 +625,15 @@ describe('app:Jimpex', () => {
     });
     // Then
     expect(wootilsMock.appConfiguration).toHaveBeenCalledTimes(1);
-    expect(wootilsMock.appConfiguration).toHaveBeenCalledWith(
-      sut.options.configuration.name,
-      { ...defaultConfig, version },
-      {
+    expect(wootilsMock.appConfiguration).toHaveBeenCalledWith({
+      appName: sut.options.configuration.name,
+      defaultConfiguration: { ...defaultConfig, version },
+      options: {
         environmentVariable: sut.options.configuration.environmentVariable,
         path: sut.options.configuration.path,
         filenameFormat: `${sut.options.configuration.name}.[name].config.js`,
       },
-    );
+    });
     expect(appConfiguration.loadFromEnvironment).toHaveBeenCalledTimes(1);
   });
 
@@ -653,15 +664,15 @@ describe('app:Jimpex', () => {
     });
     // Then
     expect(wootilsMock.appConfiguration).toHaveBeenCalledTimes(1);
-    expect(wootilsMock.appConfiguration).toHaveBeenCalledWith(
-      sut.options.configuration.name,
+    expect(wootilsMock.appConfiguration).toHaveBeenCalledWith({
+      appName: sut.options.configuration.name,
       defaultConfiguration,
-      {
+      options: {
         environmentVariable: sut.options.configuration.environmentVariable,
         path: `${sut.options.configuration.path}${sut.options.configuration.name}/`,
         filenameFormat: `${sut.options.configuration.name}.[name].config.js`,
       },
-    );
+    });
     expect(appConfiguration.loadFromEnvironment).toHaveBeenCalledTimes(1);
     expect(sut.options.version).toBe(version);
   });
@@ -694,15 +705,15 @@ describe('app:Jimpex', () => {
     });
     // Then
     expect(wootilsMock.appConfiguration).toHaveBeenCalledTimes(1);
-    expect(wootilsMock.appConfiguration).toHaveBeenCalledWith(
-      sut.options.configuration.name,
+    expect(wootilsMock.appConfiguration).toHaveBeenCalledWith({
+      appName: sut.options.configuration.name,
       defaultConfiguration,
-      {
+      options: {
         environmentVariable: sut.options.configuration.environmentVariable,
         path: `${sut.options.configuration.path}${sut.options.configuration.name}/`,
         filenameFormat: `${sut.options.configuration.name}.[name].config.js`,
       },
-    );
+    });
     expect(appConfiguration.loadFromEnvironment).toHaveBeenCalledTimes(0);
     expect(sut.options.version).toBe(version);
   });
@@ -755,7 +766,7 @@ describe('app:Jimpex', () => {
     };
     const appConfiguration = {
       loadFromEnvironment: jest.fn(),
-      get: jest.fn((prop) => configuration[prop]),
+      get: jest.fn((prop) => (Array.isArray(prop) ? [] : configuration[prop])),
     };
     JimpleMock.service('appConfiguration', appConfiguration);
     const events = {
@@ -817,7 +828,7 @@ describe('app:Jimpex', () => {
     };
     const appConfiguration = {
       loadFromEnvironment: jest.fn(),
-      get: jest.fn((prop) => configuration[prop]),
+      get: jest.fn((prop) => (Array.isArray(prop) ? [] : configuration[prop])),
     };
     JimpleMock.service('appConfiguration', appConfiguration);
     const events = {
@@ -836,6 +847,390 @@ describe('app:Jimpex', () => {
     // Then
     expect(callback).toHaveBeenCalledTimes(1);
     expect(callback).toHaveBeenCalledWith(appConfiguration);
+  });
+
+  it('should start and stop the server with HTTPS enabled', () => {
+    // Given
+    class Sut extends Jimpex {
+      boot() {}
+    }
+    const files = {
+      keyFile: {
+        name: 'key-file',
+        contents: 'key-file-contents',
+      },
+      certFile: {
+        name: 'cert-file',
+        contents: 'cert-file-contents',
+      },
+    };
+    fs.readFileSync.mockImplementationOnce(() => files.certFile.contents);
+    fs.readFileSync.mockImplementationOnce(() => files.keyFile.contents);
+    https.createServer.mockImplementationOnce((_, server) => server);
+    const pathUtils = {
+      joinFrom: jest.fn((from, rest) => path.join(from, rest)),
+    };
+    JimpleMock.service('pathUtils', pathUtils);
+    const defaultConfig = {};
+    const rootRequire = jest.fn(() => defaultConfig);
+    JimpleMock.service('rootRequire', rootRequire);
+    const configuration = {
+      port: 2509,
+      https: {
+        enabled: true,
+        credentials: {
+          key: files.keyFile.name,
+          cert: files.certFile.name,
+        },
+      },
+    };
+    const appConfiguration = {
+      loadFromEnvironment: jest.fn(),
+      get: jest.fn((prop) => (
+        Array.isArray(prop) ?
+          [null, configuration.https] :
+          configuration[prop]
+      )),
+    };
+    JimpleMock.service('appConfiguration', appConfiguration);
+    const events = {
+      emit: jest.fn(),
+    };
+    JimpleMock.service('events', events);
+    const appLogger = {
+      success: jest.fn(),
+    };
+    JimpleMock.service('appLogger', appLogger);
+    let sut = null;
+    let runningInstance = null;
+    // When
+    sut = new Sut();
+    sut.start();
+    runningInstance = sut.instance;
+    sut.stop();
+    // Then
+    expect(runningInstance).toEqual({
+      close: expect.any(Function),
+    });
+    expect(fs.readFileSync).toHaveBeenCalledTimes(2);
+    expect(fs.readFileSync).toHaveBeenNthCalledWith(1, path.join('home', files.certFile.name));
+    expect(fs.readFileSync).toHaveBeenNthCalledWith(2, path.join('home', files.keyFile.name));
+    expect(https.createServer).toHaveBeenCalledTimes(1);
+    expect(https.createServer).toHaveBeenCalledWith(
+      {
+        cert: files.certFile.contents,
+        key: files.keyFile.contents,
+      },
+      expressMock.mocks,
+    );
+    expect(expressMock.mocks.listen).toHaveBeenCalledTimes(1);
+    expect(expressMock.mocks.listen).toHaveBeenCalledWith(
+      configuration.port,
+      expect.any(Function),
+    );
+    expect(expressMock.mocks.closeInstance).toHaveBeenCalledTimes(1);
+  });
+
+  it('should start and stop the server with HTTPS and HTTP2 enabled', () => {
+    // Given
+    class Sut extends Jimpex {
+      boot() {}
+    }
+    const files = {
+      keyFile: {
+        name: 'key-file',
+        contents: 'key-file-contents',
+      },
+      certFile: {
+        name: 'cert-file',
+        contents: 'cert-file-contents',
+      },
+    };
+    fs.readFileSync.mockImplementationOnce(() => files.certFile.contents);
+    fs.readFileSync.mockImplementationOnce(() => files.keyFile.contents);
+    spdy.createServer.mockImplementationOnce((_, server) => server);
+    const pathUtils = {
+      joinFrom: jest.fn((from, rest) => path.join(from, rest)),
+    };
+    JimpleMock.service('pathUtils', pathUtils);
+    const defaultConfig = {};
+    const rootRequire = jest.fn(() => defaultConfig);
+    JimpleMock.service('rootRequire', rootRequire);
+    const configuration = {
+      port: 2509,
+      https: {
+        enabled: true,
+        credentials: {
+          key: files.keyFile.name,
+          cert: files.certFile.name,
+        },
+      },
+      http2: {
+        enabled: true,
+      },
+    };
+    const appConfiguration = {
+      loadFromEnvironment: jest.fn(),
+      get: jest.fn((prop) => (
+        Array.isArray(prop) ?
+          [configuration.http2, configuration.https] :
+          configuration[prop]
+      )),
+    };
+    JimpleMock.service('appConfiguration', appConfiguration);
+    const events = {
+      emit: jest.fn(),
+    };
+    JimpleMock.service('events', events);
+    const appLogger = {
+      success: jest.fn(),
+    };
+    JimpleMock.service('appLogger', appLogger);
+    let sut = null;
+    let runningInstance = null;
+    // When
+    sut = new Sut();
+    sut.start();
+    runningInstance = sut.instance;
+    sut.stop();
+    // Then
+    expect(runningInstance).toEqual({
+      close: expect.any(Function),
+    });
+    expect(fs.readFileSync).toHaveBeenCalledTimes(2);
+    expect(fs.readFileSync).toHaveBeenNthCalledWith(1, path.join('home', files.certFile.name));
+    expect(fs.readFileSync).toHaveBeenNthCalledWith(2, path.join('home', files.keyFile.name));
+    expect(spdy.createServer).toHaveBeenCalledTimes(1);
+    expect(spdy.createServer).toHaveBeenCalledWith(
+      {
+        cert: files.certFile.contents,
+        key: files.keyFile.contents,
+      },
+      expressMock.mocks,
+    );
+    expect(expressMock.mocks.listen).toHaveBeenCalledTimes(1);
+    expect(expressMock.mocks.listen).toHaveBeenCalledWith(
+      configuration.port,
+      expect.any(Function),
+    );
+    expect(expressMock.mocks.closeInstance).toHaveBeenCalledTimes(1);
+  });
+
+  it('should send custom options to Spdy for HTTP2', () => {
+    // Given
+    class Sut extends Jimpex {
+      boot() {}
+    }
+    const files = {
+      keyFile: {
+        name: 'key-file',
+        contents: 'key-file-contents',
+      },
+      certFile: {
+        name: 'cert-file',
+        contents: 'cert-file-contents',
+      },
+    };
+    fs.readFileSync.mockImplementationOnce(() => files.certFile.contents);
+    fs.readFileSync.mockImplementationOnce(() => files.keyFile.contents);
+    spdy.createServer.mockImplementationOnce((_, server) => server);
+    const pathUtils = {
+      joinFrom: jest.fn((from, rest) => path.join(from, rest)),
+    };
+    JimpleMock.service('pathUtils', pathUtils);
+    const defaultConfig = {};
+    const rootRequire = jest.fn(() => defaultConfig);
+    JimpleMock.service('rootRequire', rootRequire);
+    const configuration = {
+      port: 2509,
+      https: {
+        enabled: true,
+        credentials: {
+          onHome: false,
+          key: files.keyFile.name,
+          cert: files.certFile.name,
+        },
+      },
+      http2: {
+        enabled: true,
+        spdy: {
+          charito: ':D',
+          pili: ':D',
+        },
+      },
+    };
+    const appConfiguration = {
+      loadFromEnvironment: jest.fn(),
+      get: jest.fn((prop) => (
+        Array.isArray(prop) ?
+          [configuration.http2, configuration.https] :
+          configuration[prop]
+      )),
+    };
+    JimpleMock.service('appConfiguration', appConfiguration);
+    const events = {
+      emit: jest.fn(),
+    };
+    JimpleMock.service('events', events);
+    const appLogger = {
+      success: jest.fn(),
+    };
+    JimpleMock.service('appLogger', appLogger);
+    let sut = null;
+    let runningInstance = null;
+    // When
+    sut = new Sut();
+    sut.start();
+    runningInstance = sut.instance;
+    sut.stop();
+    // Then
+    expect(runningInstance).toEqual({
+      close: expect.any(Function),
+    });
+    expect(fs.readFileSync).toHaveBeenCalledTimes(2);
+    expect(fs.readFileSync).toHaveBeenNthCalledWith(1, path.join('app', files.certFile.name));
+    expect(fs.readFileSync).toHaveBeenNthCalledWith(2, path.join('app', files.keyFile.name));
+    expect(spdy.createServer).toHaveBeenCalledTimes(1);
+    expect(spdy.createServer).toHaveBeenCalledWith(
+      {
+        cert: files.certFile.contents,
+        key: files.keyFile.contents,
+        spdy: configuration.http2.spdy,
+      },
+      expressMock.mocks,
+    );
+    expect(expressMock.mocks.listen).toHaveBeenCalledTimes(1);
+    expect(expressMock.mocks.listen).toHaveBeenCalledWith(
+      configuration.port,
+      expect.any(Function),
+    );
+    expect(expressMock.mocks.closeInstance).toHaveBeenCalledTimes(1);
+  });
+
+  it('should throw an error if HTTPS is enabled but there are no credentials', () => {
+    // Given
+    class Sut extends Jimpex {
+      boot() {}
+    }
+    const pathUtils = {
+      joinFrom: jest.fn((from, rest) => path.join(from, rest)),
+    };
+    JimpleMock.service('pathUtils', pathUtils);
+    const defaultConfig = {};
+    const rootRequire = jest.fn(() => defaultConfig);
+    JimpleMock.service('rootRequire', rootRequire);
+    const configuration = {
+      port: 2509,
+      http2: {},
+      https: {
+        enabled: true,
+      },
+    };
+    const appConfiguration = {
+      loadFromEnvironment: jest.fn(),
+      get: jest.fn((prop) => (
+        Array.isArray(prop) ?
+          [configuration.http2, configuration.https] :
+          configuration[prop]
+      )),
+    };
+    JimpleMock.service('appConfiguration', appConfiguration);
+    const events = {
+      emit: jest.fn(),
+    };
+    JimpleMock.service('events', events);
+    const appLogger = {
+      success: jest.fn(),
+    };
+    JimpleMock.service('appLogger', appLogger);
+    // When/Then
+    expect(() => new Sut().start())
+    .toThrow(/The `credentials` object on the HTTPS settings is missing/i);
+  });
+
+  it('should throw an error if HTTP2 is enabled but HTTPS is not', () => {
+    // Given
+    class Sut extends Jimpex {
+      boot() {}
+    }
+    const pathUtils = {
+      joinFrom: jest.fn((from, rest) => path.join(from, rest)),
+    };
+    JimpleMock.service('pathUtils', pathUtils);
+    const defaultConfig = {};
+    const rootRequire = jest.fn(() => defaultConfig);
+    JimpleMock.service('rootRequire', rootRequire);
+    const configuration = {
+      port: 2509,
+      http2: {
+        enabled: true,
+      },
+      https: {
+        enabled: false,
+      },
+    };
+    const appConfiguration = {
+      loadFromEnvironment: jest.fn(),
+      get: jest.fn((prop) => (
+        Array.isArray(prop) ?
+          [configuration.http2, configuration.https] :
+          configuration[prop]
+      )),
+    };
+    JimpleMock.service('appConfiguration', appConfiguration);
+    const events = {
+      emit: jest.fn(),
+    };
+    JimpleMock.service('events', events);
+    const appLogger = {
+      success: jest.fn(),
+    };
+    JimpleMock.service('appLogger', appLogger);
+    // When/Then
+    expect(() => new Sut().start())
+    .toThrow(/HTTP2 requires for HTTPS to be enabled/i);
+  });
+
+  it('should throw an error if HTTPS is enabled but there are no credentials', () => {
+    // Given
+    class Sut extends Jimpex {
+      boot() {}
+    }
+    const pathUtils = {
+      joinFrom: jest.fn((from, rest) => path.join(from, rest)),
+    };
+    JimpleMock.service('pathUtils', pathUtils);
+    const defaultConfig = {};
+    const rootRequire = jest.fn(() => defaultConfig);
+    JimpleMock.service('rootRequire', rootRequire);
+    const configuration = {
+      port: 2509,
+      http2: {},
+      https: {
+        enabled: true,
+        credentials: [],
+      },
+    };
+    const appConfiguration = {
+      loadFromEnvironment: jest.fn(),
+      get: jest.fn((prop) => (
+        Array.isArray(prop) ?
+          [configuration.http2, configuration.https] :
+          configuration[prop]
+      )),
+    };
+    JimpleMock.service('appConfiguration', appConfiguration);
+    const events = {
+      emit: jest.fn(),
+    };
+    JimpleMock.service('events', events);
+    const appLogger = {
+      success: jest.fn(),
+    };
+    JimpleMock.service('appLogger', appLogger);
+    // When/Then
+    expect(() => new Sut().start())
+    .toThrow(/No credentials were found for HTTPS/i);
   });
 
   it('should start the server using `listen`', () => {
@@ -857,7 +1252,11 @@ describe('app:Jimpex', () => {
     };
     const appConfiguration = {
       loadFromEnvironment: jest.fn(),
-      get: jest.fn((prop) => configuration.changes[prop] || configuration[prop]),
+      get: jest.fn((prop) => (
+        Array.isArray(prop) ?
+          [] :
+          configuration.changes[prop] || configuration[prop]
+      )),
       set: jest.fn((prop, value) => {
         configuration.changes[prop] = value;
       }),
@@ -902,7 +1301,11 @@ describe('app:Jimpex', () => {
     };
     const appConfiguration = {
       loadFromEnvironment: jest.fn(),
-      get: jest.fn((prop) => configuration.changes[prop] || configuration[prop]),
+      get: jest.fn((prop) => (
+        Array.isArray(prop) ?
+          [] :
+          configuration.changes[prop] || configuration[prop]
+      )),
       set: jest.fn((prop, value) => {
         configuration.changes[prop] = value;
       }),
@@ -948,7 +1351,7 @@ describe('app:Jimpex', () => {
     };
     const appConfiguration = {
       loadFromEnvironment: jest.fn(),
-      get: jest.fn((prop) => configuration[prop]),
+      get: jest.fn((prop) => (Array.isArray(prop) ? [] : configuration[prop])),
     };
     JimpleMock.service('appConfiguration', appConfiguration);
     const events = {
@@ -984,7 +1387,7 @@ describe('app:Jimpex', () => {
     };
     const appConfiguration = {
       loadFromEnvironment: jest.fn(),
-      get: jest.fn((prop) => configuration[prop]),
+      get: jest.fn((prop) => (Array.isArray(prop) ? [] : configuration[prop])),
     };
     JimpleMock.service('appConfiguration', appConfiguration);
     const events = {
@@ -1024,7 +1427,7 @@ describe('app:Jimpex', () => {
     };
     const appConfiguration = {
       loadFromEnvironment: jest.fn(),
-      get: jest.fn((prop) => configuration[prop]),
+      get: jest.fn((prop) => (Array.isArray(prop) ? [] : configuration[prop])),
     };
     JimpleMock.service('appConfiguration', appConfiguration);
     const error = new Error('Something went wrong!');
@@ -1059,7 +1462,7 @@ describe('app:Jimpex', () => {
     };
     const appConfiguration = {
       loadFromEnvironment: jest.fn(),
-      get: jest.fn((prop) => configuration[prop]),
+      get: jest.fn((prop) => (Array.isArray(prop) ? [] : configuration[prop])),
     };
     JimpleMock.service('appConfiguration', appConfiguration);
     const events = {
@@ -1139,7 +1542,7 @@ describe('app:Jimpex', () => {
     };
     const appConfiguration = {
       loadFromEnvironment: jest.fn(),
-      get: jest.fn((prop) => configuration[prop]),
+      get: jest.fn((prop) => (Array.isArray(prop) ? [] : configuration[prop])),
     };
     JimpleMock.service('appConfiguration', appConfiguration);
     const events = {
@@ -1219,7 +1622,7 @@ describe('app:Jimpex', () => {
     };
     const appConfiguration = {
       loadFromEnvironment: jest.fn(),
-      get: jest.fn((prop) => configuration[prop]),
+      get: jest.fn((prop) => (Array.isArray(prop) ? [] : configuration[prop])),
     };
     JimpleMock.service('appConfiguration', appConfiguration);
     const events = {
@@ -1283,7 +1686,7 @@ describe('app:Jimpex', () => {
     };
     const appConfiguration = {
       loadFromEnvironment: jest.fn(),
-      get: jest.fn((prop) => configuration[prop]),
+      get: jest.fn((prop) => (Array.isArray(prop) ? [] : configuration[prop])),
     };
     JimpleMock.service('appConfiguration', appConfiguration);
     const events = {
@@ -1344,7 +1747,7 @@ describe('app:Jimpex', () => {
     };
     const appConfiguration = {
       loadFromEnvironment: jest.fn(),
-      get: jest.fn((prop) => configuration[prop]),
+      get: jest.fn((prop) => (Array.isArray(prop) ? [] : configuration[prop])),
     };
     JimpleMock.service('appConfiguration', appConfiguration);
     const events = {

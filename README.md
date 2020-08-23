@@ -92,6 +92,70 @@ app.stop();
 // Done, the app is not longer running.
 ```
 
+### HTTPS && HTTP2
+
+To enable HTTPS on your application, just like for the `port`, you need to create a `https` key on your configuration, "enable it" and provide the paths for the credentials:
+
+```js
+module.exports = {
+  port: 2509,
+  https: {
+    enabled: true,
+    credentials: {
+      cert: 'cert-file',
+      key: 'key-file',
+    },
+  },
+};
+```
+
+By default, Jimpex will look for those files relative to the project root directory, but you can change so it will look on a path relative to the directory where the application executable is located:
+
+```js
+{
+  // ...
+  credentials: {
+    onHome: false,
+    cert: 'cert-file',
+    key: 'key-file',
+  },
+}
+```
+
+Also, once you have HTTPS enabled, you can also enable [HTTP/2](https://en.wikipedia.org/wiki/HTTP/2):
+
+```js
+module.exports = {
+  port: 2509,
+  https: {
+    enabled: true,
+    credentials: {
+      cert: 'cert-file',
+      key: 'key-file',
+    },
+  },
+  http2: {
+    enabled: true,
+  },
+};
+```
+
+> **Important:** HTTPS MUST BE enabled in order to use HTTP/2.
+
+Under the hood, Jimpex uses [Spdy](https://yarnpkg.com/package/spdy) for the HTTP/2 support, and Spdy has custom options you can send it in order to define how it will work; you can send options to Spdy by adding a `spdy` key inside the `http2` object:
+
+```js
+{
+  // ...
+  http2: {
+    enabled: true,
+    spdy: {
+      'x-forwarded-for': '127.0.0.1',
+    },
+  },
+}
+```
+
 ### Defining a service
 
 To define a service and its provider, you would write your service as a `class` or a `function` and then wrap it on the `provider` function Jimpex provides:
