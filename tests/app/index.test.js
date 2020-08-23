@@ -1,36 +1,35 @@
-/* eslint-disable max-classes-per-file */
-const JimpleMock = require('/tests/mocks/jimple.mock');
-const expressMock = require('/tests/mocks/express.mock');
-const compressionMock = require('/tests/mocks/compression.mock');
-const multerMock = require('/tests/mocks/multer.mock');
-const bodyParserMock = require('/tests/mocks/bodyParser.mock');
-const wootilsMock = require('/tests/mocks/wootils.mock');
-
 jest.mock('https');
 jest.mock('fs-extra');
 jest.mock('spdy');
-jest.mock('jimple', () => JimpleMock);
-jest.mock('express', () => expressMock);
-jest.mock('compression', () => compressionMock);
-jest.mock('multer', () => multerMock);
-jest.mock('body-parser', () => bodyParserMock);
-jest.mock('wootils/node/providers', () => wootilsMock);
-jest.mock('/src/services/common', () => 'commonServices');
-jest.mock('/src/services/http', () => 'httpServices');
-jest.mock('/src/services/utils', () => 'utilsServices');
-jest.unmock('/src/app/index');
-jest.unmock('/src/utils/functions');
+jest.mock('jimple', () => require('../mocks/jimple.mock'));
+jest.mock('express', () => require('../mocks/express.mock'));
+jest.mock('compression', () => require('../mocks/compression.mock'));
+jest.mock('multer', () => require('../mocks/multer.mock'));
+jest.mock('body-parser', () => require('../mocks/bodyParser.mock'));
+jest.mock('wootils/node/providers', () => require('../mocks/wootils.mock'));
+jest.mock('../../src/services/common', () => 'commonServices');
+jest.mock('../../src/services/http', () => 'httpServices');
+jest.mock('../../src/services/utils', () => 'utilsServices');
+jest.unmock('../../src/app');
+jest.unmock('../../src/utils/functions');
 
 const path = require('path');
 const https = require('https');
 const statuses = require('statuses');
 const fs = require('fs-extra');
 const spdy = require('spdy');
-require('jasmine-expect');
 
-const Jimpex = require('/src/app');
-const { eventNames } = require('/src/constants');
 const { EventsHub } = require('wootils/shared');
+
+const JimpleMock = require('jimple');
+const expressMock = require('express');
+const compressionMock = require('compression');
+const multerMock = require('multer');
+const bodyParserMock = require('body-parser');
+const wootilsMock = require('wootils/node/providers');
+
+const Jimpex = require('../../src/app');
+const { eventNames } = require('../../src/constants');
 
 const originalNodeTLSRejectUnauthorized = process.env.NODE_TLS_REJECT_UNAUTHORIZED;
 

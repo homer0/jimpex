@@ -1,13 +1,12 @@
-jest.unmock('/src/utils/functions');
-jest.unmock('/src/utils/wrappers');
-jest.unmock('/src/controllers/common/statics');
+jest.unmock('../../../src/utils/functions');
+jest.unmock('../../../src/utils/wrappers');
+jest.unmock('../../../src/controllers/common/statics');
 
 const path = require('path');
-require('jasmine-expect');
 const {
   StaticsController,
   staticsController,
-} = require('/src/controllers/common/statics');
+} = require('../../../src/controllers/common/statics');
 
 describe('controllers/common:statics', () => {
   it('should be instantiated with its default options', () => {
@@ -18,7 +17,7 @@ describe('controllers/common:statics', () => {
     sut = new StaticsController(sendFile);
     // Then
     expect(sut).toBeInstanceOf(StaticsController);
-    expect(sut.addRoutes).toBeFunction();
+    expect(typeof sut.addRoutes).toBe('function');
     expect(sut.options).toEqual({
       files: ['favicon.ico', 'index.html'],
       methods: {
@@ -52,7 +51,7 @@ describe('controllers/common:statics', () => {
     sut = new StaticsController(sendFile, options);
     // Then
     expect(sut).toBeInstanceOf(StaticsController);
-    expect(sut.addRoutes).toBeFunction();
+    expect(typeof sut.addRoutes).toBe('function');
     expect(sut.options).toEqual(options);
   });
 

@@ -1,13 +1,11 @@
-/* eslint-disable max-classes-per-file */
-jest.unmock('/src/utils/wrappers');
-jest.unmock('/src/middlewares/utils/versionValidator');
+jest.unmock('../../../src/utils/wrappers');
+jest.unmock('../../../src/middlewares/utils/versionValidator');
 
-require('jasmine-expect');
 const { code: statuses } = require('statuses');
 const {
   VersionValidator,
   versionValidator,
-} = require('/src/middlewares/utils/versionValidator');
+} = require('../../../src/middlewares/utils/versionValidator');
 
 describe('services/api:versionValidator', () => {
   it('should be instantiated with its default options', () => {

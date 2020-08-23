@@ -5,5 +5,9 @@
   "globals": {
     "process": true,
     "module": true
+  },
+  "rules": {
+    "global-require": "off",
+    "max-classes-per-file": "off"
   }
 }

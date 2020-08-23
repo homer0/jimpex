@@ -1,14 +1,13 @@
-jest.unmock('/src/utils/wrappers');
+jest.unmock('../../src/utils/wrappers');
 jest.mock('wootils/shared/jimpleFns');
 
-require('jasmine-expect');
+const { resource, resourceCreator } = require('wootils/shared/jimpleFns');
 const {
   controller,
   controllerCreator,
   middleware,
   middlewareCreator,
-} = require('/src/utils/wrappers');
-const { resource, resourceCreator } = require('wootils/shared/jimpleFns');
+} = require('../../src/utils/wrappers');
 
 describe('utils/wrappers', () => {
   describe('controller', () => {

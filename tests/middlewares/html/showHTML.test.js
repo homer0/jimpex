@@ -1,11 +1,10 @@
-jest.unmock('/src/utils/wrappers');
-jest.unmock('/src/middlewares/html/showHTML');
+jest.unmock('../../../src/utils/wrappers');
+jest.unmock('../../../src/middlewares/html/showHTML');
 
-require('jasmine-expect');
 const {
   ShowHTML,
   showHTML,
-} = require('/src/middlewares/html/showHTML');
+} = require('../../../src/middlewares/html/showHTML');
 
 describe('middlewares/html:showHTML', () => {
   it('should be instantiated', () => {
@@ -81,9 +80,6 @@ describe('middlewares/html:showHTML', () => {
         expect(sendFile).toHaveBeenCalledWith(response, file, expect.any(Function));
         resolve();
       });
-    })
-    .catch(() => {
-      expect(true).toBeFalse();
     }),
   );
 
@@ -116,9 +112,6 @@ describe('middlewares/html:showHTML', () => {
         expect(sendFile).toHaveBeenCalledTimes(0);
         resolve();
       });
-    })
-    .catch(() => {
-      expect(true).toBeFalse();
     }),
   );
 

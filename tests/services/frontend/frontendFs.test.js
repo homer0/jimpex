@@ -1,13 +1,12 @@
 jest.mock('fs-extra');
-jest.unmock('/src/utils/wrappers');
-jest.unmock('/src/services/frontend/frontendFs');
+jest.unmock('../../../src/utils/wrappers');
+jest.unmock('../../../src/services/frontend/frontendFs');
 
-require('jasmine-expect');
 const fs = require('fs-extra');
 const {
   FrontendFs,
   frontendFs,
-} = require('/src/services/frontend/frontendFs');
+} = require('../../../src/services/frontend/frontendFs');
 
 describe('services/frontend:frontendFs', () => {
   beforeEach(() => {

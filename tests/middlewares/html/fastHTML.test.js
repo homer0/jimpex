@@ -1,13 +1,12 @@
-jest.unmock('/src/utils/functions');
-jest.unmock('/src/utils/wrappers');
-jest.unmock('/src/middlewares/html/fastHTML');
+jest.unmock('../../../src/utils/functions');
+jest.unmock('../../../src/utils/wrappers');
+jest.unmock('../../../src/middlewares/html/fastHTML');
 
-require('jasmine-expect');
 const {
   FastHTML,
   fastHTML,
-} = require('/src/middlewares/html/fastHTML');
-const { eventNames } = require('/src/constants');
+} = require('../../../src/middlewares/html/fastHTML');
+const { eventNames } = require('../../../src/constants');
 
 describe('middlewares/html:fastHTML', () => {
   it('should be instantiated with its default options', () => {

@@ -1,13 +1,11 @@
-/* eslint-disable max-classes-per-file */
-jest.unmock('/src/utils/wrappers');
-jest.unmock('/src/services/utils/ensureBearerToken');
+jest.unmock('../../../src/utils/wrappers');
+jest.unmock('../../../src/services/utils/ensureBearerToken');
 
-require('jasmine-expect');
 const { code: statuses } = require('statuses');
 const {
   EnsureBearerToken,
   ensureBearerToken,
-} = require('/src/services/utils/ensureBearerToken');
+} = require('../../../src/services/utils/ensureBearerToken');
 
 describe('services/utils:ensureBearerToken', () => {
   it('should be instantiated with its default options', () => {

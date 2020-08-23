@@ -1,14 +1,12 @@
-const wootilsMock = require('/tests/mocks/wootils.mock');
+jest.mock('wootils/shared', () => require('../../mocks/wootils.mock'));
+jest.unmock('../../../src/utils/wrappers');
+jest.unmock('../../../src/services/html/htmlGenerator');
 
-jest.mock('wootils/shared', () => wootilsMock);
-jest.unmock('/src/utils/wrappers');
-jest.unmock('/src/services/html/htmlGenerator');
-
-require('jasmine-expect');
+const wootilsMock = require('../../mocks/wootils.mock');
 const {
   HTMLGenerator,
   htmlGenerator,
-} = require('/src/services/html/htmlGenerator');
+} = require('../../../src/services/html/htmlGenerator');
 
 describe('services/html:htmlGenerator', () => {
   beforeEach(() => {
@@ -101,7 +99,7 @@ describe('services/html:htmlGenerator', () => {
     expect(result).toBe(file);
   });
 
-  it('should return the values from the app configuration', () => {
+  it('should return the values from the app configuration', async () => {
     // Given
     const options = {};
     const values = 'values';
@@ -111,6 +109,7 @@ describe('services/html:htmlGenerator', () => {
     const appLogger = 'appLogger';
     const frontendFs = 'frontendFs';
     let sut = null;
+    let result = null;
     // When
     sut = new HTMLGenerator(
       appConfiguration,
@@ -118,19 +117,14 @@ describe('services/html:htmlGenerator', () => {
       frontendFs,
       options,
     );
-    return sut.getValues()
-    .then((result) => {
-      // Then
-      expect(result).toBe(values);
-      expect(appConfiguration.get).toHaveBeenCalledTimes(1);
-      expect(appConfiguration.get).toHaveBeenCalledWith(sut.options.configurationKeys);
-    })
-    .catch(() => {
-      expect(true).toBeFalse();
-    });
+    result = await sut.getValues();
+    // Then
+    expect(result).toBe(values);
+    expect(appConfiguration.get).toHaveBeenCalledTimes(1);
+    expect(appConfiguration.get).toHaveBeenCalledWith(sut.options.configurationKeys);
   });
 
-  it('should return the values from a service', () => {
+  it('should return the values from a service', async () => {
     // Given
     const options = {};
     const values = 'values';
@@ -141,6 +135,7 @@ describe('services/html:htmlGenerator', () => {
       getValues: jest.fn(() => Promise.resolve(values)),
     };
     let sut = null;
+    let result = null;
     // When
     sut = new HTMLGenerator(
       appConfiguration,
@@ -149,18 +144,13 @@ describe('services/html:htmlGenerator', () => {
       options,
       valuesService,
     );
-    return sut.getValues()
-    .then((result) => {
-      // Then
-      expect(result).toBe(values);
-      expect(valuesService.getValues).toHaveBeenCalledTimes(1);
-    })
-    .catch(() => {
-      expect(true).toBeFalse();
-    });
+    result = await sut.getValues();
+    // Then
+    expect(result).toBe(values);
+    expect(valuesService.getValues).toHaveBeenCalledTimes(1);
   });
 
-  it('should return an empty object as values', () => {
+  it('should return an empty object as values', async () => {
     // Given
     const options = {
       configurationKeys: [],
@@ -170,6 +160,7 @@ describe('services/html:htmlGenerator', () => {
     const appLogger = 'appLogger';
     const frontendFs = 'frontendFs';
     let sut = null;
+    let result = null;
     // When
     sut = new HTMLGenerator(
       appConfiguration,
@@ -177,14 +168,9 @@ describe('services/html:htmlGenerator', () => {
       frontendFs,
       options,
     );
-    return sut.getValues()
-    .then((result) => {
-      // Then
-      expect(result).toEqual(values);
-    })
-    .catch(() => {
-      expect(true).toBeFalse();
-    });
+    result = await sut.getValues();
+    // Then
+    expect(result).toEqual(values);
   });
 
   it('should return a pending promise if the file hasn\'t been created', () => {
@@ -208,7 +194,7 @@ describe('services/html:htmlGenerator', () => {
     expect(wootilsMock.deferred).toHaveBeenCalledTimes(1);
   });
 
-  it('should generate the HTML file', () => {
+  it('should generate the HTML file', async () => {
     // Given
     const placeholder = '{{placeholder}}';
     const options = {
@@ -241,29 +227,21 @@ describe('services/html:htmlGenerator', () => {
       frontendFs,
       options,
     );
-    return sut.generateHTML()
-    .then(() => {
-      // Then
-      expect(frontendFs.read).toHaveBeenCalledTimes(1);
-      expect(frontendFs.read).toHaveBeenCalledWith(`./${options.template}`);
-      expect(appConfiguration.get).toHaveBeenCalledTimes(1);
-      expect(appConfiguration.get).toHaveBeenCalledWith(options.configurationKeys);
-      expect(frontendFs.write).toHaveBeenCalledTimes(1);
-      expect(frontendFs.write).toHaveBeenCalledWith(options.file, expectedContent);
-      expect(appLogger.success).toHaveBeenCalledTimes(1);
-      expect(appLogger.success).toHaveBeenCalledWith(expect.any(String));
-      expect(wootilsMock.mocks.deferredResolve).toHaveBeenCalledTimes(1);
-      return sut.whenReady();
-    })
-    .then(() => {
-      expect(true).toBeTrue();
-    })
-    .catch(() => {
-      expect(true).toBeFalse();
-    });
+    await sut.generateHTML();
+    // Then
+    expect(frontendFs.read).toHaveBeenCalledTimes(1);
+    expect(frontendFs.read).toHaveBeenCalledWith(`./${options.template}`);
+    expect(appConfiguration.get).toHaveBeenCalledTimes(1);
+    expect(appConfiguration.get).toHaveBeenCalledWith(options.configurationKeys);
+    expect(frontendFs.write).toHaveBeenCalledTimes(1);
+    expect(frontendFs.write).toHaveBeenCalledWith(options.file, expectedContent);
+    expect(appLogger.success).toHaveBeenCalledTimes(1);
+    expect(appLogger.success).toHaveBeenCalledWith(expect.any(String));
+    expect(wootilsMock.mocks.deferredResolve).toHaveBeenCalledTimes(1);
+    return sut.whenReady();
   });
 
-  it('should generate the HTML file and replace values on the template', () => {
+  it('should generate the HTML file and replace values on the template', async () => {
     // Given
     const placeholder = '{{placeholder}}';
     const options = {
@@ -313,29 +291,21 @@ describe('services/html:htmlGenerator', () => {
       frontendFs,
       options,
     );
-    return sut.generateHTML()
-    .then(() => {
-      // Then
-      expect(frontendFs.read).toHaveBeenCalledTimes(1);
-      expect(frontendFs.read).toHaveBeenCalledWith(`./${options.template}`);
-      expect(appConfiguration.get).toHaveBeenCalledTimes(1);
-      expect(appConfiguration.get).toHaveBeenCalledWith(options.configurationKeys);
-      expect(frontendFs.write).toHaveBeenCalledTimes(1);
-      expect(frontendFs.write).toHaveBeenCalledWith(options.file, expectedContent);
-      expect(appLogger.success).toHaveBeenCalledTimes(1);
-      expect(appLogger.success).toHaveBeenCalledWith(expect.any(String));
-      expect(wootilsMock.mocks.deferredResolve).toHaveBeenCalledTimes(1);
-      return sut.whenReady();
-    })
-    .then(() => {
-      expect(true).toBeTrue();
-    })
-    .catch(() => {
-      expect(true).toBeFalse();
-    });
+    await sut.generateHTML();
+    // Then
+    expect(frontendFs.read).toHaveBeenCalledTimes(1);
+    expect(frontendFs.read).toHaveBeenCalledWith(`./${options.template}`);
+    expect(appConfiguration.get).toHaveBeenCalledTimes(1);
+    expect(appConfiguration.get).toHaveBeenCalledWith(options.configurationKeys);
+    expect(frontendFs.write).toHaveBeenCalledTimes(1);
+    expect(frontendFs.write).toHaveBeenCalledWith(options.file, expectedContent);
+    expect(appLogger.success).toHaveBeenCalledTimes(1);
+    expect(appLogger.success).toHaveBeenCalledWith(expect.any(String));
+    expect(wootilsMock.mocks.deferredResolve).toHaveBeenCalledTimes(1);
+    return sut.whenReady();
   });
 
-  it('should generate the HTML file and delete the template', () => {
+  it('should generate the HTML file and delete the template', async () => {
     // Given
     const placeholder = '{{placeholder}}';
     const options = {
@@ -370,26 +340,21 @@ describe('services/html:htmlGenerator', () => {
       frontendFs,
       options,
     );
-    return sut.generateHTML()
-    .then(() => {
-      // Then
-      expect(frontendFs.read).toHaveBeenCalledTimes(1);
-      expect(frontendFs.read).toHaveBeenCalledWith(`./${options.template}`);
-      expect(appConfiguration.get).toHaveBeenCalledTimes(1);
-      expect(appConfiguration.get).toHaveBeenCalledWith(options.configurationKeys);
-      expect(frontendFs.write).toHaveBeenCalledTimes(1);
-      expect(frontendFs.write).toHaveBeenCalledWith(options.file, expectedContent);
-      expect(appLogger.success).toHaveBeenCalledTimes(1);
-      expect(appLogger.success).toHaveBeenCalledWith(expect.any(String));
-      expect(frontendFs.delete).toHaveBeenCalledTimes(1);
-      expect(frontendFs.delete).toHaveBeenCalledWith(`./${options.template}`);
-      expect(appLogger.info).toHaveBeenCalledTimes(1);
-      expect(appLogger.info).toHaveBeenCalledWith(expect.any(String));
-      expect(wootilsMock.mocks.deferredResolve).toHaveBeenCalledTimes(1);
-    })
-    .catch(() => {
-      expect(true).toBeFalse();
-    });
+    await sut.generateHTML();
+    // Then
+    expect(frontendFs.read).toHaveBeenCalledTimes(1);
+    expect(frontendFs.read).toHaveBeenCalledWith(`./${options.template}`);
+    expect(appConfiguration.get).toHaveBeenCalledTimes(1);
+    expect(appConfiguration.get).toHaveBeenCalledWith(options.configurationKeys);
+    expect(frontendFs.write).toHaveBeenCalledTimes(1);
+    expect(frontendFs.write).toHaveBeenCalledWith(options.file, expectedContent);
+    expect(appLogger.success).toHaveBeenCalledTimes(1);
+    expect(appLogger.success).toHaveBeenCalledWith(expect.any(String));
+    expect(frontendFs.delete).toHaveBeenCalledTimes(1);
+    expect(frontendFs.delete).toHaveBeenCalledWith(`./${options.template}`);
+    expect(appLogger.info).toHaveBeenCalledTimes(1);
+    expect(appLogger.info).toHaveBeenCalledWith(expect.any(String));
+    expect(wootilsMock.mocks.deferredResolve).toHaveBeenCalledTimes(1);
   });
 
   it('should fail to generate the HTML file', () => {
@@ -413,10 +378,8 @@ describe('services/html:htmlGenerator', () => {
       frontendFs,
       options,
     );
+    expect.assertions(5);
     return sut.generateHTML()
-    .then(() => {
-      expect(true).toBeFalse();
-    })
     .catch((result) => {
       // Then
       expect(result).toBe(error);
@@ -427,7 +390,7 @@ describe('services/html:htmlGenerator', () => {
     });
   });
 
-  it('should register the generator to be executed when the server starts', () => {
+  it('should register the generator to be executed when the server starts', async () => {
     // Given
     const appConfiguration = {
       get: jest.fn(() => {}),
@@ -466,30 +429,28 @@ describe('services/html:htmlGenerator', () => {
     [[serviceName, serviceFn]] = app.set.mock.calls;
     [[eventName, eventFn]] = events.once.mock.calls;
     sut = serviceFn();
-    return eventFn()
-    .then(() => {
-      // Then
-      expect(serviceName).toBe(name);
-      expect(eventName).toBe('after-start');
-      expect(frontendFs.read).toHaveBeenCalledTimes(1);
-      expect(frontendFs.read).toHaveBeenCalledWith(`./${sut.options.template}`);
-      expect(appConfiguration.get).toHaveBeenCalledTimes(1);
-      expect(appConfiguration.get).toHaveBeenCalledWith(sut.options.configurationKeys);
-      expect(frontendFs.write).toHaveBeenCalledTimes(1);
-      expect(frontendFs.write).toHaveBeenCalledWith(sut.options.file, expect.any(String));
-      expect(frontendFs.delete).toHaveBeenCalledTimes(1);
-      expect(frontendFs.delete).toHaveBeenCalledWith(`./${sut.options.template}`);
-      expect(appLogger.success).toHaveBeenCalledTimes(1);
-      expect(appLogger.success).toHaveBeenCalledWith(expect.any(String));
-      expect(appLogger.info).toHaveBeenCalledTimes(1);
-      expect(appLogger.info).toHaveBeenCalledWith(expect.any(String));
-      expect(wootilsMock.mocks.deferredResolve).toHaveBeenCalledTimes(1);
-      expect(app.try).toHaveBeenCalledTimes(1);
-      expect(app.try).toHaveBeenCalledWith('htmlGeneratorValues');
-    });
+    await eventFn();
+    // Then
+    expect(serviceName).toBe(name);
+    expect(eventName).toBe('after-start');
+    expect(frontendFs.read).toHaveBeenCalledTimes(1);
+    expect(frontendFs.read).toHaveBeenCalledWith(`./${sut.options.template}`);
+    expect(appConfiguration.get).toHaveBeenCalledTimes(1);
+    expect(appConfiguration.get).toHaveBeenCalledWith(sut.options.configurationKeys);
+    expect(frontendFs.write).toHaveBeenCalledTimes(1);
+    expect(frontendFs.write).toHaveBeenCalledWith(sut.options.file, expect.any(String));
+    expect(frontendFs.delete).toHaveBeenCalledTimes(1);
+    expect(frontendFs.delete).toHaveBeenCalledWith(`./${sut.options.template}`);
+    expect(appLogger.success).toHaveBeenCalledTimes(1);
+    expect(appLogger.success).toHaveBeenCalledWith(expect.any(String));
+    expect(appLogger.info).toHaveBeenCalledTimes(1);
+    expect(appLogger.info).toHaveBeenCalledWith(expect.any(String));
+    expect(wootilsMock.mocks.deferredResolve).toHaveBeenCalledTimes(1);
+    expect(app.try).toHaveBeenCalledTimes(1);
+    expect(app.try).toHaveBeenCalledWith('htmlGeneratorValues');
   });
 
-  it('should register the generator with a custom values service', () => {
+  it('should register the generator with a custom values service', async () => {
     // Given
     const appConfiguration = {
       get: jest.fn(() => {}),
@@ -536,37 +497,35 @@ describe('services/html:htmlGenerator', () => {
     [[serviceName, serviceFn]] = app.set.mock.calls;
     [[eventName, eventFn]] = events.once.mock.calls;
     sut = serviceFn();
-    return eventFn()
-    .then(() => {
-      // Then
-      expect(serviceName).toBe(name);
-      expect(eventName).toBe(expectedEventName);
-      expect(app.get).toHaveBeenCalledTimes(expectedGets.length);
-      expectedGets.forEach((service) => {
-        expect(app.get).toHaveBeenCalledWith(service);
-      });
-      expect(app.set).toHaveBeenCalledTimes(1);
-      expect(app.set).toHaveBeenCalledWith(name, expect.any(Function));
-      expect(events.once).toHaveBeenCalledTimes(1);
-      expect(events.once).toHaveBeenCalledWith(expectedEventName, expect.any(Function));
-      expect(frontendFs.read).toHaveBeenCalledTimes(1);
-      expect(frontendFs.read).toHaveBeenCalledWith(`./${sut.options.template}`);
-      expect(frontendFs.write).toHaveBeenCalledTimes(1);
-      expect(frontendFs.write).toHaveBeenCalledWith(sut.options.file, expect.any(String));
-      expect(frontendFs.delete).toHaveBeenCalledTimes(1);
-      expect(frontendFs.delete).toHaveBeenCalledWith(`./${sut.options.template}`);
-      expect(appLogger.success).toHaveBeenCalledTimes(1);
-      expect(appLogger.success).toHaveBeenCalledWith(expect.any(String));
-      expect(appLogger.info).toHaveBeenCalledTimes(1);
-      expect(appLogger.info).toHaveBeenCalledWith(expect.any(String));
-      expect(wootilsMock.mocks.deferredResolve).toHaveBeenCalledTimes(1);
-      expect(htmlGeneratorValues.getValues).toHaveBeenCalledTimes(1);
-      expect(app.try).toHaveBeenCalledTimes(1);
-      expect(app.try).toHaveBeenCalledWith('htmlGeneratorValues');
+    await eventFn();
+    // Then
+    expect(serviceName).toBe(name);
+    expect(eventName).toBe(expectedEventName);
+    expect(app.get).toHaveBeenCalledTimes(expectedGets.length);
+    expectedGets.forEach((service) => {
+      expect(app.get).toHaveBeenCalledWith(service);
     });
+    expect(app.set).toHaveBeenCalledTimes(1);
+    expect(app.set).toHaveBeenCalledWith(name, expect.any(Function));
+    expect(events.once).toHaveBeenCalledTimes(1);
+    expect(events.once).toHaveBeenCalledWith(expectedEventName, expect.any(Function));
+    expect(frontendFs.read).toHaveBeenCalledTimes(1);
+    expect(frontendFs.read).toHaveBeenCalledWith(`./${sut.options.template}`);
+    expect(frontendFs.write).toHaveBeenCalledTimes(1);
+    expect(frontendFs.write).toHaveBeenCalledWith(sut.options.file, expect.any(String));
+    expect(frontendFs.delete).toHaveBeenCalledTimes(1);
+    expect(frontendFs.delete).toHaveBeenCalledWith(`./${sut.options.template}`);
+    expect(appLogger.success).toHaveBeenCalledTimes(1);
+    expect(appLogger.success).toHaveBeenCalledWith(expect.any(String));
+    expect(appLogger.info).toHaveBeenCalledTimes(1);
+    expect(appLogger.info).toHaveBeenCalledWith(expect.any(String));
+    expect(wootilsMock.mocks.deferredResolve).toHaveBeenCalledTimes(1);
+    expect(htmlGeneratorValues.getValues).toHaveBeenCalledTimes(1);
+    expect(app.try).toHaveBeenCalledTimes(1);
+    expect(app.try).toHaveBeenCalledWith('htmlGeneratorValues');
   });
 
-  it('should register the generator with the values service disabled', () => {
+  it('should register the generator with the values service disabled', async () => {
     // Given
     const appConfiguration = {
       get: jest.fn(() => {}),
@@ -611,31 +570,29 @@ describe('services/html:htmlGenerator', () => {
     [[serviceName, serviceFn]] = app.set.mock.calls;
     [[eventName, eventFn]] = events.once.mock.calls;
     sut = serviceFn();
-    return eventFn()
-    .then(() => {
-      // Then
-      expect(serviceName).toBe(name);
-      expect(eventName).toBe(expectedEventName);
-      expect(app.get).toHaveBeenCalledTimes(expectedGets.length);
-      expectedGets.forEach((service) => {
-        expect(app.get).toHaveBeenCalledWith(service);
-      });
-      expect(app.set).toHaveBeenCalledTimes(1);
-      expect(app.set).toHaveBeenCalledWith(name, expect.any(Function));
-      expect(events.once).toHaveBeenCalledTimes(1);
-      expect(events.once).toHaveBeenCalledWith(expectedEventName, expect.any(Function));
-      expect(frontendFs.read).toHaveBeenCalledTimes(1);
-      expect(frontendFs.read).toHaveBeenCalledWith(`./${sut.options.template}`);
-      expect(frontendFs.write).toHaveBeenCalledTimes(1);
-      expect(frontendFs.write).toHaveBeenCalledWith(sut.options.file, expect.any(String));
-      expect(frontendFs.delete).toHaveBeenCalledTimes(1);
-      expect(frontendFs.delete).toHaveBeenCalledWith(`./${sut.options.template}`);
-      expect(appLogger.success).toHaveBeenCalledTimes(1);
-      expect(appLogger.success).toHaveBeenCalledWith(expect.any(String));
-      expect(appLogger.info).toHaveBeenCalledTimes(1);
-      expect(appLogger.info).toHaveBeenCalledWith(expect.any(String));
-      expect(wootilsMock.mocks.deferredResolve).toHaveBeenCalledTimes(1);
-      expect(app.try).toHaveBeenCalledTimes(0);
+    await eventFn();
+    // Then
+    expect(serviceName).toBe(name);
+    expect(eventName).toBe(expectedEventName);
+    expect(app.get).toHaveBeenCalledTimes(expectedGets.length);
+    expectedGets.forEach((service) => {
+      expect(app.get).toHaveBeenCalledWith(service);
     });
+    expect(app.set).toHaveBeenCalledTimes(1);
+    expect(app.set).toHaveBeenCalledWith(name, expect.any(Function));
+    expect(events.once).toHaveBeenCalledTimes(1);
+    expect(events.once).toHaveBeenCalledWith(expectedEventName, expect.any(Function));
+    expect(frontendFs.read).toHaveBeenCalledTimes(1);
+    expect(frontendFs.read).toHaveBeenCalledWith(`./${sut.options.template}`);
+    expect(frontendFs.write).toHaveBeenCalledTimes(1);
+    expect(frontendFs.write).toHaveBeenCalledWith(sut.options.file, expect.any(String));
+    expect(frontendFs.delete).toHaveBeenCalledTimes(1);
+    expect(frontendFs.delete).toHaveBeenCalledWith(`./${sut.options.template}`);
+    expect(appLogger.success).toHaveBeenCalledTimes(1);
+    expect(appLogger.success).toHaveBeenCalledWith(expect.any(String));
+    expect(appLogger.info).toHaveBeenCalledTimes(1);
+    expect(appLogger.info).toHaveBeenCalledWith(expect.any(String));
+    expect(wootilsMock.mocks.deferredResolve).toHaveBeenCalledTimes(1);
+    expect(app.try).toHaveBeenCalledTimes(0);
   });
 });

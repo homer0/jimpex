@@ -1,15 +1,14 @@
 const { code: statuses } = require('statuses');
 
-jest.unmock('/src/utils/wrappers');
-jest.unmock('/src/services/common/appError');
-jest.unmock('/src/services/common/httpError');
+jest.unmock('../../../src/utils/wrappers');
+jest.unmock('../../../src/services/common/appError');
+jest.unmock('../../../src/services/common/httpError');
 
-require('jasmine-expect');
-const { AppError } = require('/src/services/common/appError');
+const { AppError } = require('../../../src/services/common/appError');
 const {
   HTTPError,
   httpError,
-} = require('/src/services/common/httpError');
+} = require('../../../src/services/common/httpError');
 
 describe('services/common:httpError', () => {
   it('should be instantiated', () => {
@@ -92,7 +91,7 @@ describe('services/common:httpError', () => {
       result = sut(message, statuses.conflict);
       // Then
       expect(serviceName).toBe('httpError');
-      expect(sut).toBeFunction();
+      expect(typeof sut).toBe('function');
       expect(result).toBeInstanceOf(HTTPError);
       expect(result.message).toBe(message);
       expect(result.status).toEqual(statuses.conflict);

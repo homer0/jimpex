@@ -1,11 +1,10 @@
-jest.unmock('/src/utils/wrappers');
-jest.unmock('/src/controllers/common/configuration');
+jest.unmock('../../../src/utils/wrappers');
+jest.unmock('../../../src/controllers/common/configuration');
 
-require('jasmine-expect');
 const {
   ConfigurationController,
   configurationController,
-} = require('/src/controllers/common/configuration');
+} = require('../../../src/controllers/common/configuration');
 
 describe('controllers/common:configuration', () => {
   it('should be instantiated an have public methods', () => {
@@ -17,9 +16,9 @@ describe('controllers/common:configuration', () => {
     sut = new ConfigurationController(appConfiguration, responsesBuilder);
     // Then
     expect(sut).toBeInstanceOf(ConfigurationController);
-    expect(sut.getConfigurationResponse).toBeFunction();
-    expect(sut.showConfiguration).toBeFunction();
-    expect(sut.switchConfiguration).toBeFunction();
+    expect(typeof sut.getConfigurationResponse).toBe('function');
+    expect(typeof sut.showConfiguration).toBe('function');
+    expect(typeof sut.switchConfiguration).toBe('function');
   });
 
   it('should have a generic method to generate a configuration reponse', () => {
@@ -249,7 +248,7 @@ describe('controllers/common:configuration', () => {
     // When
     routes = configurationController.connect(app);
     // Then
-    expect(routes).toBeEmptyArray();
+    expect(routes).toEqual([]);
     expect(app.get).toHaveBeenCalledTimes(expectedGets.length);
     expectedGets.forEach((service) => {
       expect(app.get).toHaveBeenCalledWith(service);

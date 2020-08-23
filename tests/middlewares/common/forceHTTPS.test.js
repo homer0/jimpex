@@ -1,11 +1,10 @@
-jest.unmock('/src/utils/wrappers');
-jest.unmock('/src/middlewares/common/forceHTTPS');
+jest.unmock('../../../src/utils/wrappers');
+jest.unmock('../../../src/middlewares/common/forceHTTPS');
 
-require('jasmine-expect');
 const {
   ForceHTTPS,
   forceHTTPS,
-} = require('/src/middlewares/common/forceHTTPS');
+} = require('../../../src/middlewares/common/forceHTTPS');
 
 describe('middlewares/common:forceHTTPS', () => {
   it('should be instantiated with its default options', () => {
@@ -15,7 +14,7 @@ describe('middlewares/common:forceHTTPS', () => {
     sut = new ForceHTTPS();
     // Then
     expect(sut).toBeInstanceOf(ForceHTTPS);
-    expect(sut.ignoredRoutes).toBeArray();
+    expect(sut.ignoredRoutes).toEqual([expect.any(RegExp)]);
   });
 
   it('should be instantiated with a custom expression for ignored files', () => {

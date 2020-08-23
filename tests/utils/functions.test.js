@@ -1,13 +1,12 @@
-jest.unmock('/src/utils/functions');
+jest.unmock('../../src/utils/functions');
 
-require('jasmine-expect');
 const {
   createRouteExpression,
   escapeForRegExp,
   removeLeadingSlash,
   removeSlashes,
   removeTrailingSlash,
-} = require('/src/utils/functions');
+} = require('../../src/utils/functions');
 
 describe('utils/functions', () => {
   describe('removeLeadingSlash', () => {
@@ -129,7 +128,7 @@ describe('utils/functions', () => {
       expression = createRouteExpression(definition);
       result = expression.test(route);
       // Then
-      expect(result).toBeTrue();
+      expect(result).toBe(true);
     });
 
     it('should create a expression that matches the route with a trailing slash', () => {
@@ -142,7 +141,7 @@ describe('utils/functions', () => {
       expression = createRouteExpression(definition, false, true);
       result = expression.test(route);
       // Then
-      expect(result).toBeTrue();
+      expect(result).toBe(true);
     });
 
     it('should create a expression that doesn\'t matches a route', () => {
@@ -155,7 +154,7 @@ describe('utils/functions', () => {
       expression = createRouteExpression(definition);
       result = expression.test(route);
       // Then
-      expect(result).toBeFalse();
+      expect(result).toBe(false);
     });
   });
 });

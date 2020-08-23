@@ -1,12 +1,11 @@
-jest.unmock('/src/utils/wrappers');
-jest.unmock('/src/services/http/apiClient');
+jest.unmock('../../../src/utils/wrappers');
+jest.unmock('../../../src/services/http/apiClient');
 
-require('jasmine-expect');
+const APIClientBase = require('wootils/shared/apiClient');
 const {
   APIClient,
   apiClient,
-} = require('/src/services/http/apiClient');
-const APIClientBase = require('wootils/shared/apiClient');
+} = require('../../../src/services/http/apiClient');
 
 describe('services/http:client', () => {
   it('should be instantiated with its configuration', () => {
