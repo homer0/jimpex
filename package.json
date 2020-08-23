@@ -28,7 +28,6 @@
       "esdoc-node": "1.0.4",
       "leasot": "^11.1.0",
       "lint-staged": "^10.2.11",
-      "coveralls": "^3.1.0",
       "husky": "^4.2.5"
     },
     "engine-strict": true,
