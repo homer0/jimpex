@@ -1,7 +1,6 @@
 jest.unmock('../../../src/utils/wrappers');
 jest.unmock('../../../src/services/utils/ensureBearerToken');
 
-require('jasmine-expect');
 const { code: statuses } = require('statuses');
 const {
   EnsureBearerToken,

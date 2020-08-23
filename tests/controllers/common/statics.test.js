@@ -3,7 +3,6 @@ jest.unmock('../../../src/utils/wrappers');
 jest.unmock('../../../src/controllers/common/statics');
 
 const path = require('path');
-require('jasmine-expect');
 const {
   StaticsController,
   staticsController,
@@ -18,7 +17,7 @@ describe('controllers/common:statics', () => {
     sut = new StaticsController(sendFile);
     // Then
     expect(sut).toBeInstanceOf(StaticsController);
-    expect(sut.addRoutes).toBeFunction();
+    expect(typeof sut.addRoutes).toBe('function');
     expect(sut.options).toEqual({
       files: ['favicon.ico', 'index.html'],
       methods: {
@@ -52,7 +51,7 @@ describe('controllers/common:statics', () => {
     sut = new StaticsController(sendFile, options);
     // Then
     expect(sut).toBeInstanceOf(StaticsController);
-    expect(sut.addRoutes).toBeFunction();
+    expect(typeof sut.addRoutes).toBe('function');
     expect(sut.options).toEqual(options);
   });
 

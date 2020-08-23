@@ -1,7 +1,6 @@
 jest.unmock('../../../src/utils/wrappers');
 jest.unmock('../../../src/services/http/apiClient');
 
-require('jasmine-expect');
 const APIClientBase = require('wootils/shared/apiClient');
 const {
   APIClient,

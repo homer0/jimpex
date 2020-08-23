@@ -1,7 +1,6 @@
 jest.unmock('../../../src/utils/wrappers');
 jest.unmock('../../../src/middlewares/html/showHTML');
 
-require('jasmine-expect');
 const {
   ShowHTML,
   showHTML,
@@ -113,9 +112,6 @@ describe('middlewares/html:showHTML', () => {
         expect(sendFile).toHaveBeenCalledTimes(0);
         resolve();
       });
-    })
-    .catch(() => {
-      expect(true).toBeFalse();
     }),
   );
 

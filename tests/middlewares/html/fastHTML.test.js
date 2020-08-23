@@ -2,7 +2,6 @@ jest.unmock('../../../src/utils/functions');
 jest.unmock('../../../src/utils/wrappers');
 jest.unmock('../../../src/middlewares/html/fastHTML');
 
-require('jasmine-expect');
 const {
   FastHTML,
   fastHTML,

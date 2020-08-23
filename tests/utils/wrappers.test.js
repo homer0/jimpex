@@ -1,7 +1,6 @@
 jest.unmock('../../src/utils/wrappers');
 jest.mock('wootils/shared/jimpleFns');
 
-require('jasmine-expect');
 const { resource, resourceCreator } = require('wootils/shared/jimpleFns');
 const {
   controller,

@@ -2,7 +2,6 @@ jest.mock('fs-extra');
 jest.unmock('../../../src/utils/wrappers');
 jest.unmock('../../../src/services/frontend/frontendFs');
 
-require('jasmine-expect');
 const fs = require('fs-extra');
 const {
   FrontendFs,

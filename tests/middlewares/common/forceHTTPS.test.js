@@ -1,7 +1,6 @@
 jest.unmock('../../../src/utils/wrappers');
 jest.unmock('../../../src/middlewares/common/forceHTTPS');
 
-require('jasmine-expect');
 const {
   ForceHTTPS,
   forceHTTPS,
@@ -15,7 +14,7 @@ describe('middlewares/common:forceHTTPS', () => {
     sut = new ForceHTTPS();
     // Then
     expect(sut).toBeInstanceOf(ForceHTTPS);
-    expect(sut.ignoredRoutes).toBeArray();
+    expect(sut.ignoredRoutes).toEqual([expect.any(RegExp)]);
   });
 
   it('should be instantiated with a custom expression for ignored files', () => {

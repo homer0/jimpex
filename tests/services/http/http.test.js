@@ -2,7 +2,6 @@ jest.mock('node-fetch');
 jest.unmock('../../../src/utils/wrappers');
 jest.unmock('../../../src/services/http/http');
 
-require('jasmine-expect');
 const fetch = require('node-fetch');
 const {
   HTTP,
@@ -47,7 +46,7 @@ describe('services/http:http', () => {
     // Then
     expect(serviceName).toBe('http');
     expect(sut).toBeInstanceOf(HTTP);
-    expect(sut.logRequests).toBeFalse();
+    expect(sut.logRequests).toBe(false);
   });
 
   it('should get a request IP from an Express request object', () => {
@@ -376,6 +375,6 @@ describe('services/http:http', () => {
     // Then
     expect(serviceName).toBe('http');
     expect(sut).toBeInstanceOf(HTTP);
-    expect(sut.logRequests).toBeTrue();
+    expect(sut.logRequests).toBe(true);
   });
 });

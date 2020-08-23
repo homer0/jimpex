@@ -2,7 +2,6 @@ jest.mock('wootils/shared', () => require('../../mocks/wootils.mock'));
 jest.unmock('../../../src/utils/wrappers');
 jest.unmock('../../../src/services/html/htmlGenerator');
 
-require('jasmine-expect');
 const wootilsMock = require('../../mocks/wootils.mock');
 const {
   HTMLGenerator,

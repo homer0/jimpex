@@ -3,7 +3,6 @@ jest.unmock('../../../src/utils/wrappers');
 jest.unmock('../../../src/controllers/utils/gateway');
 
 const { code: statuses } = require('statuses');
-require('jasmine-expect');
 const {
   GatewayController,
   gatewayController,
@@ -24,7 +23,7 @@ describe('controllers/utils:gateway', () => {
       sut = new GatewayController(gatewayConfig, route, http);
       // Then
       expect(sut).toBeInstanceOf(GatewayController);
-      expect(sut.addRoutes).toBeFunction();
+      expect(typeof sut.addRoutes).toBe('function');
       expect(sut.gatewayConfig).toEqual(gatewayConfig);
       expect(sut.options).toEqual({
         root: '',
@@ -1064,7 +1063,7 @@ describe('controllers/utils:gateway', () => {
       expect(app.try).toHaveBeenCalledWith('apiGatewayHelper');
       expect(app.set).toHaveBeenCalledTimes(1);
       expect(app.set).toHaveBeenCalledWith('apiGateway', expect.any(Function));
-      expect(service).toBeFunction();
+      expect(typeof service).toBe('function');
       expect(service()).toBeInstanceOf(GatewayController);
     });
 
@@ -1121,7 +1120,7 @@ describe('controllers/utils:gateway', () => {
       expect(app.try).toHaveBeenCalledWith(`${options.serviceName}GatewayHelper`);
       expect(app.set).toHaveBeenCalledTimes(1);
       expect(app.set).toHaveBeenCalledWith(`${options.serviceName}Gateway`, expect.any(Function));
-      expect(service).toBeFunction();
+      expect(typeof service).toBe('function');
       expect(service()).toBeInstanceOf(GatewayController);
     });
 
@@ -1180,7 +1179,7 @@ describe('controllers/utils:gateway', () => {
       expect(app.try).toHaveBeenCalledWith(options.helperServiceName);
       expect(app.set).toHaveBeenCalledTimes(1);
       expect(app.set).toHaveBeenCalledWith(options.serviceName, expect.any(Function));
-      expect(service).toBeFunction();
+      expect(typeof service).toBe('function');
       expect(service()).toBeInstanceOf(GatewayController);
     });
 
@@ -1238,7 +1237,7 @@ describe('controllers/utils:gateway', () => {
       expect(app.try).toHaveBeenCalledTimes(0);
       expect(app.set).toHaveBeenCalledTimes(1);
       expect(app.set).toHaveBeenCalledWith(options.serviceName, expect.any(Function));
-      expect(service).toBeFunction();
+      expect(typeof service).toBe('function');
       expect(service()).toBeInstanceOf(GatewayController);
     });
 

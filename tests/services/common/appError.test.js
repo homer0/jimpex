@@ -2,7 +2,6 @@ jest.unmock('../../../src/utils/wrappers');
 jest.unmock('../../../src/services/common/appError');
 
 const { code: statuses } = require('statuses');
-require('jasmine-expect');
 const {
   AppError,
   appError,
@@ -61,7 +60,6 @@ describe('services/common:appError', () => {
     sut = new AppError(message, context);
     // Then
     expect(sut).toBeInstanceOf(AppError);
-    expect(sut.status).toBeNumber();
     expect(sut.status).toBe(statuses[context.status]);
   });
 
@@ -132,7 +130,7 @@ describe('services/common:appError', () => {
       result = sut(message, context);
       // Then
       expect(serviceName).toBe('appError');
-      expect(sut).toBeFunction();
+      expect(typeof sut).toBe('function');
       expect(result).toBeInstanceOf(AppError);
       expect(result.message).toBe(message);
       expect(result.context).toEqual(context);

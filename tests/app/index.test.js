@@ -13,7 +13,6 @@ jest.unmock('../../src/utils/functions');
 const path = require('path');
 const statuses = require('statuses');
 const { EventsHub } = require('wootils/shared');
-require('jasmine-expect');
 
 const JimpleMock = require('jimple');
 const expressMock = require('express');

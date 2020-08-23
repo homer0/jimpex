@@ -1,7 +1,6 @@
 jest.unmock('../../../src/utils/wrappers');
 jest.unmock('../../../src/middlewares/common/hsts');
 
-require('jasmine-expect');
 const {
   HSTS,
   hsts,

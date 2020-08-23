@@ -1,7 +1,6 @@
 jest.unmock('../../../src/utils/wrappers');
 jest.unmock('../../../src/middlewares/common/errorHandler');
 
-require('jasmine-expect');
 const { code: statuses } = require('statuses');
 const {
   ErrorHandler,
@@ -20,7 +19,7 @@ describe('middlewares/common:errorHandler', () => {
     sut = new ErrorHandler(appLogger, responsesBuilder, showErrors, AppError);
     // Then
     expect(sut).toBeInstanceOf(ErrorHandler);
-    expect(sut.middleware).toBeFunction();
+    expect(typeof sut.middleware).toBe('function');
     expect(sut.options).toEqual(({
       default: {
         message: 'Oops! Something went wrong, please try again',

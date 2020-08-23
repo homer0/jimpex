@@ -1,7 +1,6 @@
 jest.unmock('../../../src/utils/wrappers');
 jest.unmock('../../../src/controllers/common/health');
 
-require('jasmine-expect');
 const { code: statuses } = require('statuses');
 const {
   HealthController,
@@ -18,7 +17,7 @@ describe('controllers/common:health', () => {
     sut = new HealthController(appConfiguration, responsesBuilder);
     // Then
     expect(sut).toBeInstanceOf(HealthController);
-    expect(sut.health).toBeFunction();
+    expect(typeof sut.health).toBe('function');
   });
 
   it('should have a middleware to show "health" information', () => {
