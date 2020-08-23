@@ -1,8 +1,8 @@
-jest.unmock('/src/utils/wrappers');
-jest.unmock('/src/middlewares');
+jest.unmock('../../src/utils/wrappers');
+jest.unmock('../../src/middlewares');
 
 require('jasmine-expect');
-const middlewares = require('/src/middlewares');
+const middlewares = require('../../src/middlewares');
 
 describe('middlewares', () => {
   it('should export all the app middlewares', () => {

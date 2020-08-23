@@ -1,12 +1,12 @@
-jest.unmock('/src/utils/wrappers');
-jest.unmock('/src/services/common/appError');
+jest.unmock('../../../src/utils/wrappers');
+jest.unmock('../../../src/services/common/appError');
 
 const { code: statuses } = require('statuses');
 require('jasmine-expect');
 const {
   AppError,
   appError,
-} = require('/src/services/common/appError');
+} = require('../../../src/services/common/appError');
 
 const originalCaptureStackTrace = Error.captureStackTrace;
 

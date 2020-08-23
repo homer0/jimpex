@@ -1,13 +1,13 @@
 jest.mock('node-fetch');
-jest.unmock('/src/utils/wrappers');
-jest.unmock('/src/services/http/http');
+jest.unmock('../../../src/utils/wrappers');
+jest.unmock('../../../src/services/http/http');
 
 require('jasmine-expect');
 const fetch = require('node-fetch');
 const {
   HTTP,
   http,
-} = require('/src/services/http/http');
+} = require('../../../src/services/http/http');
 
 describe('services/http:http', () => {
   beforeEach(() => {

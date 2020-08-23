@@ -1,13 +1,13 @@
-jest.unmock('/src/utils/functions');
-jest.unmock('/src/utils/wrappers');
-jest.unmock('/src/controllers/utils/gateway');
+jest.unmock('../../../src/utils/functions');
+jest.unmock('../../../src/utils/wrappers');
+jest.unmock('../../../src/controllers/utils/gateway');
 
 const { code: statuses } = require('statuses');
 require('jasmine-expect');
 const {
   GatewayController,
   gatewayController,
-} = require('/src/controllers/utils/gateway');
+} = require('../../../src/controllers/utils/gateway');
 
 describe('controllers/utils:gateway', () => {
   describe('instance', () => {

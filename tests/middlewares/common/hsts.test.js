@@ -1,11 +1,11 @@
-jest.unmock('/src/utils/wrappers');
-jest.unmock('/src/middlewares/common/hsts');
+jest.unmock('../../../src/utils/wrappers');
+jest.unmock('../../../src/middlewares/common/hsts');
 
 require('jasmine-expect');
 const {
   HSTS,
   hsts,
-} = require('/src/middlewares/common/hsts');
+} = require('../../../src/middlewares/common/hsts');
 
 describe('middlewares/common:hsts', () => {
   it('should be instantiated with its default options', () => {

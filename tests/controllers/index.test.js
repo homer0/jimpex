@@ -1,8 +1,8 @@
-jest.unmock('/src/utils/wrappers');
-jest.unmock('/src/controllers');
+jest.unmock('../../src/utils/wrappers');
+jest.unmock('../../src/controllers');
 
 require('jasmine-expect');
-const controllers = require('/src/controllers');
+const controllers = require('../../src/controllers');
 
 describe('controllers', () => {
   it('should export all the app controllers', () => {

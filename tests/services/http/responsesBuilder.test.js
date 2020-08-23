@@ -1,12 +1,12 @@
-jest.unmock('/src/utils/wrappers');
-jest.unmock('/src/services/http/responsesBuilder');
+jest.unmock('../../../src/utils/wrappers');
+jest.unmock('../../../src/services/http/responsesBuilder');
 
 require('jasmine-expect');
 const { code: statuses } = require('statuses');
 const {
   ResponsesBuilder,
   responsesBuilder,
-} = require('/src/services/http/responsesBuilder');
+} = require('../../../src/services/http/responsesBuilder');
 
 describe('services/http:responsesBuilder', () => {
   it('should be instantiated', () => {

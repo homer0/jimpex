@@ -1,11 +1,11 @@
-jest.unmock('/src/utils/wrappers');
-jest.unmock('/src/middlewares/common/forceHTTPS');
+jest.unmock('../../../src/utils/wrappers');
+jest.unmock('../../../src/middlewares/common/forceHTTPS');
 
 require('jasmine-expect');
 const {
   ForceHTTPS,
   forceHTTPS,
-} = require('/src/middlewares/common/forceHTTPS');
+} = require('../../../src/middlewares/common/forceHTTPS');
 
 describe('middlewares/common:forceHTTPS', () => {
   it('should be instantiated with its default options', () => {

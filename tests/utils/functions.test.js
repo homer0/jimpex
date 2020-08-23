@@ -1,4 +1,4 @@
-jest.unmock('/src/utils/functions');
+jest.unmock('../../src/utils/functions');
 
 require('jasmine-expect');
 const {
@@ -7,7 +7,7 @@ const {
   removeLeadingSlash,
   removeSlashes,
   removeTrailingSlash,
-} = require('/src/utils/functions');
+} = require('../../src/utils/functions');
 
 describe('utils/functions', () => {
   describe('removeLeadingSlash', () => {

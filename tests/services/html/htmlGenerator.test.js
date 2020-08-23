@@ -1,14 +1,13 @@
-const wootilsMock = require('/tests/mocks/wootils.mock');
-
-jest.mock('wootils/shared', () => wootilsMock);
-jest.unmock('/src/utils/wrappers');
-jest.unmock('/src/services/html/htmlGenerator');
+jest.mock('wootils/shared', () => require('../../mocks/wootils.mock'));
+jest.unmock('../../../src/utils/wrappers');
+jest.unmock('../../../src/services/html/htmlGenerator');
 
 require('jasmine-expect');
+const wootilsMock = require('../../mocks/wootils.mock');
 const {
   HTMLGenerator,
   htmlGenerator,
-} = require('/src/services/html/htmlGenerator');
+} = require('../../../src/services/html/htmlGenerator');
 
 describe('services/html:htmlGenerator', () => {
   beforeEach(() => {

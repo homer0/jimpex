@@ -1,13 +1,13 @@
-jest.unmock('/src/utils/functions');
-jest.unmock('/src/utils/wrappers');
-jest.unmock('/src/controllers/common/statics');
+jest.unmock('../../../src/utils/functions');
+jest.unmock('../../../src/utils/wrappers');
+jest.unmock('../../../src/controllers/common/statics');
 
 const path = require('path');
 require('jasmine-expect');
 const {
   StaticsController,
   staticsController,
-} = require('/src/controllers/common/statics');
+} = require('../../../src/controllers/common/statics');
 
 describe('controllers/common:statics', () => {
   it('should be instantiated with its default options', () => {

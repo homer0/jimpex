@@ -1,11 +1,11 @@
-jest.unmock('/src/utils/wrappers');
-jest.unmock('/src/middlewares/html/showHTML');
+jest.unmock('../../../src/utils/wrappers');
+jest.unmock('../../../src/middlewares/html/showHTML');
 
 require('jasmine-expect');
 const {
   ShowHTML,
   showHTML,
-} = require('/src/middlewares/html/showHTML');
+} = require('../../../src/middlewares/html/showHTML');
 
 describe('middlewares/html:showHTML', () => {
   it('should be instantiated', () => {

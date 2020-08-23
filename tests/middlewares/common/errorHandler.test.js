@@ -1,12 +1,12 @@
-jest.unmock('/src/utils/wrappers');
-jest.unmock('/src/middlewares/common/errorHandler');
+jest.unmock('../../../src/utils/wrappers');
+jest.unmock('../../../src/middlewares/common/errorHandler');
 
 require('jasmine-expect');
 const { code: statuses } = require('statuses');
 const {
   ErrorHandler,
   errorHandler,
-} = require('/src/middlewares/common/errorHandler');
+} = require('../../../src/middlewares/common/errorHandler');
 
 describe('middlewares/common:errorHandler', () => {
   it('should be instantiated with default options and have a middleware method', () => {

@@ -1,11 +1,11 @@
-jest.unmock('/src/utils/wrappers');
-jest.unmock('/src/controllers/common/configuration');
+jest.unmock('../../../src/utils/wrappers');
+jest.unmock('../../../src/controllers/common/configuration');
 
 require('jasmine-expect');
 const {
   ConfigurationController,
   configurationController,
-} = require('/src/controllers/common/configuration');
+} = require('../../../src/controllers/common/configuration');
 
 describe('controllers/common:configuration', () => {
   it('should be instantiated an have public methods', () => {
