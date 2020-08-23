@@ -209,25 +209,6 @@
  */
 
 /**
- * @typedef {Object} JimpexHTTP2Credentials
- * @property {boolean} onHome If `true`, the path to the files will be relative to the project root
- *                            directory, otherwise, it will be relative to the directory where the
- *                            app executable file is located. Default `true`.
- * @property {string}  cert   The path to the certificate file. Default `''`.
- * @property {string}  key    The path to the key file. Default `''`.
- * @property {string}  ca     The path to the CA file. Default `''`.
- */
-
-/**
- * @typedef {Object} JimpexHTTP2Options
- * @property {boolean}                enabled     Whether or not HTTP2 should be enabled.
- *                                                Default `false`.
- * @property {JimpexHTTP2Credentials} credentials The path to the certificates for HTTP2.
- * @property {?Partial<SpdyOptions>}  spdyOptions Custom options for the Spdy server. Default
- *                                                `null`.
- */
-
-/**
  * @typedef {Object} JimpexDefaultServicesOptions
  * @property {boolean} common Whether or not to register all the `common` service providers.
  *                            Default `true`.
@@ -248,7 +229,6 @@
  * @property {string}                       filesizeLimit   The size limit for the requests
  *                                                          payload. Default `'15MB'`.
  * @property {JimpexExpressOptions}         express         The options for the Express app.
- * @property {JimpexHTTP2Options}           http2           The options to enable `spdy` for HTTP2.
  * @property {JimpexDefaultServicesOptions} defaultServices To tell the app which services should
  *                                                          be registered when instantiated.
  */
