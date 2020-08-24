@@ -1,8 +1,13 @@
 /**
+ * @module functions
+ */
+
+/**
  * Removes any leading slash from a URL.
  *
  * @param {string} url The URL to format.
  * @returns {string}
+ * @parent module:functions
  */
 const removeLeadingSlash = (url) => url.replace(/^\/+/, '');
 /**
@@ -10,6 +15,7 @@ const removeLeadingSlash = (url) => url.replace(/^\/+/, '');
  *
  * @param {string} url The URL to format.
  * @returns {string}
+ * @parent module:functions
  */
 const removeTrailingSlash = (url) => url.replace(/\/+$/, '');
 /**
@@ -19,6 +25,7 @@ const removeTrailingSlash = (url) => url.replace(/\/+$/, '');
  * @param {boolean} [leading=true]  Whether or not to remove any leading slash.
  * @param {boolean} [trailing=true] Whether or not to remove the trailing slash.
  * @returns {string}
+ * @parent module:functions
  */
 const removeSlashes = (url, leading = true, trailing = true) => {
   const newUrl = leading ? removeLeadingSlash(url) : url;
@@ -29,6 +36,7 @@ const removeSlashes = (url, leading = true, trailing = true) => {
  *
  * @param {string} text The text to escape.
  * @returns {string}
+ * @parent module:functions
  */
 const escapeForRegExp = (text) => text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
 /**
@@ -44,6 +52,7 @@ const escapeForRegExp = (text) => text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&
  *                                        these expressions are often used to match against
  *                                        incoming requests, and they don't have a trailing slash.
  * @returns {RegExp}
+ * @parent module:functions
  */
 const createRouteExpression = (route, leadingSlash = true, trailingSlash = false) => {
   let expression = removeSlashes(route)

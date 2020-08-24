@@ -9,6 +9,8 @@ const { provider } = require('../../utils/wrappers');
  * Another _'feature'_ of this service is that all the paths are relative to the directory where
  * the app executable is located, so you don't have to remember the relative path from the place
  * you are accessing a file to the place where it's located.
+ *
+ * @parent module:services
  */
 class FrontendFs {
   /**
@@ -64,6 +66,7 @@ class FrontendFs {
  * // Getting access to the service instance
  * const frontendFs = container.get('frontendFs');
  * @type {Provider}
+ * @parent module:services
  */
 const frontendFs = provider((app) => {
   app.set('frontendFs', () => new FrontendFs(app.get('pathUtils')));

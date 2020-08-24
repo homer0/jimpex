@@ -3,10 +3,13 @@ const { middlewareCreator } = require('../../utils/wrappers');
  * @typedef {Object} ForceHTTPSMiddlewareOptions
  * @property {RegExp[]} ignoredRoutes A list of regular expressions to match routes that should be
  *                                    ignored.
+ * @parent module:middlewares
  */
 
 /**
  * Force all the app traffice to be through HTTPS.
+ *
+ * @parent module:middlewares
  */
 class ForceHTTPS {
   /**
@@ -55,6 +58,7 @@ class ForceHTTPS {
  * A middleware to force HTTPS redirections to all the routes.
  *
  * @type {MiddlewareCreator<ForceHTTPSMiddlewareOptions>}
+ * @parent module:middlewares
  */
 const forceHTTPS = middlewareCreator((options = {}) => (app) => (
   app.get('appConfiguration').get('forceHTTPS') ?

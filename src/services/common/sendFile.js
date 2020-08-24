@@ -9,6 +9,7 @@ const { provider } = require('../../utils/wrappers');
  * @param {string}          [from='app'] The location it uses to build the relative path. It can be
  *                                       `app` for the directory where the app executable is
  *                                       located, or `home` for the project root directory.
+ * @parent module:services
  */
 
 /**
@@ -23,6 +24,7 @@ const { provider } = require('../../utils/wrappers');
  *
  * @param {PathUtils} pathUtils To generate the relative paths.
  * @returns {SendFile}
+ * @parent module:services
  */
 const sendFile = (pathUtils) => (res, filepath, next = () => {}, from = 'app') => {
   res.sendFile(pathUtils.joinFrom(from, filepath), (error) => {
@@ -44,6 +46,7 @@ const sendFile = (pathUtils) => (res, filepath, next = () => {}, from = 'app') =
  * const sendFile = container.get('sendFile');
  *
  * @type {Provider}
+ * @parent module:services
  */
 const sendFileProvider = provider((app) => {
   app.set('sendFile', () => sendFile(app.get('pathUtils')));

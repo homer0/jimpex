@@ -9,17 +9,19 @@ const { middlewareCreator } = require('../../utils/wrappers');
  *                                              HTTPS.
  * @property {boolean} [includeSubDomains=true] Whether or not the rule should apply to all sub
  *                                              domains.
- * @property {boolea}  [preload=false]          Whether or not to include on the major browsers'
+ * @property {boolean} [preload=false]          Whether or not to include on the major browsers'
  *                                              preload list. This directive is not part of the
  *                                              specification, for more information about it, you
  *                                              should check the MDN documentation for the header.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Strict-Transport-Security
+ * @parent module:middlewares
  */
 
 /**
  * It configures a `Strict-Transport-Security` header and includes it on every response.
  *
  * @see https://tools.ietf.org/html/rfc6797
+ * @parent module:middlewares
  */
 class HSTS {
   /**
@@ -90,6 +92,7 @@ class HSTS {
  * disable or enable the middleware.
  *
  * @type {MiddlewareCreator<HSTSOptions>}
+ * @parent module:middlewares
  */
 const hsts = middlewareCreator((options = {}) => (app) => {
   const useOptions = typeof options.maxAge !== 'undefined' ?

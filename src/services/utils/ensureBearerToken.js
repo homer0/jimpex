@@ -12,6 +12,7 @@ const { providerCreator } = require('../../utils/wrappers');
  *                             Default `401`.
  * @property {Object} response Context information that the error handler can read and add to the
  *                             default response. Default `{}`.
+ * @parent module:services
  */
 
 /**
@@ -27,12 +28,15 @@ const { providerCreator } = require('../../utils/wrappers');
  * @property {string}                        local      The property inside the `res.locals` where
  *                                                      the token, if found, will be saved.
  *                                                      Default `'token'`.
+ * @parent module:services
  */
 
 /**
  * This service gives you a middleware that verifies if a request has an `Authorization` header
  * with a bearer token; if it does, the token will be saved on the `res.locals`, otherwise, it
  * will generate an error.
+ *
+ * @parent module:services
  */
 class EnsureBearerToken {
   /**
@@ -118,6 +122,7 @@ class EnsureBearerToken {
  * the presence of a bearer token on the requests authorization header.
  *
  * @type {ProviderCreator<EnsureBearerTokenOptions>}
+ * @parent module:services
  */
 const ensureBearerToken = providerCreator((options) => (app) => {
   app.set(

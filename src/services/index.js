@@ -4,6 +4,10 @@ const html = require('./html');
 const http = require('./http');
 const utils = require('./utils');
 
+/**
+ * @module module:services
+ */
+
 module.exports.common = common;
 module.exports.frontend = frontend;
 module.exports.html = html;

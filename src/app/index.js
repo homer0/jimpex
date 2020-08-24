@@ -9,6 +9,10 @@ const multer = require('multer');
 const statuses = require('statuses');
 const spdy = require('spdy');
 
+/**
+ * @module core
+ */
+
 const {
   appConfiguration,
   appLogger,
@@ -30,6 +34,7 @@ const { escapeForRegExp } = require('../utils/functions');
  *
  * @augments Jimple
  * @todo Implement `helmet`.
+ * @parent module:core
  */
 class Jimpex extends Jimple {
   /**

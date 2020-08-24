@@ -19,12 +19,14 @@
  *                                             order to "reduce it".
  * @property {string} middlewareWillBeUsed     This is for a reducer event. It gets called before
  *                                             using a middleware in order to "reduce it".
+ * @parent module:constants
  */
 
 /**
  * The name of all the events {@link Jimpex} can trigger.
  *
  * @type {JimpexEvents}
+ * @parent module:constants
  */
 const eventNames = {
   beforeStart: 'before-start',

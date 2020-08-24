@@ -16,6 +16,7 @@ const { controllerCreator } = require('../../utils/wrappers');
  * @property {string}                               method   The name of the HTTP method.
  * @property {GatewayControllerEndpointInformation} endpoint The information for the endpoint
  *                                                           responsible from creating the route.
+ * @parent module:controllers
  * @ignore
  */
 
@@ -31,6 +32,7 @@ const { controllerCreator } = require('../../utils/wrappers');
  *                                                    `root` option.
  * @property {GatewayControllerRouteMethod[]} methods A list with all the methods the controller
  *                                                    will use to mount the route.
+ * @parent module:controllers
  * @ignore
  */
 
@@ -44,6 +46,7 @@ const { controllerCreator } = require('../../utils/wrappers');
  * @property {string} method The HTTP method for the endpoint. This will tell the gateway the
  *                           type of route it should mount. If is not specified, it will use
  *                           `all`.
+ * @parent module:controllers
  */
 
 /**
@@ -53,6 +56,7 @@ const { controllerCreator } = require('../../utils/wrappers');
  * @property {string|GatewayConfigurationEndpoints|GatewayConfigurationEndpoint} [endpointName]
  * It can be the path to an actual endpoint, a dictionary of sub endpoints, or a definition of
  * an endpoint with settings ({@link GatewayConfigurationEndpoint}).
+ * @parent module:controllers
  */
 
 /**
@@ -65,6 +69,7 @@ const { controllerCreator } = require('../../utils/wrappers');
  *                                                   will make the requests to.
  * @property {GatewayConfigurationEndpoints} gateway A dictionary with the endpoints the gateway
  *                                                   will make available.
+ * @parent module:controllers
  */
 
 /**
@@ -82,6 +87,7 @@ const { controllerCreator } = require('../../utils/wrappers');
  * @property {string[]} remove
  * A list of "known" headers the gateway will try to remove the response. Default:
  * `['server', 'x-powered-by']`.
+ * @parent module:controllers
  */
 
 /**
@@ -102,6 +108,7 @@ const { controllerCreator } = require('../../utils/wrappers');
  * option. For example: `{ url: '...', endpoints: { api: { ... } } }`. Default `api`.
  * @property {GatewayControllerHeadersOptions} headers
  * The options for how the gateway will handle the headers from the requests and the responses.
+ * @parent module:controllers
  */
 
 /**
@@ -131,6 +138,7 @@ const { controllerCreator } = require('../../utils/wrappers');
  * @property {?GatewayControllerMiddlewaresFn} middlewares
  * This function can be used to add custom middlewares on the gateway routes. If implemented, it
  * must return a list of middlewares when executed. Default `null`.
+ * @parent module:controllers
  */
 
 /**
@@ -139,6 +147,7 @@ const { controllerCreator } = require('../../utils/wrappers');
  * @typedef {Object} GatewayControllerRequest
  * @property {string}           url     The URL for the request.
  * @property {HTTPFetchOptions} options The request options.
+ * @parent module:controllers
  */
 
 /**
@@ -151,6 +160,7 @@ const { controllerCreator } = require('../../utils/wrappers');
  *                                                          configuration's `gateway` property.
  * @property {string|GatewayConfigurationEndpoint} settings The path for the endpoint, or the
  *                                                          dictionary of settings.
+ * @parent module:controllers
  */
 
 /**
@@ -168,6 +178,7 @@ const { controllerCreator } = require('../../utils/wrappers');
  * @param {ExpressNext}                          next     The function to call the next
  *                                                        middleware.
  * @returns {GatewayControllerRequest}
+ * @parent module:controllers
  */
 
 /**
@@ -185,6 +196,7 @@ const { controllerCreator } = require('../../utils/wrappers');
  * @param {ExpressNext}                          next     The function to call the next
  *                                                        middleware.
  * @returns {Response}
+ * @parent module:controllers
  */
 
 /**
@@ -203,6 +215,7 @@ const { controllerCreator } = require('../../utils/wrappers');
  * @param {ExpressNext}                          next     The function to call the next
  *                                                        middleware.
  * @returns {boolean}
+ * @parent module:controllers
  */
 
 /**
@@ -219,6 +232,7 @@ const { controllerCreator } = require('../../utils/wrappers');
  * @param {ExpressResponse}                      res      The server's response information.
  * @param {ExpressNext}                          next     The function to call the next
  *                                                        middleware.
+ * @parent module:controllers
  */
 
 /**
@@ -233,6 +247,7 @@ const { controllerCreator } = require('../../utils/wrappers');
  * @param {ExpressResponse}                      res      The server's response information.
  * @param {ExpressNext}                          next     The function to call the next
  *                                                        middleware.
+ * @parent module:controllers
  */
 
 /**
@@ -255,16 +270,20 @@ const { controllerCreator } = require('../../utils/wrappers');
  * `shouldStreamEndpointResponse` returned `false`.
  * @property {?GatewayHelperServiceErrorHandler} handleEndpointError
  * This is called in order for the helper to handle a fetch request error.
+ * @parent module:controllers
  */
 
 /**
  * @callback GatewayControllerMiddlewaresFn
  * @param {Jimpex} app A reference for the container.
  * @returns {MiddlewareLike[]}
+ * @parent module:controllers
  */
 
 /**
  * Geneters routes that will act as a gateway to an specific set of endpoints.
+ *
+ * @parent module:controllers
  */
 class GatewayController {
   /**
@@ -886,6 +905,7 @@ class GatewayController {
  * the contents from an specified API.
  *
  * @type {ControllerCreator<GatewayControllerCreatorOptions>}
+ * @parent module:controllers
  */
 const gatewayController = controllerCreator((options = {}) => (app, route) => {
   /**

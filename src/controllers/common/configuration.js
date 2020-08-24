@@ -6,6 +6,8 @@ const { controller } = require('../../utils/wrappers');
 
 /**
  * Provides the handlers and middlwares to show and switch configurations.
+ *
+ * @parent module:controllers
  */
 class ConfigurationController {
   /**
@@ -82,6 +84,7 @@ class ConfigurationController {
  * - Switching the configuration, but only if the service allows it.
  *
  * @type {Controller}
+ * @parent module:controllers
  * @todo Don't use an array to return the routes.
  */
 const configurationController = controller((app) => {

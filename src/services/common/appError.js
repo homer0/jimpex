@@ -4,6 +4,7 @@ const { provider } = require('../../utils/wrappers');
  * A simple subclass of `Error` but with support for context information.
  *
  * @augments Error
+ * @parent module:services
  */
 class AppError extends Error {
   /**
@@ -101,6 +102,7 @@ class AppError extends Error {
  * @param {string} message   The error message.
  * @param {Object} [context] Context information related to the error.
  * @returns {AppError}
+ * @parent module:services
  */
 const appErrorGenerator = (message, context) => new AppError(message, context);
 /**
@@ -116,6 +118,7 @@ const appErrorGenerator = (message, context) => new AppError(message, context);
  * // Getting access to the function.
  * const appError = container.get('appError');
  * @type {Provider}
+ * @parent module:services
  */
 const appError = provider((app) => {
   app.set('AppError', () => AppError);

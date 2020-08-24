@@ -7,6 +7,10 @@ const {
 } = require('wootils/shared/jimpleFns');
 
 /**
+ * @module wrappers
+ */
+
+/**
  * Generates a routes controller for the application container to mount.
  *
  * @example
@@ -21,6 +25,7 @@ const {
  * @param {ControllerConnectFn} connectFn A function that will be called the moment the app mounts
  *                                        the controller.
  * @returns {Controller}
+ * @parent module:wrappers
  */
 const controller = (connectFn) => resource('controller', 'connect', connectFn);
 /**
@@ -39,6 +44,7 @@ const controller = (connectFn) => resource('controller', 'connect', connectFn);
  *
  * @param {ControllerCreatorFn} creatorFn The function that generates the controller.
  * @returns {ControllerCreator<*>}
+ * @parent module:wrappers
  */
 const controllerCreator = (creatorFn) => resourceCreator('controller', 'connect', creatorFn);
 /**
@@ -73,6 +79,7 @@ const controllerCreator = (creatorFn) => resourceCreator('controller', 'connect'
  * @param {MiddlewareConnectFn} connectFn A function that will be called the moment the app
  *                                        mounts the middleware.
  * @returns {Middleware}
+ * @parent module:wrappers
  */
 const middleware = (connectFn) => resource('middleware', 'connect', connectFn);
 /**
@@ -89,6 +96,7 @@ const middleware = (connectFn) => resource('middleware', 'connect', connectFn);
  *
  * @param {MiddlewareCreatorFn} creatorFn The function that generates the middleware.
  * @returns {MiddlewareCreator<*>}
+ * @parent module:wrappers
  */
 const middlewareCreator = (creatorFn) => resourceCreator('middleware', 'connect', creatorFn);
 
