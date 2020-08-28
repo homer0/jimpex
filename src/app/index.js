@@ -38,15 +38,9 @@ const { escapeForRegExp } = require('../utils/functions');
  */
 class Jimpex extends Jimple {
   /**
-   * @param {boolean}                [boot=true]  If `true`, after initializing the server, it will
-   *                                              immediately call the `boot` method. This can be
-   *                                              used on a development environment where you
-   *                                              would want to register development
-   *                                              services/middlewares/controllers before the
-   *                                              application starts.
    * @param {Partial<JimpexOptions>} [options={}] Preferences to customize the application.
    */
-  constructor(boot = true, options = {}) {
+  constructor(options = {}) {
     super();
     /**
      * The application options.
@@ -58,6 +52,7 @@ class Jimpex extends Jimple {
     this._options = ObjectUtils.merge({
       version: '0.0.0',
       filesizeLimit: '15MB',
+      boot: true,
       configuration: {
         default: null,
         name: 'app',
@@ -140,7 +135,7 @@ class Jimpex extends Jimple {
     this._setupDefaultServices();
     this._setupConfiguration();
 
-    if (boot) {
+    if (this._options.boot) {
       this.boot();
     }
   }

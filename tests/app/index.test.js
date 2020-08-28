@@ -177,7 +177,7 @@ describe('app:Jimpex', () => {
     expect(bootMock).toHaveBeenCalledTimes(1);
   });
 
-  it('shouldn\'t call `boot` is the constructor flag is false', () => {
+  it('shouldn\'t call `boot` is option is set to false', () => {
     // Given
     const bootMock = jest.fn();
     class Sut extends Jimpex {
@@ -199,16 +199,15 @@ describe('app:Jimpex', () => {
     JimpleMock.service('appConfiguration', appConfiguration);
     // When
     // eslint-disable-next-line no-new
-    new Sut(false);
+    new Sut({
+      boot: false,
+    });
     // Then
     expect(bootMock).toHaveBeenCalledTimes(0);
   });
 
   it('shouldn\'t set \'trust proxy\' if its flag is `false`', () => {
     // Given
-    class Sut extends Jimpex {
-      boot() {}
-    }
     const pathUtils = {
       joinFrom: jest.fn((from, rest) => path.join(from, rest)),
     };
@@ -223,7 +222,7 @@ describe('app:Jimpex', () => {
     JimpleMock.service('appConfiguration', appConfiguration);
     // When
     // eslint-disable-next-line no-new
-    new Sut(true, {
+    new Jimpex({
       express: {
         trustProxy: false,
       },
@@ -234,9 +233,6 @@ describe('app:Jimpex', () => {
 
   it('shouldn\'t remove the \'x-powered-by\' if its flag is `false`', () => {
     // Given
-    class Sut extends Jimpex {
-      boot() {}
-    }
     const pathUtils = {
       joinFrom: jest.fn((from, rest) => path.join(from, rest)),
     };
@@ -251,7 +247,7 @@ describe('app:Jimpex', () => {
     JimpleMock.service('appConfiguration', appConfiguration);
     // When
     // eslint-disable-next-line no-new
-    new Sut(true, {
+    new Jimpex({
       express: {
         disableXPoweredBy: false,
       },
@@ -262,9 +258,6 @@ describe('app:Jimpex', () => {
 
   it('shouldn\'t add the compression middleware if its flag is `false`', () => {
     // Given
-    class Sut extends Jimpex {
-      boot() {}
-    }
     const pathUtils = {
       joinFrom: jest.fn((from, rest) => path.join(from, rest)),
     };
@@ -279,7 +272,7 @@ describe('app:Jimpex', () => {
     JimpleMock.service('appConfiguration', appConfiguration);
     // When
     // eslint-disable-next-line no-new
-    new Sut(true, {
+    new Jimpex({
       express: {
         compression: false,
       },
@@ -290,9 +283,6 @@ describe('app:Jimpex', () => {
 
   it('shouldn\'t add the bodyParser middleware if its flag is `false`', () => {
     // Given
-    class Sut extends Jimpex {
-      boot() {}
-    }
     const pathUtils = {
       joinFrom: jest.fn((from, rest) => path.join(from, rest)),
     };
@@ -307,7 +297,7 @@ describe('app:Jimpex', () => {
     JimpleMock.service('appConfiguration', appConfiguration);
     // When
     // eslint-disable-next-line no-new
-    new Sut(true, {
+    new Jimpex({
       express: {
         bodyParser: false,
       },
@@ -319,9 +309,6 @@ describe('app:Jimpex', () => {
 
   it('shouldn\'t add the multer middleware if its flag is `false`', () => {
     // Given
-    class Sut extends Jimpex {
-      boot() {}
-    }
     const pathUtils = {
       joinFrom: jest.fn((from, rest) => path.join(from, rest)),
     };
@@ -336,7 +323,7 @@ describe('app:Jimpex', () => {
     JimpleMock.service('appConfiguration', appConfiguration);
     // When
     // eslint-disable-next-line no-new
-    new Sut(true, {
+    new Jimpex({
       express: {
         multer: false,
       },
@@ -348,9 +335,6 @@ describe('app:Jimpex', () => {
 
   it('shouldn\'t add the static middleware if its flag is `false`', () => {
     // Given
-    class Sut extends Jimpex {
-      boot() {}
-    }
     const pathUtils = {
       joinFrom: jest.fn((from, rest) => path.join(from, rest)),
     };
@@ -365,7 +349,7 @@ describe('app:Jimpex', () => {
     JimpleMock.service('appConfiguration', appConfiguration);
     // When
     // eslint-disable-next-line no-new
-    new Sut(true, {
+    new Jimpex({
       statics: {
         enabled: false,
       },
@@ -380,9 +364,6 @@ describe('app:Jimpex', () => {
      * Home directory: Where the app is executed from (`process.cwd`).
      */
     // Given
-    class Sut extends Jimpex {
-      boot() {}
-    }
     const pathUtils = {
       joinFrom: jest.fn((from, rest) => path.join(from, rest)),
     };
@@ -397,7 +378,7 @@ describe('app:Jimpex', () => {
     JimpleMock.service('appConfiguration', appConfiguration);
     let sut = null;
     // When
-    sut = new Sut(true, {
+    sut = new Jimpex({
       statics: {
         onHome: true,
       },
@@ -414,9 +395,6 @@ describe('app:Jimpex', () => {
      * Home directory: Where the app is executed from (`process.cwd`).
      */
     // Given
-    class Sut extends Jimpex {
-      boot() {}
-    }
     const pathUtils = {
       joinFrom: jest.fn((from, rest) => path.join(from, rest)),
     };
@@ -440,7 +418,7 @@ describe('app:Jimpex', () => {
       ['multer-any'],
     ];
     // When
-    sut = new Sut(true, {
+    sut = new Jimpex({
       statics: {
         onHome: true,
         route: staticsRoute,
@@ -494,7 +472,7 @@ describe('app:Jimpex', () => {
       [`/${customStatic}`, path.join('app', customStatic)],
     ];
     // When
-    sut = new Sut(true, {
+    sut = new Sut({
       statics: {
         onHome: true,
         route: staticsRoute,
@@ -515,9 +493,6 @@ describe('app:Jimpex', () => {
 
   it('shouldn\'t add the default services if their flags are `false`', () => {
     // Given
-    class Sut extends Jimpex {
-      boot() {}
-    }
     const pathUtils = {
       joinFrom: jest.fn((from, rest) => path.join(from, rest)),
     };
@@ -540,7 +515,7 @@ describe('app:Jimpex', () => {
       'appConfiguration',
     ];
     // When
-    sut = new Sut(true, {
+    sut = new Jimpex({
       defaultServices: {
         common: false,
         http: false,
@@ -556,9 +531,6 @@ describe('app:Jimpex', () => {
 
   it('should be able to look for configurations', () => {
     // Given
-    class Sut extends Jimpex {
-      boot() {}
-    }
     const pathUtils = {
       joinFrom: jest.fn((from, rest) => path.join(from, rest)),
     };
@@ -574,7 +546,7 @@ describe('app:Jimpex', () => {
     JimpleMock.service('appConfiguration', appConfiguration);
     let sut = null;
     // When
-    sut = new Sut(true, {
+    sut = new Jimpex({
       configuration: {
         hasFolder: false,
       },
@@ -596,9 +568,6 @@ describe('app:Jimpex', () => {
 
   it('should inject the app version on the default configuration', () => {
     // Given
-    class Sut extends Jimpex {
-      boot() {}
-    }
     const pathUtils = {
       joinFrom: jest.fn((from, rest) => path.join(from, rest)),
     };
@@ -614,7 +583,7 @@ describe('app:Jimpex', () => {
     JimpleMock.service('appConfiguration', appConfiguration);
     let sut = null;
     // When
-    sut = new Sut(true, {
+    sut = new Jimpex({
       version,
       configuration: {
         hasFolder: false,
@@ -637,9 +606,6 @@ describe('app:Jimpex', () => {
 
   it('should receive the default configuration on the configuration options', () => {
     // Given
-    class Sut extends Jimpex {
-      boot() {}
-    }
     const pathUtils = {
       joinFrom: jest.fn((from, rest) => path.join(from, rest)),
     };
@@ -655,7 +621,7 @@ describe('app:Jimpex', () => {
     };
     let sut = null;
     // When
-    sut = new Sut(true, {
+    sut = new Jimpex({
       configuration: {
         default: defaultConfiguration,
       },
@@ -677,9 +643,6 @@ describe('app:Jimpex', () => {
 
   it('shouldn\'t load the configuration based on an env var if the option is disabled', () => {
     // Given
-    class Sut extends Jimpex {
-      boot() {}
-    }
     const pathUtils = {
       joinFrom: jest.fn((from, rest) => path.join(from, rest)),
     };
@@ -695,7 +658,7 @@ describe('app:Jimpex', () => {
     };
     let sut = null;
     // When
-    sut = new Sut(true, {
+    sut = new Jimpex({
       configuration: {
         default: defaultConfiguration,
         loadFromEnvironment: false,
@@ -718,9 +681,6 @@ describe('app:Jimpex', () => {
 
   it('should disable TL validation', () => {
     // Given
-    class Sut extends Jimpex {
-      boot() {}
-    }
     const pathUtils = {
       joinFrom: jest.fn((from, rest) => path.join(from, rest)),
     };
@@ -739,7 +699,7 @@ describe('app:Jimpex', () => {
     JimpleMock.service('appLogger', appLogger);
     let sut = null;
     // When
-    sut = new Sut();
+    sut = new Jimpex();
     sut.disableTLSValidation();
     // Then
     expect(process.env.NODE_TLS_REJECT_UNAUTHORIZED).toBe('0');
@@ -749,9 +709,6 @@ describe('app:Jimpex', () => {
 
   it('should start and stop the server', () => {
     // Given
-    class Sut extends Jimpex {
-      boot() {}
-    }
     const pathUtils = {
       joinFrom: jest.fn((from, rest) => path.join(from, rest)),
     };
@@ -786,7 +743,7 @@ describe('app:Jimpex', () => {
       eventNames.afterStop,
     ];
     // When
-    sut = new Sut();
+    sut = new Jimpex();
     sut.start();
     runningInstance = sut.instance;
     sut.stop();
@@ -811,9 +768,6 @@ describe('app:Jimpex', () => {
 
   it('should start the server and fire a custom callback', () => {
     // Given
-    class Sut extends Jimpex {
-      boot() {}
-    }
     const pathUtils = {
       joinFrom: jest.fn((from, rest) => path.join(from, rest)),
     };
@@ -840,7 +794,7 @@ describe('app:Jimpex', () => {
     const callback = jest.fn();
     let sut = null;
     // When
-    sut = new Sut();
+    sut = new Jimpex();
     sut.start(callback);
     // Then
     expect(callback).toHaveBeenCalledTimes(1);
@@ -849,9 +803,6 @@ describe('app:Jimpex', () => {
 
   it('should start and stop the server with HTTPS enabled', () => {
     // Given
-    class Sut extends Jimpex {
-      boot() {}
-    }
     const files = {
       keyFile: {
         name: 'key-file',
@@ -902,7 +853,7 @@ describe('app:Jimpex', () => {
     let sut = null;
     let runningInstance = null;
     // When
-    sut = new Sut();
+    sut = new Jimpex();
     sut.start();
     runningInstance = sut.instance;
     sut.stop();
@@ -931,9 +882,6 @@ describe('app:Jimpex', () => {
 
   it('should start and stop the server with HTTPS and HTTP2 enabled', () => {
     // Given
-    class Sut extends Jimpex {
-      boot() {}
-    }
     const files = {
       keyFile: {
         name: 'key-file',
@@ -987,7 +935,7 @@ describe('app:Jimpex', () => {
     let sut = null;
     let runningInstance = null;
     // When
-    sut = new Sut();
+    sut = new Jimpex();
     sut.start();
     runningInstance = sut.instance;
     sut.stop();
@@ -1016,9 +964,6 @@ describe('app:Jimpex', () => {
 
   it('should send custom options to Spdy for HTTP2', () => {
     // Given
-    class Sut extends Jimpex {
-      boot() {}
-    }
     const files = {
       keyFile: {
         name: 'key-file',
@@ -1077,7 +1022,7 @@ describe('app:Jimpex', () => {
     let sut = null;
     let runningInstance = null;
     // When
-    sut = new Sut();
+    sut = new Jimpex();
     sut.start();
     runningInstance = sut.instance;
     sut.stop();
@@ -1107,9 +1052,6 @@ describe('app:Jimpex', () => {
 
   it('should throw an error if HTTPS is enabled but there are no credentials', () => {
     // Given
-    class Sut extends Jimpex {
-      boot() {}
-    }
     const pathUtils = {
       joinFrom: jest.fn((from, rest) => path.join(from, rest)),
     };
@@ -1142,15 +1084,12 @@ describe('app:Jimpex', () => {
     };
     JimpleMock.service('appLogger', appLogger);
     // When/Then
-    expect(() => new Sut().start())
+    expect(() => new Jimpex().start())
     .toThrow(/The `credentials` object on the HTTPS settings is missing/i);
   });
 
   it('should throw an error if HTTP2 is enabled but HTTPS is not', () => {
     // Given
-    class Sut extends Jimpex {
-      boot() {}
-    }
     const pathUtils = {
       joinFrom: jest.fn((from, rest) => path.join(from, rest)),
     };
@@ -1185,15 +1124,12 @@ describe('app:Jimpex', () => {
     };
     JimpleMock.service('appLogger', appLogger);
     // When/Then
-    expect(() => new Sut().start())
+    expect(() => new Jimpex().start())
     .toThrow(/HTTP2 requires for HTTPS to be enabled/i);
   });
 
   it('should throw an error if HTTPS is enabled but there are no credentials', () => {
     // Given
-    class Sut extends Jimpex {
-      boot() {}
-    }
     const pathUtils = {
       joinFrom: jest.fn((from, rest) => path.join(from, rest)),
     };
@@ -1227,15 +1163,12 @@ describe('app:Jimpex', () => {
     };
     JimpleMock.service('appLogger', appLogger);
     // When/Then
-    expect(() => new Sut().start())
+    expect(() => new Jimpex().start())
     .toThrow(/No credentials were found for HTTPS/i);
   });
 
   it('should start the server using `listen`', () => {
     // Given
-    class Sut extends Jimpex {
-      boot() {}
-    }
     const pathUtils = {
       joinFrom: jest.fn((from, rest) => path.join(from, rest)),
     };
@@ -1270,7 +1203,7 @@ describe('app:Jimpex', () => {
     JimpleMock.service('appLogger', appLogger);
     let sut = null;
     // When
-    sut = new Sut();
+    sut = new Jimpex();
     sut.listen(customPort);
     // Then
     expect(appLogger.success).toHaveBeenCalledTimes(1);
@@ -1282,9 +1215,6 @@ describe('app:Jimpex', () => {
 
   it('should start the server using `listen` and fire a custom callback', () => {
     // Given
-    class Sut extends Jimpex {
-      boot() {}
-    }
     const pathUtils = {
       joinFrom: jest.fn((from, rest) => path.join(from, rest)),
     };
@@ -1320,7 +1250,7 @@ describe('app:Jimpex', () => {
     const callback = jest.fn();
     let sut = null;
     // When
-    sut = new Sut();
+    sut = new Jimpex();
     sut.listen(customPort, callback);
     // Then
     expect(callback).toHaveBeenCalledTimes(1);
@@ -1334,9 +1264,6 @@ describe('app:Jimpex', () => {
 
   it('shouldn\'t do anything when trying to stop the server without starting it', () => {
     // Given
-    class Sut extends Jimpex {
-      boot() {}
-    }
     const pathUtils = {
       joinFrom: jest.fn((from, rest) => path.join(from, rest)),
     };
@@ -1362,7 +1289,7 @@ describe('app:Jimpex', () => {
     JimpleMock.service('appLogger', appLogger);
     let sut = null;
     // When
-    sut = new Sut();
+    sut = new Jimpex();
     sut.stop();
     // Then
     expect(expressMock.mocks.closeInstance).toHaveBeenCalledTimes(0);
@@ -1370,9 +1297,6 @@ describe('app:Jimpex', () => {
 
   it('should try to access a service that may or may not be registered', () => {
     // Given
-    class Sut extends Jimpex {
-      boot() {}
-    }
     const pathUtils = {
       joinFrom: jest.fn((from, rest) => path.join(from, rest)),
     };
@@ -1400,7 +1324,7 @@ describe('app:Jimpex', () => {
     let resultAvailable = null;
     let resultUnavailable = null;
     // When
-    sut = new Sut();
+    sut = new Jimpex();
     resultAvailable = sut.try('events');
     resultUnavailable = sut.try('randomService');
     // Then
@@ -1410,9 +1334,6 @@ describe('app:Jimpex', () => {
 
   it('should throw an error when trying to access a service that failed to init', () => {
     // Given
-    class Sut extends Jimpex {
-      boot() {}
-    }
     const pathUtils = {
       joinFrom: jest.fn((from, rest) => path.join(from, rest)),
     };
@@ -1439,15 +1360,12 @@ describe('app:Jimpex', () => {
     JimpleMock.service('appLogger', appLogger);
     let sut = null;
     // When/Then
-    sut = new Sut();
+    sut = new Jimpex();
     expect(() => sut.try('events')).toThrow(error.message);
   });
 
   it('should mount a controller', () => {
     // Given
-    class Sut extends Jimpex {
-      boot() {}
-    }
     const pathUtils = {
       joinFrom: jest.fn((from, rest) => path.join(from, rest)),
     };
@@ -1499,7 +1417,7 @@ describe('app:Jimpex', () => {
       [eventNames.afterStartCallback],
     ];
     // When
-    sut = new Sut();
+    sut = new Jimpex();
     sut.mount(route, controller);
     sut.start();
     routesList = sut.routes;
@@ -1525,9 +1443,6 @@ describe('app:Jimpex', () => {
 
   it('should mount a controller router', () => {
     // Given
-    class Sut extends Jimpex {
-      boot() {}
-    }
     const pathUtils = {
       joinFrom: jest.fn((from, rest) => path.join(from, rest)),
     };
@@ -1579,7 +1494,7 @@ describe('app:Jimpex', () => {
       [eventNames.afterStartCallback],
     ];
     // When
-    sut = new Sut();
+    sut = new Jimpex();
     sut.mount(route, controller);
     sut.start();
     routesList = sut.routes;
@@ -1605,9 +1520,6 @@ describe('app:Jimpex', () => {
 
   it('should mount a middleware', () => {
     // Given
-    class Sut extends Jimpex {
-      boot() {}
-    }
     const pathUtils = {
       joinFrom: jest.fn((from, rest) => path.join(from, rest)),
     };
@@ -1650,7 +1562,7 @@ describe('app:Jimpex', () => {
       [middlewareFn],
     ];
     // When
-    sut = new Sut();
+    sut = new Jimpex();
     sut.use(middleware);
     sut.start();
     // Then
@@ -1669,9 +1581,6 @@ describe('app:Jimpex', () => {
 
   it('should mount an Express middleware', () => {
     // Given
-    class Sut extends Jimpex {
-      boot() {}
-    }
     const pathUtils = {
       joinFrom: jest.fn((from, rest) => path.join(from, rest)),
     };
@@ -1711,7 +1620,7 @@ describe('app:Jimpex', () => {
       [middleware],
     ];
     // When
-    sut = new Sut();
+    sut = new Jimpex();
     sut.use(middleware);
     sut.start();
     // Then
@@ -1730,9 +1639,6 @@ describe('app:Jimpex', () => {
 
   it('shouldn\'t mount a middleware if its `connect` method returned a falsy value', () => {
     // Given
-    class Sut extends Jimpex {
-      boot() {}
-    }
     const pathUtils = {
       joinFrom: jest.fn((from, rest) => path.join(from, rest)),
     };
@@ -1769,7 +1675,7 @@ describe('app:Jimpex', () => {
       ['multer-any'],
     ];
     // When
-    sut = new Sut();
+    sut = new Jimpex();
     sut.use(middleware);
     sut.start();
     // Then

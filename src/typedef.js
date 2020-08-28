@@ -222,12 +222,15 @@
  * @typedef {Object} JimpexOptions
  * @property {string}                       version         The app version. To be used on the
  *                                                          configuration. Default `'0.0.0'`.
+ * @property {string}                       filesizeLimit   The size limit for the requests
+ *                                                          payload. Default `'15MB'`.
+ * @property {boolean}                      boot            Whether or not to automatically call
+ *                                                          the `boot` method after initialization.
+ *                                                          Default `true`.
  * @property {JimpexConfigurationOptions}   configuration   The options for the app configuration
  *                                                          service.
  * @property {JimpexStaticsOptions}         statics         The options for the app static
  *                                                          `middleware`.
- * @property {string}                       filesizeLimit   The size limit for the requests
- *                                                          payload. Default `'15MB'`.
  * @property {JimpexExpressOptions}         express         The options for the Express app.
  * @property {JimpexDefaultServicesOptions} defaultServices To tell the app which services should
  *                                                          be registered when instantiated.
