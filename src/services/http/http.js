@@ -9,6 +9,7 @@ const { provider } = require('../../utils/wrappers');
  * @property {?Object.<string,string>} qs      The request query string parameters.
  * @property {?ExpressRequest}         req     An Express request object used to get extra
  *                                             infromation (like headers and the IP).
+ * @parent module:services
  */
 
 /**
@@ -17,6 +18,8 @@ const { provider } = require('../../utils/wrappers');
 
 /**
  * A set of utilities to work with HTTP requests and responses.
+ *
+ * @parent module:services
  */
 class HTTP {
   /**
@@ -237,6 +240,7 @@ class HTTP {
  * const http = container.get('http');
  *
  * @type {Provider}
+ * @parent module:services
  */
 const http = provider((app) => {
   app.set('http', () => {

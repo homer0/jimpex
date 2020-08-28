@@ -6,6 +6,7 @@ const { AppError } = require('./appError');
  * A type of error to be used on HTTP requests.
  *
  * @augments AppError
+ * @parent module:services
  */
 class HTTPError extends AppError {
   /**
@@ -24,6 +25,7 @@ class HTTPError extends AppError {
  * @param {number} [status]  The HTTP status code of the request response.
  * @param {Object} [context] Context information related to the error.
  * @returns {HTTPError}
+ * @parent module:services
  */
 const httpErrorGenerator = (message, status, context) => new HTTPError(
   message,
@@ -43,6 +45,7 @@ const httpErrorGenerator = (message, status, context) => new HTTPError(
  * // Getting access to the function.
  * const httpError = container.get('httpError');
  * @type {Provider}
+ * @parent module:services
  */
 const httpError = provider((app) => {
   app.set('HTTPError', () => HTTPError);

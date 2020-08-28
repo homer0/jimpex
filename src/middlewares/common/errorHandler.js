@@ -13,6 +13,7 @@ const { middlewareCreator } = require('../../utils/wrappers');
  * @property {string} message The error message the response will show. Default `'Oops! Something
  *                            went wrong, please try again'`.
  * @property {number} status  The HTTP status code for the response. Default `500`.
+ * @parent module:middlewares
  */
 
 /**
@@ -22,10 +23,13 @@ const { middlewareCreator } = require('../../utils/wrappers');
  * @property {ErrorHandlerDefaultOptions} default The options to build the default response,
  *                                                before the middleware analyzes the recevied
  *                                                error.
+ * @parent module:middlewares
  */
 
 /**
  * Provides the middleware to handle error responses for the app.
+ *
+ * @parent module:middlewares
  */
 class ErrorHandler {
   /**
@@ -159,6 +163,7 @@ class ErrorHandler {
  * Generates a middleware that show responses for unhandled errors thrown by the app.
  *
  * @type {MiddlewareCreator<ErrorHandlerOptions>}
+ * @parent module:middlewares
  */
 const errorHandler = middlewareCreator((options) => (app) => {
   const showErrors = app.get('appConfiguration').get('debug.showErrors') === true;

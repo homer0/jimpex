@@ -10,10 +10,13 @@ const { provider } = require('../../utils/wrappers');
  *                                 Default `true`.
  * @property {?number}  closeDelay How many ms should it wait before closing the window, if
  *                                 `options.close` is `true`. Default `700`.
+ * @parent module:services
  */
 
 /**
  * A utility service to build server responses.
+ *
+ * @parent module:services
  */
 class ResponsesBuilder {
   /**
@@ -167,6 +170,7 @@ class ResponsesBuilder {
  * const responsesBuilder = container.get('responsesBuilder');
  *
  * @type {Provider}
+ * @parent module:services
  */
 const responsesBuilder = provider((app) => {
   app.set('responsesBuilder', () => new ResponsesBuilder(

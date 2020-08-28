@@ -9,6 +9,7 @@ const { providers } = require('../../utils/wrappers');
  * @property {Provider} appError  The provider for {@link AppError}.
  * @property {Provider} httpError The provider for {@link HTTPError}.
  * @property {Provider} sendFile  The provider for {@link SendFile}.
+ * @parent module:services
  */
 const commonServices = providers({
   appError,

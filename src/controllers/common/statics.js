@@ -18,6 +18,7 @@ const { removeSlashes } = require('../../utils/functions');
  *                                            app.
  * @property {Object.<string,string>} headers A dictionary of custom headers to send on the file
  *                                            response.
+ * @parent module:controllers
  */
 
 /**
@@ -27,10 +28,12 @@ const { removeSlashes } = require('../../utils/functions');
  * @typedef {Object} StaticsControllerPathsOptions
  * @property {string} route  A custom route to prefix all the file routes.
  * @property {string} source A custom path to prefix all the file paths.
+ * @parent module:controllers
  */
 
 /**
  * @typedef {string|StaticsControllerFile} StaticsControllerFileLike
+ * @parent module:controllers
  */
 
 /**
@@ -46,11 +49,13 @@ const { removeSlashes } = require('../../utils/functions');
  *                                                   flags will be ignored.
  * @property {StaticsControllerPathsOptions} paths   The "master paths" the controller uses to
  *                                                   prefix all file routes and paths.
+ * @parent module:controllers
  */
 
 /**
  * @typedef {StaticsControllerOptions & StaticsControllerWrapperOptionsProperties}
  * StaticsControllerWrapperOptions
+ * @parent module:controllers
  */
 
 /**
@@ -59,17 +64,21 @@ const { removeSlashes } = require('../../utils/functions');
  * function can be used to add custom middlewares on the file routes. If implemented, it must
  * return a list of middlewares when executed.
  * @augments StaticsControllerWrapperOptions
+ * @parent module:controllers
  */
 
 /**
  * @callback StaticsControllerMiddlewaresFn
  * @param {Jimpex} app A reference for the container.
  * @returns {MiddlewareLike[]}
+ * @parent module:controllers
  */
 
 /**
  * This controller allows you to serve specific files from any folder to any route without the
  * need of mounting directories as "static".
+ *
+ * @parent module:controllers
  */
 class StaticsController {
   /**
@@ -292,6 +301,7 @@ class StaticsController {
  * need of mounting directories as "static".
  *
  * @type {ControllerCreator<StaticsControllerWrapperOptions>}
+ * @parent module:controllers
  */
 const staticsController = controllerCreator((options = {}) => (app) => {
   const router = app.get('router');

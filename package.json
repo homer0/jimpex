@@ -24,9 +24,9 @@
     "eslint": "^7.7.0",
     "eslint-plugin-homer0": "^5.0.2",
     "jest": "^26.4.2",
-    "esdoc": "^1.1.0",
-    "esdoc-standard-plugin": "^1.0.0",
-    "esdoc-node": "1.0.4",
+    "jsdoc": "^3.6.5",
+    "jsdoc-ts-utils": "^1.0.1",
+    "docdash": "homer0/docdash#semver:^2.1.0",
     "leasot": "^11.1.0",
     "lint-staged": "^10.2.11",
     "husky": "^4.2.5"
@@ -50,7 +50,6 @@
     "test": "./utils/scripts/test",
     "lint": "./utils/scripts/lint",
     "lint:all": "./utils/scripts/lint-all",
-    "predocs": "./utils/scripts/docs-index",
     "docs": "./utils/scripts/docs",
     "todo": "./utils/scripts/todo"
   }

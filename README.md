@@ -4,20 +4,6 @@ Express as dependency injection container.
 
 Jimpex is an implementation of [Express](https://expressjs.com), one of the most popular web frameworks for Node, using [Jimple](https://github.com/fjorgemota/jimple), a Javascript port of [Pimple](https://pimple.symfony.com/) dependency injection container.
 
-## Motivation/Introduction
-
-A friend who's also web developer brought the idea of start using a dependency injection container on Node, and how Jimple was a great tool for it, and from that moment on I can't think of starting an app without using it. It not only allows you to implement dependency injection on a simple and clean way but it also kind of forces you to have a really good organization of your code.
-
-A couple of months after that, the same friend told me that we should do something similar to [Silex](https://silex.symfony.com/), which is based on Pimple, with Express. I ran with the idea and... this project is what I think a mix of Jimple and Express would look like. To be clear, **this is not a port of Silex**.
-
-## Information
-
-| -            | -                                                                  |
-|--------------|--------------------------------------------------------------------|
-| Package      | jimpex                                                             |
-| Description  | Express as dependency injection container.                         |
-| Node Version | >= v10.0.0                                                         |
-
 ## Usage
 
 ### Creating your app
@@ -476,26 +462,44 @@ The service also implements a few other services from the [wootils](https://gith
 
 ### NPM/Yarn Tasks
 
-| Task                    | Description                         |
-|-------------------------|-------------------------------------|
-| `yarn test`             | Run the project unit tests.         |
-| `yarn run lint`         | Lint the modified files.            |
-| `yarn run lint:all`     | Lint the project code.              |
-| `yarn run docs`         | Generate the project documentation. |
-| `yarn run todo`         | List all the pending to-do's.       |
+| Task       | Description                          |
+|------------|--------------------------------------|
+| `docs`     | Generates the project documentation. |
+| `lint`     | Lints the staged files.              |
+| `lint:all` | Lints the entire project code.       |
+| `test`     | Runs the project unit tests.         |
+| `todo`     | Lists all the pending to-do's.       |
+
+### Repository hooks
+
+I use [`husky`](https://yarnpkg.com/package/husky) to automatically install the repository hooks so the code will be tested and linted before any commit and the dependencies updated after every merge.
+
+The configuration is on the `husky` property of the `package.json` and the hooks' files are on `./utils/hooks`.
 
 ### Testing
 
-I use [Jest](https://facebook.github.io/jest/) with [Jest-Ex](https://yarnpkg.com/en/package/jest-ex) to test the project. The configuration file is on `./.jestrc`, the tests and mocks are on `./tests` and the script that runs it is on `./utils/scripts/test`.
+I use [Jest](https://facebook.github.io/jest/) to test the project.
+
+The configuration file is on `./.jestrc.json`, the tests are on `./tests` and the script that runs it is on `./utils/scripts/test`.
 
 ### Linting
 
-I use [ESlint](http://eslint.org) to validate all our JS code. The configuration file for the project code is on `./.eslintrc` and for the tests on `./tests/.eslintrc` (which inherits from the one on the root), there's also an `./.eslintignore` to ignore some files on the process, and the script that runs it is on `./utils/scripts/lint`.
+I use [ESlint](https://eslint.org) with [my own custom configuration](https://yarnpkg.com/package/eslint-plugin-homer0) to validate all the JS code and the JSDoc comments.
+
+The configuration file for the project code is on `./.eslintrc` and the one for the tests is on `./tests/.eslintrc`, and there's also an `./.eslintignore` to exclude some files on the process. The script that runs it is on `./utils/scripts/lint`.
 
 ### Documentation
 
-I use [ESDoc](http://esdoc.org) to generate HTML documentation for the project. The configuration file is on `./.esdocrc` and the script that runs it is on `./utils/scripts/docs`.
+I use [JSDoc](https://jsdoc.app) to generate an HTML documentation site for the project.
+
+The configuration file is on `./.jsdoc.js` and the script that runs it is on `./utils/scripts/docs`.
 
 ### To-Dos
 
 I use `@todo` comments to write all the pending improvements and fixes, and [Leasot](https://yarnpkg.com/en/package/leasot) to generate a report. The script that runs it is on `./utils/scripts/todo`.
+
+## Motivation/Introduction
+
+A friend who's also web developer brought the idea of start using a dependency injection container on Node, and how Jimple was a great tool for it, and from that moment on I can't think of starting an app without using it. It not only allows you to implement dependency injection on a simple and clean way but it also kind of forces you to have a really good organization of your code.
+
+A couple of months after that, the same friend told me that we should do something similar to [Silex](https://silex.symfony.com/), which is based on Pimple, with Express. I ran with the idea and... this project is what I think a mix of Jimple and Express would look like. To be clear, **this is not a port of Silex**.

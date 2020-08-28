@@ -15,6 +15,7 @@ const { middlewareCreator } = require('../../utils/wrappers');
  * @property {string}  name  The name of the _"latest version"_. Basically, `req.params.version`
  *                           must match with this property in order to be consider "latest".
  *                           Default `'latest'`.
+ * @parent module:middlewares
  */
 
 /**
@@ -29,6 +30,7 @@ const { middlewareCreator } = require('../../utils/wrappers');
  *                             versions don't match. Default `'Conflict'`.
  * @property {string} message  The contents of the post message the generated page will send if
  *                             the versions don't match. Default `'vesion:conflict'`.
+ * @parent module:middlewares
  */
 
 /**
@@ -49,6 +51,7 @@ const { middlewareCreator } = require('../../utils/wrappers');
  *                                                   constructor, if specified via parameter,
  *                                                   the class will take care of automatically
  *                                                   add it to the options.
+ * @parent module:middlewares
  */
 
 /**
@@ -59,6 +62,8 @@ const { middlewareCreator } = require('../../utils/wrappers');
  * used to let the frontend know.
  * Also, it can be configured to handle requests from popups, in which case, instead of generating
  * an error message, it will send a post message.
+ *
+ * @parent module:middlewares
  */
 class VersionValidator {
   /**
@@ -212,6 +217,7 @@ class VersionValidator {
  * but if used as controller, it will mount it on `[route]/:version/*`.
  *
  * @type {MiddlewareCreator<VersionValidatorOptions>}
+ * @parent module:middlewares
  */
 const versionValidator = middlewareCreator((options = {}) => (app, route) => {
   // Get the middleware function.

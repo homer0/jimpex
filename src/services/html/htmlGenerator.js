@@ -25,11 +25,14 @@ const { providerCreator } = require('../../utils/wrappers');
  * @property {string[]} configurationKeys   A list of settings from the app configuration that will
  *                                          be used as the information to inject on the file.
  *                                          Default `['features', 'version', 'postMessagesPrefix']`.
+ *
+ * @parent module:services
  */
 
 /**
  * @typedef {HTMLGeneratorOptions & HTMLGeneratorProviderOptionsProperties}
  * HTMLGeneratorProviderOptions
+ * @parent module:services
  */
 
 /**
@@ -42,11 +45,13 @@ const { providerCreator } = require('../../utils/wrappers');
  * injected on the template. If the service is available, the values from `configurationKeys`
  * will be ignored.
  * @augments HTMLGeneratorProviderOptions
+ * @parent module:services
  */
 
 /**
  * @callback HTMLGeneratorValuesServiceGetValues
  * @returns {Promise<Object>}
+ * @parent module:services
  */
 
 /**
@@ -57,11 +62,14 @@ const { providerCreator } = require('../../utils/wrappers');
  * @property {HTMLGeneratorValuesServiceGetValues} getValues
  * This is the method an `HTMLGenerator` service will call in order to retrieve the values that
  * should be injected on the generated file.
+ * @parent module:services
  */
 
 /**
  * This is a utility sever that generates an HTML file with custom information when the app server
  * is started.
+ *
+ * @parent module:services
  */
 class HTMLGenerator {
   /**
@@ -349,6 +357,7 @@ class HTMLGenerator {
  * the generation an the html file when the server starts.
  *
  * @type {ProviderCreator<HTMLGeneratorProviderOptions>}
+ * @parent module:services
  */
 const htmlGenerator = providerCreator((options = {}) => (app) => {
   const { serviceName = 'htmlGenerator' } = options;

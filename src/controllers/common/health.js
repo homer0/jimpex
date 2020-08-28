@@ -8,6 +8,8 @@ const { controller } = require('../../utils/wrappers');
  * Provides the handler to show a some minimal health information about the app:
  * - app version.
  * - configuration name.
+ *
+ * @parent module:controllers
  */
 class HealthController {
   /**
@@ -56,6 +58,7 @@ class HealthController {
  * Mounts the health route.
  *
  * @type {Controller}
+ * @parent module:controllers
  */
 const healthController = controller((app) => {
   const router = app.get('router');

@@ -19,6 +19,7 @@ const { providerCreator } = require('../../utils/wrappers');
  * @property {typeof APIClient} clientClass          The class the service will instantiate. It
  *                                                   has to extend from {@link APIClient}, which
  *                                                   is the default value.
+ * @parent module:services
  */
 
 /**
@@ -28,6 +29,7 @@ const { providerCreator } = require('../../utils/wrappers');
  * @property {string}             url       The API entry point.
  * @property {APIClientEndpoints} endpoints A dictionary of named endpoints relative to the API
  *                                          entry point.
+ * @parent module:services
  */
 
 /**
@@ -36,6 +38,7 @@ const { providerCreator } = require('../../utils/wrappers');
  * `http` service, allowing the app to to internally handle all the requests and responses.
  *
  * @augments APIClientBase
+ * @parent module:services
  */
 class APIClient extends APIClientBase {
   /**
@@ -115,6 +118,7 @@ class APIClient extends APIClientBase {
  * configuration.
  *
  * @type {ProviderCreator<APIClientProviderOptions>}
+ * @parent module:services
  */
 const apiClient = providerCreator((options = {}) => (app) => {
   const defaultName = 'apiClient';

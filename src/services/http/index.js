@@ -9,6 +9,7 @@ const { providers } = require('../../utils/wrappers');
  * @property {Provider} apiClient        The provider for {@link APIClient}.
  * @property {Provider} http             The provider for {@link HTTP}.
  * @property {Provider} responsesBuilder The provider for {@link ResponsesBuilder}.
+ * @parent module:services
  */
 const httpServices = providers({
   apiClient,

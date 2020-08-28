@@ -24,6 +24,7 @@ const { createRouteExpression, removeSlashes } = require('../../utils/functions'
  *                                   incoming requests (in addition to `ignore`): If a request URL
  *                                   doesn't match with any of the controlled routes, it will show
  *                                   the HTML file. Default `true`.
+ * @parent module:middlewares
  */
 
 /**
@@ -35,6 +36,7 @@ const { createRouteExpression, removeSlashes } = require('../../utils/functions'
  * @property {string} htmlGenerator The name of a {@link HTMLGenerator} service for the middleware
  *                                  to use. Default `htmlGenerator`.
  * @augments FastHTMLMiddlewareOptions
+ * @parent module:middlewares
  */
 
 /**
@@ -49,6 +51,8 @@ const { createRouteExpression, removeSlashes } = require('../../utils/functions'
  *
  * **Disclaimer**: Managing statics files with Express is not a best practice, but there are
  * scenarios where there is not other choice.
+ *
+ * @parent module:middlewares
  */
 class FastHTML {
   /**
@@ -247,6 +251,7 @@ class FastHTML {
  * reason of this middleware, please read the description of {@link FastHTML}.
  *
  * @type {MiddlewareCreator<FastHTMLMiddlewareOptions>}
+ * @parent module:middlewares
  */
 const fastHTML = middlewareCreator((options = {}) => (app) => {
   const htmlGeneratorServiceName = typeof options.htmlGenerator === 'undefined' ?
