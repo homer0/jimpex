@@ -1,3 +1,4 @@
+const path = require('path');
 const https = require('https');
 const Jimple = require('jimple');
 const ObjectUtils = require('wootils/shared/objectUtils');
@@ -38,9 +39,11 @@ const { escapeForRegExp } = require('../utils/functions');
  */
 class Jimpex extends Jimple {
   /**
-   * @param {Partial<JimpexOptions>} [options={}] Preferences to customize the application.
+   * @param {Partial<JimpexOptions>} [options={}]         Preferences to customize the application.
+   * @param {?Object}                [configuration=null] The default configuration for the
+   *                                                      `appConfiguration` service.
    */
-  constructor(options = {}) {
+  constructor(options = {}, configuration = null) {
     super();
     /**
      * The application options.
@@ -54,7 +57,7 @@ class Jimpex extends Jimple {
       filesizeLimit: '15MB',
       boot: true,
       configuration: {
-        default: null,
+        default: configuration,
         name: 'app',
         path: 'config/',
         hasFolder: true,
@@ -479,7 +482,7 @@ class Jimpex extends Jimple {
     if (options.default) {
       defaultConfig = options.default;
     } else {
-      const defaultConfigPath = `${configsPath}${options.name}.config.js`;
+      const defaultConfigPath = path.join(configsPath, `${options.name}.config.js`);
       defaultConfig = this.get('rootRequire')(defaultConfigPath);
     }
 

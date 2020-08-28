@@ -604,6 +604,39 @@ describe('app:Jimpex', () => {
     expect(appConfiguration.loadFromEnvironment).toHaveBeenCalledTimes(1);
   });
 
+  it('should receive the default configuration from the constructor parameter', () => {
+    // Given
+    const pathUtils = {
+      joinFrom: jest.fn((from, rest) => path.join(from, rest)),
+    };
+    JimpleMock.service('pathUtils', pathUtils);
+    const version = 'version-on-file';
+    const appConfiguration = {
+      loadFromEnvironment: jest.fn(),
+      get: jest.fn(() => version),
+    };
+    JimpleMock.service('appConfiguration', appConfiguration);
+    const defaultConfiguration = {
+      charito: 25092015,
+    };
+    let sut = null;
+    // When
+    sut = new Jimpex({}, defaultConfiguration);
+    // Then
+    expect(wootilsMock.appConfiguration).toHaveBeenCalledTimes(1);
+    expect(wootilsMock.appConfiguration).toHaveBeenCalledWith({
+      appName: sut.options.configuration.name,
+      defaultConfiguration,
+      options: {
+        environmentVariable: sut.options.configuration.environmentVariable,
+        path: `${sut.options.configuration.path}${sut.options.configuration.name}/`,
+        filenameFormat: `${sut.options.configuration.name}.[name].config.js`,
+      },
+    });
+    expect(appConfiguration.loadFromEnvironment).toHaveBeenCalledTimes(1);
+    expect(sut.options.version).toBe(version);
+  });
+
   it('should receive the default configuration on the configuration options', () => {
     // Given
     const pathUtils = {
