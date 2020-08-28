@@ -603,5 +603,18 @@ class Jimpex extends Jimple {
     this.set('router', this.factory(() => express.Router()));
   }
 }
+/**
+ * Creates a new instance of {@link Jimpex}.
+ *
+ * @param {Partial<JimpexOptions>} [options={}]         Preferences to customize the application.
+ * @param {?Object}                [configuration=null] The default configuration for the
+ *                                                      `appConfiguration` service.
+ * @returns {Jimpex}
+ */
+const jimpex = (options = {}, configuration = null) => new Jimpex(
+  options,
+  configuration,
+);
 
-module.exports = Jimpex;
+module.exports.Jimpex = Jimpex;
+module.exports.jimpex = jimpex;

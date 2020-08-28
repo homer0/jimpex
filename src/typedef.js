@@ -237,7 +237,7 @@
  */
 
 /**
- * @typedef {import('./app')} Jimpex
+ * @typedef {import('./app').Jimpex} Jimpex
  */
 
 /**

@@ -28,7 +28,7 @@ const multerMock = require('multer');
 const bodyParserMock = require('body-parser');
 const wootilsMock = require('wootils/node/providers');
 
-const Jimpex = require('../../src/app');
+const { Jimpex, jimpex } = require('../../src/app');
 const { eventNames } = require('../../src/constants');
 
 const originalNodeTLSRejectUnauthorized = process.env.NODE_TLS_REJECT_UNAUTHORIZED;
@@ -1716,5 +1716,74 @@ describe('app:Jimpex', () => {
     expectedMiddlewares.forEach((useCall) => {
       expect(expressMock.mocks.use).toHaveBeenCalledWith(...useCall);
     });
+  });
+
+  it('should be able to be instantiated from a function', () => {
+    // Given
+    const pathUtils = {
+      joinFrom: jest.fn((from, rest) => path.join(from, rest)),
+    };
+    JimpleMock.service('pathUtils', pathUtils);
+    const defaultConfig = {
+      port: 2509,
+    };
+    const rootRequire = jest.fn(() => defaultConfig);
+    JimpleMock.service('rootRequire', rootRequire);
+    const version = 'latest';
+    const appConfiguration = {
+      loadFromEnvironment: jest.fn(),
+      get: jest.fn(() => version),
+    };
+    JimpleMock.service('appConfiguration', appConfiguration);
+    let sut = null;
+    // When
+    sut = jimpex();
+    // Then
+    expect(sut).toBeInstanceOf(Jimpex);
+    expect(wootilsMock.appConfiguration).toHaveBeenCalledTimes(1);
+    expect(wootilsMock.appConfiguration).toHaveBeenCalledWith({
+      appName: sut.options.configuration.name,
+      defaultConfiguration: defaultConfig,
+      options: {
+        environmentVariable: sut.options.configuration.environmentVariable,
+        path: `${sut.options.configuration.path}${sut.options.configuration.name}/`,
+        filenameFormat: `${sut.options.configuration.name}.[name].config.js`,
+      },
+    });
+  });
+
+  it('should support custom options and configuration from the function', () => {
+    // Given
+    const pathUtils = {
+      joinFrom: jest.fn((from, rest) => path.join(from, rest)),
+    };
+    JimpleMock.service('pathUtils', pathUtils);
+    const version = 'version-on-file';
+    const appConfiguration = {
+      loadFromEnvironment: jest.fn(),
+      get: jest.fn(() => version),
+    };
+    JimpleMock.service('appConfiguration', appConfiguration);
+    const boot = false;
+    const defaultConfiguration = {
+      charito: 25092015,
+    };
+    let sut = null;
+    // When
+    sut = jimpex({ boot }, defaultConfiguration);
+    // Then
+    expect(sut.options.boot).toBe(boot);
+    expect(wootilsMock.appConfiguration).toHaveBeenCalledTimes(1);
+    expect(wootilsMock.appConfiguration).toHaveBeenCalledWith({
+      appName: sut.options.configuration.name,
+      defaultConfiguration,
+      options: {
+        environmentVariable: sut.options.configuration.environmentVariable,
+        path: `${sut.options.configuration.path}${sut.options.configuration.name}/`,
+        filenameFormat: `${sut.options.configuration.name}.[name].config.js`,
+      },
+    });
+    expect(appConfiguration.loadFromEnvironment).toHaveBeenCalledTimes(1);
+    expect(sut.options.version).toBe(version);
   });
 });
