@@ -47,20 +47,8 @@ describe('app:Jimpex', () => {
     spdy.createServer.mockReset();
   });
 
-  it('should throw an error if used without subclassing it', () => {
-    // Given/When/Then
-    expect(() => new Jimpex())
-    .toThrow(/Jimpex is an abstract class/i);
-  });
-
-  it('should be able to be instantiated when subclassed', () => {
+  it('should be able to be instantiated', () => {
     // Given
-    const bootMock = jest.fn();
-    class Sut extends Jimpex {
-      boot() {
-        bootMock();
-      }
-    }
     const pathUtils = {
       joinFrom: jest.fn((from, rest) => path.join(from, rest)),
     };
@@ -104,11 +92,9 @@ describe('app:Jimpex', () => {
       ['multer-any'],
     ];
     // When
-    sut = new Sut();
+    sut = new Jimpex();
     // Then
-    expect(sut).toBeInstanceOf(Sut);
     expect(sut).toBeInstanceOf(Jimpex);
-    expect(bootMock).toHaveBeenCalledTimes(1);
     expect(sut.register).toHaveBeenCalledTimes(expectedServices.length);
     expectedServices.forEach((service) => {
       expect(sut.register).toHaveBeenCalledWith(service);
@@ -159,24 +145,36 @@ describe('app:Jimpex', () => {
     expect(appConfiguration.get).toHaveBeenCalledWith('version');
   });
 
-  it('should throw an error if `boot` is not overwritten', () => {
+  it('should call a custom boot method when subclassed', () => {
     // Given
-    class Sut extends Jimpex {}
+    const bootMock = jest.fn();
+    class Sut extends Jimpex {
+      boot() {
+        bootMock();
+      }
+    }
     const pathUtils = {
       joinFrom: jest.fn((from, rest) => path.join(from, rest)),
     };
     JimpleMock.service('pathUtils', pathUtils);
-    const defaultConfig = {};
+    const defaultConfig = {
+      port: 2509,
+    };
     const rootRequire = jest.fn(() => defaultConfig);
     JimpleMock.service('rootRequire', rootRequire);
+    const version = 'latest';
     const appConfiguration = {
       loadFromEnvironment: jest.fn(),
-      get: jest.fn(),
+      get: jest.fn(() => version),
     };
     JimpleMock.service('appConfiguration', appConfiguration);
-    // When/Then
-    // eslint-disable-next-line no-new
-    expect(() => new Sut()).toThrow(/This method must be overwritten/i);
+    let sut = null;
+    // When
+    sut = new Sut();
+    // Then
+    expect(sut).toBeInstanceOf(Sut);
+    expect(sut).toBeInstanceOf(Jimpex);
+    expect(bootMock).toHaveBeenCalledTimes(1);
   });
 
   it('shouldn\'t call `boot` is the constructor flag is false', () => {

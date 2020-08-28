@@ -45,15 +45,8 @@ class Jimpex extends Jimple {
    *                                              services/middlewares/controllers before the
    *                                              application starts.
    * @param {Partial<JimpexOptions>} [options={}] Preferences to customize the application.
-   * @throws {TypeError} If instantiated directly.
    */
   constructor(boot = true, options = {}) {
-    if (new.target === Jimpex) {
-      throw new TypeError(
-        'Jimpex is an abstract class, it can\'t be instantiated directly',
-      );
-    }
-
     super();
     /**
      * The application options.
@@ -153,13 +146,8 @@ class Jimpex extends Jimple {
   }
   /**
    * This is where the app would register all its specific services, middlewares and controllers.
-   *
-   * @throws {Error} If not overwritten.
-   * @abstract
    */
-  boot() {
-    throw new Error('This method must be overwritten');
-  }
+  boot() {}
   /**
    * Disables the server TLS validation.
    */
