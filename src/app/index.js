@@ -162,16 +162,22 @@ class Jimpex extends Jimple {
    * This is an alias of `start`. The idea is for it to be used on serverless platforms, where you
    * don't get to start your app, you just have export it.
    *
-   * @param {number}              port The port where the app will run. In case the rest of the app
-   *                                   needs to be aware of the port, this method will overwrite
-   *                                   the `port` setting on the configuration.
-   * @param {JimpexStartCallback} [fn] A callback function to be called when the server starts.
+   * @param {?number}              [port=null] In case the configuration doesn't already have it,
+   *                                           this is the port where the application will use to
+   *                                           run. If this parameter is used, the method will
+   *                                           overwrite the `port` setting on the configuration
+   *                                           service.
+   * @param {?JimpexStartCallback} [fn=null]   A callback function to be called when the server
+   *                                            starts.
    * @returns {Server} The server instance.
    */
-  listen(port, fn = () => {}) {
-    const config = this.get('appConfiguration');
-    config.set('port', port);
-    return this.start(fn, port);
+  listen(port = null, fn = null) {
+    if (port) {
+      const config = this.get('appConfiguration');
+      config.set('port', port);
+    }
+
+    return this.start(fn);
   }
   /**
    * Mounts a controller on a specific route.
@@ -204,10 +210,11 @@ class Jimpex extends Jimple {
   /**
    * Starts the app server.
    *
-   * @param {JimpexStartCallback} [fn] A callback function to be called when the server starts.
+   * @param {?JimpexStartCallback} [fn=null] A callback function to be called when the server
+   *                                         starts.
    * @returns {Object} The server instance.
    */
-  start(fn = () => {}) {
+  start(fn = null) {
     const config = this.get('appConfiguration');
     const port = config.get('port');
     this._emitEvent('beforeStart');
@@ -217,9 +224,10 @@ class Jimpex extends Jimple {
       this._mountResources();
       this.get('appLogger').success(`Starting on port ${port}`);
       this._emitEvent('afterStart');
-      const result = fn(config);
+      if (fn) {
+        fn(config);
+      }
       this._emitEvent('afterStartCallback');
-      return result;
     });
 
     return this._instance;

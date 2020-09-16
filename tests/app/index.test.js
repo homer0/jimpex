@@ -1254,6 +1254,44 @@ describe('app:Jimpex', () => {
     const defaultConfig = {};
     const rootRequire = jest.fn(() => defaultConfig);
     JimpleMock.service('rootRequire', rootRequire);
+    const configuration = {
+      port: 2509,
+    };
+    const appConfiguration = {
+      loadFromEnvironment: jest.fn(),
+      get: jest.fn((prop) => (
+        Array.isArray(prop) ?
+          [] :
+          configuration[prop]
+      )),
+    };
+    JimpleMock.service('appConfiguration', appConfiguration);
+    const events = {
+      emit: jest.fn(),
+    };
+    JimpleMock.service('events', events);
+    const appLogger = {
+      success: jest.fn(),
+    };
+    JimpleMock.service('appLogger', appLogger);
+    let sut = null;
+    // When
+    sut = new Jimpex();
+    sut.listen();
+    // Then
+    expect(appLogger.success).toHaveBeenCalledTimes(1);
+    expect(appLogger.success).toHaveBeenCalledWith(`Starting on port ${configuration.port}`);
+  });
+
+  it('should start the server using `listen` with a custom port', () => {
+    // Given
+    const pathUtils = {
+      joinFrom: jest.fn((from, rest) => path.join(from, rest)),
+    };
+    JimpleMock.service('pathUtils', pathUtils);
+    const defaultConfig = {};
+    const rootRequire = jest.fn(() => defaultConfig);
+    JimpleMock.service('rootRequire', rootRequire);
     const customPort = 8080;
     const configuration = {
       port: 2509,
