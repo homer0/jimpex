@@ -2,34 +2,108 @@
 
 Express as dependency injection container.
 
-Jimpex is an implementation of [Express](https://expressjs.com), one of the most popular web frameworks for Node, using [Jimple](https://github.com/fjorgemota/jimple), a Javascript port of [Pimple](https://pimple.symfony.com/) dependency injection container.
+Jimpex is an implementation of [Express](https://expressjs.com), one of the most popular web frameworks for Node, using [Jimple](https://github.com/fjorgemota/jimple), a Javascript port of [Pimple](https://pimple.symfony.com) dependency injection container.
 
 ## Usage
 
 ### Creating your app
 
-To create a Jimpex app you would require the `Jimpex` class from the package, extend it and define all your services, controllers and middlewares on its `boot` method:
+You have two ways of creating an app: by defining a class and using the `boot` method to add all your services and customizations; or with the `jimpex` function:
+
+#### Class
 
 ```js
 const { Jimpex } = require('jimpex');
+// OR import { Jimpex } from 'jimpex/esm';
 
 class MyApp extends Jimpex {
   boot() {
     // Do all your custom stuff...
+    this.register(...);
+    this.mount(...);
   }
 }
 ```
 
 The class constructor has two parameters:
 
-1. `boot` (`true`): Whether or not to call the `boot` method after initializing the instance.
-2. `options` (`{}`): A set of options to customize the app.
+```js
+(options = {}, configuration = null) => Jimpex
+```
 
-There are a lot of options to customize an app, so I would recommend you to read the [Jimpex Options documentation](./documents/options.md).
+1. The options to customize the application. You can read about them on the [Jimpex Options documentation](./documents/options.md).
+2. The default configuration, in case you don't want Jimpex to try loading an external configuration file.
+
+When definining the application as a class, there are two _protected_ (helper) methods that you can use to overwrite the options and even define priority resources that the implementation could access/overwrite if they manually handle the "boot":
+
+##### Adding resources that can be overriden
+
+```js
+class MyApp extends Jimpex {
+  _init() {
+    this.set('env', 'PROD');
+  }
+}
+```
+
+The `_init` method is called before `boot` gets validated, so even if the constructor option `boot` is set to `false`, `_init` will be called.
+
+Now, let's say you want to execute the application on a development environment; instead of adding `if`s to check the environment, you could do something like this on your development file:
+
+```js
+const MyApp = require('...');
+
+const app = new MyApp({ boot: false });
+app.set('env', 'DEV');
+app.boot();
+...
+```
+
+##### Modifying the options
+
+```js
+class MyApp extends Jimpex {
+  _initOptions() {
+    return {
+      configuration: {
+        loadFromEnvironment: false,
+      },
+    };
+  }
+}
+```
+
+If you are subclassing `Jimpex`, it highly probable that if the default options need to be changed, you would want to do it from within the class, rather than forcing all implementations to do it.
+
+One way would be to overwrite the constructor and call `super` with the customizations, the other would be using this method: The constructor automatically merges the result of `_initOptions` on top of the defaults so you won't have to override anything.
+
+There are a lot of different options, so I would recommend reading the [Jimpex Options documentation](./documents/options.md).
+
+#### Function
+
+```js
+const { jimpex } = require('jimpex');
+// OR import { jimpex } from 'jimpex/esm';
+
+const app = jimpex();
+app.register(...);
+app.mount(...);
+```
+
+The idea of the function is to be used on scenarios where a class may be too much or you have a single implementation, like on a lamda serverless.
+
+The function has almost the same signature as the class constructor:
+
+```js
+(options = {}, configuration = null) => Jimpex
+```
+
+1. The options to customize the application. You can read about them on the [Jimpex Options documentation](./documents/options.md).
+2. The default configuration. The big difference here is that, even if you send `null`, Jimpex won't try to load an external configuration file.
 
 #### App configuration
 
-Jimpex, by default, depends on external configuration files and as a base configuration it will try to load `./config/app/app.config.js`. Of course this is extremely configurable through the [Jimpex Options](./documents/options.md).
+Jimpex, by default, depends on external configuration files and, as a base configuration, it will try to load `./config/app/app.config.js`. Of course this is extremely configurable through the [Jimpex Options](./documents/options.md).
 
 A configuration file is just a Javascript file that exports an Object, for example:
 
@@ -39,28 +113,42 @@ module.exports = {
 };
 ```
 
-> If that's who you default configuration file looks like, the app will run on the port `2509`.
+> If that's how you default configuration file looks like, the app will run on the port `2509`.
 
-To access the app configuration, you just call the `appConfiguration` service:
+If you don't want the application to load an external file, you could use the second parameter of either the class or the function:
+
+```js
+new MyApp({ ... }, { port: 2509 });
+// OR
+jimpex({ ... }, { port: 2509 });
+```
+
+Now, to access the configuration service, you just call `appConfiguration`:
 
 ```js
 const config = app.get('appConfiguration');
 ```
 
-Then you can read its values using `.get(setting)`:
+Then you can read its settings using `.get(setting)`:
 
 ```js
 console.log(config.get('port'));
 // Will log 2509
 ```
 
-To more information about how the `appConfiguration` service works, you can check [its documentation on the wootils repository](https://github.com/homer0/wootils/blob/master/documents/node/appConfiguration.md).
+To get more information about how the `appConfiguration` service works, you can check [its documentation on the wootils repository](https://github.com/homer0/wootils/blob/master/documents/node/appConfiguration.md).
 
-#### Starting the app
+#### Starting the application
 
-To start the app you need a valid configuration file with a valid `port` setting. Check the previous section to more information about it.
+```js
+app.listen(2509, () => {
+  console.log('The app is running!');
+});
+```
 
-Now, Starting the app is as easy as calling `start()`:
+Just like any other Node server, you can use the `listen` method and specify a port and a callback.
+
+Now, if you you already have a `port` set on the configuration, you could use the `start` method; it works just like listen but it only receives a callback:
 
 ```js
 app.start(() => {
@@ -68,10 +156,7 @@ app.start(() => {
 });
 ```
 
-> - Like Express, you can send a callback to be executed after the server starts.
-> - You also have a `listen` alias with the same signature as express (port and callback) for serverless platforms where you don't manually start the app.
-
-You can also stop the app by calling `stop()`:
+And finally, you can also stop the application by calling...
 
 ```js
 app.stop();
@@ -128,7 +213,7 @@ module.exports = {
 
 > **Important:** HTTPS MUST BE enabled in order to use HTTP/2.
 
-Under the hood, Jimpex uses [Spdy](https://yarnpkg.com/package/spdy) for the HTTP/2 support, and Spdy has custom options you can send it in order to define how it will work; you can send options to Spdy by adding a `spdy` key inside the `http2` object:
+Under the hood, Jimpex uses [Spdy](https://yarnpkg.com/package/spdy) for the HTTP/2 support, and Spdy has custom options you can send in order to define how it will work; you can send options to Spdy by adding a `spdy` key inside the `http2` object:
 
 ```js
 {
@@ -144,7 +229,7 @@ Under the hood, Jimpex uses [Spdy](https://yarnpkg.com/package/spdy) for the HTT
 
 ### Defining a service
 
-To define a service and its provider, you would write your service as a `class` or a `function` and then wrap it on the `provider` function Jimpex provides:
+To define a service and its provider, you would write your service as a `class` or a `function` and then wrap it on the `provider` function Jimpex exports:
 
 ```js
 const { provider } = require('jimpex');
@@ -163,13 +248,12 @@ const myService = provider((app) => {
 });
 
 // Export the service and its provider
-module.exports = {
-  MyService,
-  myService,
-};
+module.exports.MyService = MyService;
+module.exports.myService = myService;
 ```
 
-> You could export just export the provider, but I believe is a good practice to export both in case another part of your app wants to extend the class and overwrite the service on the container.
+> 1. You could just export the provider, but I believe is a good practice to export both in case another part of your app wants to extend the class and overwrite the service on the container.
+> 2. That why of using `module.expots` is so the class can be imported on JSDoc comments.
 
 Then, on you app, you would simple `register` the provider:
 
@@ -252,21 +336,20 @@ const healthController = controller((app) => {
   const ctrl = new HealthController();
   // Get the router service
   const router = app.get('router');
-  // Return the list of routes this controller will handle
-  return [
-    router.get('/', ctrl.health()),
-  ];
+  // Return the router with all the routes
+  return router
+  .get('/', ctrl.health())
+  .get(...);
 });
 
 // Export the controller class and the controller itself
-module.exports = {
-  HealthController,
-  healthController,
-};
+module.exports.HealthController = HealthController;
+module.exports.healthController = healthController;
 ```
 
-> - You could export just export the controller, but I believe is a good practice to export both in case another part of your app wants to extend the class and mount a new route withs its inherit functionalities.
-> - The function inside the `controller` wrapper won't be called until the app is started. In case you are wondering about the lazy loading of the services that you may inject.
+> 1. You could just export the controller, but I believe is a good practice to export both in case another part of your app wants to extend the class and mount a new route withs its inherit functionalities.
+> 2. That why of using `module.expots` is so the class can be imported on JSDoc comments.
+> 3. The function inside the `controller` wrapper won't be called until the app is started. In case you are wondering about the lazy loading of the services that you may inject.
 
 Then, on you app, you would `mount` the controller:
 
@@ -306,17 +389,15 @@ const healthController = controllerCreator((settings) => (app) => {
   const ctrl = new HealthController(settings);
   // Get the router service
   const router = app.get('router');
-  // Return the list of routes this controller will handle
-  return [
-    router.get('/', ctrl.health()),
-  ];
+  // Return the router with all the routes
+  return router
+  .get('/', ctrl.health())
+  .get(...);
 });
 
 // Export the controller class and the controller itself
-module.exports = {
-  HealthController,
-  healthController,
-};
+module.exports.HealthController = HealthController;
+module.exports.healthController = healthController;
 ```
 
 The special behavior the creators have, is that you can call them as a function, sending the settings, or just use them with `mount` as regular controllers; and since they can be used as regular controllers, **it's very important that the settings are optional**:
@@ -351,13 +432,12 @@ const greetingsMiddleware = () => (req, res, next) => {
 const greetings = middleware(() => greetingsMiddleware());
 
 // Export the function and the middleware
-module.exports = {
-  greetingsMiddleware,
-  greetings,
-};
+module.exports.greetingsMiddleware = greetingsMiddleware;
+module.exports.greetings = greetings;
 ```
 
-> You could export just export the provider, but I believe is a good practice to export both in case another part of your app wants to extend the class or use the function.
+> 1. You could just export the provider, but I believe is a good practice to export both in case another part of your app wants to extend the class or use the function.
+> 2. That why of using `module.expots` is so the function can be imported on JSDoc comments.
 
 Then, on you app, you would `use` the controller:
 
@@ -389,10 +469,8 @@ const greetingsMiddleware = (message = 'Hello!') => (req, res, next) => {
 const greetings = middlewareCreator((message) => greetingsMiddleware(message));
 
 // Export the function and the middleware
-module.exports = {
-  greetingsMiddleware,
-  greetings,
-};
+module.exports.greetingsMiddleware = greetingsMiddleware;
+module.exports.greetings = greetings;
 ```
 
 The special behavior the creators have, is that you can call them as a function, sending the settings, or just register them with `use` as regular middlewares, so **it's very important that the settings must be optional**:
