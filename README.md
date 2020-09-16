@@ -416,6 +416,78 @@ class MyApp extends Jimpex {
 }
 ```
 
+#### Defining a controller that registers a service
+
+If for some reason, your controller needs to register a service the rest of the container needs to have access to and you plan to do it on the `controller`/`controllerCreator` callback, you could end up messing with the _lazyness_ of the container: If a middleware or another controller tries to access the service and the controller that registers it is mounter after it, it will get an error as the service doesn't exist yet.
+
+To solve this issue, you can use a "controller provider":
+
+```js
+const { provider, controller } = require('jimpex');
+
+// (Optional) Define a class to organize your route handlers.
+class HealthController {
+  health() {
+    return (req, res) => {
+      res.write('Everything works!');
+    };
+  }
+}
+
+// Define the controller
+const healthController = provider(app) => {
+  // Register the controller as a service (or any other resource)
+  app.set('health', () => new HealthController());
+  return controller(() => {
+    // Get the controller as a service
+    const ctrl = app.get('health');
+    // Get the router service
+    const router = app.get('router');
+    // Return the router with all the routes
+    return router
+    .get('/', ctrl.health())
+    .get(...);
+  });
+});
+
+// Export the controller class and the controller itself
+module.exports.HealthController = HealthController;
+module.exports.healthController = healthController;
+```
+
+And you would mount it just like any other contorller:
+
+```js
+const { Jimpex } = require('jimpex');
+const { healthController } = require('...');
+
+class MyApp extends Jimpex {
+  boot() {
+    ...
+    this.mount('/health', healthController);
+  }
+}
+```
+
+And in the case you need a "creator", you could use a "provider creator" and return a controller:
+
+```js
+const healthController = providerCreator((settings) => (app) => {
+  // Register the controller as a service (or any other resource) and send the settings
+  app.set('health', () => new HealthController(settings));
+  return controller(() => {
+    // Get the controller as a service
+    const ctrl = app.get('health');
+    // Get the router service
+    const router = app.get('router');
+    // Return the router with all the routes
+    return router
+    .get('/', ctrl.health())
+    .get(...);
+  });
+});
+```
+
 ### Adding a middleware
 
 To add a new middleware you need to use the `middleware` function and return a function:
