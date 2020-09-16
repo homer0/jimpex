@@ -1365,38 +1365,6 @@ describe('app:Jimpex', () => {
     expect(resultUnavailable).toBeNull();
   });
 
-  it('should throw an error when trying to access a service that failed to init', () => {
-    // Given
-    const pathUtils = {
-      joinFrom: jest.fn((from, rest) => path.join(from, rest)),
-    };
-    JimpleMock.service('pathUtils', pathUtils);
-    const defaultConfig = {};
-    const rootRequire = jest.fn(() => defaultConfig);
-    JimpleMock.service('rootRequire', rootRequire);
-    const configuration = {
-      port: 2509,
-    };
-    const appConfiguration = {
-      loadFromEnvironment: jest.fn(),
-      get: jest.fn((prop) => (Array.isArray(prop) ? [] : configuration[prop])),
-    };
-    JimpleMock.service('appConfiguration', appConfiguration);
-    const error = new Error('Something went wrong!');
-    const events = () => {
-      throw error;
-    };
-    JimpleMock.service('events', events, true);
-    const appLogger = {
-      success: jest.fn(),
-    };
-    JimpleMock.service('appLogger', appLogger);
-    let sut = null;
-    // When/Then
-    sut = new Jimpex();
-    expect(() => sut.try('events')).toThrow(error.message);
-  });
-
   it('should mount a controller', () => {
     // Given
     const pathUtils = {

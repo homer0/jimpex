@@ -28,7 +28,6 @@ const { eventNames } = require('../constants');
 const commonServices = require('../services/common');
 const httpServices = require('../services/http');
 const utilsServices = require('../services/utils');
-const { escapeForRegExp } = require('../utils/functions');
 /**
  * Jimpex is a mix of Jimple, a Javascript port of Pimple dependency injection container, and
  * Express, one of the most popular web frameworks for Node.
@@ -241,23 +240,7 @@ class Jimpex extends Jimple {
    *                 exist.
    */
   try(name) {
-    let result;
-    try {
-      result = this.get(name);
-    } catch (error) {
-      /**
-       * Validate if the received error is from Jimple not being able to find the service, or from
-       * something else; if it's not about the module not being registered, throw the error.
-       */
-      const expression = new RegExp(escapeForRegExp(`identifier "${name}" is not defined`), 'i');
-      if (error.message && error.message.match(expression)) {
-        result = null;
-      } else {
-        throw error;
-      }
-    }
-
-    return result;
+    return this.has(name) ? this.get(name) : null;
   }
   /**
    * Adds a middleware.

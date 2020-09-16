@@ -16,6 +16,7 @@ const mocks = {
   }),
   register: jest.fn(),
   factory: jest.fn((fn) => fn()),
+  has: jest.fn((name) => !!services[name]),
 };
 
 class JimpleMock {
@@ -48,6 +49,7 @@ class JimpleMock {
     this.get = mocks.get;
     this.register = mocks.register;
     this.factory = mocks.factory;
+    this.has = mocks.has;
   }
 }
 
