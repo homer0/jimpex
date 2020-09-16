@@ -148,9 +148,13 @@ describe('app:Jimpex', () => {
   it('should call a custom boot method when subclassed', () => {
     // Given
     const bootMock = jest.fn();
+    const initMock = jest.fn();
     class Sut extends Jimpex {
       boot() {
         bootMock();
+      }
+      _init() {
+        initMock();
       }
     }
     const pathUtils = {
@@ -175,14 +179,19 @@ describe('app:Jimpex', () => {
     expect(sut).toBeInstanceOf(Sut);
     expect(sut).toBeInstanceOf(Jimpex);
     expect(bootMock).toHaveBeenCalledTimes(1);
+    expect(initMock).toHaveBeenCalledTimes(1);
   });
 
   it('shouldn\'t call `boot` is option is set to false', () => {
     // Given
     const bootMock = jest.fn();
+    const initMock = jest.fn();
     class Sut extends Jimpex {
       boot() {
         bootMock();
+      }
+      _init() {
+        initMock();
       }
     }
     const pathUtils = {
@@ -204,6 +213,42 @@ describe('app:Jimpex', () => {
     });
     // Then
     expect(bootMock).toHaveBeenCalledTimes(0);
+    expect(initMock).toHaveBeenCalledTimes(1);
+  });
+
+  it('should overwrite the default options using the protected method', () => {
+    // Given
+    class Sut extends Jimpex {
+      _initOptions() {
+        return {
+          configuration: {
+            loadFromEnvironment: false,
+          },
+        };
+      }
+    }
+    const pathUtils = {
+      joinFrom: jest.fn((from, rest) => path.join(from, rest)),
+    };
+    JimpleMock.service('pathUtils', pathUtils);
+    const defaultConfig = {
+      port: 2509,
+    };
+    const rootRequire = jest.fn(() => defaultConfig);
+    JimpleMock.service('rootRequire', rootRequire);
+    const version = 'latest';
+    const appConfiguration = {
+      loadFromEnvironment: jest.fn(),
+      get: jest.fn(() => version),
+    };
+    JimpleMock.service('appConfiguration', appConfiguration);
+    let sut = null;
+    // When
+    sut = new Sut();
+    // Then
+    expect(sut).toBeInstanceOf(Sut);
+    expect(sut).toBeInstanceOf(Jimpex);
+    expect(appConfiguration.loadFromEnvironment).toHaveBeenCalledTimes(0);
   });
 
   it('shouldn\'t set \'trust proxy\' if its flag is `false`', () => {

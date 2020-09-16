@@ -51,39 +51,43 @@ class Jimpex extends Jimple {
      * @access protected
      * @ignore
      */
-    this._options = ObjectUtils.merge({
-      version: '0.0.0',
-      filesizeLimit: '15MB',
-      boot: true,
-      configuration: {
-        default: configuration,
-        name: 'app',
-        path: 'config/',
-        hasFolder: true,
-        environmentVariable: 'CONFIG',
-        loadFromEnvironment: true,
-        loadVersionFromConfiguration: true,
-        filenameFormat: '[app-name].[configuration-name].config.js',
+    this._options = ObjectUtils.merge(
+      {
+        version: '0.0.0',
+        filesizeLimit: '15MB',
+        boot: true,
+        configuration: {
+          default: configuration,
+          name: 'app',
+          path: 'config/',
+          hasFolder: true,
+          environmentVariable: 'CONFIG',
+          loadFromEnvironment: true,
+          loadVersionFromConfiguration: true,
+          filenameFormat: '[app-name].[configuration-name].config.js',
+        },
+        statics: {
+          enabled: true,
+          onHome: false,
+          route: 'statics',
+          folder: '',
+        },
+        express: {
+          trustProxy: true,
+          disableXPoweredBy: true,
+          compression: true,
+          bodyParser: true,
+          multer: true,
+        },
+        defaultServices: {
+          common: true,
+          http: true,
+          utils: true,
+        },
       },
-      statics: {
-        enabled: true,
-        onHome: false,
-        route: 'statics',
-        folder: '',
-      },
-      express: {
-        trustProxy: true,
-        disableXPoweredBy: true,
-        compression: true,
-        bodyParser: true,
-        multer: true,
-      },
-      defaultServices: {
-        common: true,
-        http: true,
-        utils: true,
-      },
-    }, options);
+      options,
+      this._initOptions(),
+    );
     /**
      * The Express application Jimpex uses under the hood.
      *
@@ -137,6 +141,7 @@ class Jimpex extends Jimple {
     this._setupDefaultServices();
     this._setupConfiguration();
 
+    this._init();
     if (this._options.boot) {
       this.boot();
     }
@@ -386,6 +391,32 @@ class Jimpex extends Jimple {
     }
 
     return result;
+  }
+  /**
+   * This method is like a "lifecycle method", it gets executed on the constructor right before
+   * the "boot step". The idea is for the method to be a helper when application is defined by
+   * subclassing {@link Jimpex}: the application could register all important services here and
+   * the routes on boot, then, if the implementation needs to access or overwrite a something, it
+   * can send `boot: false`, access/register what it needs and then call `boot()`. That would be
+   * impossible for an application without overwriting the constructor and the boot functionality.
+   *
+   * @access protected
+   */
+  _init() {}
+  /**
+   * It generates overwrites for the class options when they are created. This method is a helper
+   * for when the application is defined by subclassing {@link Jimpex}: It's highly probable that
+   * if the application needs to change the default options, it would want to do it right from the
+   * class, instead of having to do it on every implementation. A way to do it would be overwriting
+   * the constructor and calling `super` with the custom overwrites; this method exists so that
+   * won't be necessary: when creating the `options`, the constructor will merge the result of
+   * this method on top of the default ones.
+   *
+   * @returns {Partial<JimpexOptions>}
+   * @access protected
+   */
+  _initOptions() {
+    return {};
   }
   /**
    * Loads the contents of a dictionary of files that need to be used for HTTPS credentials.
