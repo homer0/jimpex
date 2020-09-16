@@ -1,3 +1,4 @@
+const path = require('path');
 const https = require('https');
 const Jimple = require('jimple');
 const ObjectUtils = require('wootils/shared/objectUtils');
@@ -27,7 +28,6 @@ const { eventNames } = require('../constants');
 const commonServices = require('../services/common');
 const httpServices = require('../services/http');
 const utilsServices = require('../services/utils');
-const { escapeForRegExp } = require('../utils/functions');
 /**
  * Jimpex is a mix of Jimple, a Javascript port of Pimple dependency injection container, and
  * Express, one of the most popular web frameworks for Node.
@@ -38,22 +38,11 @@ const { escapeForRegExp } = require('../utils/functions');
  */
 class Jimpex extends Jimple {
   /**
-   * @param {boolean}                [boot=true]  If `true`, after initializing the server, it will
-   *                                              immediately call the `boot` method. This can be
-   *                                              used on a development environment where you
-   *                                              would want to register development
-   *                                              services/middlewares/controllers before the
-   *                                              application starts.
-   * @param {Partial<JimpexOptions>} [options={}] Preferences to customize the application.
-   * @throws {TypeError} If instantiated directly.
+   * @param {Partial<JimpexOptions>} [options={}]         Preferences to customize the application.
+   * @param {?Object}                [configuration=null] The default configuration for the
+   *                                                      `appConfiguration` service.
    */
-  constructor(boot = true, options = {}) {
-    if (new.target === Jimpex) {
-      throw new TypeError(
-        'Jimpex is an abstract class, it can\'t be instantiated directly',
-      );
-    }
-
+  constructor(options = {}, configuration = null) {
     super();
     /**
      * The application options.
@@ -62,38 +51,43 @@ class Jimpex extends Jimple {
      * @access protected
      * @ignore
      */
-    this._options = ObjectUtils.merge({
-      version: '0.0.0',
-      filesizeLimit: '15MB',
-      configuration: {
-        default: null,
-        name: 'app',
-        path: 'config/',
-        hasFolder: true,
-        environmentVariable: 'CONFIG',
-        loadFromEnvironment: true,
-        loadVersionFromConfiguration: true,
-        filenameFormat: '[app-name].[configuration-name].config.js',
+    this._options = ObjectUtils.merge(
+      {
+        version: '0.0.0',
+        filesizeLimit: '15MB',
+        boot: true,
+        configuration: {
+          default: configuration,
+          name: 'app',
+          path: 'config/',
+          hasFolder: true,
+          environmentVariable: 'CONFIG',
+          loadFromEnvironment: true,
+          loadVersionFromConfiguration: true,
+          filenameFormat: '[app-name].[configuration-name].config.js',
+        },
+        statics: {
+          enabled: true,
+          onHome: false,
+          route: 'statics',
+          folder: '',
+        },
+        express: {
+          trustProxy: true,
+          disableXPoweredBy: true,
+          compression: true,
+          bodyParser: true,
+          multer: true,
+        },
+        defaultServices: {
+          common: true,
+          http: true,
+          utils: true,
+        },
       },
-      statics: {
-        enabled: true,
-        onHome: false,
-        route: 'statics',
-        folder: '',
-      },
-      express: {
-        trustProxy: true,
-        disableXPoweredBy: true,
-        compression: true,
-        bodyParser: true,
-        multer: true,
-      },
-      defaultServices: {
-        common: true,
-        http: true,
-        utils: true,
-      },
-    }, options);
+      options,
+      this._initOptions(),
+    );
     /**
      * The Express application Jimpex uses under the hood.
      *
@@ -147,19 +141,15 @@ class Jimpex extends Jimple {
     this._setupDefaultServices();
     this._setupConfiguration();
 
-    if (boot) {
+    this._init();
+    if (this._options.boot) {
       this.boot();
     }
   }
   /**
    * This is where the app would register all its specific services, middlewares and controllers.
-   *
-   * @throws {Error} If not overwritten.
-   * @abstract
    */
-  boot() {
-    throw new Error('This method must be overwritten');
-  }
+  boot() {}
   /**
    * Disables the server TLS validation.
    */
@@ -172,16 +162,22 @@ class Jimpex extends Jimple {
    * This is an alias of `start`. The idea is for it to be used on serverless platforms, where you
    * don't get to start your app, you just have export it.
    *
-   * @param {number}              port The port where the app will run. In case the rest of the app
-   *                                   needs to be aware of the port, this method will overwrite
-   *                                   the `port` setting on the configuration.
-   * @param {JimpexStartCallback} [fn] A callback function to be called when the server starts.
+   * @param {?number}              [port=null] In case the configuration doesn't already have it,
+   *                                           this is the port where the application will use to
+   *                                           run. If this parameter is used, the method will
+   *                                           overwrite the `port` setting on the configuration
+   *                                           service.
+   * @param {?JimpexStartCallback} [fn=null]   A callback function to be called when the server
+   *                                            starts.
    * @returns {Server} The server instance.
    */
-  listen(port, fn = () => {}) {
-    const config = this.get('appConfiguration');
-    config.set('port', port);
-    return this.start(fn, port);
+  listen(port = null, fn = null) {
+    if (port) {
+      const config = this.get('appConfiguration');
+      config.set('port', port);
+    }
+
+    return this.start(fn);
   }
   /**
    * Mounts a controller on a specific route.
@@ -214,10 +210,11 @@ class Jimpex extends Jimple {
   /**
    * Starts the app server.
    *
-   * @param {JimpexStartCallback} [fn] A callback function to be called when the server starts.
+   * @param {?JimpexStartCallback} [fn=null] A callback function to be called when the server
+   *                                         starts.
    * @returns {Object} The server instance.
    */
-  start(fn = () => {}) {
+  start(fn = null) {
     const config = this.get('appConfiguration');
     const port = config.get('port');
     this._emitEvent('beforeStart');
@@ -227,9 +224,10 @@ class Jimpex extends Jimple {
       this._mountResources();
       this.get('appLogger').success(`Starting on port ${port}`);
       this._emitEvent('afterStart');
-      const result = fn(config);
+      if (fn) {
+        fn(config);
+      }
       this._emitEvent('afterStartCallback');
-      return result;
     });
 
     return this._instance;
@@ -255,23 +253,7 @@ class Jimpex extends Jimple {
    *                 exist.
    */
   try(name) {
-    let result;
-    try {
-      result = this.get(name);
-    } catch (error) {
-      /**
-       * Validate if the received error is from Jimple not being able to find the service, or from
-       * something else; if it's not about the module not being registered, throw the error.
-       */
-      const expression = new RegExp(escapeForRegExp(`identifier "${name}" is not defined`), 'i');
-      if (error.message && error.message.match(expression)) {
-        result = null;
-      } else {
-        throw error;
-      }
-    }
-
-    return result;
+    return this.has(name) ? this.get(name) : null;
   }
   /**
    * Adds a middleware.
@@ -419,6 +401,32 @@ class Jimpex extends Jimple {
     return result;
   }
   /**
+   * This method is like a "lifecycle method", it gets executed on the constructor right before
+   * the "boot step". The idea is for the method to be a helper when application is defined by
+   * subclassing {@link Jimpex}: the application could register all important services here and
+   * the routes on boot, then, if the implementation needs to access or overwrite a something, it
+   * can send `boot: false`, access/register what it needs and then call `boot()`. That would be
+   * impossible for an application without overwriting the constructor and the boot functionality.
+   *
+   * @access protected
+   */
+  _init() {}
+  /**
+   * It generates overwrites for the class options when they are created. This method is a helper
+   * for when the application is defined by subclassing {@link Jimpex}: It's highly probable that
+   * if the application needs to change the default options, it would want to do it right from the
+   * class, instead of having to do it on every implementation. A way to do it would be overwriting
+   * the constructor and calling `super` with the custom overwrites; this method exists so that
+   * won't be necessary: when creating the `options`, the constructor will merge the result of
+   * this method on top of the default ones.
+   *
+   * @returns {Partial<JimpexOptions>}
+   * @access protected
+   */
+  _initOptions() {
+    return {};
+  }
+  /**
    * Loads the contents of a dictionary of files that need to be used for HTTPS credentials.
    *
    * @param {boolean}                onHome          If this is `true`, the path of the files will
@@ -496,7 +504,7 @@ class Jimpex extends Jimple {
     if (options.default) {
       defaultConfig = options.default;
     } else {
-      const defaultConfigPath = `${configsPath}${options.name}.config.js`;
+      const defaultConfigPath = path.join(configsPath, `${options.name}.config.js`);
       defaultConfig = this.get('rootRequire')(defaultConfigPath);
     }
 
@@ -617,5 +625,18 @@ class Jimpex extends Jimple {
     this.set('router', this.factory(() => express.Router()));
   }
 }
+/**
+ * Creates a new instance of {@link Jimpex}.
+ *
+ * @param {Partial<JimpexOptions>} [options={}]         Preferences to customize the application.
+ * @param {?Object}                [configuration=null] The default configuration for the
+ *                                                      `appConfiguration` service.
+ * @returns {Jimpex}
+ */
+const jimpex = (options = {}, configuration = null) => new Jimpex(
+  options,
+  configuration || {},
+);
 
-module.exports = Jimpex;
+module.exports.Jimpex = Jimpex;
+module.exports.jimpex = jimpex;

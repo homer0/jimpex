@@ -1,4 +1,4 @@
-const Jimpex = require('./app');
+const { Jimpex, jimpex } = require('./app');
 const controllers = require('./controllers');
 const middlewares = require('./middlewares');
 const services = require('./services');
@@ -27,3 +27,4 @@ module.exports.services = services;
 module.exports.eventNames = eventNames;
 module.exports.utils = utils;
 module.exports.Jimpex = Jimpex;
+module.exports.jimpex = jimpex;

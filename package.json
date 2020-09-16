@@ -25,10 +25,10 @@
     "eslint-plugin-homer0": "^5.0.2",
     "jest": "^26.4.2",
     "jsdoc": "^3.6.5",
-    "jsdoc-ts-utils": "^1.0.1",
+    "jsdoc-ts-utils": "^1.1.1",
     "docdash": "homer0/docdash#semver:^2.1.0",
     "leasot": "^11.1.0",
-    "lint-staged": "^10.2.11",
+    "lint-staged": "^10.2.13",
     "husky": "^4.2.5"
   },
   "engine-strict": true,
