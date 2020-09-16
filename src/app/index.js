@@ -182,17 +182,20 @@ class Jimpex extends Jimple {
   /**
    * Mounts a controller on a specific route.
    *
-   * @param {string}     route      The route for the controller.
-   * @param {Controller} controller The route controller.
+   * @param {string}                        route      The route for the controller.
+   * @param {Controller|ControllerProvider} controller The route controller.
    */
   mount(route, controller) {
+    const useController = typeof controller.register === 'function' ?
+      controller.register(this, route) :
+      controller;
     this._mountQueue.push((server) => {
       let result;
       const routes = this._reduceWithEvent(
         'controllerWillBeMounted',
-        controller.connect(this, route),
+        useController.connect(this, route),
         route,
-        controller,
+        useController,
       );
       if (Array.isArray(routes)) {
         // If the returned value is a list of routes, mount each single route.

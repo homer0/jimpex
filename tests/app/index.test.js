@@ -1602,6 +1602,72 @@ describe('app:Jimpex', () => {
     expect(routesList).toEqual([route]);
   });
 
+  it('should mount a controller provider', () => {
+    // Given
+    const pathUtils = {
+      joinFrom: jest.fn((from, rest) => path.join(from, rest)),
+    };
+    JimpleMock.service('pathUtils', pathUtils);
+    const defaultConfig = {};
+    const rootRequire = jest.fn(() => defaultConfig);
+    JimpleMock.service('rootRequire', rootRequire);
+    const configuration = {
+      port: 2509,
+    };
+    const appConfiguration = {
+      loadFromEnvironment: jest.fn(),
+      get: jest.fn((prop) => (Array.isArray(prop) ? [] : configuration[prop])),
+    };
+    JimpleMock.service('appConfiguration', appConfiguration);
+    const events = {
+      emit: jest.fn(),
+      reduce: jest.fn((eventName, router) => router),
+    };
+    JimpleMock.service('events', events);
+    const appLogger = {
+      success: jest.fn(),
+    };
+    JimpleMock.service('appLogger', appLogger);
+    const router = 'my-router';
+    const route = '/api';
+    const controllerConnect = jest.fn(() => router);
+    const controller = {
+      register: jest.fn(() => ({
+        connect: controllerConnect,
+      })),
+    };
+    let sut = null;
+    let routesList = null;
+    const expectedStaticsFolder = 'app/statics';
+    const expectedMiddlewares = [
+      ['compression-middleware'],
+      ['/statics', expectedStaticsFolder],
+      ['body-parser-json'],
+      ['body-parser-urlencoded'],
+      ['multer-any'],
+    ];
+    const expectedUseCalls = [
+      ...expectedMiddlewares,
+      ...[[route, router]],
+    ];
+    // When
+    sut = new Jimpex();
+    sut.mount(route, controller);
+    sut.start();
+    routesList = sut.routes;
+    // Then
+    expect(controller.register).toHaveBeenCalledTimes(1);
+    expect(controller.register).toHaveBeenCalledWith(sut, route);
+    expect(controllerConnect).toHaveBeenCalledTimes(1);
+    expect(controllerConnect).toHaveBeenCalledWith(sut, route);
+    expect(expressMock.mocks.use).toHaveBeenCalledTimes(expectedUseCalls.length);
+    expectedUseCalls.forEach((useCall) => {
+      expect(expressMock.mocks.use).toHaveBeenCalledWith(...useCall);
+    });
+
+    expect(routesList).toEqual([route]);
+  });
+
   it('should mount a middleware', () => {
     // Given
     const pathUtils = {

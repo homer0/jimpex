@@ -252,6 +252,24 @@
  */
 
 /**
+ * @callback ControllerProviderRegisterFn
+ * @param {Jimpex} app   The instance of the application container.
+ * @param {string} route The route where the controller will be mounted.
+ * @returns {Controller}
+ */
+
+/**
+ * This is a special kind of controller that not only registers routes but also adds resources to
+ * the container, and to avoid doing it during the mount process, it registers the resources first
+ * and then returns the actuall controller.
+ *
+ * @typedef {Object} ControllerProvider
+ * @property {ControllerProviderRegisterFn} register  The function Jimpex calls when registering
+ *                                                    the provider and the one that has to generate
+ *                                                    the controller.
+ */
+
+/**
  * The function called by the application container in order to mount a routes controller.
  *
  * @callback ControllerConnectFn
@@ -275,7 +293,7 @@
  *
  * @callback ControllerCreator
  * @param {Partial<O>} [options={}] The options to create the controller.
- * @returns {Controller}
+ * @returns {Controller|ControllerProvider}
  * @template O
  */
 
