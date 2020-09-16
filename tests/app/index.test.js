@@ -1737,11 +1737,7 @@ describe('app:Jimpex', () => {
       joinFrom: jest.fn((from, rest) => path.join(from, rest)),
     };
     JimpleMock.service('pathUtils', pathUtils);
-    const defaultConfig = {
-      port: 2509,
-    };
-    const rootRequire = jest.fn(() => defaultConfig);
-    JimpleMock.service('rootRequire', rootRequire);
+    JimpleMock.service('rootRequire', jest.fn());
     const version = 'latest';
     const appConfiguration = {
       loadFromEnvironment: jest.fn(),
@@ -1756,7 +1752,7 @@ describe('app:Jimpex', () => {
     expect(wootilsMock.appConfiguration).toHaveBeenCalledTimes(1);
     expect(wootilsMock.appConfiguration).toHaveBeenCalledWith({
       appName: sut.options.configuration.name,
-      defaultConfiguration: defaultConfig,
+      defaultConfiguration: {},
       options: {
         environmentVariable: sut.options.configuration.environmentVariable,
         path: `${sut.options.configuration.path}${sut.options.configuration.name}/`,

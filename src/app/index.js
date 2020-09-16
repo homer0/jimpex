@@ -627,7 +627,7 @@ class Jimpex extends Jimple {
  */
 const jimpex = (options = {}, configuration = null) => new Jimpex(
   options,
-  configuration,
+  configuration || {},
 );
 
 module.exports.Jimpex = Jimpex;
