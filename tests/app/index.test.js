@@ -7,9 +7,15 @@ jest.mock('compression', () => require('../mocks/compression.mock'));
 jest.mock('multer', () => require('../mocks/multer.mock'));
 jest.mock('body-parser', () => require('../mocks/bodyParser.mock'));
 jest.mock('wootils/node/providers', () => require('../mocks/wootils.mock'));
-jest.mock('../../src/services/common', () => 'commonServices');
-jest.mock('../../src/services/http', () => 'httpServices');
-jest.mock('../../src/services/utils', () => 'utilsServices');
+jest.mock('../../src/services/common', () => ({
+  register: (app) => app.set('commonServices', 'commonServices'),
+}));
+jest.mock('../../src/services/http', () => ({
+  register: (app) => app.set('httpServices', 'httpServices'),
+}));
+jest.mock('../../src/services/utils', () => ({
+  register: (app) => app.set('utilsServices', 'utilsServices'),
+}));
 jest.unmock('../../src/app');
 jest.unmock('../../src/utils/functions');
 
@@ -67,21 +73,19 @@ describe('app:Jimpex', () => {
     let sut = null;
     let eventsService = null;
     let statusesService = null;
-    const expectedServices = [
-      'appLogger',
-      'environmentUtils',
-      'packageInfo',
-      'pathUtils',
-      'rootRequire',
-      'utilsServices',
-      'commonServices',
-      'httpServices',
-      'appConfiguration',
-    ];
     const expectedSetServices = [
-      'router',
-      'events',
-      'statuses',
+      ['appLogger', 'appLogger'],
+      ['environmentUtils', 'environmentUtils'],
+      ['packageInfo', 'packageInfo'],
+      ['pathUtils', 'pathUtils'],
+      ['rootRequire', 'rootRequire'],
+      ['router', 'router'],
+      ['commonServices', 'commonServices'],
+      ['httpServices', 'httpServices'],
+      ['utilsServices', 'utilsServices'],
+      ['events', expect.any(Function)],
+      ['statuses', expect.any(Function)],
+      ['appConfiguration', 'appConfiguration'],
     ];
     const expectedStaticsFolder = 'app/statics';
     const expectedMiddlewares = [
@@ -95,10 +99,6 @@ describe('app:Jimpex', () => {
     sut = new Jimpex();
     // Then
     expect(sut).toBeInstanceOf(Jimpex);
-    expect(sut.register).toHaveBeenCalledTimes(expectedServices.length);
-    expectedServices.forEach((service) => {
-      expect(sut.register).toHaveBeenCalledWith(service);
-    });
     expect(sut.express).toBe(expressMock.mocks);
     expect(expressMock).toHaveBeenCalledTimes(1);
     expect(expressMock.mocks.enable).toHaveBeenCalledTimes(1);
@@ -124,9 +124,10 @@ describe('app:Jimpex', () => {
     expect(multerMock).toHaveBeenCalledTimes(1);
     expect(multerMock.mocks.any).toHaveBeenCalledTimes(1);
     expect(sut.set).toHaveBeenCalledTimes(expectedSetServices.length);
-    expect(sut.set).toHaveBeenCalledWith('router', 'router');
-    expect(sut.set).toHaveBeenCalledWith('events', expect.any(Function));
-    [, [, eventsService], [, statusesService]] = sut.set.mock.calls;
+    expectedSetServices.forEach((expectedSet, index) => {
+      expect(sut.set).toHaveBeenNthCalledWith(index + 1, expectedSet[0], expectedSet[1]);
+    });
+    [,,,,,,,,, [, eventsService], [, statusesService]] = sut.set.mock.calls;
     expect(eventsService()).toBeInstanceOf(EventsHub);
     expect(statusesService()).toEqual(statuses);
     expect(wootilsMock.appConfiguration).toHaveBeenCalledTimes(1);
@@ -552,12 +553,15 @@ describe('app:Jimpex', () => {
     JimpleMock.service('appConfiguration', appConfiguration);
     let sut = null;
     const expectedServices = [
-      'appLogger',
-      'environmentUtils',
-      'packageInfo',
-      'pathUtils',
-      'rootRequire',
-      'appConfiguration',
+      ['appLogger', 'appLogger'],
+      ['environmentUtils', 'environmentUtils'],
+      ['packageInfo', 'packageInfo'],
+      ['pathUtils', 'pathUtils'],
+      ['rootRequire', 'rootRequire'],
+      ['router', 'router'],
+      ['events', expect.any(Function)],
+      ['statuses', expect.any(Function)],
+      ['appConfiguration', 'appConfiguration'],
     ];
     // When
     sut = new Jimpex({
@@ -568,9 +572,9 @@ describe('app:Jimpex', () => {
       },
     });
     // Then
-    expect(sut.register).toHaveBeenCalledTimes(expectedServices.length);
-    expectedServices.forEach((service) => {
-      expect(sut.register).toHaveBeenCalledWith(service);
+    expect(sut.set).toHaveBeenCalledTimes(expectedServices.length);
+    expectedServices.forEach((service, index) => {
+      expect(sut.set).toHaveBeenNthCalledWith(index + 1, service[0], service[1]);
     });
   });
 
@@ -1409,6 +1413,87 @@ describe('app:Jimpex', () => {
     sut.stop();
     // Then
     expect(expressMock.mocks.closeInstance).toHaveBeenCalledTimes(0);
+  });
+
+  it('should register a service', () => {
+    // Given
+    const pathUtils = {
+      joinFrom: jest.fn((from, rest) => path.join(from, rest)),
+    };
+    JimpleMock.service('pathUtils', pathUtils);
+    const defaultConfig = {};
+    const rootRequire = jest.fn(() => defaultConfig);
+    JimpleMock.service('rootRequire', rootRequire);
+    const configuration = {
+      port: 2509,
+    };
+    const appConfiguration = {
+      loadFromEnvironment: jest.fn(),
+      get: jest.fn((prop) => (Array.isArray(prop) ? [] : configuration[prop])),
+    };
+    JimpleMock.service('appConfiguration', appConfiguration);
+    const events = {
+      emit: jest.fn(),
+      reduce: jest.fn((eventName, router) => router),
+    };
+    JimpleMock.service('events', events);
+    const appLogger = {
+      success: jest.fn(),
+    };
+    JimpleMock.service('appLogger', appLogger);
+    const provider = {
+      register: jest.fn(),
+    };
+    let sut = null;
+    // When
+    sut = new Jimpex();
+    sut.register(provider);
+    // Then
+    expect(provider.register).toHaveBeenCalledTimes(1);
+    expect(provider.register).toHaveBeenCalledWith(sut);
+  });
+
+  it('should register a service (proxy)', () => {
+    // Given
+    const pathUtils = {
+      joinFrom: jest.fn((from, rest) => path.join(from, rest)),
+    };
+    JimpleMock.service('pathUtils', pathUtils);
+    const defaultConfig = {};
+    const rootRequire = jest.fn(() => defaultConfig);
+    JimpleMock.service('rootRequire', rootRequire);
+    const configuration = {
+      port: 2509,
+    };
+    const appConfiguration = {
+      loadFromEnvironment: jest.fn(),
+      get: jest.fn((prop) => (Array.isArray(prop) ? [] : configuration[prop])),
+    };
+    JimpleMock.service('appConfiguration', appConfiguration);
+    const events = {
+      emit: jest.fn(),
+      reduce: jest.fn((eventName, router) => router),
+    };
+    JimpleMock.service('events', events);
+    const appLogger = {
+      success: jest.fn(),
+    };
+    JimpleMock.service('appLogger', appLogger);
+    const serviceName = 'myService';
+    const serviceValue = 'My-Service';
+    const provider = {
+      register: jest.fn((app) => {
+        // eslint-disable-next-line no-param-reassign
+        app[serviceName] = serviceValue;
+      }),
+    };
+    let sut = null;
+    // When
+    sut = new Jimpex({ proxy: true });
+    sut.register(provider);
+    // Then
+    expect(provider.register).toHaveBeenCalledTimes(1);
+    expect(sut.set).toHaveBeenCalledWith(serviceName, serviceValue);
   });
 
   it('should try to access a service that may or may not be registered', () => {

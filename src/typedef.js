@@ -227,6 +227,12 @@
  * @property {boolean}                      boot            Whether or not to automatically call
  *                                                          the `boot` method after initialization.
  *                                                          Default `true`.
+ * @property {boolean}                      proxy           Whether or not to enable the proxy
+ *                                                          mode, so all providers, controllers
+ *                                                          and middlewares will receive a proxied
+ *                                                          reference of the container, in which
+ *                                                          they can set and get resources using
+ *                                                          dot notation.
  * @property {JimpexConfigurationOptions}   configuration   The options for the app configuration
  *                                                          service.
  * @property {JimpexStaticsOptions}         statics         The options for the app static

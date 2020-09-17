@@ -22,7 +22,7 @@ const {
   pathUtils,
   rootRequire,
 } = require('wootils/node/providers');
-const { EventsHub } = require('wootils/shared');
+const { EventsHub, proxyContainer } = require('wootils/shared');
 
 const { eventNames } = require('../constants');
 const commonServices = require('../services/common');
@@ -56,6 +56,7 @@ class Jimpex extends Jimple {
         version: '0.0.0',
         filesizeLimit: '15MB',
         boot: true,
+        proxy: false,
         configuration: {
           default: configuration,
           name: 'app',
@@ -88,6 +89,15 @@ class Jimpex extends Jimple {
       options,
       this._initOptions(),
     );
+    /**
+     * If the `proxy` option was set to `true`, this property will have a reference for a proxy
+     * of the container, in which resources can be registered and obtained using dot notation.
+     *
+     * @type {?Proxy<Jimpex>}
+     * @access protected
+     * @ignore
+     */
+    this._proxy = this._options.proxy ? proxyContainer(this) : null;
     /**
      * The Express application Jimpex uses under the hood.
      *
@@ -186,14 +196,15 @@ class Jimpex extends Jimple {
    * @param {Controller|ControllerProvider} controller The route controller.
    */
   mount(route, controller) {
+    const ref = this.ref();
     const useController = typeof controller.register === 'function' ?
-      controller.register(this, route) :
+      controller.register(ref, route) :
       controller;
     this._mountQueue.push((server) => {
       let result;
       const routes = this._reduceWithEvent(
         'controllerWillBeMounted',
-        useController.connect(this, route),
+        useController.connect(ref, route),
         route,
         useController,
       );
@@ -209,6 +220,23 @@ class Jimpex extends Jimple {
       this._emitEvent('routeAdded', route);
       return result;
     });
+  }
+  /**
+   * Gets "safe" reference for the container that validates if the "proxy mode" is enabled, in
+   * order to provide the proxy or the actual instance.
+   *
+   * @returns {Jimpex}
+   */
+  ref() {
+    return this._proxy || this;
+  }
+  /**
+   * Registers a provider to extend the application.
+   *
+   * @param {Provider} provider  The provider to register.
+   */
+  register(provider) {
+    provider.register(this.ref());
   }
   /**
    * Starts the app server.
@@ -264,13 +292,14 @@ class Jimpex extends Jimple {
    * @param {MiddlewareLike} middleware The middleware to use.
    */
   use(middleware) {
+    const ref = this.ref();
     const useMiddleware = typeof middleware.register === 'function' ?
-      middleware.register(this) :
+      middleware.register(ref) :
       middleware;
     this._mountQueue.push((server) => {
       if (typeof useMiddleware.connect === 'function') {
         // If the middleware is from Jimpex, connect it and then use it.
-        const middlewareHandler = useMiddleware.connect(this);
+        const middlewareHandler = useMiddleware.connect(ref);
         if (middlewareHandler) {
           server.use(this._reduceWithEvent(
             'middlewareWillBeUsed',
@@ -639,10 +668,10 @@ class Jimpex extends Jimple {
  *                                                      `appConfiguration` service.
  * @returns {Jimpex}
  */
-const jimpex = (options = {}, configuration = null) => new Jimpex(
-  options,
-  configuration || {},
-);
+const jimpex = (options = {}, configuration = null) => {
+  const app = new Jimpex(options, configuration || {});
+  return app.ref();
+};
 
 module.exports.Jimpex = Jimpex;
 module.exports.jimpex = jimpex;
