@@ -47,7 +47,6 @@ class JimpleMock {
   constructor() {
     this.set = mocks.set;
     this.get = mocks.get;
-    this.register = mocks.register;
     this.factory = mocks.factory;
     this.has = mocks.has;
   }

@@ -618,6 +618,35 @@ const greetings = providerCreator((settings) => (app) => {
 });
 ```
 
+### Proxy mode
+
+You can enable the "proxy mode" by setting the `proxy` option to `true` on either the function or the class and it allows you to access and register resources using dot notation:
+
+```js
+// Set the option
+const app = jimpex({ proxy: true });
+
+app.myService = () => new MyService();
+// = app.set('myService', () => new MyService();
+
+app.myService.doSomething();
+// = app.get('myService').doSomething();
+
+doSomething(app.$myService);
+// = doSomething(app.try('myService'));
+```
+
+When using the class, as you would expect, the constructor would give you the original instance and then you would have to call `.ref()` to get either the proxy or the original (depending on the setting):
+
+```js
+const original = new Jimpex({ proxy: true });
+const app = original.ref();
+```
+
+But for the function, what you get as return value is actually the call for `.ref()`, that's why the first example could use the proxy mode without calling it.
+
+Internally, when `proxy` is enabled, all providers, controllers and middlewares will receive the proxy instead of the original.
+
 ## Built-in features
 
 Jimpex comes with a few services, middlewares and controllers that you can import and use on your app, some of them [are activated by default on the options](./documents/options.md), but others you have to implement manually:
