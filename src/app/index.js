@@ -264,10 +264,13 @@ class Jimpex extends Jimple {
    * @param {MiddlewareLike} middleware The middleware to use.
    */
   use(middleware) {
+    const useMiddleware = typeof middleware.register === 'function' ?
+      middleware.register(this) :
+      middleware;
     this._mountQueue.push((server) => {
-      if (typeof middleware.connect === 'function') {
+      if (typeof useMiddleware.connect === 'function') {
         // If the middleware is from Jimpex, connect it and then use it.
-        const middlewareHandler = middleware.connect(this);
+        const middlewareHandler = useMiddleware.connect(this);
         if (middlewareHandler) {
           server.use(this._reduceWithEvent(
             'middlewareWillBeUsed',
@@ -279,7 +282,7 @@ class Jimpex extends Jimple {
         // But if the middleware is a regular middleware, just use it directly.
         server.use(this._reduceWithEvent(
           'middlewareWillBeUsed',
-          middleware,
+          useMiddleware,
           null,
         ));
       }

@@ -561,6 +561,63 @@ class MyApp extends Jimpex {
 }
 ```
 
+#### Defining a middleware that registers a service
+
+Just like the "controller provider", you can also create a "middleware provider", a middleware that also registers something on the contianer without messing with the _lazyness_ of the container:
+
+```js
+const { provider, middleware } = require('jimpex');
+// Define the class that will work as a service
+class Greeter {
+  // Add a method that could be used on its "service role"
+  greet() {
+    return 'Hello!';
+  }
+  // Add a method for the actual middleware
+  middleware() {
+    return (req, res, next) => {
+      console.log(this.greet());
+    };
+  }
+}
+// Define the provider
+const greetings = provider((app) => {
+  // Register the class as a service
+  app.set('greeter', () => new Greeter());
+  // Return the actual middleware
+  return middleware(() => app.get('greeter').middleware());
+})
+
+// Export the class and the provider
+module.exports.greetingsMiddleware = greetingsMiddleware;
+module.exports.greetings = greetings;
+```
+
+And you would mount it just like any other contorller:
+
+```js
+const { Jimpex } = require('jimpex');
+const { greetings } = require('...');
+
+class MyApp extends Jimpex {
+  boot() {
+    ...
+    this.use(greetings);
+  }
+}
+```
+
+And in the case you need a "creator", you could use a "provider creator" and return a controller:
+
+```js
+const greetings = providerCreator((settings) => (app) => {
+  // Register the class as a service and send the settings
+  app.set('greeter', () => new Greeter(settings));
+  // Return the actual middleware
+  return middleware(() => app.get('greeter').middleware());
+});
+```
+
 ## Built-in features
 
 Jimpex comes with a few services, middlewares and controllers that you can import and use on your app, some of them [are activated by default on the options](./documents/options.md), but others you have to implement manually:

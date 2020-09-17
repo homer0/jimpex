@@ -1729,6 +1729,72 @@ describe('app:Jimpex', () => {
     );
   });
 
+  it('should mount a middleware provider', () => {
+    // Given
+    const pathUtils = {
+      joinFrom: jest.fn((from, rest) => path.join(from, rest)),
+    };
+    JimpleMock.service('pathUtils', pathUtils);
+    const defaultConfig = {};
+    const rootRequire = jest.fn(() => defaultConfig);
+    JimpleMock.service('rootRequire', rootRequire);
+    const configuration = {
+      port: 2509,
+    };
+    const appConfiguration = {
+      loadFromEnvironment: jest.fn(),
+      get: jest.fn((prop) => (Array.isArray(prop) ? [] : configuration[prop])),
+    };
+    JimpleMock.service('appConfiguration', appConfiguration);
+    const events = {
+      emit: jest.fn(),
+      reduce: jest.fn((eventName, middleware) => middleware),
+    };
+    JimpleMock.service('events', events);
+    const appLogger = {
+      success: jest.fn(),
+    };
+    JimpleMock.service('appLogger', appLogger);
+    const middlewareFn = 'custom-middleware';
+    const middlewareConnect = jest.fn(() => middlewareFn);
+    const middleware = {
+      register: jest.fn(() => ({
+        connect: middlewareConnect,
+      })),
+    };
+    let sut = null;
+    const expectedStaticsFolder = 'app/statics';
+    const expectedMiddlewares = [
+      ['compression-middleware'],
+      ['/statics', expectedStaticsFolder],
+      ['body-parser-json'],
+      ['body-parser-urlencoded'],
+      ['multer-any'],
+    ];
+    const expectedUseCalls = [
+      ...expectedMiddlewares,
+      [middlewareFn],
+    ];
+    // When
+    sut = new Jimpex();
+    sut.use(middleware);
+    sut.start();
+    // Then
+    expect(middleware.register).toHaveBeenCalledTimes(1);
+    expect(middleware.register).toHaveBeenCalledWith(sut);
+    expect(expressMock.mocks.use).toHaveBeenCalledTimes(expectedUseCalls.length);
+    expectedUseCalls.forEach((useCall) => {
+      expect(expressMock.mocks.use).toHaveBeenCalledWith(...useCall);
+    });
+    expect(events.reduce).toHaveBeenCalledTimes(1);
+    expect(events.reduce).toHaveBeenCalledWith(
+      eventNames.middlewareWillBeUsed,
+      middlewareFn,
+      middleware,
+      sut,
+    );
+  });
+
   it('should mount an Express middleware', () => {
     // Given
     const pathUtils = {
