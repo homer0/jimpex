@@ -182,17 +182,20 @@ class Jimpex extends Jimple {
   /**
    * Mounts a controller on a specific route.
    *
-   * @param {string}     route      The route for the controller.
-   * @param {Controller} controller The route controller.
+   * @param {string}                        route      The route for the controller.
+   * @param {Controller|ControllerProvider} controller The route controller.
    */
   mount(route, controller) {
+    const useController = typeof controller.register === 'function' ?
+      controller.register(this, route) :
+      controller;
     this._mountQueue.push((server) => {
       let result;
       const routes = this._reduceWithEvent(
         'controllerWillBeMounted',
-        controller.connect(this, route),
+        useController.connect(this, route),
         route,
-        controller,
+        useController,
       );
       if (Array.isArray(routes)) {
         // If the returned value is a list of routes, mount each single route.
@@ -261,10 +264,13 @@ class Jimpex extends Jimple {
    * @param {MiddlewareLike} middleware The middleware to use.
    */
   use(middleware) {
+    const useMiddleware = typeof middleware.register === 'function' ?
+      middleware.register(this) :
+      middleware;
     this._mountQueue.push((server) => {
-      if (typeof middleware.connect === 'function') {
+      if (typeof useMiddleware.connect === 'function') {
         // If the middleware is from Jimpex, connect it and then use it.
-        const middlewareHandler = middleware.connect(this);
+        const middlewareHandler = useMiddleware.connect(this);
         if (middlewareHandler) {
           server.use(this._reduceWithEvent(
             'middlewareWillBeUsed',
@@ -276,7 +282,7 @@ class Jimpex extends Jimple {
         // But if the middleware is a regular middleware, just use it directly.
         server.use(this._reduceWithEvent(
           'middlewareWillBeUsed',
-          middleware,
+          useMiddleware,
           null,
         ));
       }

@@ -1,6 +1,6 @@
 const ObjectUtils = require('wootils/shared/objectUtils');
 const { removeSlashes, createRouteExpression } = require('../../utils/functions');
-const { controllerCreator } = require('../../utils/wrappers');
+const { providerCreator, controller } = require('../../utils/wrappers');
 
 /**
  * @typedef {import('../../services/http/http').HTTP} HTTP
@@ -904,10 +904,12 @@ class GatewayController {
  * This controller allows you to have gateway routes that actually make requests and respond with
  * the contents from an specified API.
  *
- * @type {ControllerCreator<GatewayControllerCreatorOptions>}
+ *
+ *
+ * @type {ProviderCreator<GatewayControllerCreatorOptions>}
  * @parent module:controllers
  */
-const gatewayController = controllerCreator((options = {}) => (app, route) => {
+const gatewayController = providerCreator((options = {}) => (app, route) => {
   /**
    * Formats the name in order to keep consistency with the helper service and the configuration
    * setting: If the `serviceName` is different from the default, make sure it ends with
@@ -944,35 +946,33 @@ const gatewayController = controllerCreator((options = {}) => (app, route) => {
     ...options,
     configurationSetting,
   };
-  // Get the gateway configuration.
-  const gatewayConfig = app.get('appConfiguration').get(configurationSetting);
-  // Generate the controller
-  const ctrl = new GatewayClass(
-    gatewayConfig,
+  // Register the controller on the container.
+  app.set(serviceName, () => new GatewayClass(
+    app.get('appConfiguration').get(configurationSetting),
     route,
     app.get('http'),
     newOptions,
     helperServiceName ? app.try(helperServiceName) : null,
-  );
-  /**
-   * Register a service for the controller so other services can ask for the endpoints formatted
-   * for an API Client.
-   */
-  app.set(serviceName, () => ctrl);
-  /**
-   * Check if there are actual middlewares to be included, and in case there are Jimpex
-   * middlewares, connect them.
-   */
-  let useMiddlewares;
-  if (options.middlewares) {
-    useMiddlewares = options.middlewares(app).map((middleware) => (
-      middleware.connect ?
-        middleware.connect(app) :
-        middleware
-    ));
-  }
-  // Add the routes to the router and return it.
-  return ctrl.addRoutes(app.get('router'), useMiddlewares);
+  ));
+
+  return controller(() => {
+    // Get the controller
+    const ctrl = app.get(serviceName);
+    /**
+     * Check if there are actual middlewares to be included, and in case there are Jimpex
+     * middlewares, connect them.
+     */
+    let useMiddlewares;
+    if (options.middlewares) {
+      useMiddlewares = options.middlewares(app).map((middleware) => (
+        middleware.connect ?
+          middleware.connect(app) :
+          middleware
+      ));
+    }
+    // Add the routes to the router and return it.
+    return ctrl.addRoutes(app.get('router'), useMiddlewares);
+  });
 });
 
 module.exports.GatewayController = GatewayController;
