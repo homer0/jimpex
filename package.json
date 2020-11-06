@@ -21,8 +21,10 @@
     "spdy": "^4.0.2"
   },
   "devDependencies": {
+    "@homer0/eslint-plugin": "^6.0.0",
+    "@homer0/prettier-config": "^1.1.0",
+    "@homer0/prettier-plugin-jsdoc": "^1.1.1",
     "eslint": "^7.9.0",
-    "eslint-plugin-homer0": "^5.0.2",
     "jest": "^26.4.2",
     "jsdoc": "^3.6.5",
     "jsdoc-ts-utils": "^1.1.1",
