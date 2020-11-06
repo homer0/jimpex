@@ -31,17 +31,8 @@ describe('controllers/utils:gateway', () => {
         headers: {
           useXForwardedFor: true,
           copyCustomHeaders: true,
-          copy: [
-            'authorization',
-            'content-type',
-            'referer',
-            'user-agent',
-          ],
-          remove: [
-            'server',
-            'x-powered-by',
-            'content-encoding',
-          ],
+          copy: ['authorization', 'content-type', 'referer', 'user-agent'],
+          remove: ['server', 'x-powered-by', 'content-encoding'],
         },
       });
     });
@@ -84,8 +75,9 @@ describe('controllers/utils:gateway', () => {
       const route = '/my-gateway';
       const http = 'http';
       // When/Then
-      expect(() => new GatewayController(gatewayConfig, route, http))
-      .toThrow(/You can't have two gateway endpoints to the same path/i);
+      expect(() => new GatewayController(gatewayConfig, route, http)).toThrow(
+        /You can't have two gateway endpoints to the same path/i,
+      );
     });
 
     it('should create a configuration for an API client', () => {
@@ -182,10 +174,9 @@ describe('controllers/utils:gateway', () => {
         expect.any(Function),
       ]);
       expect(router.post).toHaveBeenCalledTimes(1);
-      expect(router.post).toHaveBeenCalledWith(
-        gatewayConfig.gateway.endpointTwo.path,
-        [expect.any(Function)],
-      );
+      expect(router.post).toHaveBeenCalledWith(gatewayConfig.gateway.endpointTwo.path, [
+        expect.any(Function),
+      ]);
     });
 
     it('should add the gateway routes to the router with a custom root', () => {
@@ -214,15 +205,17 @@ describe('controllers/utils:gateway', () => {
       sut.addRoutes(router);
       // Then
       expect(router.all).toHaveBeenCalledTimes(1);
-      expect(router.all).toHaveBeenCalledWith(
-        `/${root}${gatewayConfig.gateway.endpointOne}`,
-        [expect.any(Function)],
-      );
+      expect(
+        router.all,
+      ).toHaveBeenCalledWith(`/${root}${gatewayConfig.gateway.endpointOne}`, [
+        expect.any(Function),
+      ]);
       expect(router.post).toHaveBeenCalledTimes(1);
-      expect(router.post).toHaveBeenCalledWith(
-        `/${root}${gatewayConfig.gateway.endpointTwo.path}`,
-        [expect.any(Function)],
-      );
+      expect(
+        router.post,
+      ).toHaveBeenCalledWith(`/${root}${gatewayConfig.gateway.endpointTwo.path}`, [
+        expect.any(Function),
+      ]);
     });
 
     it('should add the gateway routes to the router with a custom middleware', () => {
@@ -255,16 +248,13 @@ describe('controllers/utils:gateway', () => {
         expect.any(Function),
       ]);
       expect(router.post).toHaveBeenCalledTimes(1);
-      expect(router.post).toHaveBeenCalledWith(
-        gatewayConfig.gateway.endpointTwo.path,
-        [
-          middleware,
-          expect.any(Function),
-        ],
-      );
+      expect(router.post).toHaveBeenCalledWith(gatewayConfig.gateway.endpointTwo.path, [
+        middleware,
+        expect.any(Function),
+      ]);
     });
 
-    it('should use `all` when an endpoint doesn\'t have a valid HTTP method', () => {
+    it("should use `all` when an endpoint doesn't have a valid HTTP method", () => {
       // Given
       const gatewayConfig = {
         url: 'http://my-api.com',
@@ -286,10 +276,9 @@ describe('controllers/utils:gateway', () => {
       sut.addRoutes(router);
       // Then
       expect(router.all).toHaveBeenCalledTimes(1);
-      expect(router.all).toHaveBeenCalledWith(
-        gatewayConfig.gateway.endpointOne.path,
-        [expect.any(Function)],
-      );
+      expect(router.all).toHaveBeenCalledWith(gatewayConfig.gateway.endpointOne.path, [
+        expect.any(Function),
+      ]);
     });
   });
 
@@ -309,10 +298,7 @@ describe('controllers/utils:gateway', () => {
           pipe: jest.fn(() => httpResponse.body),
           on: jest.fn(),
         },
-        headers: [
-          'content-type',
-          'server',
-        ],
+        headers: ['content-type', 'server'],
       };
       const ip = '25.09.2015';
       const customHeaderName = 'x-custom-header';
@@ -381,7 +367,7 @@ describe('controllers/utils:gateway', () => {
       expect(httpResponse.body.on).toHaveBeenCalledWith('error', expect.any(Function));
     });
 
-    it('shouldn\'t add custom headers to the request', async () => {
+    it("shouldn't add custom headers to the request", async () => {
       // Given
       const gatewayConfig = {
         url: 'http://my-api.com',
@@ -396,10 +382,7 @@ describe('controllers/utils:gateway', () => {
           pipe: jest.fn(() => httpResponse.body),
           on: jest.fn(),
         },
-        headers: [
-          'content-type',
-          'server',
-        ],
+        headers: ['content-type', 'server'],
       };
       const http = {
         fetch: jest.fn(() => Promise.resolve(httpResponse)),
@@ -511,7 +494,7 @@ describe('controllers/utils:gateway', () => {
       );
     });
 
-    it('should add the content type for JSON when there\'s a body but no header', async () => {
+    it("should add the content type for JSON when there's a body but no header", async () => {
       // Given
       const gatewayConfig = {
         url: 'http://my-api.com',
@@ -704,10 +687,7 @@ describe('controllers/utils:gateway', () => {
           pipe: jest.fn(() => httpResponse.body),
           on: jest.fn(),
         },
-        headers: [
-          'content-type',
-          'server',
-        ],
+        headers: ['content-type', 'server'],
       };
       const ip = '25.09.2015';
       const customHeaderName = 'x-custom-header';
@@ -819,10 +799,7 @@ describe('controllers/utils:gateway', () => {
           pipe: jest.fn(() => httpResponse.body),
           on: jest.fn(),
         },
-        headers: [
-          'content-type',
-          'server',
-        ],
+        headers: ['content-type', 'server'],
       };
       const http = {
         fetch: jest.fn(() => Promise.resolve(httpResponse)),
@@ -890,10 +867,7 @@ describe('controllers/utils:gateway', () => {
           pipe: jest.fn(() => httpResponse.body),
           on: jest.fn(),
         },
-        headers: [
-          'content-type',
-          'server',
-        ],
+        headers: ['content-type', 'server'],
       };
       const http = {
         fetch: jest.fn(() => Promise.resolve(httpResponse)),
@@ -1041,12 +1015,7 @@ describe('controllers/utils:gateway', () => {
       const route = '/my-gateway';
       let result = null;
       let service = null;
-      const expectedGetServices = [
-        'appConfiguration',
-        'http',
-        'apiGateway',
-        'router',
-      ];
+      const expectedGetServices = ['appConfiguration', 'http', 'apiGateway', 'router'];
       // When
       result = gatewayController.register(app, route).connect();
       [[, service]] = app.set.mock.calls;
@@ -1125,7 +1094,10 @@ describe('controllers/utils:gateway', () => {
       expect(app.try).toHaveBeenCalledTimes(1);
       expect(app.try).toHaveBeenCalledWith(`${options.serviceName}GatewayHelper`);
       expect(app.set).toHaveBeenCalledTimes(1);
-      expect(app.set).toHaveBeenCalledWith(`${options.serviceName}Gateway`, expect.any(Function));
+      expect(app.set).toHaveBeenCalledWith(
+        `${options.serviceName}Gateway`,
+        expect.any(Function),
+      );
       expect(typeof service).toBe('function');
       expect(service()).toBeInstanceOf(GatewayController);
     });

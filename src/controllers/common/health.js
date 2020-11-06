@@ -1,7 +1,8 @@
 const { code: statuses } = require('statuses');
 const { controller } = require('../../utils/wrappers');
 /**
- * @typedef {import('../../services/http/responsesBuilder').ResponsesBuilder} ResponsesBuilder
+ * @typedef {import('../../services/http/responsesBuilder').ResponsesBuilder}
+ * ResponsesBuilder
  */
 
 /**
@@ -13,8 +14,9 @@ const { controller } = require('../../utils/wrappers');
  */
 class HealthController {
   /**
-   * @param {AppConfiguration} appConfiguration To read the app version and the configuration name.
-   * @param {ResponsesBuilder} responsesBuilder To generate the JSON response.
+   * @param {AppConfiguration} appConfiguration  To read the app version and the
+   *                                             configuration name.
+   * @param {ResponsesBuilder} responsesBuilder  To generate the JSON response.
    */
   constructor(appConfiguration, responsesBuilder) {
     /**
@@ -41,10 +43,10 @@ class HealthController {
    */
   health() {
     return (req, res) => {
-      const {
-        name: configuration,
-        version,
-      } = this._appConfiguration.get(['name', 'version']);
+      const { name: configuration, version } = this._appConfiguration.get([
+        'name',
+        'version',
+      ]);
       this._responsesBuilder.json(res, {
         isHealthy: true,
         status: statuses.ok,
@@ -67,9 +69,7 @@ const healthController = controller((app) => {
     app.get('responsesBuilder'),
   );
 
-  return [
-    router.get('/', ctrl.health()),
-  ];
+  return [router.get('/', ctrl.health())];
 });
 
 module.exports.HealthController = HealthController;

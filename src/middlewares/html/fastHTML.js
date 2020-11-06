@@ -13,57 +13,62 @@ const { createRouteExpression, removeSlashes } = require('../../utils/functions'
  * The options to customize the behavior of the middleware.
  *
  * @typedef {Object} FastHTMLOptions
- * @property {string}  file          The name of the file the middleware will serve. It can get
- *                                   overwritten if {@link FastHTML} receives an
- *                                   {@link HTMLGenerator}, in that case, the file will be obtained
- *                                   from that service. Default `index.html`.
- * @property {RegExp[]} ignore       A list of regular expressions to match requests paths that
- *                                   should be ignored.
- * @property {boolean}  useAppRoutes If `true`, {@link FastHTML} will get the list of all routes
- *                                   controlled by {@link Jimpex} and will use them to validate the
- *                                   incoming requests (in addition to `ignore`): If a request URL
- *                                   doesn't match with any of the controlled routes, it will show
- *                                   the HTML file. Default `true`.
+ * @property {string}   file          The name of the file the middleware will serve. It
+ *                                    can get overwritten if {@link FastHTML} receives an
+ *                                    {@link HTMLGenerator}, in that case, the file will
+ *                                    be obtained from that service. Default `index.html`.
+ * @property {RegExp[]} ignore        A list of regular expressions to match requests
+ *                                    paths that should be ignored.
+ * @property {boolean}  useAppRoutes  If `true`, {@link FastHTML} will get the list of all
+ *                                    routes controlled by {@link Jimpex} and will use
+ *                                    them to validate the incoming requests (in addition
+ *                                    to `ignore`): If a request URL doesn't match with
+ *                                    any of the controlled routes, it will show the HTML
+ *                                    file. Default `true`.
  * @parent module:middlewares
  */
 
 /**
- * @typedef {FastHTMLOptions & FastHTMLMiddlewareOptionsProperties} FastHTMLMiddlewareOptions
+ * @typedef {FastHTMLOptions & FastHTMLMiddlewareOptionsProperties}
+ * FastHTMLMiddlewareOptions
  */
 
 /**
  * @typedef {Object} FastHTMLMiddlewareOptionsProperties
- * @property {string} htmlGenerator The name of a {@link HTMLGenerator} service for the middleware
- *                                  to use. Default `htmlGenerator`.
+ * @property {string} htmlGenerator
+ * The name of a {@link HTMLGenerator} service for the middleware to use. Default
+ * `htmlGenerator`.
  * @augments FastHTMLMiddlewareOptions
  * @parent module:middlewares
  */
 
 /**
- * It's common for an app to show an HTML view when no route was able to handle a request, so the
- * idea behind this middleware is to avoid going to every middleware and controller and just
- * specify that if the request is not for a route handled by a controller, just serve the HTML
- * and avoid processing unnecessary data.
+ * It's common for an app to show an HTML view when no route was able to handle a request,
+ * so the idea behind this middleware is to avoid going to every middleware and controller
+ * and just specify that if the request is not for a route handled by a controller, just
+ * serve the HTML and avoid processing unnecessary data.
  *
- * A simple example: The app has a route `/backend` that a frontend uses to get information.
- * This middleware can be used to only allow the execution of middlewares and controllers when
- * the request route is for `/backend`.
+ * A simple example: The app has a route `/backend` that a frontend uses to get
+ * information.
+ * This middleware can be used to only allow the execution of middlewares and controllers
+ * when the request route is for `/backend`.
  *
- * **Disclaimer**: Managing statics files with Express is not a best practice, but there are
- * scenarios where there is not other choice.
+ * **Disclaimer**: Managing statics files with Express is not a best practice, but there
+ * are scenarios where there is not other choice.
  *
  * @parent module:middlewares
  */
 class FastHTML {
   /**
-   * @param {EventsHub}       events               To listen for the {@link Jimpex} event
-   *                                               triggered after the app starts. The event is
-   *                                               used to get all the controlled routes, in case
-   *                                               the `useAppRoutes` option is set to true.
-   * @param {SendFile}        sendFile             To send the HTML file response.
-   * @param {FastHTMLOptions} [options={}]         To customize the middleware behavior.
-   * @param {?HTMLGenerator}  [htmlGenerator=null] If used, the file to serve will be the one
-   *                                               generated by that service.
+   * @param {EventsHub}       events                To listen for the {@link Jimpex} event
+   *                                                triggered after the app starts. The
+   *                                                event is used to get all the
+   *                                                controlled routes, in case the
+   *                                                `useAppRoutes` option is set to true.
+   * @param {SendFile}        sendFile              To send the HTML file response.
+   * @param {FastHTMLOptions} [options={}]          To customize the middleware behavior.
+   * @param {?HTMLGenerator}  [htmlGenerator=null]  If used, the file to serve will be the
+   *                                                one generated by that service.
    */
   constructor(events, sendFile, options = {}, htmlGenerator = null) {
     /**
@@ -91,23 +96,27 @@ class FastHTML {
      */
     this._htmlGenerator = htmlGenerator;
     /**
-     * The options that tell the middleware which routes should be ignored and which is the file
-     * to serve.
+     * The options that tell the middleware which routes should be ignored and which is
+     * the file to serve.
      *
      * @type {FastHTMLOptions}
      */
-    this._options = this._normalizeOptions(ObjectUtils.merge(
-      {
-        file: 'index.html',
-        ignore: options.ignore || [/\.ico$/i],
-        useAppRoutes: true,
-      },
-      options,
-    ));
+    this._options = this._normalizeOptions(
+      ObjectUtils.merge(
+        {
+          file: 'index.html',
+          ignore: options.ignore || [/\.ico$/i],
+          useAppRoutes: true,
+        },
+        options,
+      ),
+    );
     /**
      * Whether or not the file is ready to be served, in case there's an
-     * {@link HTMLGenerator}. If the service is used, the HTML is generated after the app starts,
-     * so the middleware will have to wait for it to be ready before being able to serve it.
+     * {@link HTMLGenerator}. If the service is used, the HTML is generated after the app
+     * starts,
+     * so the middleware will have to wait for it to be ready before being able to serve
+     * it.
      *
      * @type {boolean}
      * @access protected
@@ -115,10 +124,10 @@ class FastHTML {
      */
     this._ready = !this._htmlGenerator;
     /**
-     * A list of regular expression that match the routes controlled by the app. This is in case
-     * the `useAppRoutes` option is set to `true`; when the app gets started, an event listener
-     * will obtain all the top controlled routes, create regular expressions and save them on
-     * this property.
+     * A list of regular expression that match the routes controlled by the app. This is
+     * in case the `useAppRoutes` option is set to `true`; when the app gets started, an
+     * event listener will obtain all the top controlled routes, create regular
+     * expressions and save them on this property.
      *
      * @type {RegExp[]}
      * @access protected
@@ -134,7 +143,8 @@ class FastHTML {
     }
   }
   /**
-   * Returns the Express middleware that validates the routes and serves the HTML file if necessary.
+   * Returns the Express middleware that validates the routes and serves the HTML file if
+   * necessary.
    *
    * @returns {ExpressMiddleware}
    */
@@ -145,17 +155,18 @@ class FastHTML {
         next();
       } else if (!this._ready) {
         // If there's an HTMLGenerator and is not ready, wait for it...
-        this._htmlGenerator.whenReady()
-        .then(() => {
-          // Change the flag to prevent the next execution to enter here.
-          this._ready = true;
-          // Serve the file.
-          this._sendHTML(res, next);
-        })
-        .catch((error) => {
-          // Something went wrong while generating the file, send the error to the error handler.
-          next(error);
-        });
+        this._htmlGenerator
+          .whenReady()
+          .then(() => {
+            // Change the flag to prevent the next execution to enter here.
+            this._ready = true;
+            // Serve the file.
+            this._sendHTML(res, next);
+          })
+          .catch((error) => {
+            // Something went wrong while generating the file, send the error to the error handler.
+            next(error);
+          });
       } else {
         // The route is not ignored and the file is ready to be served, so do it.
         this._sendHTML(res, next);
@@ -163,8 +174,8 @@ class FastHTML {
     };
   }
   /**
-   * The options that tell the middleware which routes should be ignored and which is the file
-   * to serve.
+   * The options that tell the middleware which routes should be ignored and which is the
+   * file to serve.
    *
    * @type {FastHTMLOptions}
    * @todo Remove Object.freeze.
@@ -174,13 +185,15 @@ class FastHTML {
   }
   /**
    * Normalizes and validates the options recevied on the constructor.
-   * If the class is using a {@link HTMLGenerator} service, the method will overwrite the `file`
+   * If the class is using a {@link HTMLGenerator} service, the method will overwrite the
+   * `file`
    * option with the result of the service's `getFile()` method.
    *
-   * @param {FastHTMLOptions} options The received options.
+   * @param {FastHTMLOptions} options  The received options.
    * @returns {FastHTMLOptions}
    * @throws {Error} If no file and no {@link HTMLGenerator} service are specified.
-   * @throws {Error} If no routes to ignore are specified and `useAppRoutes` is set to `false`.
+   * @throws {Error} If no routes to ignore are specified and `useAppRoutes` is set to
+   *                 `false`.
    * @access protected
    * @ignore
    */
@@ -193,15 +206,15 @@ class FastHTML {
       );
     }
 
-    return this._htmlGenerator ?
-      { ...options, file: this._htmlGenerator.getFile() } :
-      options;
+    return this._htmlGenerator
+      ? { ...options, file: this._htmlGenerator.getFile() }
+      : options;
   }
   /**
    * Serves the file on the response.
    *
-   * @param {ExpressResponse} res  The server response.
-   * @param {ExpressNext}     next The function to call the next middleware.
+   * @param {ExpressResponse} res   The server response.
+   * @param {ExpressNext}     next  The function to call the next middleware.
    * @access protected
    * @ignore
    */
@@ -210,8 +223,8 @@ class FastHTML {
     this._sendFile(res, this._options.file, next);
   }
   /**
-   * Adds the event listener that obtains the controlled routes when `useAppRoutes` is set to
-   * `true`.
+   * Adds the event listener that obtains the controlled routes when `useAppRoutes` is set
+   * to `true`.
    *
    * @access protected
    * @ignore
@@ -220,50 +233,56 @@ class FastHTML {
     this._events.once(eventNames.afterStart, ({ routes }) => {
       // Re generate the list of expressions...
       this._routeExpressions = routes
-      // Remove leading and trailing slashes.
-      .map((route) => removeSlashes(route).trim())
-      // Filter empty routes (in case they were for `/`).
-      .filter((route) => route !== '')
-      // Remove repeated routes.
-      .reduce((unique, route) => (unique.includes(route) ? unique : [...unique, route]), [])
-      // Generate regular expressions for each route.
-      .map((route) => createRouteExpression(route));
+        // Remove leading and trailing slashes.
+        .map((route) => removeSlashes(route).trim())
+        // Filter empty routes (in case they were for `/`).
+        .filter((route) => route !== '')
+        // Remove repeated routes.
+        .reduce(
+          (unique, route) => (unique.includes(route) ? unique : [...unique, route]),
+          [],
+        )
+        // Generate regular expressions for each route.
+        .map((route) => createRouteExpression(route));
     });
   }
   /**
-   * Checks whether a route should be ignored or not. The method checks first against the `ignore`
-   * option, and then against the controlled routes (if `useAppRoutes` is `false`, the list
-   * will be empty).
+   * Checks whether a route should be ignored or not. The method checks first against the
+   * `ignore`
+   * option, and then against the controlled routes (if `useAppRoutes` is `false`, the
+   * list will be empty).
    *
-   * @param {string} route The route to validate.
+   * @param {string} route  The route to validate.
    * @returns {boolean}
    * @access protected
    * @ignore
    */
   _shouldIgnore(route) {
-    return this._options.ignore.some((expression) => expression.test(route)) ||
-      this._routeExpressions.some((expression) => expression.test(route));
+    return (
+      this._options.ignore.some((expression) => expression.test(route)) ||
+      this._routeExpressions.some((expression) => expression.test(route))
+    );
   }
 }
 /**
- * A middleware for filtering routes so you can serve an HTML before the app gets to evaluate
- * whether there's a controller for the requested route or not. For more information about the
- * reason of this middleware, please read the description of {@link FastHTML}.
+ * A middleware for filtering routes so you can serve an HTML before the app gets to
+ * evaluate whether there's a controller for the requested route or not. For more
+ * information about the reason of this middleware, please read the description of
+ * {@link FastHTML}.
  *
  * @type {MiddlewareCreator<FastHTMLMiddlewareOptions>}
  * @parent module:middlewares
  */
 const fastHTML = middlewareCreator((options = {}) => (app) => {
-  const htmlGeneratorServiceName = typeof options.htmlGenerator === 'undefined' ?
-    'htmlGenerator' :
-    options.htmlGenerator;
-  return (
-    new FastHTML(
-      app.get('events'),
-      app.get('sendFile'),
-      options,
-      htmlGeneratorServiceName ? app.try(htmlGeneratorServiceName) : null,
-    )
+  const htmlGeneratorServiceName =
+    typeof options.htmlGenerator === 'undefined'
+      ? 'htmlGenerator'
+      : options.htmlGenerator;
+  return new FastHTML(
+    app.get('events'),
+    app.get('sendFile'),
+    options,
+    htmlGeneratorServiceName ? app.try(htmlGeneratorServiceName) : null,
   ).middleware();
 });
 

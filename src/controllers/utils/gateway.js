@@ -6,16 +6,18 @@ const { providerCreator, controller } = require('../../utils/wrappers');
  * @typedef {import('../../services/http/http').HTTP} HTTP
  * @typedef {import('../../services/http/http').HTTPFetchOptions} HTTPFetchOptions
  * @typedef {import('../../services/http/http').Response} Response
- * @typedef {import('../../services/http/apiClient').APIClientConfiguration} APIClientConfiguration
+ * @typedef {import('../../services/http/apiClient').APIClientConfiguration}
+ * APIClientConfiguration
  */
 
 /**
  * This object represets an HTTP method for a route the controller will mount.
  *
  * @typedef {Object} GatewayControllerRouteMethod
- * @property {string}                               method   The name of the HTTP method.
- * @property {GatewayControllerEndpointInformation} endpoint The information for the endpoint
- *                                                           responsible from creating the route.
+ * @property {string} method
+ * The name of the HTTP method.
+ * @property {GatewayControllerEndpointInformation} endpoint
+ * The information for the endpoint responsible from creating the route.
  * @parent module:controllers
  * @ignore
  */
@@ -24,69 +26,77 @@ const { providerCreator, controller } = require('../../utils/wrappers');
  * This object contains the information for an specific route the controller will mount.
  *
  * @typedef {Object} GatewayControllerRoute
- * @property {string}                         path    The path to the endpoint relative to the
- *                                                    entry point.
- * @property {string}                         route   The path the route will have. This is
- *                                                    different from `path` as it's possible for
- *                                                    the gateway to be implemented using the
- *                                                    `root` option.
- * @property {GatewayControllerRouteMethod[]} methods A list with all the methods the controller
- *                                                    will use to mount the route.
+ * @property {string}                         path     The path to the endpoint relative
+ *                                                     to the entry point.
+ * @property {string}                         route    The path the route will have. This
+ *                                                     is different from `path` as it's
+ *                                                     possible for the gateway to be
+ *                                                     implemented using the `root`
+ *                                                     option.
+ * @property {GatewayControllerRouteMethod[]} methods  A list with all the methods the
+ *                                                     controller will use to mount the
+ *                                                     route.
  * @parent module:controllers
  * @ignore
  */
 
 /**
- * Normally, you would define an endpoint with just a string path, but you can use this type of
- * object to add extra settings.
+ * Normally, you would define an endpoint with just a string path, but you can use this
+ * type of object to add extra settings.
  *
  * @typedef {Object} GatewayConfigurationEndpoint
- * @property {string} path   The path to the endpoint relative to the entry point. It can include
- *                           placeholders for parameters like `/:parameter/`.
- * @property {string} method The HTTP method for the endpoint. This will tell the gateway the
- *                           type of route it should mount. If is not specified, it will use
- *                           `all`.
+ * @property {string} path    The path to the endpoint relative to the entry point. It can
+ *                            include placeholders for parameters like `/:parameter/`.
+ * @property {string} method  The HTTP method for the endpoint. This will tell the gateway
+ *                            the type of route it should mount. If is not specified, it
+ *                            will use `all`.
  * @parent module:controllers
  */
 
 /**
- * A dictionary of endpoints or sub endpoints the gateway will use in order to mount routes.
+ * A dictionary of endpoints or sub endpoints the gateway will use in order to mount
+ * routes.
  *
  * @typedef {Object} GatewayConfigurationEndpoints
- * @property {string|GatewayConfigurationEndpoints|GatewayConfigurationEndpoint} [endpointName]
- * It can be the path to an actual endpoint, a dictionary of sub endpoints, or a definition of
- * an endpoint with settings ({@link GatewayConfigurationEndpoint}).
+ * @property {string | GatewayConfigurationEndpoints | GatewayConfigurationEndpoint}
+ * [endpointName]
+ * It can be the path to an actual endpoint, a dictionary of sub endpoints, or a
+ * definition of an endpoint with settings ({@link GatewayConfigurationEndpoint}).
  * @parent module:controllers
  */
 
 /**
- * This is a configuration object very similar to the one {@link APIClient} uses in order to
- * configure the endpoints; the controller uses it to create the routes and to validate the HTTP
- * methods.
+ * This is a configuration object very similar to the one {@link APIClient} uses in order
+ * to configure the endpoints; the controller uses it to create the routes and to validate
+ * the HTTP methods.
  *
  * @typedef {Object} GatewayConfiguration
- * @property {string}                        url     The entry point to the API the controller
- *                                                   will make the requests to.
- * @property {GatewayConfigurationEndpoints} gateway A dictionary with the endpoints the gateway
- *                                                   will make available.
+ * @property {string}                        url      The entry point to the API the
+ *                                                    controller will make the requests
+ *                                                    to.
+ * @property {GatewayConfigurationEndpoints} gateway  A dictionary with the endpoints the
+ *                                                    gateway will make available.
  * @parent module:controllers
  */
 
 /**
- * The options for how the gateway will handle the headers from the requests and the responses.
+ * The options for how the gateway will handle the headers from the requests and the
+ * responses.
  *
  * @typedef {Object} GatewayControllerHeadersOptions
- * @property {boolean} useXForwardedFor
- * Whether or not to include the header with the request's IP address. Default `true`.
- * @property {boolean} copyCustomHeaders
- * Whether or not to copy all custom headers from the request. By custom header, it means all the
- * headers which names start with `x-`. Default `true`.
- * @property {string[]} copy
- * A list of "known" headers the gateway will try to copy from the incoming request. Default:
- * `['authorization','content-type', 'referer', 'user-agent']`.
- * @property {string[]} remove
- * A list of "known" headers the gateway will try to remove the response. Default:
- * `['server', 'x-powered-by']`.
+ * @property {boolean}  useXForwardedFor   Whether or not to include the header with the
+ *                                         request's IP address. Default `true`.
+ * @property {boolean}  copyCustomHeaders  Whether or not to copy all custom headers from
+ *                                         the request. By custom header, it means all the
+ *                                         headers which names start with `x-`. Default
+ *                                         `true`.
+ * @property {string[]} copy               A list of "known" headers the gateway will try
+ *                                         to copy from the incoming request. Default:
+ *                                         `['authorization','content-type', 'referer',
+ *                                         'user-agent']`.
+ * @property {string[]} remove             A list of "known" headers the gateway will try
+ *                                         to remove the response. Default:
+ *                                         `['server', 'x-powered-by']`.
  * @parent module:controllers
  */
 
@@ -95,49 +105,57 @@ const { providerCreator, controller } = require('../../utils/wrappers');
  *
  * @typedef {Object} GatewayControllerOptions
  * @property {string} root
- * This is really a helper for when the gateway is used with an API client. The idea is that,
- * by default, the routes are mounted on the controller route, but with this option, you can
- * specify another sub path. For example: The controller is mounted on `/routes`, if you set
- * `root` to `gateway`, all the routes will be on `/routes/gateway`.
+ * This is really a helper for when the gateway is used with an API client. The idea is
+ * that,
+ * by default, the routes are mounted on the controller route, but with this option, you
+ * can specify another sub path. For example: The controller is mounted on `/routes`, if
+ * you set `root` to `gateway`, all the routes will be on `/routes/gateway`.
  * This become important (and useful) when you get the API client configuration (with
- * `endpointsForAPIClient`): The `url` will be the controller route, but all the endpoints will
- * be modified and prefixed with the `root`. Default `''`.
+ * `endpointsForAPIClient`): The `url` will be the controller route, but all the endpoints
+ * will be modified and prefixed with the `root`. Default `''`.
  * @property {string} configurationSetting
  * This is another option for when the gateway is used with an API client. When calling
- * `endpointsForAPIClient`, all the endpoints will be wrapped inside an object named after this
- * option. For example: `{ url: '...', endpoints: { api: { ... } } }`. Default `api`.
+ * `endpointsForAPIClient`, all the endpoints will be wrapped inside an object named after
+ * this option. For example: `{ url: '...', endpoints: { api: { ... } } }`. Default `api`.
  * @property {GatewayControllerHeadersOptions} headers
- * The options for how the gateway will handle the headers from the requests and the responses.
+ * The options for how the gateway will handle the headers from the requests and the
+ * responses.
  * @parent module:controllers
  */
 
 /**
- * This are the options sent to the controller creator that instantiates {@link GatewayController}.
- * They're basically the same as {@link GatewayControllerOptions} but with a couple of extra ones.
+ * This are the options sent to the controller creator that instantiates
+ * {@link GatewayController}.
+ * They're basically the same as {@link GatewayControllerOptions} but with a couple of
+ * extra ones.
  *
  * @typedef {Object} GatewayControllerCreatorOptions
  * @property {string} serviceName
- * The name of the creator will use to register the controller in the container. No, this is not a
- * typo. The creator will register the controller so other services can access the
- * `endpointsForAPIClient` getter. The service will be available after the app routes are mounted.
- * If this is overwritten, the creator will ensure that the name ends with `Gateway`; and if
- * overwritten, but it doesn't include `Gateway` at the end, and no `configurationSetting` was
- * defined, the creator will use the custom name (without `Gatway`) for `configurationSetting`.
+ * The name of the creator will use to register the controller in the container. No, this
+ * is not a typo. The creator will register the controller so other services can access
+ * the `endpointsForAPIClient` getter. The service will be available after the app routes
+ * are mounted.
+ * If this is overwritten, the creator will ensure that the name ends with `Gateway`; and
+ * if overwritten, but it doesn't include `Gateway` at the end, and no
+ * `configurationSetting` was defined, the creator will use the custom name (without
+ * `Gatway`) for `configurationSetting`.
  * Default `'apiGeteway'`.
  * @property {string} helperServiceName
  * The name of the helper service the creator will try to obtain from the container. If
- * `serviceName` is overwritten, the default for this will be `${serviceName}Helper`. Default:
+ * `serviceName` is overwritten, the default for this will be `${serviceName}Helper`.
+ * Default:
  * `'apiGatewayHelper'`.
  * @property {string} configurationSetting
  * The name of the configuration setting where the gateway configuration is stored. If not
- * overwritten, check the description of `serviceName` to understand which will be its default
- * value. Default `'api'`.
+ * overwritten, check the description of `serviceName` to understand which will be its
+ * default value. Default `'api'`.
  * @property {typeof GatewayController} gatewayClass
- * The class the creator will instantiate. Similar to {@link APIClient}, this allows for extra
- * customization in cases you may need multiple gateways. Default {@link GatewayController}.
+ * The class the creator will instantiate. Similar to {@link APIClient}, this allows for
+ * extra customization in cases you may need multiple gateways. Default
+ * {@link GatewayController}.
  * @property {?GatewayControllerMiddlewaresFn} middlewares
- * This function can be used to add custom middlewares on the gateway routes. If implemented, it
- * must return a list of middlewares when executed. Default `null`.
+ * This function can be used to add custom middlewares on the gateway routes. If
+ * implemented, it must return a list of middlewares when executed. Default `null`.
  * @parent module:controllers
  */
 
@@ -145,75 +163,78 @@ const { providerCreator, controller } = require('../../utils/wrappers');
  * This is the information for a request the controller will make.
  *
  * @typedef {Object} GatewayControllerRequest
- * @property {string}           url     The URL for the request.
- * @property {HTTPFetchOptions} options The request options.
+ * @property {string}           url      The URL for the request.
+ * @property {HTTPFetchOptions} options  The request options.
  * @parent module:controllers
  */
 
 /**
- * This is the information for an specific endpoint that the gateway may use to send to a helper
- * method in order to give it context.
+ * This is the information for an specific endpoint that the gateway may use to send to a
+ * helper method in order to give it context.
  *
  * @typedef {Object} GatewayControllerEndpointInformation
- * @property {string}                              name     The name of the endpoint, which is
- *                                                          actually the path inside the gateway
- *                                                          configuration's `gateway` property.
- * @property {string|GatewayConfigurationEndpoint} settings The path for the endpoint, or the
- *                                                          dictionary of settings.
+ * @property {string} name
+ * The name of the endpoint, which is actually the path inside the gateway configuration's
+ * `gateway` property.
+ * @property {string | GatewayConfigurationEndpoint} settings
+ * The path for the endpoint, or the dictionary of settings.
  * @parent module:controllers
  */
 
 /**
- * This is called in order to allow the helper to modify the information of a request that is about
- * the fired.
+ * This is called in order to allow the helper to modify the information of a request that
+ * is about the fired.
  *
  * @callback GatewayHelperServiceRequestReducer
- * @param {GatewayControllerRequest}             request  The information for a request the
- *                                                        controller will make.
- * @param {GatewayControllerEndpointInformation} endpoint The information for the endpoint
- *                                                        responsible of creating the route.
- * @param {ExpressRequest}                       req      The server's incoming request
- *                                                        information.
- * @param {ExpressResponse}                      res      The server's response information.
- * @param {ExpressNext}                          next     The function to call the next
- *                                                        middleware.
+ * @param {GatewayControllerRequest} request
+ * The information for a request the controller will make.
+ * @param {GatewayControllerEndpointInformation} endpoint
+ * The information for the endpoint responsible of creating the route.
+ * @param {ExpressRequest} req
+ * The server's incoming request information.
+ * @param {ExpressResponse} res
+ * The server's response information.
+ * @param {ExpressNext} next
+ * The function to call the next middleware.
  * @returns {GatewayControllerRequest}
  * @parent module:controllers
  */
 
 /**
- * This is called in order to allow the helper to modify the information of a response the gateway
- * made.
+ * This is called in order to allow the helper to modify the information of a response the
+ * gateway made.
  *
  * @callback GatewayHelperServiceResponseReducer
- * @param {Response}                             response The response generated by the fetch
- *                                                        request.
- * @param {GatewayControllerEndpointInformation} endpoint The information for the endpoint
- *                                                        responsible of creating the route.
- * @param {ExpressRequest}                       req      The server's incoming request
- *                                                        information.
- * @param {ExpressResponse}                      res      The server's response information.
- * @param {ExpressNext}                          next     The function to call the next
- *                                                        middleware.
+ * @param {Response} response
+ * The response generated by the fetch request.
+ * @param {GatewayControllerEndpointInformation} endpoint
+ * The information for the endpoint responsible of creating the route.
+ * @param {ExpressRequest} req
+ * The server's incoming request information.
+ * @param {ExpressResponse} res
+ * The server's response information.
+ * @param {ExpressNext} next
+ * The function to call the next middleware.
  * @returns {Response}
  * @parent module:controllers
  */
 
 /**
- * This is called in order to allow the helper to decide whether a fetch request response should
- * be added to the server's response stream. This will only be called if the helper also
- * implements `handleEndpointResponse`.
+ * This is called in order to allow the helper to decide whether a fetch request response
+ * should be added to the server's response stream. This will only be called if the helper
+ * also implements `handleEndpointResponse`.
  *
  * @callback GatewayHelperServiceStreamVerification
- * @param {Response}                             response The response generated by the fetch
- *                                                        request.
- * @param {GatewayControllerEndpointInformation} endpoint The information for the endpoint
- *                                                        responsible of creating the route.
- * @param {ExpressRequest}                       req      The server's incoming request
- *                                                        information.
- * @param {ExpressResponse}                      res      The server's response information.
- * @param {ExpressNext}                          next     The function to call the next
- *                                                        middleware.
+ * @param {Response} response
+ * The response generated by the fetch request.
+ * @param {GatewayControllerEndpointInformation} endpoint
+ * The information for the endpoint responsible of creating the route.
+ * @param {ExpressRequest} req
+ * The server's incoming request information.
+ * @param {ExpressResponse} res
+ * The server's response information.
+ * @param {ExpressNext} next
+ * The function to call the next middleware.
  * @returns {boolean}
  * @parent module:controllers
  */
@@ -223,15 +244,16 @@ const { providerCreator, controller } = require('../../utils/wrappers');
  * `shouldStreamEndpointResponse` returned `false`.
  *
  * @callback GatewayHelperServiceResponseHandler
- * @param {Response}                             response The response generated by the fetch
- *                                                        request.
- * @param {GatewayControllerEndpointInformation} endpoint The information for the endpoint
- *                                                        responsible of creating the route.
- * @param {ExpressRequest}                       req      The server's incoming request
- *                                                        information.
- * @param {ExpressResponse}                      res      The server's response information.
- * @param {ExpressNext}                          next     The function to call the next
- *                                                        middleware.
+ * @param {Response} response
+ * The response generated by the fetch request.
+ * @param {GatewayControllerEndpointInformation} endpoint
+ * The information for the endpoint responsible of creating the route.
+ * @param {ExpressRequest} req
+ * The server's incoming request information.
+ * @param {ExpressResponse} res
+ * The server's response information.
+ * @param {ExpressNext} next
+ * The function to call the next middleware.
  * @parent module:controllers
  */
 
@@ -239,32 +261,35 @@ const { providerCreator, controller } = require('../../utils/wrappers');
  * This is called in order for the helper to handle a fetch request error.
  *
  * @callback GatewayHelperServiceErrorHandler
- * @param {Error}                                error    The fetch request error.
- * @param {GatewayControllerEndpointInformation} endpoint The information for the endpoint
- *                                                        responsible of creating the route.
- * @param {ExpressRequest}                       req      The server's incoming request
- *                                                        information.
- * @param {ExpressResponse}                      res      The server's response information.
- * @param {ExpressNext}                          next     The function to call the next
- *                                                        middleware.
+ * @param {Error} error
+ * The fetch request error.
+ * @param {GatewayControllerEndpointInformation} endpoint
+ * The information for the endpoint responsible of creating the route.
+ * @param {ExpressRequest} req
+ * The server's incoming request information.
+ * @param {ExpressResponse} res
+ * The server's response information.
+ * @param {ExpressNext} next
+ * The function to call the next middleware.
  * @parent module:controllers
  */
 
 /**
- * A service that can have specific methods the gateway will call in order to modify requests,
+ * A service that can have specific methods the gateway will call in order to modify
+ * requests,
  * responses, handle errors, etc.
  *
  * @typedef {Object} GatewayHelperService
  * @property {?GatewayHelperServiceRequestReducer} reduceEndpointRequest
- * This is called in order to allow the helper to modify the information of a request that is
- * about the fired.
+ * This is called in order to allow the helper to modify the information of a request that
+ * is about the fired.
  * @property {?GatewayHelperServiceResponseReducer} reduceEndpointResponse
  * This is called in order to allow the helper to modify the information of a response the
  * gateway made.
  * @property {?GatewayHelperServiceStreamVerification} shouldStreamEndpointResponse
- * This is called in order to allow the helper to decide whether a fetch request response should
- * be added to the server's response stream. This will only be called if the helper also
- * implements `handleEndpointResponse`.
+ * This is called in order to allow the helper to decide whether a fetch request response
+ * should be added to the server's response stream. This will only be called if the helper
+ * also implements `handleEndpointResponse`.
  * @property {?GatewayHelperServiceResponseHandler} handleEndpointResponse
  * This is called in order for the helper to handle a response. This is only called if
  * `shouldStreamEndpointResponse` returned `false`.
@@ -275,7 +300,7 @@ const { providerCreator, controller } = require('../../utils/wrappers');
 
 /**
  * @callback GatewayControllerMiddlewaresFn
- * @param {Jimpex} app A reference for the container.
+ * @param {Jimpex} app  A reference for the container.
  * @returns {MiddlewareLike[]}
  * @parent module:controllers
  */
@@ -287,11 +312,10 @@ const { providerCreator, controller } = require('../../utils/wrappers');
  */
 class GatewayController {
   /**
-   *
    * @param {GatewayConfiguration} gatewayConfig
-   * This is a configuration object very similar to the one {@link APIClient} uses in order to
-   * configure the endpoints; the controller uses it to create the routes and to validate the HTTP
-   * methods.
+   * This is a configuration object very similar to the one {@link APIClient} uses in
+   * order to configure the endpoints; the controller uses it to create the routes and to
+   * validate the HTTP methods.
    * @param {string} route
    * The route where the controller will be mounted.
    * @param {HTTP} http
@@ -299,40 +323,41 @@ class GatewayController {
    * @param {GatewayControllerOptions} [options={}]
    * The options to configure how the gateway will manage the requests and the responses.
    * @param {?GatewayHelperService} [helperService=null]
-   * A service that can have specific methods the gateway will call in order to modify requests,
+   * A service that can have specific methods the gateway will call in order to modify
+   * requests,
    * responses, handle errors, etc.
    */
   constructor(gatewayConfig, route, http, options = {}, helperService = null) {
     /**
-     * The options to configure how the gateway will manage the requests and the responses.
+     * The options to configure how the gateway will manage the requests and the
+     * responses.
      *
      * @type {GatewayControllerOptions}
      * @access protected
      * @ignore
      * @todo Use deepAssign for this merge.
      */
-    this._options = this._normalizeOptions(ObjectUtils.merge(
-      {
-        root: '',
-        configurationSetting: 'api',
-        headers: {
-          useXForwardedFor: true,
-          copyCustomHeaders: true,
-          copy: options.headers && options.headers.copy ? options.headers.copy : [
-            'authorization',
-            'content-type',
-            'referer',
-            'user-agent',
-          ],
-          remove: options.headers && options.headers.remove ? options.headers.remove : [
-            'server',
-            'x-powered-by',
-            'content-encoding',
-          ],
+    this._options = this._normalizeOptions(
+      ObjectUtils.merge(
+        {
+          root: '',
+          configurationSetting: 'api',
+          headers: {
+            useXForwardedFor: true,
+            copyCustomHeaders: true,
+            copy:
+              options.headers && options.headers.copy
+                ? options.headers.copy
+                : ['authorization', 'content-type', 'referer', 'user-agent'],
+            remove:
+              options.headers && options.headers.remove
+                ? options.headers.remove
+                : ['server', 'x-powered-by', 'content-encoding'],
+          },
         },
-      },
-      options,
-    ));
+        options,
+      ),
+    );
     /**
      * The configuration for the API the controller will make requests to.
      *
@@ -371,10 +396,11 @@ class GatewayController {
     ];
     /**
      * A flat dictionary of the gateway endpoints. The key is the path on the original
-     * dictionary (`this._gatewayConfig.gateway`) and the value is either the path (`string`)
+     * dictionary (`this._gatewayConfig.gateway`) and the value is either the path
+     * (`string`)
      * or the endpoint settings ({@link GatewayConfigurationEndpoint}).
      *
-     * @type {Object.<string,(string|GatewayConfigurationEndpoint)>}
+     * @type {Object.<string, string | GatewayConfigurationEndpoint>}
      * @access protected
      * @ignore
      */
@@ -388,9 +414,9 @@ class GatewayController {
      */
     this._route = removeSlashes(route);
     /**
-     * A regular expression that will be used to remove the controller route from a request
-     * path. This will allow the main middleware to extract the path to where the request should
-     * be made.
+     * A regular expression that will be used to remove the controller route from a
+     * request path. This will allow the main middleware to extract the path to where the
+     * request should be made.
      *
      * @type {RegExp}
      * @access protected
@@ -422,11 +448,11 @@ class GatewayController {
      */
     this._helperService = helperService;
     /**
-     * A dictionary of boolean flags that specify if a helper service has method. This is to
-     * avoid checking if the helper is defined and if "x method" is a function. If no helper
-     * was specified, the object will have all the flags set to `false`.
+     * A dictionary of boolean flags that specify if a helper service has method. This is
+     * to avoid checking if the helper is defined and if "x method" is a function. If no
+     * helper was specified, the object will have all the flags set to `false`.
      *
-     * @type {Object.<string,boolean>}
+     * @type {Object.<string, boolean>}
      * @access protected
      * @ignore
      */
@@ -435,19 +461,25 @@ class GatewayController {
   /**
    * Defines all the routes on a given router.
    *
-   * @param {Router}              router           The router where all the routes will be added.
-   * @param {ExpressMiddleware[]} [middlewares=[]] A list of custom middlewares that will be added
-   *                                               before the one that makes the request.
+   * @param {Router}              router            The router where all the routes will
+   *                                                be added.
+   * @param {ExpressMiddleware[]} [middlewares=[]]  A list of custom middlewares that will
+   *                                                be added before the one that makes the
+   *                                                request.
    * @returns {Router}
    */
   addRoutes(router, middlewares = []) {
-    this._routes.forEach((route) => route.methods.forEach((info) => this._addRoute(
-      router,
-      info.method,
-      route.route,
-      this._getMiddleware(info.endpoint),
-      middlewares,
-    )));
+    this._routes.forEach((route) =>
+      route.methods.forEach((info) =>
+        this._addRoute(
+          router,
+          info.method,
+          route.route,
+          this._getMiddleware(info.endpoint),
+          middlewares,
+        ),
+      ),
+    );
 
     return router;
   }
@@ -478,12 +510,13 @@ class GatewayController {
   /**
    * Adds a route on a given router.
    *
-   * @param {Router}            router              The router where the route will be added.
+   * @param {Router}            router              The router where the route will be
+   *                                                added.
    * @param {string}            method              The HTTP method for the route.
    * @param {string}            route               The path for the route.
    * @param {ExpressMiddleware} endpointMiddleware  The middleware that makes the request.
-   * @param {Array}             middlewares         Extra middlewares to add before the main one.
-   *
+   * @param {Array}             middlewares         Extra middlewares to add before the
+   *                                                main one.
    * @returns {Router}
    * @access protected
    * @ignore
@@ -492,8 +525,8 @@ class GatewayController {
     return router[method](route, [...middlewares, endpointMiddleware]);
   }
   /**
-   * Based on the controller options and the gateway endpoints, this method will create an API
-   * client configuration that can be used to make requests to this controller.
+   * Based on the controller options and the gateway endpoints, this method will create an
+   * API client configuration that can be used to make requests to this controller.
    *
    * @returns {APIClientConfiguration}
    * @access protected
@@ -503,28 +536,25 @@ class GatewayController {
     let endpoints;
     const { root } = this._options;
     if (root) {
-      endpoints = Object.keys(this._endpoints).reduce(
-        (acc, name) => {
-          const endpoint = this._endpoints[name];
-          let newEndpoint;
-          if (typeof endpoint === 'string') {
-            newEndpoint = removeSlashes(endpoint);
-            newEndpoint = `${root}/${newEndpoint}`;
-          } else {
-            const endpointPath = removeSlashes(endpoint.path);
-            newEndpoint = {
-              ...endpoint,
-              path: `${root}/${endpointPath}`,
-            };
-          }
-
-          return {
-            ...acc,
-            [name]: newEndpoint,
+      endpoints = Object.keys(this._endpoints).reduce((acc, name) => {
+        const endpoint = this._endpoints[name];
+        let newEndpoint;
+        if (typeof endpoint === 'string') {
+          newEndpoint = removeSlashes(endpoint);
+          newEndpoint = `${root}/${newEndpoint}`;
+        } else {
+          const endpointPath = removeSlashes(endpoint.path);
+          newEndpoint = {
+            ...endpoint,
+            path: `${root}/${endpointPath}`,
           };
-        },
-        {},
-      );
+        }
+
+        return {
+          ...acc,
+          [name]: newEndpoint,
+        };
+      }, {});
     } else {
       endpoints = this._endpoints;
     }
@@ -539,16 +569,14 @@ class GatewayController {
    * Based on the information from the endpoints, this method will create the routes the
    * controller will later add on a router.
    *
-   * @returns {Array<GatewayControllerRoute>}
-   * @throws {Error} If there's more than one endpoint using the same path with the same HTTP
-   *                 method.
+   * @returns {GatewayControllerRoute[]}
+   * @throws {Error} If there's more than one endpoint using the same path with the same
+   *                 HTTP method.
    * @access protected
    * @ignore
    */
   _createEndpointRoutes() {
-    const routePrefixes = this._options.root ?
-      `/${this._options.root}/` :
-      '/';
+    const routePrefixes = this._options.root ? `/${this._options.root}/` : '/';
     const routes = {};
     Object.keys(this._endpoints).forEach((name) => {
       const endpoint = this._endpoints[name];
@@ -559,9 +587,9 @@ class GatewayController {
         endpointMethod = 'all';
       } else {
         endpointPath = endpoint.path;
-        endpointMethod = endpoint.method ?
-          this._normalizeHTTPMethod(endpoint.method) :
-          'all';
+        endpointMethod = endpoint.method
+          ? this._normalizeHTTPMethod(endpoint.method)
+          : 'all';
       }
 
       endpointPath = removeSlashes(endpointPath);
@@ -575,16 +603,15 @@ class GatewayController {
       if (routes[endpointPath].methods[endpointMethod]) {
         const repeatedEndpoint = routes[endpointPath].methods[endpointMethod];
         throw new Error(
-          'You can\'t have two gateway endpoints to the same path and with the same ' +
-          `HTTP method: '${repeatedEndpoint}' and '${name}'`,
+          "You can't have two gateway endpoints to the same path and with the same " +
+            `HTTP method: '${repeatedEndpoint}' and '${name}'`,
         );
       }
 
       routes[endpointPath].methods[endpointMethod] = name;
     });
 
-    return Object.keys(routes)
-    .map((endpointPath) => {
+    return Object.keys(routes).map((endpointPath) => {
       const info = routes[endpointPath];
       return {
         path: info.path,
@@ -600,11 +627,12 @@ class GatewayController {
     });
   }
   /**
-   * Validates if a server helper exists and creates a dictionary with flags for all the methods
-   * a helper can have; this will allow other methods to check if the "helper method X" is
-   * available without having to check if the helper is defined and if "method X" is a function.
+   * Validates if a server helper exists and creates a dictionary with flags for all the
+   * methods a helper can have; this will allow other methods to check if the "helper
+   * method X" is available without having to check if the helper is defined and if
+   * "method X" is a function.
    *
-   * @returns {Object.<string,boolean>}
+   * @returns {Object.<string, boolean>}
    * @access protected
    * @ignore
    */
@@ -635,9 +663,9 @@ class GatewayController {
     return result;
   }
   /**
-   * Creates a regular expression the main middleware will later use in order to remove the
-   * controller route from the request url. That's needed in order to build the URL where the
-   * request will be made.
+   * Creates a regular expression the main middleware will later use in order to remove
+   * the controller route from the request url. That's needed in order to build the URL
+   * where the request will be made.
    *
    * @returns {RegExp}
    * @access protected
@@ -653,8 +681,8 @@ class GatewayController {
   /**
    * Generates a middleware that will make a request and stream back the response.
    *
-   * @param {GatewayControllerEndpointInformation} endpoint The information for the enpdoint for
-   *                                                        which the middleware is being created.
+   * @param {GatewayControllerEndpointInformation} endpoint
+   * The information for the enpdoint for which the middleware is being created.
    * @returns {ExpressMiddleware}
    * @access protected
    * @ignore
@@ -708,40 +736,45 @@ class GatewayController {
         next,
       );
       // Make the fetch request.
-      return this._http.fetch(request.url, request.options)
-      .then((response) => {
-        // Reduce the response.
-        const newResponse = this._reduceEndpointResponse(response, endpoint, req, res, next);
-        // If the response should be sent down on the stream...
-        if (this._shouldStreamEndpointResponse(newResponse, endpoint, req, res, next)) {
-          // Update the server's response status.
-          res.status(newResponse.status);
-          // Copy the headers.
-          newResponse.headers.forEach((value, name) => {
-            if (!this._options.headers.remove.includes(name)) {
-              res.setHeader(name, value);
-            }
-          });
-          // Pipe the server's response into the fetch response stream.
-          newResponse.body
-          .pipe(res)
-          .on('error', (error) => {
-            next(error);
-          });
-        } else {
-          // Otherwise, let the helper handle the response.
-          this._handleEndpointResponse(newResponse, endpoint, req, res, next);
-        }
-      })
-      .catch((error) => this._handleEndpointError(error, endpoint, req, res, next));
+      return this._http
+        .fetch(request.url, request.options)
+        .then((response) => {
+          // Reduce the response.
+          const newResponse = this._reduceEndpointResponse(
+            response,
+            endpoint,
+            req,
+            res,
+            next,
+          );
+          // If the response should be sent down on the stream...
+          if (this._shouldStreamEndpointResponse(newResponse, endpoint, req, res, next)) {
+            // Update the server's response status.
+            res.status(newResponse.status);
+            // Copy the headers.
+            newResponse.headers.forEach((value, name) => {
+              if (!this._options.headers.remove.includes(name)) {
+                res.setHeader(name, value);
+              }
+            });
+            // Pipe the server's response into the fetch response stream.
+            newResponse.body.pipe(res).on('error', (error) => {
+              next(error);
+            });
+          } else {
+            // Otherwise, let the helper handle the response.
+            this._handleEndpointResponse(newResponse, endpoint, req, res, next);
+          }
+        })
+        .catch((error) => this._handleEndpointError(error, endpoint, req, res, next));
     };
   }
   /**
-   * Flattens all the endpoints from gateway configuration into a one level dictionary, where the
-   * key are the paths they used to have on the original configuration, and the values are the
-   * endpoints definitions.
+   * Flattens all the endpoints from gateway configuration into a one level dictionary,
+   * where the key are the paths they used to have on the original configuration, and the
+   * values are the endpoints definitions.
    *
-   * @returns {Object.<string,(string|GatewayConfigurationEndpoint)>}
+   * @returns {Object.<string, string | GatewayConfigurationEndpoint>}
    * @access protected
    * @ignore
    */
@@ -757,36 +790,39 @@ class GatewayController {
    * This method is called in order to handle a fetch request error. It will check if a
    * helper is defined and allow it to do it, or fallback and call the next middleware.
    *
-   * @param {Error}                                error    The fetch request error.
-   * @param {GatewayControllerEndpointInformation} endpoint The information for the endpoint
-   *                                                        responsible of creating the route.
-   * @param {ExpressRequest}                       req      The server's incoming request
-   *                                                        information.
-   * @param {ExpressResponse}                      res      The server's response information.
-   * @param {ExpressNext}                          next     The function to call the next
-   *                                                        middleware.
+   * @param {Error} error
+   * The fetch request error.
+   * @param {GatewayControllerEndpointInformation} endpoint
+   * The information for the endpoint responsible of creating the route.
+   * @param {ExpressRequest} req
+   * The server's incoming request information.
+   * @param {ExpressResponse} res
+   * The server's response information.
+   * @param {ExpressNext} next
+   * The function to call the next middleware.
    * @returns {*}
    * @access protected
    * @ignore
    */
   _handleEndpointError(error, endpoint, req, res, next) {
-    return this._helperServiceInfo.handleEndpointError ?
-      this._helperService.handleEndpointError(error, endpoint, req, res, next) :
-      next(error);
+    return this._helperServiceInfo.handleEndpointError
+      ? this._helperService.handleEndpointError(error, endpoint, req, res, next)
+      : next(error);
   }
   /**
-   * This is called when the helper say that a fetch response shouldn't be sent, so the controller
-   * will allow it to handle the response by itself.
+   * This is called when the helper say that a fetch response shouldn't be sent, so the
+   * controller will allow it to handle the response by itself.
    *
-   * @param {Object}                               response The response generated by the fetch
-   *                                                        request.
-   * @param {GatewayControllerEndpointInformation} endpoint The information for the endpoint
-   *                                                        responsible of creating the route.
-   * @param {ExpressRequest}                       req      The server's incoming request
-   *                                                        information.
-   * @param {ExpressResponse}                      res      The server's response information.
-   * @param {ExpressNext}                          next     The function to call the next
-   *                                                        middleware.
+   * @param {Object} response
+   * The response generated by the fetch request.
+   * @param {GatewayControllerEndpointInformation} endpoint
+   * The information for the endpoint responsible of creating the route.
+   * @param {ExpressRequest} req
+   * The server's incoming request information.
+   * @param {ExpressResponse} res
+   * The server's response information.
+   * @param {ExpressNext} next
+   * The function to call the next middleware.
    * @returns {*}
    * @access protected
    * @ignore
@@ -795,11 +831,12 @@ class GatewayController {
     return this._helperService.handleEndpointResponse(response, endpoint, req, res, next);
   }
   /**
-   * This is a helper method used in order to validate if an HTTP method can be used in order to
-   * define a route in the router. If the given method is not on the list of allowed methods,
+   * This is a helper method used in order to validate if an HTTP method can be used in
+   * order to define a route in the router. If the given method is not on the list of
+   * allowed methods,
    * it will be "normalized" to `all`. It also transforms the method into lower case.
    *
-   * @param {string} method The method to validate.
+   * @param {string} method  The method to validate.
    * @returns {string}
    * @access protected
    * @ignore
@@ -812,7 +849,7 @@ class GatewayController {
    * Normalizes the options recevied by the controller:
    * - Removes any trailing and leading slashes from the `root` path, if defined.
    *
-   * @param {GatewayControllerOptions} options The options to normalize.
+   * @param {GatewayControllerOptions} options  The options to normalize.
    * @returns {GatewayControllerOptions}
    * @access protected
    * @ignore
@@ -829,82 +866,91 @@ class GatewayController {
     return newOptions;
   }
   /**
-   * This method is called in order to reduce a fetch request information. It will check if a
-   * helper is defined and allow it to do it, or fallback and return the given information.
+   * This method is called in order to reduce a fetch request information. It will check
+   * if a helper is defined and allow it to do it, or fallback and return the given
+   * information.
    *
-   * @param {GatewayControllerRequest}             request  The information for a request the
-   *                                                        controller will make.
-   * @param {GatewayControllerEndpointInformation} endpoint The information for the endpoint
-   *                                                        responsible of creating the route.
-   * @param {ExpressRequest}                       req      The server's incoming request
-   *                                                        information.
-   * @param {ExpressResponse}                      res      The server's response information.
-   * @param {ExpressNext}                          next     The function to call the next
-   *                                                        middleware.
+   * @param {GatewayControllerRequest} request
+   * The information for a request the controller will make.
+   * @param {GatewayControllerEndpointInformation} endpoint
+   * The information for the endpoint responsible of creating the route.
+   * @param {ExpressRequest} req
+   * The server's incoming request information.
+   * @param {ExpressResponse} res
+   * The server's response information.
+   * @param {ExpressNext} next
+   * The function to call the next middleware.
    * @returns {GatewayControllerRequest}
    * @access protected
    * @ignore
    */
   _reduceEndpointRequest(request, endpoint, req, res, next) {
-    return this._helperServiceInfo.reduceEndpointRequest ?
-      this._helperService.reduceEndpointRequest(request, endpoint, req, res, next) :
-      request;
+    return this._helperServiceInfo.reduceEndpointRequest
+      ? this._helperService.reduceEndpointRequest(request, endpoint, req, res, next)
+      : request;
   }
   /**
-   * This method is called in order to reduce a fetch response information. It will check if a
-   * helper is defined and allow it to do it, or fallback and return the given information.
+   * This method is called in order to reduce a fetch response information. It will check
+   * if a helper is defined and allow it to do it, or fallback and return the given
+   * information.
    *
-   * @param {Response}                             response The response generated by the fetch
-   *                                                        request.
-   * @param {GatewayControllerEndpointInformation} endpoint The information for the endpoint
-   *                                                        responsible of creating the route.
-   * @param {ExpressRequest}                       req      The server's incoming request
-   *                                                        information.
-   * @param {ExpressResponse}                      res      The server's response information.
-   * @param {ExpressNext}                          next     The function to call the next
-   *                                                        middleware.
+   * @param {Response} response
+   * The response generated by the fetch request.
+   * @param {GatewayControllerEndpointInformation} endpoint
+   * The information for the endpoint responsible of creating the route.
+   * @param {ExpressRequest} req
+   * The server's incoming request information.
+   * @param {ExpressResponse} res
+   * The server's response information.
+   * @param {ExpressNext} next
+   * The function to call the next middleware.
    * @returns {Response}
    * @access protected
    * @ignore
    */
   _reduceEndpointResponse(response, endpoint, req, res, next) {
-    return this._helperServiceInfo.reduceEndpointResponse ?
-      this._helperService.reduceEndpointResponse(response, endpoint, req, res, next) :
-      response;
+    return this._helperServiceInfo.reduceEndpointResponse
+      ? this._helperService.reduceEndpointResponse(response, endpoint, req, res, next)
+      : response;
   }
   /**
-   * This method is called in order to validate if the main middleware should pipe the fetch
-   * response stream into the server's response or if the helper will handle the response.
-   * This method will only call the helper if it implements both `shouldStreamEndpointResponse`
+   * This method is called in order to validate if the main middleware should pipe the
+   * fetch response stream into the server's response or if the helper will handle the
+   * response.
+   * This method will only call the helper if it implements both
+   * `shouldStreamEndpointResponse`
    * and `handleEndpointResponse`.
    *
-   * @param {Response}                             response The response generated by the fetch
-   *                                                        request.
-   * @param {GatewayControllerEndpointInformation} endpoint The information for the endpoint
-   *                                                        responsible of creating the route.
-   * @param {ExpressRequest}                       req      The server's incoming request
-   *                                                        information.
-   * @param {ExpressResponse}                      res      The server's response information.
-   * @param {ExpressNext}                          next     The function to call the next
-   *                                                        middleware.
+   * @param {Response} response
+   * The response generated by the fetch request.
+   * @param {GatewayControllerEndpointInformation} endpoint
+   * The information for the endpoint responsible of creating the route.
+   * @param {ExpressRequest} req
+   * The server's incoming request information.
+   * @param {ExpressResponse} res
+   * The server's response information.
+   * @param {ExpressNext} next
+   * The function to call the next middleware.
    * @returns {boolean}
    * @access protected
    * @ignore
    */
   _shouldStreamEndpointResponse(response, endpoint, req, res, next) {
-    return (
-      this._helperServiceInfo.shouldStreamEndpointResponse &&
+    return this._helperServiceInfo.shouldStreamEndpointResponse &&
       this._helperServiceInfo.handleEndpointResponse
-    ) ?
-      this._helperService.shouldStreamEndpointResponse(response, endpoint, req, res, next) :
-      true;
+      ? this._helperService.shouldStreamEndpointResponse(
+          response,
+          endpoint,
+          req,
+          res,
+          next,
+        )
+      : true;
   }
 }
 /**
- * This controller allows you to have gateway routes that actually make requests and respond with
- * the contents from an specified API.
- *
- *
+ * This controller allows you to have gateway routes that actually make requests and
+ * respond with the contents from an specified API.
  *
  * @type {ProviderCreator<GatewayControllerCreatorOptions>}
  * @parent module:controllers
@@ -947,13 +993,17 @@ const gatewayController = providerCreator((options = {}) => (app, route) => {
     configurationSetting,
   };
   // Register the controller on the container.
-  app.set(serviceName, () => new GatewayClass(
-    app.get('appConfiguration').get(configurationSetting),
-    route,
-    app.get('http'),
-    newOptions,
-    helperServiceName ? app.try(helperServiceName) : null,
-  ));
+  app.set(
+    serviceName,
+    () =>
+      new GatewayClass(
+        app.get('appConfiguration').get(configurationSetting),
+        route,
+        app.get('http'),
+        newOptions,
+        helperServiceName ? app.try(helperServiceName) : null,
+      ),
+  );
 
   return controller(() => {
     // Get the controller
@@ -964,11 +1014,9 @@ const gatewayController = providerCreator((options = {}) => (app, route) => {
      */
     let useMiddlewares;
     if (options.middlewares) {
-      useMiddlewares = options.middlewares(app).map((middleware) => (
-        middleware.connect ?
-          middleware.connect(app) :
-          middleware
-      ));
+      useMiddlewares = options
+        .middlewares(app)
+        .map((middleware) => (middleware.connect ? middleware.connect(app) : middleware));
     }
     // Add the routes to the router and return it.
     return ctrl.addRoutes(app.get('router'), useMiddlewares);

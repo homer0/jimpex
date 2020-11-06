@@ -3,10 +3,7 @@ jest.unmock('../../../src/utils/wrappers');
 jest.unmock('../../../src/services/frontend/frontendFs');
 
 const fs = require('fs-extra');
-const {
-  FrontendFs,
-  frontendFs,
-} = require('../../../src/services/frontend/frontendFs');
+const { FrontendFs, frontendFs } = require('../../../src/services/frontend/frontendFs');
 
 describe('services/frontend:frontendFs', () => {
   beforeEach(() => {

@@ -20,12 +20,12 @@ describe('middlewares/common:errorHandler', () => {
     // Then
     expect(sut).toBeInstanceOf(ErrorHandler);
     expect(typeof sut.middleware).toBe('function');
-    expect(sut.options).toEqual(({
+    expect(sut.options).toEqual({
       default: {
         message: 'Oops! Something went wrong, please try again',
         status: statuses['internal server error'],
       },
-    }));
+    });
   });
 
   it('should be instantiated with custom options', () => {
@@ -82,7 +82,7 @@ describe('middlewares/common:errorHandler', () => {
     );
   });
 
-  it('shouldn\'t show the real error if it\'s not an instance of AppError', () => {
+  it("shouldn't show the real error if it's not an instance of AppError", () => {
     // Given
     const appLogger = 'appLogger';
     const responsesBuilder = {
@@ -225,7 +225,7 @@ describe('middlewares/common:errorHandler', () => {
     expect(appLogger.info).toHaveBeenCalledWith(expectedData.stack);
   });
 
-  it('should move to the next middleware if there\'s no error', () => {
+  it("should move to the next middleware if there's no error", () => {
     // Given
     const appLogger = 'appLogger';
     const responsesBuilder = {
@@ -258,7 +258,7 @@ describe('middlewares/common:errorHandler', () => {
       appConfiguration,
     };
     const app = {
-      get: jest.fn((service) => (services[service] || service)),
+      get: jest.fn((service) => services[service] || service),
     };
     let middleware = null;
     let toCompare = null;
@@ -296,7 +296,7 @@ describe('middlewares/common:errorHandler', () => {
       appConfiguration,
     };
     const app = {
-      get: jest.fn((service) => (services[service] || service)),
+      get: jest.fn((service) => services[service] || service),
     };
     let middleware = null;
     let toCompare = null;

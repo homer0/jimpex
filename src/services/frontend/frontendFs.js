@@ -1,20 +1,21 @@
 const fs = require('fs-extra');
 const { provider } = require('../../utils/wrappers');
 /**
- * This service allows the app to easily read static files. The idea behind centralizing this
- * functionalities into a service is that is pretty common to have bundling tools to generate the
- * frontend, and on that process files can have different paths or not even be generated all, that's
- * why this service exists. The service can be extended/overwritten to accommodate any
- * requirements and avoid having to update or add `if`s to every `fs` call the app does.
- * Another _'feature'_ of this service is that all the paths are relative to the directory where
- * the app executable is located, so you don't have to remember the relative path from the place
- * you are accessing a file to the place where it's located.
+ * This service allows the app to easily read static files. The idea behind centralizing
+ * this functionalities into a service is that is pretty common to have bundling tools to
+ * generate the frontend, and on that process files can have different paths or not even
+ * be generated all, that's why this service exists. The service can be
+ * extended/overwritten to accommodate any requirements and avoid having to update or add
+ * `if`s to every `fs` call the app does.
+ * Another _'feature'_ of this service is that all the paths are relative to the directory
+ * where the app executable is located, so you don't have to remember the relative path
+ * from the place you are accessing a file to the place where it's located.
  *
  * @parent module:services
  */
 class FrontendFs {
   /**
-   * @param {PathUtils} pathUtils To generate the relative paths.
+   * @param {PathUtils} pathUtils  To generate the relative paths.
    */
   constructor(pathUtils) {
     /**
@@ -29,7 +30,7 @@ class FrontendFs {
   /**
    * Delete a file from the file system.
    *
-   * @param {string} filepath The path to the file.
+   * @param {string} filepath  The path to the file.
    * @returns {Promise}
    */
   delete(filepath) {
@@ -38,8 +39,9 @@ class FrontendFs {
   /**
    * Read a file from the file system.
    *
-   * @param {string} filepath           The path to the file.
-   * @param {string} [encoding='utf-8'] The text encoding in which the file should be read.
+   * @param {string} filepath            The path to the file.
+   * @param {string} [encoding='utf-8']  The text encoding in which the file should be
+   *                                     read.
    * @returns {Promise<string>}
    */
   read(filepath, encoding = 'utf-8') {
@@ -48,8 +50,8 @@ class FrontendFs {
   /**
    * Write a file on the file system.
    *
-   * @param {string} filepath The path to the file.
-   * @param {string} data     The contents of the file.
+   * @param {string} filepath  The path to the file.
+   * @param {string} data      The contents of the file.
    * @returns {Promise}
    */
   write(filepath, data) {
@@ -60,12 +62,14 @@ class FrontendFs {
  * The service provider that once registered on the app container will set an instance of
  * `FrontendFs` as the `frontendFs` service.
  *
- * @example
- * // Register it on the container
- * container.register(frontendFs);
- * // Getting access to the service instance
- * const frontendFs = container.get('frontendFs');
  * @type {Provider}
+ * @example
+ *
+ *   // Register it on the container
+ *   container.register(frontendFs);
+ *   // Getting access to the service instance
+ *   const frontendFs = container.get('frontendFs');
+ *
  * @parent module:services
  */
 const frontendFs = provider((app) => {

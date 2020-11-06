@@ -1,7 +1,8 @@
 const { controller } = require('../../utils/wrappers');
 
 /**
- * @typedef {import('../../services/http/responsesBuilder').ResponsesBuilder} ResponsesBuilder
+ * @typedef {import('../../services/http/responsesBuilder').ResponsesBuilder}
+ * ResponsesBuilder
  */
 
 /**
@@ -11,8 +12,8 @@ const { controller } = require('../../utils/wrappers');
  */
 class ConfigurationController {
   /**
-   * @param {AppConfiguration} appConfiguration To read the app configuration.
-   * @param {ResponsesBuilder} responsesBuilder To generate the JSON responses.
+   * @param {AppConfiguration} appConfiguration  To read the app configuration.
+   * @param {ResponsesBuilder} responsesBuilder  To generate the JSON responses.
    */
   constructor(appConfiguration, responsesBuilder) {
     /**
@@ -35,7 +36,7 @@ class ConfigurationController {
   /**
    * Send a response with the current app configuration as a body.
    *
-   * @param {ExpressResponse} res The server response.
+   * @param {ExpressResponse} res  The server response.
    */
   getConfigurationResponse(res) {
     const name = this._appConfiguration.get('name');
@@ -96,10 +97,12 @@ const configurationController = controller((app) => {
       appConfiguration,
       app.get('responsesBuilder'),
     );
-    routes.push(...[
-      router.get('/', ctrl.showConfiguration()),
-      router.get('/switch/:name', ctrl.switchConfiguration()),
-    ]);
+    routes.push(
+      ...[
+        router.get('/', ctrl.showConfiguration()),
+        router.get('/switch/:name', ctrl.switchConfiguration()),
+      ],
+    );
   }
 
   return routes;

@@ -11,14 +11,16 @@ const { providerCreator } = require('../../utils/wrappers');
  * The options to customize how the service gets registered.
  *
  * @typedef {Object} APIClientProviderOptions
- * @property {string}           serviceName          The name of the service that will be
- *                                                   registered into the app. Default
- *                                                   `'apiClient'`.
- * @property {string}           configurationSetting The name of the configuration setting that
- *                                                   has the API information. Default `'api'`.
- * @property {typeof APIClient} clientClass          The class the service will instantiate. It
- *                                                   has to extend from {@link APIClient}, which
- *                                                   is the default value.
+ * @property {string}           serviceName           The name of the service that will be
+ *                                                    registered into the app. Default
+ *                                                    `'apiClient'`.
+ * @property {string}           configurationSetting  The name of the configuration
+ *                                                    setting that has the API
+ *                                                    information. Default `'api'`.
+ * @property {typeof APIClient} clientClass           The class the service will
+ *                                                    instantiate. It has to extend from
+ *                                                    {@link APIClient}, which is the
+ *                                                    default value.
  * @parent module:services
  */
 
@@ -26,34 +28,31 @@ const { providerCreator } = require('../../utils/wrappers');
  * The configuration for the API the client will make requests to.
  *
  * @typedef {Object} APIClientConfiguration
- * @property {string}             url       The API entry point.
- * @property {APIClientEndpoints} endpoints A dictionary of named endpoints relative to the API
- *                                          entry point.
+ * @property {string}             url        The API entry point.
+ * @property {APIClientEndpoints} endpoints  A dictionary of named endpoints relative to
+ *                                           the API entry point.
  * @parent module:services
  */
 
 /**
- * An API client for the app to use. What makes this service special is that its that it formats
- * the received errors using the `AppError` service class and as fetch function it uses the
- * `http` service, allowing the app to to internally handle all the requests and responses.
+ * An API client for the app to use. What makes this service special is that its that it
+ * formats the received errors using the `AppError` service class and as fetch function it
+ * uses the `http` service, allowing the app to to internally handle all the requests and
+ * responses.
  *
  * @augments APIClientBase
  * @parent module:services
  */
 class APIClient extends APIClientBase {
   /**
-   * @param {APIClientConfiguration} apiConfig The configuration for the API the client will
-   *                                           make requests to.
-   * @param {HTTP}                   http      To get the `fetch` function for this service
-   *                                           to use on all the requests.
-   * @param {ClassHTTPError}         HTTPError To format the received errors.
+   * @param {APIClientConfiguration} apiConfig  The configuration for the API the client
+   *                                            will make requests to.
+   * @param {HTTP}                   http       To get the `fetch` function for this
+   *                                            service to use on all the requests.
+   * @param {ClassHTTPError}         HTTPError  To format the received errors.
    */
   constructor(apiConfig, http, HTTPError) {
-    super(
-      apiConfig.url,
-      apiConfig.endpoints || apiConfig.gateway,
-      http.fetch,
-    );
+    super(apiConfig.url, apiConfig.endpoints || apiConfig.gateway, http.fetch);
     /**
      * The configuration for the API the client will make requests to.
      *
@@ -74,8 +73,8 @@ class APIClient extends APIClientBase {
   /**
    * Formats a response error with the App error class.
    *
-   * @param {Object} response A received response from a request.
-   * @param {number} status   The HTTP status of the request.
+   * @param {Object} response  A received response from a request.
+   * @param {number} status    The HTTP status of the request.
    * @returns {HTTPError}
    */
   error(response, status) {
@@ -84,9 +83,9 @@ class APIClient extends APIClientBase {
   /**
    * Helper method that tries to get an error message from a given response.
    *
-   * @param {Object} response                      A received response from a request.
-   * @param {string} [fallback='Unexpected error'] A fallback message in case the method doesn't
-   *                                               found one on the response.
+   * @param {Object} response                       A received response from a request.
+   * @param {string} [fallback='Unexpected error']  A fallback message in case the method
+   *                                                doesn't found one on the response.
    * @returns {string}
    */
   getErrorMessageFromResponse(response, fallback = 'Unexpected error') {
@@ -122,19 +121,20 @@ class APIClient extends APIClientBase {
  */
 const apiClient = providerCreator((options = {}) => (app) => {
   const defaultName = 'apiClient';
-  const {
-    serviceName = defaultName,
-    clientClass: ClientClass = APIClient,
-  } = options;
+  const { serviceName = defaultName, clientClass: ClientClass = APIClient } = options;
   let { configurationSetting } = options;
   if (!configurationSetting) {
     configurationSetting = serviceName === defaultName ? 'api' : serviceName;
   }
-  app.set(serviceName, () => new ClientClass(
-    app.get('appConfiguration').get(configurationSetting),
-    app.get('http'),
-    app.get('HTTPError'),
-  ));
+  app.set(
+    serviceName,
+    () =>
+      new ClientClass(
+        app.get('appConfiguration').get(configurationSetting),
+        app.get('http'),
+        app.get('HTTPError'),
+      ),
+  );
 });
 
 module.exports.APIClient = APIClient;

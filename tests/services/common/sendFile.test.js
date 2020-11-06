@@ -1,10 +1,7 @@
 jest.unmock('../../../src/utils/wrappers');
 jest.unmock('../../../src/services/common/sendFile');
 
-const {
-  sendFile,
-  sendFileProvider,
-} = require('../../../src/services/common/sendFile');
+const { sendFile, sendFileProvider } = require('../../../src/services/common/sendFile');
 
 describe('services/common:sendFile', () => {
   it('should create a function to send a file on a server response', () => {

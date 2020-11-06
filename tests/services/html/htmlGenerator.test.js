@@ -20,11 +20,7 @@ describe('services/html:htmlGenerator', () => {
     const frontendFs = 'frontendFs';
     let sut = null;
     // When
-    sut = new HTMLGenerator(
-      appConfiguration,
-      appLogger,
-      frontendFs,
-    );
+    sut = new HTMLGenerator(appConfiguration, appLogger, frontendFs);
     // Then
     expect(sut).toBeInstanceOf(HTMLGenerator);
     expect(sut.options).toEqual({
@@ -68,14 +64,16 @@ describe('services/html:htmlGenerator', () => {
     const frontendFs = 'frontendFs';
     const valuesService = {};
     // When/Then
-    expect(() => new HTMLGenerator(
-      appConfiguration,
-      appLogger,
-      frontendFs,
-      options,
-      valuesService,
-    ))
-    .toThrow(/The HTMLGenerator values service must have a `getValues` method/i);
+    expect(
+      () =>
+        new HTMLGenerator(
+          appConfiguration,
+          appLogger,
+          frontendFs,
+          options,
+          valuesService,
+        ),
+    ).toThrow(/The HTMLGenerator values service must have a `getValues` method/i);
   });
 
   it('should return the generated filename', () => {
@@ -88,12 +86,7 @@ describe('services/html:htmlGenerator', () => {
     let sut = null;
     let result = null;
     // When
-    sut = new HTMLGenerator(
-      appConfiguration,
-      appLogger,
-      frontendFs,
-      options,
-    );
+    sut = new HTMLGenerator(appConfiguration, appLogger, frontendFs, options);
     result = sut.getFile();
     // Then
     expect(result).toBe(file);
@@ -111,12 +104,7 @@ describe('services/html:htmlGenerator', () => {
     let sut = null;
     let result = null;
     // When
-    sut = new HTMLGenerator(
-      appConfiguration,
-      appLogger,
-      frontendFs,
-      options,
-    );
+    sut = new HTMLGenerator(appConfiguration, appLogger, frontendFs, options);
     result = await sut.getValues();
     // Then
     expect(result).toBe(values);
@@ -162,18 +150,13 @@ describe('services/html:htmlGenerator', () => {
     let sut = null;
     let result = null;
     // When
-    sut = new HTMLGenerator(
-      appConfiguration,
-      appLogger,
-      frontendFs,
-      options,
-    );
+    sut = new HTMLGenerator(appConfiguration, appLogger, frontendFs, options);
     result = await sut.getValues();
     // Then
     expect(result).toEqual(values);
   });
 
-  it('should return a pending promise if the file hasn\'t been created', () => {
+  it("should return a pending promise if the file hasn't been created", () => {
     // Given
     const options = {};
     const appConfiguration = 'appConfiguration';
@@ -182,12 +165,7 @@ describe('services/html:htmlGenerator', () => {
     let sut = null;
     let result = null;
     // When
-    sut = new HTMLGenerator(
-      appConfiguration,
-      appLogger,
-      frontendFs,
-      options,
-    );
+    sut = new HTMLGenerator(appConfiguration, appLogger, frontendFs, options);
     result = sut.whenReady();
     // Then
     expect(result).toBe('promise');
@@ -221,12 +199,7 @@ describe('services/html:htmlGenerator', () => {
     let sut = null;
     const expectedContent = `window.${options.variable} = ${JSON.stringify(values)}`;
     // When
-    sut = new HTMLGenerator(
-      appConfiguration,
-      appLogger,
-      frontendFs,
-      options,
-    );
+    sut = new HTMLGenerator(appConfiguration, appLogger, frontendFs, options);
     await sut.generateHTML();
     // Then
     expect(frontendFs.read).toHaveBeenCalledTimes(1);
@@ -267,30 +240,27 @@ describe('services/html:htmlGenerator', () => {
     const appLogger = {
       success: jest.fn(),
     };
-    const template = `${placeholder};\n` +
+    const template =
+      `${placeholder};\n` +
       'const enabled = {{featureName.enabled}};\n' +
       'const unknown = {{unknownFeature}};\n' +
-      'const id = \'{{featureName.account.id}}\';\n' +
+      "const id = '{{featureName.account.id}}';\n" +
       'const name = {{featureName.account.name}};\n' +
-      'const something = \'{{something}}\';';
+      "const something = '{{something}}';";
     const frontendFs = {
       read: jest.fn(() => Promise.resolve(template)),
       write: jest.fn(() => Promise.resolve()),
     };
     let sut = null;
-    const expectedContent = `window.${options.variable} = ${JSON.stringify(values)};\n` +
+    const expectedContent =
+      `window.${options.variable} = ${JSON.stringify(values)};\n` +
       `const enabled = ${values.featureName.enabled};\n` +
       'const unknown = null;\n' +
       `const id = '${values.featureName.account.id}';\n` +
       'const name = null;\n' +
       `const something = '${values.something}';`;
     // When
-    sut = new HTMLGenerator(
-      appConfiguration,
-      appLogger,
-      frontendFs,
-      options,
-    );
+    sut = new HTMLGenerator(appConfiguration, appLogger, frontendFs, options);
     await sut.generateHTML();
     // Then
     expect(frontendFs.read).toHaveBeenCalledTimes(1);
@@ -334,12 +304,7 @@ describe('services/html:htmlGenerator', () => {
     let sut = null;
     const expectedContent = `window.${options.variable} = ${JSON.stringify(values)}`;
     // When
-    sut = new HTMLGenerator(
-      appConfiguration,
-      appLogger,
-      frontendFs,
-      options,
-    );
+    sut = new HTMLGenerator(appConfiguration, appLogger, frontendFs, options);
     await sut.generateHTML();
     // Then
     expect(frontendFs.read).toHaveBeenCalledTimes(1);
@@ -372,15 +337,9 @@ describe('services/html:htmlGenerator', () => {
     };
     let sut = null;
     // When
-    sut = new HTMLGenerator(
-      appConfiguration,
-      appLogger,
-      frontendFs,
-      options,
-    );
+    sut = new HTMLGenerator(appConfiguration, appLogger, frontendFs, options);
     expect.assertions(5);
-    return sut.generateHTML()
-    .catch((result) => {
+    return sut.generateHTML().catch((result) => {
       // Then
       expect(result).toBe(error);
       expect(frontendFs.read).toHaveBeenCalledTimes(1);
