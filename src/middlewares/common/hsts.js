@@ -4,15 +4,17 @@ const { middlewareCreator } = require('../../utils/wrappers');
  * The options to customize the HSTS header value.
  *
  * @typedef {Object} HSTSOptions
- * @property {number}  [maxAge=31536000]        The time, in seconds, that the browser should
- *                                              remember that a site is only to be accessed using
- *                                              HTTPS.
- * @property {boolean} [includeSubDomains=true] Whether or not the rule should apply to all sub
- *                                              domains.
- * @property {boolean} [preload=false]          Whether or not to include on the major browsers'
- *                                              preload list. This directive is not part of the
- *                                              specification, for more information about it, you
- *                                              should check the MDN documentation for the header.
+ * @property {number}  [maxAge=31536000]         The time, in seconds, that the browser
+ *                                               should remember that a site is only to be
+ *                                               accessed using HTTPS.
+ * @property {boolean} [includeSubDomains=true]  Whether or not the rule should apply to
+ *                                               all sub domains.
+ * @property {boolean} [preload=false]           Whether or not to include on the major
+ *                                               browsers'
+ *                                               preload list. This directive is not part
+ *                                               of the specification, for more
+ *                                               information about it, you should check
+ *                                               the MDN documentation for the header.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Strict-Transport-Security
  * @parent module:middlewares
  */
@@ -25,7 +27,8 @@ const { middlewareCreator } = require('../../utils/wrappers');
  */
 class HSTS {
   /**
-   * @param {Partial<HSTSOptions>} [options={}] The options to customize the header value.
+   * @param {Partial<HSTSOptions>} [options={}]  The options to customize the header
+   *                                             value.
    */
   constructor(options = {}) {
     /**
@@ -64,7 +67,7 @@ class HSTS {
   /**
    * Creates the value for the header.
    *
-   * @param {HSTSOptions} options The options to customize the header value.
+   * @param {HSTSOptions} options  The options to customize the header value.
    * @returns {string}
    * @access protected
    * @ignore
@@ -83,25 +86,27 @@ class HSTS {
   }
 }
 /**
- * A middleware that creates and includes a `Strict-Transport-Security` header on every response.
- * If the `options` parameter doesn't include the value for `maxAge`, the middleware will ask
- * the {@link AppConfiguration} service for the `hsts` settings as a fallback. You can take
- * advantage of that fallback to use the middleware and manage its settings from your project
- * configuration.
- * Both the `options` parameter and the `hsts` can include a `enabled` (boolean) flag to either
- * disable or enable the middleware.
+ * A middleware that creates and includes a `Strict-Transport-Security` header on every
+ * response.
+ * If the `options` parameter doesn't include the value for `maxAge`, the middleware will
+ * ask the {@link AppConfiguration} service for the `hsts` settings as a fallback. You can
+ * take advantage of that fallback to use the middleware and manage its settings from your
+ * project configuration.
+ * Both the `options` parameter and the `hsts` can include a `enabled` (boolean) flag to
+ * either disable or enable the middleware.
  *
  * @type {MiddlewareCreator<HSTSOptions>}
  * @parent module:middlewares
  */
 const hsts = middlewareCreator((options = {}) => (app) => {
-  const useOptions = typeof options.maxAge !== 'undefined' ?
-    options :
-    (app.get('appConfiguration').get('hsts') || {});
+  const useOptions =
+    typeof options.maxAge !== 'undefined'
+      ? options
+      : app.get('appConfiguration').get('hsts') || {};
 
-  return typeof useOptions.enabled === 'undefined' || useOptions.enabled ?
-    (new HSTS(useOptions)).middleware() :
-    null;
+  return typeof useOptions.enabled === 'undefined' || useOptions.enabled
+    ? new HSTS(useOptions).middleware()
+    : null;
 });
 
 module.exports.HSTS = HSTS;

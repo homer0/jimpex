@@ -130,7 +130,7 @@ describe('controllers/common:configuration', () => {
     expect(next).toHaveBeenCalledTimes(0);
   });
 
-  it('shouldn\'t switch configurations if the appConfiguration service doesn\'t allow it', () => {
+  it("shouldn't switch configurations if the appConfiguration service doesn't allow it", () => {
     // Given
     const appConfiguration = {
       switchEnabled: false,
@@ -209,7 +209,7 @@ describe('controllers/common:configuration', () => {
       },
     };
     const app = {
-      get: jest.fn((service) => (services[service] || service)),
+      get: jest.fn((service) => services[service] || service),
     };
     let routes = null;
     let toCompare = null;
@@ -228,7 +228,7 @@ describe('controllers/common:configuration', () => {
     });
   });
 
-  it('shouldn\'t return its routes when the debug `configurationController` flag is `false`', () => {
+  it("shouldn't return its routes when the debug `configurationController` flag is `false`", () => {
     // Given
     const appConfiguration = {
       'debug.configurationController': false,
@@ -241,7 +241,7 @@ describe('controllers/common:configuration', () => {
       },
     };
     const app = {
-      get: jest.fn((service) => (services[service] || service)),
+      get: jest.fn((service) => services[service] || service),
     };
     let routes = null;
     const expectedGets = ['appConfiguration'];

@@ -85,7 +85,7 @@ describe('services/http:responsesBuilder', () => {
     expect(response.end).toHaveBeenCalledTimes(1);
   });
 
-  it('shouldn\'t normalize an invalid string status', () => {
+  it("shouldn't normalize an invalid string status", () => {
     // Given
     const version = 'latest';
     const appConfiguration = {
@@ -239,7 +239,9 @@ describe('services/http:responsesBuilder', () => {
     expect(response.write).toHaveBeenCalledWith(expect.any(String));
     expect(response.end).toHaveBeenCalledTimes(1);
     expect(html).toMatch(RegExp(`<title>${title}</title>`));
-    expect(html).toMatch(RegExp(`${options.target}\\.postMessage\\('${message}', '\\*'\\)`));
+    expect(html).toMatch(
+      RegExp(`${options.target}\\.postMessage\\('${message}', '\\*'\\)`),
+    );
   });
 
   it('should include a provider for the DIC', () => {

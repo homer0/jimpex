@@ -9,46 +9,50 @@ const { removeSlashes } = require('../../utils/functions');
  */
 
 /**
- * If you wan to customize how, to, and from where files are served, instead of just sending a list
- * of strings, you can use an object with these properties.
+ * If you wan to customize how, to, and from where files are served, instead of just
+ * sending a list of strings, you can use an object with these properties.
  *
  * @typedef {Object} StaticsControllerFile
- * @property {string}                 route   The route the controller will use for the file.
- * @property {string}                 path    The path for the file, relative to the root of the
- *                                            app.
- * @property {Object.<string,string>} headers A dictionary of custom headers to send on the file
- *                                            response.
+ * @property {string}                  route    The route the controller will use for the
+ *                                              file.
+ * @property {string}                  path     The path for the file, relative to the
+ *                                              root of the app.
+ * @property {Object.<string, string>} headers  A dictionary of custom headers to send on
+ *                                              the file response.
  * @parent module:controllers
  */
 
 /**
- * They are like "master paths" that get prepended to all the file paths and routes the controller
- * use.
+ * They are like "master paths" that get prepended to all the file paths and routes the
+ * controller use.
  *
  * @typedef {Object} StaticsControllerPathsOptions
- * @property {string} route  A custom route to prefix all the file routes.
- * @property {string} source A custom path to prefix all the file paths.
+ * @property {string} route   A custom route to prefix all the file routes.
+ * @property {string} source  A custom path to prefix all the file paths.
  * @parent module:controllers
  */
 
 /**
- * @typedef {string|StaticsControllerFile} StaticsControllerFileLike
+ * @typedef {string | StaticsControllerFile} StaticsControllerFileLike
  * @parent module:controllers
  */
 
 /**
- * These are the options that allow you to customize the controller, how, to and from where the
- * files are served.
+ * These are the options that allow you to customize the controller, how, to and from
+ * where the files are served.
  *
  * @typedef {Object} StaticsControllerOptions
- * @property {StaticsControllerFileLike[]}   files   A list of filenames or
- *                                                   {@link StaticsControllerFile} definitions.
- * @property {Object.<string,boolean>}       methods A dictionary of all the HTTP methods the
- *                                                   controller will use in order to serve the
- *                                                   files. If `all` is set to true, all the other
- *                                                   flags will be ignored.
- * @property {StaticsControllerPathsOptions} paths   The "master paths" the controller uses to
- *                                                   prefix all file routes and paths.
+ * @property {StaticsControllerFileLike[]}   files    A list of filenames or
+ *                                                    {@link StaticsControllerFile}
+ *                                                    definitions.
+ * @property {Object.<string, boolean>}      methods  A dictionary of all the HTTP methods
+ *                                                    the controller will use in order to
+ *                                                    serve the files. If `all` is set to
+ *                                                    true, all the other flags will be
+ *                                                    ignored.
+ * @property {StaticsControllerPathsOptions} paths    The "master paths" the controller
+ *                                                    uses to prefix all file routes and
+ *                                                    paths.
  * @parent module:controllers
  */
 
@@ -61,29 +65,31 @@ const { removeSlashes } = require('../../utils/functions');
 /**
  * @typedef {Object} StaticsControllerWrapperOptionsProperties
  * @property {StaticsControllerMiddlewaresFn} middlewares
- * function can be used to add custom middlewares on the file routes. If implemented, it must
- * return a list of middlewares when executed.
+ * Function can be used to add custom middlewares on the file routes. If implemented, it
+ * must return a list of middlewares when executed.
  * @augments StaticsControllerWrapperOptions
  * @parent module:controllers
  */
 
 /**
  * @callback StaticsControllerMiddlewaresFn
- * @param {Jimpex} app A reference for the container.
+ * @param {Jimpex} app  A reference for the container.
  * @returns {MiddlewareLike[]}
  * @parent module:controllers
  */
 
 /**
- * This controller allows you to serve specific files from any folder to any route without the
- * need of mounting directories as "static".
+ * This controller allows you to serve specific files from any folder to any route without
+ * the need of mounting directories as "static".
  *
  * @parent module:controllers
  */
 class StaticsController {
   /**
-   * @param {SendFile}                          sendFile To send the responses for the files.
-   * @param {Partial<StaticsControllerOptions>} options  The options to customize the controller.
+   * @param {SendFile} sendFile
+   * To send the responses for the files.
+   * @param {Partial<StaticsControllerOptions>} options
+   * The options to customize the controller.
    */
   constructor(sendFile, options = {}) {
     /**
@@ -101,25 +107,27 @@ class StaticsController {
      * @access protected
      * @ignore
      */
-    this._options = this._normalizeOptions(ObjectUtils.merge(
-      {
-        files: options.files || ['favicon.ico', 'index.html'],
-        methods: {
-          all: false,
-          get: true,
+    this._options = this._normalizeOptions(
+      ObjectUtils.merge(
+        {
+          files: options.files || ['favicon.ico', 'index.html'],
+          methods: {
+            all: false,
+            get: true,
+          },
+          paths: {
+            route: '',
+            source: './',
+          },
         },
-        paths: {
-          route: '',
-          source: './',
-        },
-      },
-      options,
-    ));
+        options,
+      ),
+    );
     /**
-     * A dictionary of all the formatted files ({@link StaticsControllerFile}). It uses the files
-     * routes as keys.
+     * A dictionary of all the formatted files ({@link StaticsControllerFile}). It uses
+     * the files routes as keys.
      *
-     * @type {Object.<string,StaticsControllerFile>}
+     * @type {Object.<string, StaticsControllerFile>}
      * @access protected
      * @ignore
      */
@@ -128,27 +136,27 @@ class StaticsController {
   /**
    * Defines all the needed routes to serve the files.
    *
-   * @param {Router}              router           To generate the routes.
-   * @param {ExpressMiddleware[]} [middlewares=[]] A list of custom middlewares that will be added
-   *                                               before the one that serves a file.
+   * @param {Router}              router            To generate the routes.
+   * @param {ExpressMiddleware[]} [middlewares=[]]  A list of custom middlewares that will
+   *                                                be added before the one that serves a
+   *                                                file.
    * @returns {Router}
    */
   addRoutes(router, middlewares = []) {
     const { methods } = this._options;
-    const use = methods.all ?
-      ['all'] :
-      Object.keys(methods).reduce((acc, name) => (methods[name] ? [...acc, name] : acc), []);
+    const use = methods.all
+      ? ['all']
+      : Object.keys(methods).reduce(
+          (acc, name) => (methods[name] ? [...acc, name] : acc),
+          [],
+        );
 
     Object.keys(this._files).forEach((route) => {
       const file = this._files[route];
       const fileMiddleware = this._getMiddleware(file);
-      use.forEach((method) => this._addRoute(
-        router,
-        method,
-        file,
-        fileMiddleware,
-        middlewares,
-      ));
+      use.forEach((method) =>
+        this._addRoute(router, method, file, fileMiddleware, middlewares),
+      );
     });
 
     return router;
@@ -165,12 +173,12 @@ class StaticsController {
   /**
    * Generates a route for an specific file.
    *
-   * @param {Router}                router         To create the actual route.
-   * @param {string}                method         The HTTP method for the route.
-   * @param {StaticsControllerFile} file           The file information.
-   * @param {ExpressMiddleware}     fileMiddleware The middleware that serves the file.
-   * @param {ExpressMiddleware[]}   middlewares    A list of custom middlewares to add before the
-   *                                               one that serves the file.
+   * @param {Router}                router          To create the actual route.
+   * @param {string}                method          The HTTP method for the route.
+   * @param {StaticsControllerFile} file            The file information.
+   * @param {ExpressMiddleware}     fileMiddleware  The middleware that serves the file.
+   * @param {ExpressMiddleware[]}   middlewares     A list of custom middlewares to add
+   *                                                before the one that serves the file.
    * @returns {Router}
    * @access protected
    * @ignore
@@ -181,45 +189,42 @@ class StaticsController {
   /**
    * Parses each of the received files in order to create a {@link StaticsControllerFile}.
    *
-   * @returns {Object.<string,StaticsControllerFile>}
+   * @returns {Object.<string, StaticsControllerFile>}
    * @access protected
    * @ignore
    */
   _createFiles() {
     const { files, paths } = this._options;
     const routePath = removeSlashes(paths.route, false, true);
-    return files.reduce(
-      (formatted, file) => {
-        let source;
-        let route;
-        let headers;
-        if (typeof file === 'object') {
-          ({ route, source, headers } = file);
-        } else {
-          source = file;
-          route = file;
-        }
+    return files.reduce((formatted, file) => {
+      let source;
+      let route;
+      let headers;
+      if (typeof file === 'object') {
+        ({ route, source, headers } = file);
+      } else {
+        source = file;
+        route = file;
+      }
 
-        source = path.join(paths.source, source);
-        route = removeSlashes(route, true, false);
-        route = `${routePath}/${route}`;
+      source = path.join(paths.source, source);
+      route = removeSlashes(route, true, false);
+      route = `${routePath}/${route}`;
 
-        return {
-          ...formatted,
-          [route]: {
-            source,
-            route,
-            headers: headers || {},
-          },
-        };
-      },
-      {},
-    );
+      return {
+        ...formatted,
+        [route]: {
+          source,
+          route,
+          headers: headers || {},
+        },
+      };
+    }, {});
   }
   /**
    * Generates the middleware to serve a specific file.
    *
-   * @param {StaticsControllerFile} file The file information.
+   * @param {StaticsControllerFile} file  The file information.
    * @returns {ExpressMiddleware}
    * @access protected
    * @ignore
@@ -242,7 +247,7 @@ class StaticsController {
   /**
    * Helper method that validates and normalizes the options received by the controller.
    *
-   * @param {StaticsControllerOptions} options The options to validate.
+   * @param {StaticsControllerOptions} options  The options to validate.
    * @returns {StaticsControllerOptions}
    * @throws {Error} If no files are specified.
    * @throws {Error} If methods is not defined.
@@ -277,7 +282,9 @@ class StaticsController {
       'trace',
     ];
 
-    const invalid = methods.find((method) => !allowedMethods.includes(method.toLowerCase()));
+    const invalid = methods.find(
+      (method) => !allowedMethods.includes(method.toLowerCase()),
+    );
     if (invalid) {
       throw new Error(`${invalid} is not a valid HTTP method`);
     }
@@ -297,8 +304,8 @@ class StaticsController {
   }
 }
 /**
- * This controller allows you to serve specific files from any folder to any route without the
- * need of mounting directories as "static".
+ * This controller allows you to serve specific files from any folder to any route without
+ * the need of mounting directories as "static".
  *
  * @type {ControllerCreator<StaticsControllerWrapperOptions>}
  * @parent module:controllers
@@ -308,11 +315,9 @@ const staticsController = controllerCreator((options = {}) => (app) => {
   const ctrl = new StaticsController(app.get('sendFile'), options);
   let useMiddlewares;
   if (options.middlewares) {
-    useMiddlewares = options.middlewares(app).map((middleware) => (
-      middleware.connect ?
-        middleware.connect(app) :
-        middleware
-    ));
+    useMiddlewares = options
+      .middlewares(app)
+      .map((middleware) => (middleware.connect ? middleware.connect(app) : middleware));
   }
 
   return ctrl.addRoutes(router, useMiddlewares);

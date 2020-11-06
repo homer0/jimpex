@@ -3,16 +3,17 @@ const { code: statuses } = require('statuses');
 const { middlewareCreator } = require('../../utils/wrappers');
 
 /**
- * @typedef {import('../../services/http/responsesBuilder').ResponsesBuilder} ResponsesBuilder
+ * @typedef {import('../../services/http/responsesBuilder').ResponsesBuilder}
+ * ResponsesBuilder
  */
 
 /**
  * Before reading the recevied information, these will be the settings for the response.
  *
  * @typedef {Object} ErrorHandlerDefaultOptions
- * @property {string} message The error message the response will show. Default `'Oops! Something
- *                            went wrong, please try again'`.
- * @property {number} status  The HTTP status code for the response. Default `500`.
+ * @property {string} message  The error message the response will show. Default `'Oops!
+ *                             Something went wrong, please try again'`.
+ * @property {number} status   The HTTP status code for the response. Default `500`.
  * @parent module:middlewares
  */
 
@@ -20,9 +21,10 @@ const { middlewareCreator } = require('../../utils/wrappers');
  * The options for how to build the middleware responses.
  *
  * @typedef {Object} ErrorHandlerOptions
- * @property {ErrorHandlerDefaultOptions} default The options to build the default response,
- *                                                before the middleware analyzes the recevied
- *                                                error.
+ * @property {ErrorHandlerDefaultOptions} default  The options to build the default
+ *                                                 response,
+ *                                                 before the middleware analyzes the
+ *                                                 recevied error.
  * @parent module:middlewares
  */
 
@@ -33,24 +35,20 @@ const { middlewareCreator } = require('../../utils/wrappers');
  */
 class ErrorHandler {
   /**
-   * @param {Logger}              appLogger        To log the received errors.
-   * @param {ResponsesBuilder}    responsesBuilder To generate the JSON response.
-   * @param {boolean}             showErrors       If `false`, unknown errors will show a generic
-   *                                               message instead of real message. And if `true`,
-   *                                               it will not only show all kind of errors but it
-   *                                               will also show the error stack.
-   * @param {ClassAppError}       AppError         To validate if the received errors are known or
-   *                                               not.
-   * @param {ErrorHandlerOptions} [options={}]     Custom options to modify the middleware
-   *                                               behavior.
+   * @param {Logger}              appLogger         To log the received errors.
+   * @param {ResponsesBuilder}    responsesBuilder  To generate the JSON response.
+   * @param {boolean}             showErrors        If `false`, unknown errors will show a
+   *                                                generic message instead of real
+   *                                                message. And if `true`,
+   *                                                it will not only show all kind of
+   *                                                errors but it will also show the error
+   *                                                stack.
+   * @param {ClassAppError}       AppError          To validate if the received errors are
+   *                                                known or not.
+   * @param {ErrorHandlerOptions} [options={}]      Custom options to modify the
+   *                                                middleware behavior.
    */
-  constructor(
-    appLogger,
-    responsesBuilder,
-    showErrors,
-    AppError,
-    options = {},
-  ) {
+  constructor(appLogger, responsesBuilder, showErrors, AppError, options = {}) {
     /**
      * A local reference for the `appLogger` service.
      *
@@ -173,8 +171,7 @@ const errorHandler = middlewareCreator((options) => (app) => {
     showErrors,
     app.get('AppError'),
     options,
-  )
-  .middleware();
+  ).middleware();
 });
 
 module.exports.ErrorHandler = ErrorHandler;

@@ -5,10 +5,7 @@ jest.unmock('../../../src/services/common/appError');
 jest.unmock('../../../src/services/common/httpError');
 
 const { AppError } = require('../../../src/services/common/appError');
-const {
-  HTTPError,
-  httpError,
-} = require('../../../src/services/common/httpError');
+const { HTTPError, httpError } = require('../../../src/services/common/httpError');
 
 describe('services/common:httpError', () => {
   it('should be instantiated', () => {

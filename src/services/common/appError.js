@@ -8,8 +8,8 @@ const { provider } = require('../../utils/wrappers');
  */
 class AppError extends Error {
   /**
-   * @param {string}  message      The error message.
-   * @param {Object}  [context={}] Context information related to the error.
+   * @param {string} message       The error message.
+   * @param {Object} [context={}]  Context information related to the error.
    */
   constructor(message, context = {}) {
     super(message);
@@ -58,9 +58,9 @@ class AppError extends Error {
     return this._date;
   }
   /**
-   * Information about the error that can be shown on an app response. This is set using the
-   * `response` key on the `context`. The idea is that the error handler will read it and use it
-   * on the response.
+   * Information about the error that can be shown on an app response. This is set using
+   * the `response` key on the `context`. The idea is that the error handler will read it
+   * and use it on the response.
    *
    * @returns {Object}
    */
@@ -79,10 +79,10 @@ class AppError extends Error {
   }
   /**
    * Utility method that formats the context before saving it in the instance:
-   * - If the context includes a `status` as a `string`, it will try to replace it with its status
-   * code from the `statuses` package.
+   * - If the context includes a `status` as a `string`, it will try to replace it with
+   * its status code from the `statuses` package.
    *
-   * @param {Object} original The original context to format.
+   * @param {Object} original  The original context to format.
    * @returns {Object}
    * @access protected
    * @ignore
@@ -99,25 +99,27 @@ class AppError extends Error {
 /**
  * A generator function to create {@link AppError} instances.
  *
- * @param {string} message   The error message.
- * @param {Object} [context] Context information related to the error.
+ * @param {string} message    The error message.
+ * @param {Object} [context]  Context information related to the error.
  * @returns {AppError}
  * @parent module:services
  */
 const appErrorGenerator = (message, context) => new AppError(message, context);
 /**
- * A service provider that will register both the {@link AppError} and a generator function on
- * the container. `AppError` will be the key for class, and `appError` will be for the
- * generator function.
+ * A service provider that will register both the {@link AppError} and a generator
+ * function on the container. `AppError` will be the key for class, and `appError` will be
+ * for the generator function.
  *
- * @example
- * // Register it on the container
- * container.register(appError);
- * // Getting access to the class.
- * const AppError = container.get('AppError');
- * // Getting access to the function.
- * const appError = container.get('appError');
  * @type {Provider}
+ * @example
+ *
+ *   // Register it on the container
+ *   container.register(appError);
+ *   // Getting access to the class.
+ *   const AppError = container.get('AppError');
+ *   // Getting access to the function.
+ *   const appError = container.get('appError');
+ *
  * @parent module:services
  */
 const appError = provider((app) => {

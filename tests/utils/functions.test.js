@@ -30,7 +30,7 @@ describe('utils/functions', () => {
       expect(result).toBe(url.substr(3));
     });
 
-    it('shouldn\'t modify a URL that doesn\'t start with a slash', () => {
+    it("shouldn't modify a URL that doesn't start with a slash", () => {
       // Given
       const url = 'my/url';
       let result = null;
@@ -62,7 +62,7 @@ describe('utils/functions', () => {
       expect(result).toBe(url.substr(0, url.length - 3));
     });
 
-    it('shouldn\'t modify a URL that doesn\'t start with a slash', () => {
+    it("shouldn't modify a URL that doesn't start with a slash", () => {
       // Given
       const url = 'my/url';
       let result = null;
@@ -94,7 +94,7 @@ describe('utils/functions', () => {
       expect(result).toBe(url.substr(0, url.length - 1));
     });
 
-    it('shouldn\'t remove slashes from a URL', () => {
+    it("shouldn't remove slashes from a URL", () => {
       // Given
       const url = '/my/url/';
       let result = null;
@@ -144,7 +144,7 @@ describe('utils/functions', () => {
       expect(result).toBe(true);
     });
 
-    it('should create a expression that doesn\'t matches a route', () => {
+    it("should create a expression that doesn't matches a route", () => {
       // Given
       const definition = '/my-route/:my-param/something/:else/end';
       const route = '/my-route/something/something/something';

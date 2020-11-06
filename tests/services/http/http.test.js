@@ -3,10 +3,7 @@ jest.unmock('../../../src/utils/wrappers');
 jest.unmock('../../../src/services/http/http');
 
 const fetch = require('node-fetch');
-const {
-  HTTP,
-  http,
-} = require('../../../src/services/http/http');
+const { HTTP, http } = require('../../../src/services/http/http');
 
 describe('services/http:http', () => {
   beforeEach(() => {
@@ -34,7 +31,7 @@ describe('services/http:http', () => {
     };
     const app = {
       set: jest.fn(),
-      get: jest.fn((service) => (services[service] || service)),
+      get: jest.fn((service) => services[service] || service),
     };
     let sut = null;
     let serviceName = null;
@@ -99,7 +96,9 @@ describe('services/http:http', () => {
     resultForHeader = sut.getIPFromRequest(requestWithHeader);
     resultForConnection = sut.getIPFromRequest(requestWithConnectionRemoteAddr);
     resultForSocket = sut.getIPFromRequest(requestWithSocketRemoteAddr);
-    resultForConnectionSocket = sut.getIPFromRequest(requestWithConnectionSocketRemoteAddr);
+    resultForConnectionSocket = sut.getIPFromRequest(
+      requestWithConnectionSocketRemoteAddr,
+    );
     resultForEmptyRequest = sut.getIPFromRequest(requestWithNoIP);
     // Then
     expect(resultForHeader).toBe(ip);
@@ -277,10 +276,7 @@ describe('services/http:http', () => {
       method: 'GET',
     });
     expect(appLogger.info).toHaveBeenCalledTimes(['request', 'response'].length);
-    expect(appLogger.info).toHaveBeenCalledWith([
-      '--->>',
-      `REQUEST> GET ${url}`,
-    ]);
+    expect(appLogger.info).toHaveBeenCalledWith(['--->>', `REQUEST> GET ${url}`]);
     expect(appLogger.info).toHaveBeenCalledWith([
       '<<---',
       `RESPONSE> ${url}`,
@@ -337,11 +333,11 @@ describe('services/http:http', () => {
     expect(appLogger.info).toHaveBeenCalledWith([
       '--->>',
       `REQUEST> ${method} ${url}`,
-      ...Object.keys(request.headers)
-      .map((headerName) => (
-        `REQUEST> ${headersFixedNames[headerName]}: ` +
-          `${request.headers[headerName]}`
-      )),
+      ...Object.keys(request.headers).map(
+        (headerName) =>
+          `REQUEST> ${headersFixedNames[headerName]}: ` +
+          `${request.headers[headerName]}`,
+      ),
       `REQUEST> body: "${body}"`,
     ]);
     expect(appLogger.info).toHaveBeenCalledWith([
@@ -363,7 +359,7 @@ describe('services/http:http', () => {
     };
     const app = {
       set: jest.fn(),
-      get: jest.fn((service) => (services[service] || service)),
+      get: jest.fn((service) => services[service] || service),
     };
     let sut = null;
     let serviceName = null;

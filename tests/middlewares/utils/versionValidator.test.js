@@ -19,7 +19,7 @@ describe('services/api:versionValidator', () => {
     // Then
     expect(sut).toBeInstanceOf(VersionValidator);
     expect(sut.options).toEqual({
-      error: 'The application version doesn\'t match',
+      error: "The application version doesn't match",
       latest: {
         allow: true,
         name: 'latest',
@@ -39,8 +39,9 @@ describe('services/api:versionValidator', () => {
     const responsesBuilder = 'responsesBuilder';
     const AppError = 'AppError';
     // When/Then
-    expect(() => new VersionValidator(version, responsesBuilder, AppError))
-    .toThrow(/You need to supply a version/i);
+    expect(() => new VersionValidator(version, responsesBuilder, AppError)).toThrow(
+      /You need to supply a version/i,
+    );
   });
 
   it('should be able to overwrite its default options', () => {
@@ -79,7 +80,7 @@ describe('services/api:versionValidator', () => {
   });
 
   describe('middleware', () => {
-    it('shouldn\'t do anything when no version is found in the route', () => {
+    it("shouldn't do anything when no version is found in the route", () => {
       // Given
       const version = '0.1';
       const request = {
@@ -121,7 +122,7 @@ describe('services/api:versionValidator', () => {
       expect(next).toHaveBeenCalledWith();
     });
 
-    it('should generate an error when the version doesn\'t match', () => {
+    it("should generate an error when the version doesn't match", () => {
       // Given
       const version = '2.0';
       const options = {
@@ -150,18 +151,15 @@ describe('services/api:versionValidator', () => {
       // Then
       expect(next).toHaveBeenCalledTimes(1);
       expect(next).toHaveBeenCalledWith(expect.any(AppError));
-      expect(appError).toHaveBeenCalledWith(
-        options.error,
-        {
-          status: statuses.conflict,
-          response: {
-            validation: true,
-          },
+      expect(appError).toHaveBeenCalledWith(options.error, {
+        status: statuses.conflict,
+        response: {
+          validation: true,
         },
-      );
+      });
     });
 
-    it('should allow \'latest\' as a version', () => {
+    it("should allow 'latest' as a version", () => {
       // Given
       const version = '1.0';
       const request = {
@@ -183,7 +181,7 @@ describe('services/api:versionValidator', () => {
       expect(next).toHaveBeenCalledWith();
     });
 
-    it('shouldn\'t allow \'latest\' as a version', () => {
+    it("shouldn't allow 'latest' as a version", () => {
       // Given
       const version = '2.0';
       const options = {
@@ -215,15 +213,12 @@ describe('services/api:versionValidator', () => {
       // Then
       expect(next).toHaveBeenCalledTimes(1);
       expect(next).toHaveBeenCalledWith(expect.any(AppError));
-      expect(appError).toHaveBeenCalledWith(
-        options.error,
-        {
-          status: statuses.conflict,
-          response: {
-            validation: true,
-          },
+      expect(appError).toHaveBeenCalledWith(options.error, {
+        status: statuses.conflict,
+        response: {
+          validation: true,
         },
-      );
+      });
     });
 
     it('should send an HTML post message if the validation fails on a popup', () => {
@@ -287,11 +282,7 @@ describe('services/api:versionValidator', () => {
       };
       let sut = null;
       let toCompare = null;
-      const expectedServices = [
-        'appConfiguration',
-        'responsesBuilder',
-        'AppError',
-      ];
+      const expectedServices = ['appConfiguration', 'responsesBuilder', 'AppError'];
       // When
       sut = versionValidator().connect(app);
       toCompare = new VersionValidator('25.09');
@@ -331,7 +322,7 @@ describe('services/api:versionValidator', () => {
       ];
       // When
       sut = versionValidator.connect(app, '/route');
-      ([[, middleware]] = router.all.mock.calls);
+      [[, middleware]] = router.all.mock.calls;
       toCompare = new VersionValidator('25.09');
       // Then
       expect(sut).toEqual(['route']);

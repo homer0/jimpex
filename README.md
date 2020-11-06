@@ -718,17 +718,19 @@ I use [Jest](https://facebook.github.io/jest/) to test the project.
 
 The configuration file is on `./.jestrc.json`, the tests are on `./tests` and the script that runs it is on `./utils/scripts/test`.
 
-### Linting
+### Code linting and formatting
 
-I use [ESlint](https://eslint.org) with [my own custom configuration](https://yarnpkg.com/package/eslint-plugin-homer0) to validate all the JS code and the JSDoc comments.
+For linting, I use [ESlint](https://eslint.org) with [my own custom configuration](https://yarnpkg.com/package/@homer0/eslint-plugin); there are two configuration files, `./.eslintrc` for the source and the tooling, and `./tests/.eslintrc`, and there's also a `./.eslintignore` to exclude some files.
 
-The configuration file for the project code is on `./.eslintrc` and the one for the tests is on `./tests/.eslintrc`, and there's also an `./.eslintignore` to exclude some files on the process. The script that runs it is on `./utils/scripts/lint`.
+And for formatting, I use [Prettier](https://prettier.io) with [my JSDoc plugin](https://yarnpkg.com/package/@homer0/prettier-plugin-jsdoc) and [my own custom configuration](https://yarnpkg.com/package/@homer0/prettier-config). The configuration file is `./.prettierrc`.
+
+The script that runs them is `./utils/scripts/lint`; the script `lint-all` only runs ESLint, and runs it for the entire project.
 
 ### Documentation
 
 I use [JSDoc](https://jsdoc.app) to generate an HTML documentation site for the project.
 
-The configuration file is on `./.jsdoc.js` and the script that runs it is on `./utils/scripts/docs`.
+The configuration file is `./.jsdoc.js` and the script that runs it is on `./utils/scripts/docs`.
 
 ### To-Dos
 

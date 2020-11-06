@@ -3,33 +3,40 @@ const { code: statuses } = require('statuses');
 const { middlewareCreator } = require('../../utils/wrappers');
 
 /**
- * @typedef {import('../../services/http/responsesBuilder').ResponsesBuilder} ResponsesBuilder
+ * @typedef {import('../../services/http/responsesBuilder').ResponsesBuilder}
+ * ResponsesBuilder
  */
 
 /**
  * The options for how the middleware should behave if the requested version is `latest`.
  *
  * @typedef {Object} VersionValidatorLatestOptions
- * @property {boolean} allow Whether or not the middleware should validate the _"latest version"_.
- *                           Default `true`.
- * @property {string}  name  The name of the _"latest version"_. Basically, `req.params.version`
- *                           must match with this property in order to be consider "latest".
- *                           Default `'latest'`.
+ * @property {boolean} allow  Whether or not the middleware should validate the _"latest
+ *                            version"_.
+ *                            Default `true`.
+ * @property {string}  name   The name of the _"latest version"_. Basically,
+ *                            `req.params.version`
+ *                            must match with this property in order to be consider
+ *                            "latest".
+ *                            Default `'latest'`.
  * @parent module:middlewares
  */
 
 /**
- * The options for how to detect if the request comes from a popup and how to compose the post
- * message the middleware will use to respond.
+ * The options for how to detect if the request comes from a popup and how to compose the
+ * post message the middleware will use to respond.
  *
  * @typedef {Object} VersionValidatorPopupOptions
- * @property {string} variable The name of the query string variable the middleware will check in
- *                             order to indentify whether the request comes from a popup or not.
- *                             The variable must have `'true'` as its value. Default `'popup'`.
- * @property {string} title    The title of the page that will be generated to respond in case the
- *                             versions don't match. Default `'Conflict'`.
- * @property {string} message  The contents of the post message the generated page will send if
- *                             the versions don't match. Default `'vesion:conflict'`.
+ * @property {string} variable  The name of the query string variable the middleware will
+ *                              check in order to indentify whether the request comes from
+ *                              a popup or not.
+ *                              The variable must have `'true'` as its value. Default
+ *                              `'popup'`.
+ * @property {string} title     The title of the page that will be generated to respond in
+ *                              case the versions don't match. Default `'Conflict'`.
+ * @property {string} message   The contents of the post message the generated page will
+ *                              send if the versions don't match. Default
+ *                              `'vesion:conflict'`.
  * @parent module:middlewares
  */
 
@@ -37,54 +44,54 @@ const { middlewareCreator } = require('../../utils/wrappers');
  * The options used to customize a {@link VersionValidator} instance.
  *
  * @typedef {Object} VersionValidatorOptions
- * @property {string}                        error   The error message to show when the version
- *                                                   is invalid.
- * @property {VersionValidatorLatestOptions} latest  The options for how the middleware should
- *                                                   behave if the requested version is
- *                                                   `latest`.
- * @property {VersionValidatorPopupOptions}  popup   The options for how to detect if the request
- *                                                   comes from a popup and how to compose the
- *                                                   post message the middleware will use to
- *                                                   respond.
- * @property {string|number}                 version The version used to validate the requests.
- *                                                   On the {@link VersionValidator}
- *                                                   constructor, if specified via parameter,
- *                                                   the class will take care of automatically
- *                                                   add it to the options.
+ * @property {string}                        error    The error message to show when the
+ *                                                    version is invalid.
+ * @property {VersionValidatorLatestOptions} latest   The options for how the middleware
+ *                                                    should behave if the requested
+ *                                                    version is `latest`.
+ * @property {VersionValidatorPopupOptions}  popup    The options for how to detect if the
+ *                                                    request comes from a popup and how
+ *                                                    to compose the post message the
+ *                                                    middleware will use to respond.
+ * @property {string | number}               version  The version used to validate the
+ *                                                    requests.
+ *                                                    On the {@link VersionValidator}
+ *                                                    constructor, if specified via
+ *                                                    parameter,
+ *                                                    the class will take care of
+ *                                                    automatically add it to the options.
  * @parent module:middlewares
  */
 
 /**
  * This is the handler for the middleware/controller that validates the app version.
- * This is useful in cases where you want to restrict the access to the app to specific versions,
- * for example: you have a frontend app which needs to be aligned with the "current" version of
- * the app, since the frontend won't realize a new version was released, the validator can be
- * used to let the frontend know.
- * Also, it can be configured to handle requests from popups, in which case, instead of generating
- * an error message, it will send a post message.
+ * This is useful in cases where you want to restrict the access to the app to specific
+ * versions,
+ * for example: you have a frontend app which needs to be aligned with the "current"
+ * version of the app, since the frontend won't realize a new version was released, the
+ * validator can be used to let the frontend know.
+ * Also, it can be configured to handle requests from popups, in which case, instead of
+ * generating an error message, it will send a post message.
  *
  * @parent module:middlewares
  */
 class VersionValidator {
   /**
-   * @param {?string|?number} version
-   * The current version of the app. The reason this is nullable is because this comes directly
-   * from the app configuration, but you may want to re use this to validate "another version", so
-   * you can use the custom shorthand and send the version using the `options` parameter.
+   * @param {?(string | ?number)} version
+   * The current version of the app. The reason this is nullable is because this comes
+   * directly from the app configuration, but you may want to re use this to validate
+   * "another version", so you can use the custom shorthand and send the version using the
+   * `options` parameter.
    * @param {ResponsesBuilder} responsesBuilder
    * To generate post message responses for popups.
    * @param {ClassAppError} AppError
    * To generate the error in case the version is invalid.
    * @param {Partial<VersionValidatorOptions>} [options={}]
    * Custom options to modify the middleware behavior.
-   * @throws {Error} If the version is `null` and the `options` don't include one either.
+   * @throws {Error}
+   * If the version is `null` and the `options` don't include one either.
    */
-  constructor(
-    version,
-    responsesBuilder,
-    AppError,
-    options = {},
-  ) {
+  constructor(version, responsesBuilder, AppError, options = {}) {
     /**
      * A local reference for the `responsesBuilder` service.
      *
@@ -110,7 +117,7 @@ class VersionValidator {
      */
     this._options = ObjectUtils.merge(
       {
-        error: 'The application version doesn\'t match',
+        error: "The application version doesn't match",
         latest: {
           allow: true,
           name: 'latest',
@@ -160,15 +167,14 @@ class VersionValidator {
         );
       } else {
         // Finally, if it doesn't match and is not from a popup, move to the error handler.
-        next(new this._AppError(
-          this._options.error,
-          {
+        next(
+          new this._AppError(this._options.error, {
             status: statuses.conflict,
             response: {
               validation: true,
             },
-          },
-        ));
+          }),
+        );
       }
     };
   }
@@ -183,7 +189,7 @@ class VersionValidator {
   /**
    * Helper method that checks if the incoming request is from a popup.
    *
-   * @param {ExpressRequest} req The request information.
+   * @param {ExpressRequest} req  The request information.
    * @returns {boolean}
    * @access protected
    * @ignore
@@ -193,10 +199,10 @@ class VersionValidator {
     return !!(popup && popup.toLowerCase() === 'true');
   }
   /**
-   * Helper method that checks if the "latest version" is enabled and if the given version is
-   * "the latest" (comparing it with the option name).
+   * Helper method that checks if the "latest version" is enabled and if the given version
+   * is "the latest" (comparing it with the option name).
    *
-   * @param {string|number} version The version to validate.
+   * @param {string | number} version  The version to validate.
    * @returns {boolean}
    * @access protected
    * @ignore
@@ -206,14 +212,15 @@ class VersionValidator {
   }
 }
 /**
- * A middleware that will validate a `version` request parameter against the app version and
- * generate an error if they don't match.
+ * A middleware that will validate a `version` request parameter against the app version
+ * and generate an error if they don't match.
  * This is a "middleware/controller" is because the wrappers for both are the same, the
- * difference is that, for controllers, Jimpex sends a second parameter with the route where they
- * are mounted.
- * By validating the route parameter, the function can know whether the implementation is going
- * to use the middleware by itself or as a route middleware.
- * If used as middleware, it will just return the result of {@link VersionValidator#middleware};
+ * difference is that, for controllers, Jimpex sends a second parameter with the route
+ * where they are mounted.
+ * By validating the route parameter, the function can know whether the implementation is
+ * going to use the middleware by itself or as a route middleware.
+ * If used as middleware, it will just return the result of
+ * {@link VersionValidator#middleware};
  * but if used as controller, it will mount it on `[route]/:version/*`.
  *
  * @type {MiddlewareCreator<VersionValidatorOptions>}
@@ -221,21 +228,19 @@ class VersionValidator {
  */
 const versionValidator = middlewareCreator((options = {}) => (app, route) => {
   // Get the middleware function.
-  const middlewareValidator = (new VersionValidator(
+  const middlewareValidator = new VersionValidator(
     app.get('appConfiguration').get('version'),
     app.get('responsesBuilder'),
     app.get('AppError'),
     options,
-  )).middleware();
+  ).middleware();
   // Set the variable to be returned.
   let result;
   if (route) {
     // If the implementation will use it as a router, get the `router` service and mount it.
     const router = app.get('router');
     // Set the array of "routes" as the return value.
-    result = [
-      router.all('/:version/*', middlewareValidator),
-    ];
+    result = [router.all('/:version/*', middlewareValidator)];
   } else {
     // If the implementation will use it stand alone, just set the function to be returned.
     result = middlewareValidator;

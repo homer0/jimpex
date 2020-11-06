@@ -7,14 +7,8 @@ describe('controllers', () => {
   it('should export all the app controllers', () => {
     // Given
     const knownControllers = {
-      common: [
-        'configurationController',
-        'healthController',
-        'staticsController',
-      ],
-      utils: [
-        'gatewayController',
-      ],
+      common: ['configurationController', 'healthController', 'staticsController'],
+      utils: ['gatewayController'],
     };
     const knownControllersModules = Object.keys(knownControllers);
     // When/Then

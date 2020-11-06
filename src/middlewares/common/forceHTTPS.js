@@ -1,8 +1,8 @@
 const { middlewareCreator } = require('../../utils/wrappers');
 /**
  * @typedef {Object} ForceHTTPSMiddlewareOptions
- * @property {RegExp[]} ignoredRoutes A list of regular expressions to match routes that should be
- *                                    ignored.
+ * @property {RegExp[]} ignoredRoutes  A list of regular expressions to match routes that
+ *                                     should be ignored.
  * @parent module:middlewares
  */
 
@@ -13,8 +13,8 @@ const { middlewareCreator } = require('../../utils/wrappers');
  */
 class ForceHTTPS {
   /**
-   * @param {RegExp[]} [ignoredRoutes=[/^\/service\//]] A list of regular expressions to match
-   *                                                    routes that should be ignored.
+   * @param {RegExp[]} [ignoredRoutes=[/^\/service\//]]
+   * A list of regular expressions to match routes that should be ignored.
    */
   constructor(ignoredRoutes = [/^\/service\//]) {
     /**
@@ -60,11 +60,11 @@ class ForceHTTPS {
  * @type {MiddlewareCreator<ForceHTTPSMiddlewareOptions>}
  * @parent module:middlewares
  */
-const forceHTTPS = middlewareCreator((options = {}) => (app) => (
-  app.get('appConfiguration').get('forceHTTPS') ?
-    new ForceHTTPS(options.ignoredRoutes).middleware() :
-    null
-));
+const forceHTTPS = middlewareCreator((options = {}) => (app) =>
+  app.get('appConfiguration').get('forceHTTPS')
+    ? new ForceHTTPS(options.ignoredRoutes).middleware()
+    : null,
+);
 
 module.exports.ForceHTTPS = ForceHTTPS;
 module.exports.forceHTTPS = forceHTTPS;

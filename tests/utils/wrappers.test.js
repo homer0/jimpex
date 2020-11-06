@@ -39,7 +39,11 @@ describe('utils/wrappers', () => {
       // Then
       expect(result).toBe(routeController);
       expect(resourceCreator).toHaveBeenCalledTimes(1);
-      expect(resourceCreator).toHaveBeenCalledWith('controller', 'connect', routeController);
+      expect(resourceCreator).toHaveBeenCalledWith(
+        'controller',
+        'connect',
+        routeController,
+      );
     });
   });
 
@@ -72,7 +76,11 @@ describe('utils/wrappers', () => {
       // Then
       expect(result).toBe(appMiddleware);
       expect(resourceCreator).toHaveBeenCalledTimes(1);
-      expect(resourceCreator).toHaveBeenCalledWith('middleware', 'connect', appMiddleware);
+      expect(resourceCreator).toHaveBeenCalledWith(
+        'middleware',
+        'connect',
+        appMiddleware,
+      );
     });
   });
 });

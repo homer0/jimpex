@@ -21,14 +21,16 @@
     "spdy": "^4.0.2"
   },
   "devDependencies": {
-    "eslint": "^7.9.0",
-    "eslint-plugin-homer0": "^5.0.2",
-    "jest": "^26.4.2",
-    "jsdoc": "^3.6.5",
-    "jsdoc-ts-utils": "^1.1.1",
+    "@homer0/eslint-plugin": "^6.0.0",
+    "@homer0/prettier-config": "^1.1.0",
+    "@homer0/prettier-plugin-jsdoc": "^1.1.1",
+    "eslint": "^7.12.1",
+    "jest": "^26.6.3",
+    "jsdoc": "^3.6.6",
+    "jsdoc-ts-utils": "^1.1.2",
     "docdash": "homer0/docdash#semver:^2.1.0",
-    "leasot": "^11.3.0",
-    "lint-staged": "^10.4.0",
+    "leasot": "^11.4.0",
+    "lint-staged": "^10.5.1",
     "husky": "^4.3.0"
   },
   "engine-strict": true,

@@ -2,10 +2,7 @@ jest.unmock('../../../src/utils/wrappers');
 jest.unmock('../../../src/services/common/appError');
 
 const { code: statuses } = require('statuses');
-const {
-  AppError,
-  appError,
-} = require('../../../src/services/common/appError');
+const { AppError, appError } = require('../../../src/services/common/appError');
 
 const originalCaptureStackTrace = Error.captureStackTrace;
 
@@ -63,7 +60,7 @@ describe('services/common:appError', () => {
     expect(sut.status).toBe(statuses[context.status]);
   });
 
-  it('shouldn\'t format a status code sent as string if is not a valid status', () => {
+  it("shouldn't format a status code sent as string if is not a valid status", () => {
     // Given
     const message = 'Something went wrong!';
     const context = {

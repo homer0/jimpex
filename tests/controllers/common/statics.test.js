@@ -62,8 +62,9 @@ describe('controllers/common:statics', () => {
       files: [],
     };
     // When/Then
-    expect(() => new StaticsController(sendFile, options))
-    .toThrow(/You need to specify a list of files/i);
+    expect(() => new StaticsController(sendFile, options)).toThrow(
+      /You need to specify a list of files/i,
+    );
   });
 
   it('should throw an error when instantiated without HTTP methods', () => {
@@ -74,8 +75,9 @@ describe('controllers/common:statics', () => {
       methods: null,
     };
     // When/Then
-    expect(() => new StaticsController(sendFile, options))
-    .toThrow(/You need to specify which HTTP methods are allowed for the files/i);
+    expect(() => new StaticsController(sendFile, options)).toThrow(
+      /You need to specify which HTTP methods are allowed for the files/i,
+    );
   });
 
   it('should throw an error when instantiated without an enabled HTTP method', () => {
@@ -88,8 +90,9 @@ describe('controllers/common:statics', () => {
       },
     };
     // When/Then
-    expect(() => new StaticsController(sendFile, options))
-    .toThrow(/You need to enable at least one HTTP method to serve the files/i);
+    expect(() => new StaticsController(sendFile, options)).toThrow(
+      /You need to enable at least one HTTP method to serve the files/i,
+    );
   });
 
   it('should throw an error when instantiated with an invalid HTTP method', () => {
@@ -103,8 +106,9 @@ describe('controllers/common:statics', () => {
       },
     };
     // When/Then
-    expect(() => new StaticsController(sendFile, options))
-    .toThrow(/is not a valid HTTP method/i);
+    expect(() => new StaticsController(sendFile, options)).toThrow(
+      /is not a valid HTTP method/i,
+    );
   });
 
   it('should register `get` routes for all the files', () => {
@@ -295,10 +299,9 @@ describe('controllers/common:statics', () => {
     middleware(request, response, next);
     // Then
     expect(router.get).toHaveBeenCalledTimes(1);
-    expect(router.get).toHaveBeenCalledWith(
-      `${options.paths.route}/${file}`,
-      [expect.any(Function)],
-    );
+    expect(router.get).toHaveBeenCalledWith(`${options.paths.route}/${file}`, [
+      expect.any(Function),
+    ]);
     expect(response.setHeader).toHaveBeenCalledTimes(1);
     expect(response.setHeader).toHaveBeenCalledWith('Content-Type', 'text/html');
     expect(sendFile).toHaveBeenCalledTimes(1);
@@ -340,10 +343,9 @@ describe('controllers/common:statics', () => {
     middleware(request, response, next);
     // Then
     expect(router.get).toHaveBeenCalledTimes(1);
-    expect(router.get).toHaveBeenCalledWith(
-      `${options.paths.route}/${file.route}`,
-      [expect.any(Function)],
-    );
+    expect(router.get).toHaveBeenCalledWith(`${options.paths.route}/${file.route}`, [
+      expect.any(Function),
+    ]);
     expect(response.setHeader).toHaveBeenCalledTimes(1);
     expect(response.setHeader).toHaveBeenCalledWith('Content-Type', 'image/png');
     expect(sendFile).toHaveBeenCalledTimes(1);
@@ -394,10 +396,9 @@ describe('controllers/common:statics', () => {
     middleware(request, response, next);
     // Then
     expect(router.get).toHaveBeenCalledTimes(1);
-    expect(router.get).toHaveBeenCalledWith(
-      `${options.paths.route}/${file.route}`,
-      [expect.any(Function)],
-    );
+    expect(router.get).toHaveBeenCalledWith(`${options.paths.route}/${file.route}`, [
+      expect.any(Function),
+    ]);
     expect(response.setHeader).toHaveBeenCalledTimes(expectedHeaders.length);
     expectedHeaders.forEach((setHeaderCall) => {
       expect(response.setHeader).toHaveBeenCalledWith(...setHeaderCall);
@@ -419,7 +420,7 @@ describe('controllers/common:statics', () => {
       router,
     };
     const app = {
-      get: jest.fn((service) => (services[service] || service)),
+      get: jest.fn((service) => services[service] || service),
     };
     let result = null;
     const expectedGets = ['router', 'sendFile'];
@@ -458,7 +459,7 @@ describe('controllers/common:statics', () => {
       router,
     };
     const app = {
-      get: jest.fn((service) => (services[service] || service)),
+      get: jest.fn((service) => services[service] || service),
     };
     let result = null;
     const expectedGets = ['router', 'sendFile'];

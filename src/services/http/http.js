@@ -3,12 +3,13 @@ const urijs = require('urijs');
 const { provider } = require('../../utils/wrappers');
 /**
  * @typedef {Object} HTTPFetchOptions
- * @property {?string}                 method  The request method.
- * @property {?Object.<string,string>} headers The request headers.
- * @property {?string}                 body    The request body.
- * @property {?Object.<string,string>} qs      The request query string parameters.
- * @property {?ExpressRequest}         req     An Express request object used to get extra
- *                                             infromation (like headers and the IP).
+ * @property {?string}                  method   The request method.
+ * @property {?Object.<string, string>} headers  The request headers.
+ * @property {?string}                  body     The request body.
+ * @property {?Object.<string, string>} qs       The request query string parameters.
+ * @property {?ExpressRequest}          req      An Express request object used to get
+ *                                               extra infromation (like headers and the
+ *                                               IP).
  * @parent module:services
  */
 
@@ -23,9 +24,9 @@ const { provider } = require('../../utils/wrappers');
  */
 class HTTP {
   /**
-   * @param {boolean} logRequests Whether or not to log the requests and their responses.
-   * @param {Logger}  appLogger   If `logRequests` is `true`, this will be used to log the requests
-   *                              and responses information.
+   * @param {boolean} logRequests  Whether or not to log the requests and their responses.
+   * @param {Logger}  appLogger    If `logRequests` is `true`, this will be used to log
+   *                               the requests and responses information.
    */
   constructor(logRequests, appLogger) {
     /**
@@ -54,8 +55,8 @@ class HTTP {
   /**
    * Make a request.
    *
-   * @param {string}                    url          The request URL.
-   * @param {Partial<HTTPFetchOptions>} [options={}] The request options.
+   * @param {string}                    url           The request URL.
+   * @param {Partial<HTTPFetchOptions>} [options={}]  The request options.
    * @returns {Promise<Response>}
    */
   fetch(url, options = {}) {
@@ -118,13 +119,13 @@ class HTTP {
     return result;
   }
   /**
-   * Creates a dictionary with all the custom headers a request has. By custom header it means all
-   * the headers which name start with `x-`.
-   * This method doesn't copy `x-forwarded-for` as the `fetch` method generates it by calling
-   * `getIPFromRequest`.
+   * Creates a dictionary with all the custom headers a request has. By custom header it
+   * means all the headers which name start with `x-`.
+   * This method doesn't copy `x-forwarded-for` as the `fetch` method generates it by
+   * calling `getIPFromRequest`.
    *
-   * @param {ExpressRequest} req The request from which it will try to get the headers.
-   * @returns {Object.<string,string>}
+   * @param {ExpressRequest} req  The request from which it will try to get the headers.
+   * @returns {Object.<string, string>}
    */
   getCustomHeadersFromRequest(req) {
     const headers = {};
@@ -139,38 +140,38 @@ class HTTP {
   /**
    * Try to get the IP from a given request.
    *
-   * @param {ExpressRequest} req The request from which it will try to obtain the IP address.
+   * @param {ExpressRequest} req  The request from which it will try to obtain the IP
+   *                              address.
    * @returns {?string}
    */
   getIPFromRequest(req) {
-    return req.headers['x-forwarded-for'] ||
+    return (
+      req.headers['x-forwarded-for'] ||
       req.connection.remoteAddress ||
       req.socket.remoteAddress ||
-      req.connection.socket.remoteAddress;
+      req.connection.socket.remoteAddress
+    );
   }
   /**
-   * It takes a dictionary of headers and normalize the names so each word will start with an
-   * upper case character. This is helpful in case you added custom headers and didn't care about
-   * the casing, or when copying headers from a server request, in which case they are all
-   * tranformed to lower case.
+   * It takes a dictionary of headers and normalize the names so each word will start with
+   * an upper case character. This is helpful in case you added custom headers and didn't
+   * care about the casing, or when copying headers from a server request, in which case
+   * they are all tranformed to lower case.
    *
-   * @param {Object.<string,string>} headers The dictionary of headers to normalize.
-   * @returns {Object.<string,string>}
+   * @param {Object.<string, string>} headers  The dictionary of headers to normalize.
+   * @returns {Object.<string, string>}
    */
   normalizeHeaders(headers) {
-    return Object.keys(headers).reduce(
-      (newHeaders, name) => {
-        const newName = name
+    return Object.keys(headers).reduce((newHeaders, name) => {
+      const newName = name
         .split('-')
         .map((part) => part.replace(/^(\w)/, (ignore, letter) => letter.toUpperCase()))
         .join('-');
-        return {
-          ...newHeaders,
-          [newName]: headers[name],
-        };
-      },
-      {},
-    );
+      return {
+        ...newHeaders,
+        [newName]: headers[name],
+      };
+    }, {});
   }
   /**
    * Whether or not to log the requests and their responses.
@@ -183,17 +184,14 @@ class HTTP {
   /**
    * Log a a request information using the `appLogger` service.
    *
-   * @param {string}           url     The request URL.
-   * @param {HTTPFetchOptions} options The options generated by the `fetch` method.
+   * @param {string}           url      The request URL.
+   * @param {HTTPFetchOptions} options  The options generated by the `fetch` method.
    * @access protected
    * @ignore
    */
   _logRequest(url, options) {
     const prefix = 'REQUEST> ';
-    const lines = [
-      '--->>',
-      `${prefix}${options.method} ${url}`,
-    ];
+    const lines = ['--->>', `${prefix}${options.method} ${url}`];
     if (options.headers) {
       Object.keys(options.headers).forEach((header) => {
         lines.push(`${prefix}${header}: ${options.headers[header]}`);
@@ -209,7 +207,7 @@ class HTTP {
   /**
    * Log a a response information using the `appLogger` service.
    *
-   * @param {Response} response The response object returned by `node-fetch`.
+   * @param {Response} response  The response object returned by `node-fetch`.
    * @access protected
    * @ignore
    */
@@ -230,16 +228,17 @@ class HTTP {
 }
 /**
  * The service provider that once registered on the app container will set an instance of
- * `HTTP` as the `http` service. The provider also checks the `debug.logRequests` setting on
- * the app configuration in order to enable or not the logging of requests.
- *
- * @example
- * // Register it on the container
- * container.register(http);
- * // Getting access to the service instance
- * const http = container.get('http');
+ * `HTTP` as the `http` service. The provider also checks the `debug.logRequests` setting
+ * on the app configuration in order to enable or not the logging of requests.
  *
  * @type {Provider}
+ * @example
+ *
+ *   // Register it on the container
+ *   container.register(http);
+ *   // Getting access to the service instance
+ *   const http = container.get('http');
+ *
  * @parent module:services
  */
 const http = provider((app) => {
