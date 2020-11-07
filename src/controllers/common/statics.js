@@ -136,11 +136,11 @@ class StaticsController {
   /**
    * Defines all the needed routes to serve the files.
    *
-   * @param {Router}              router            To generate the routes.
+   * @param {ExpressRouter}       router            To generate the routes.
    * @param {ExpressMiddleware[]} [middlewares=[]]  A list of custom middlewares that will
    *                                                be added before the one that serves a
    *                                                file.
-   * @returns {Router}
+   * @returns {ExpressRouter}
    */
   addRoutes(router, middlewares = []) {
     const { methods } = this._options;
@@ -173,13 +173,13 @@ class StaticsController {
   /**
    * Generates a route for an specific file.
    *
-   * @param {Router}                router          To create the actual route.
+   * @param {ExpressRouter}         router          To create the actual route.
    * @param {string}                method          The HTTP method for the route.
    * @param {StaticsControllerFile} file            The file information.
    * @param {ExpressMiddleware}     fileMiddleware  The middleware that serves the file.
    * @param {ExpressMiddleware[]}   middlewares     A list of custom middlewares to add
    *                                                before the one that serves the file.
-   * @returns {Router}
+   * @returns {ExpressRouter}
    * @access protected
    * @ignore
    */

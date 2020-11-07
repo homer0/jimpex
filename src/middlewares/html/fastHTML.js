@@ -5,6 +5,7 @@ const { middlewareCreator } = require('../../utils/wrappers');
 const { createRouteExpression, removeSlashes } = require('../../utils/functions');
 
 /**
+ * @typedef {import('../../types').EventsHub} EventsHub
  * @typedef {import('../../services/common/sendFile').SendFile} SendFile
  * @typedef {import('../../services/html/htmlGenerator').HTMLGenerator} HTMLGenerator
  */

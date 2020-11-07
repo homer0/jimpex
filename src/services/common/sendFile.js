@@ -1,6 +1,10 @@
 const { provider } = require('../../utils/wrappers');
 
 /**
+ * @typedef {import('../../types').PathUtils} PathUtils
+ */
+
+/**
  * @callback SendFile
  * @param {ExpressResponse} res           Necessary to write the file.
  * @param {string}          filepath      The path to the file relative to where the app

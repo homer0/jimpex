@@ -3,6 +3,7 @@ const { code: statuses } = require('statuses');
 const { middlewareCreator } = require('../../utils/wrappers');
 
 /**
+ * @typedef {import('../../types').Logger} Logger
  * @typedef {import('../../services/http/responsesBuilder').ResponsesBuilder}
  * ResponsesBuilder
  */

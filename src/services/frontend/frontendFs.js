@@ -1,6 +1,10 @@
 const fs = require('fs-extra');
 const { provider } = require('../../utils/wrappers');
 /**
+ * @typedef {import('../../types').PathUtils} PathUtils
+ */
+
+/**
  * This service allows the app to easily read static files. The idea behind centralizing
  * this functionalities into a service is that is pretty common to have bundling tools to
  * generate the frontend, and on that process files can have different paths or not even

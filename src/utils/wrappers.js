@@ -7,6 +7,13 @@ const {
 } = require('wootils/shared/jimpleFns');
 
 /**
+ * @typedef {import('../types').ControllerConnectFn} ControllerConnectFn
+ * @typedef {import('../types').ControllerCreatorFn} ControllerCreatorFn
+ * @typedef {import('../types').MiddlewareConnectFn} MiddlewareConnectFn
+ * @typedef {import('../types').MiddlewareCreatorFn} MiddlewareCreatorFn
+ */
+
+/**
  * @module wrappers
  */
 

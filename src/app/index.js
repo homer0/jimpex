@@ -11,6 +11,14 @@ const statuses = require('statuses');
 const spdy = require('spdy');
 
 /**
+ * @typedef {import('../types').Express} Express
+ * @typedef {import('../types').SpdyServer} SpdyServer
+ * @typedef {import('../types').Server} Server
+ * @typedef {import('../types').JimpexStartCallback} JimpexStartCallback
+ * @typedef {import('../types').JimpexOptions} JimpexOptions
+ */
+
+/**
  * @module core
  */
 
@@ -113,7 +121,7 @@ class Jimpex extends Jimple {
      * "patched"
      * version of Express that uses Spdy.
      *
-     * @type {SpdyServer}
+     * @type {?SpdyServer}
      * @access protected
      * @ignore
      */

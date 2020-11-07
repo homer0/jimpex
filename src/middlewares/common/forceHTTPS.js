@@ -1,4 +1,5 @@
 const { middlewareCreator } = require('../../utils/wrappers');
+
 /**
  * @typedef {Object} ForceHTTPSMiddlewareOptions
  * @property {RegExp[]} ignoredRoutes  A list of regular expressions to match routes that

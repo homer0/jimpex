@@ -1,5 +1,10 @@
 const { code: statuses } = require('statuses');
 const { provider } = require('../../utils/wrappers');
+
+/**
+ * @typedef {import('../../types').AppConfiguration} AppConfiguration
+ */
+
 /**
  * It allows customization of a post message HTML template.
  *

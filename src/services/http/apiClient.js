@@ -3,6 +3,8 @@ const APIClientBase = require('wootils/shared/apiClient');
 const { providerCreator } = require('../../utils/wrappers');
 
 /**
+ * @typedef {import('../../types').APIClientBase} APIClientBase
+ * @typedef {import('../../types').APIClientEndpoints} APIClientEndpoints
  * @typedef {import('./http').HTTP} HTTP
  * @typedef {import('../common/httpError').HTTPError} HTTPError
  */
