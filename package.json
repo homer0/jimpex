@@ -45,7 +45,7 @@
     }
   },
   "lint-staged": {
-    "*.js": "eslint"
+    "*.js": ["eslint", "prettier --write"]
   },
   "scripts": {
     "hooks": "./utils/hooks/install",
