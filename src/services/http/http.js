@@ -1,6 +1,12 @@
 const fetch = require('node-fetch');
 const urijs = require('urijs');
 const { provider } = require('../../utils/wrappers');
+
+/**
+ * @typedef {import('../../types').Logger}  Logger
+ * @typedef {import('node-fetch').Response} Response
+ */
+
 /**
  * @typedef {Object} HTTPFetchOptions
  * @property {?string}                  method   The request method.
@@ -11,10 +17,6 @@ const { provider } = require('../../utils/wrappers');
  *                                               extra infromation (like headers and the
  *                                               IP).
  * @parent module:services
- */
-
-/**
- * @typedef {import('node-fetch').Response} Response
  */
 
 /**

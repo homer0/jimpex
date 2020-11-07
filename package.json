@@ -24,7 +24,7 @@
     "@homer0/eslint-plugin": "^6.0.0",
     "@homer0/prettier-config": "^1.1.0",
     "@homer0/prettier-plugin-jsdoc": "^1.1.1",
-    "eslint": "^7.12.1",
+    "eslint": "^7.13.0",
     "jest": "^26.6.3",
     "jsdoc": "^3.6.6",
     "jsdoc-ts-utils": "^1.1.2",
@@ -45,7 +45,7 @@
     }
   },
   "lint-staged": {
-    "*.js": "eslint"
+    "*.js": ["eslint", "prettier --write"]
   },
   "scripts": {
     "hooks": "./utils/hooks/install",

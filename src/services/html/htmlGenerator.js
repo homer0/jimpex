@@ -3,6 +3,8 @@ const { deferred } = require('wootils/shared');
 const { eventNames } = require('../../constants');
 const { providerCreator } = require('../../utils/wrappers');
 /**
+ * @typedef {import('../../types').AppConfiguration} AppConfiguration
+ * @typedef {import('../../types').Logger} Logger
  * @typedef {import('../frontend/frontendFs').FrontendFs} FrontendFs
  */
 
