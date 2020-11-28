@@ -1,12 +1,11 @@
-jest.unmock('/src/utils/wrappers');
-jest.unmock('/src/services/utils/ensureBearerToken');
+jest.unmock('../../../src/utils/wrappers');
+jest.unmock('../../../src/services/utils/ensureBearerToken');
 
-require('jasmine-expect');
 const { code: statuses } = require('statuses');
 const {
   EnsureBearerToken,
   ensureBearerToken,
-} = require('/src/services/utils/ensureBearerToken');
+} = require('../../../src/services/utils/ensureBearerToken');
 
 describe('services/utils:ensureBearerToken', () => {
   it('should be instantiated with its default options', () => {
@@ -109,7 +108,7 @@ describe('services/utils:ensureBearerToken', () => {
     });
   });
 
-  it('should send an error if the authorization header doesn\'t match the expression', () => {
+  it("should send an error if the authorization header doesn't match the expression", () => {
     // Given
     const appError = jest.fn();
     class AppError {
@@ -144,7 +143,7 @@ describe('services/utils:ensureBearerToken', () => {
     const services = {};
     const app = {
       set: jest.fn(),
-      get: jest.fn((service) => (services[service] || service)),
+      get: jest.fn((service) => services[service] || service),
     };
     let sut = null;
     let serviceName = null;
@@ -165,7 +164,7 @@ describe('services/utils:ensureBearerToken', () => {
     const services = {};
     const app = {
       set: jest.fn(),
-      get: jest.fn((service) => (services[service] || service)),
+      get: jest.fn((service) => services[service] || service),
     };
     let sut = null;
     let serviceName = null;

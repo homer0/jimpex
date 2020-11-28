@@ -1,23 +1,21 @@
-jest.unmock('/src/utils/wrappers');
-jest.unmock('/src/services');
+jest.unmock('../../src/services');
+jest.mock('../../src/utils/wrappers', () => ({
+  provider: jest.fn(() => 'provider'),
+  providerCreator: jest.fn(() => 'providerCreator'),
+  providers: jest.fn(() => 'providers'),
+}));
 
-require('jasmine-expect');
-const services = require('/src/services');
+const services = require('../../src/services');
 
 describe('services', () => {
   it('should export all the app sevices', () => {
-    // Given
-    const knownServices = [
-      'common',
-      'frontend',
-      'html',
-      'http',
-      'utils',
-    ];
-    // When/Then
-    expect(Object.keys(services).length).toBe(knownServices.length);
-    knownServices.forEach((name) => {
-      expect(services[name]).toBeObject();
+    // Given/When/Then
+    expect(services).toEqual({
+      common: 'providers',
+      frontend: 'providers',
+      html: 'providers',
+      http: 'providers',
+      utils: 'providers',
     });
   });
 });

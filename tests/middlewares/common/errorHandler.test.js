@@ -1,12 +1,11 @@
-jest.unmock('/src/utils/wrappers');
-jest.unmock('/src/middlewares/common/errorHandler');
+jest.unmock('../../../src/utils/wrappers');
+jest.unmock('../../../src/middlewares/common/errorHandler');
 
-require('jasmine-expect');
 const { code: statuses } = require('statuses');
 const {
   ErrorHandler,
   errorHandler,
-} = require('/src/middlewares/common/errorHandler');
+} = require('../../../src/middlewares/common/errorHandler');
 
 describe('middlewares/common:errorHandler', () => {
   it('should be instantiated with default options and have a middleware method', () => {
@@ -20,13 +19,13 @@ describe('middlewares/common:errorHandler', () => {
     sut = new ErrorHandler(appLogger, responsesBuilder, showErrors, AppError);
     // Then
     expect(sut).toBeInstanceOf(ErrorHandler);
-    expect(sut.middleware).toBeFunction();
-    expect(sut.options).toEqual(({
+    expect(typeof sut.middleware).toBe('function');
+    expect(sut.options).toEqual({
       default: {
         message: 'Oops! Something went wrong, please try again',
         status: statuses['internal server error'],
       },
-    }));
+    });
   });
 
   it('should be instantiated with custom options', () => {
@@ -44,7 +43,7 @@ describe('middlewares/common:errorHandler', () => {
       'responsesBuilder',
       'showErrors',
       'AppError',
-      customOptions
+      customOptions,
     );
     // Then
     expect(sut).toBeInstanceOf(ErrorHandler);
@@ -79,11 +78,11 @@ describe('middlewares/common:errorHandler', () => {
     expect(responsesBuilder.json).toHaveBeenCalledWith(
       response,
       expectedData,
-      expectedStatus
+      expectedStatus,
     );
   });
 
-  it('shouldn\'t show the real error if it\'s not an instance of AppError', () => {
+  it("shouldn't show the real error if it's not an instance of AppError", () => {
     // Given
     const appLogger = 'appLogger';
     const responsesBuilder = {
@@ -118,7 +117,7 @@ describe('middlewares/common:errorHandler', () => {
     expect(responsesBuilder.json).toHaveBeenCalledWith(
       response,
       expectedData,
-      expectedStatus
+      expectedStatus,
     );
   });
 
@@ -159,7 +158,7 @@ describe('middlewares/common:errorHandler', () => {
     expect(responsesBuilder.json).toHaveBeenCalledWith(
       response,
       expectedData,
-      expectedStatus
+      expectedStatus,
     );
     expect(appLogger.error).toHaveBeenCalledTimes(1);
     expect(appLogger.error).toHaveBeenCalledWith(`ERROR: ${error.message}`);
@@ -196,18 +195,19 @@ describe('middlewares/common:errorHandler', () => {
       errorMessage,
       errorStackMessage,
       errorStatus,
-      errorResponse
+      errorResponse,
     );
     const request = 'request';
     const response = 'response';
     const next = 'next';
     let sut = null;
     let middleware = null;
-    const expectedData = Object.assign({
+    const expectedData = {
       error: true,
       message: errorMessage,
       stack: [errorStackMessage],
-    }, errorResponse);
+      ...errorResponse,
+    };
     // When
     sut = new ErrorHandler(appLogger, responsesBuilder, showErrors, AppError);
     middleware = sut.middleware();
@@ -217,7 +217,7 @@ describe('middlewares/common:errorHandler', () => {
     expect(responsesBuilder.json).toHaveBeenCalledWith(
       response,
       expectedData,
-      errorStatus
+      errorStatus,
     );
     expect(appLogger.error).toHaveBeenCalledTimes(1);
     expect(appLogger.error).toHaveBeenCalledWith(`ERROR: ${error.message}`);
@@ -225,7 +225,7 @@ describe('middlewares/common:errorHandler', () => {
     expect(appLogger.info).toHaveBeenCalledWith(expectedData.stack);
   });
 
-  it('should move to the next middleware if there\'s no error', () => {
+  it("should move to the next middleware if there's no error", () => {
     // Given
     const appLogger = 'appLogger';
     const responsesBuilder = {
@@ -258,7 +258,7 @@ describe('middlewares/common:errorHandler', () => {
       appConfiguration,
     };
     const app = {
-      get: jest.fn((service) => (services[service] || service)),
+      get: jest.fn((service) => services[service] || service),
     };
     let middleware = null;
     let toCompare = null;
@@ -274,7 +274,7 @@ describe('middlewares/common:errorHandler', () => {
       'appLogger',
       'responsesBuilder',
       'showErrors',
-      'AppError'
+      'AppError',
     );
     // Then
     expect(middleware.toString()).toEqual(toCompare.middleware().toString());
@@ -296,7 +296,7 @@ describe('middlewares/common:errorHandler', () => {
       appConfiguration,
     };
     const app = {
-      get: jest.fn((service) => (services[service] || service)),
+      get: jest.fn((service) => services[service] || service),
     };
     let middleware = null;
     let toCompare = null;
@@ -312,7 +312,7 @@ describe('middlewares/common:errorHandler', () => {
       'appLogger',
       'responsesBuilder',
       'showErrors',
-      'AppError'
+      'AppError',
     );
     // Then
     expect(middleware.toString()).toEqual(toCompare.middleware().toString());

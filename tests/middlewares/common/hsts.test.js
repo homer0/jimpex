@@ -1,11 +1,7 @@
-jest.unmock('/src/utils/wrappers');
-jest.unmock('/src/middlewares/common/hsts');
+jest.unmock('../../../src/utils/wrappers');
+jest.unmock('../../../src/middlewares/common/hsts');
 
-require('jasmine-expect');
-const {
-  HSTS,
-  hsts,
-} = require('/src/middlewares/common/hsts');
+const { HSTS, hsts } = require('../../../src/middlewares/common/hsts');
 
 describe('middlewares/common:hsts', () => {
   it('should be instantiated with its default options', () => {
@@ -57,7 +53,7 @@ describe('middlewares/common:hsts', () => {
     expect(setHeader).toHaveBeenCalledTimes(1);
     expect(setHeader).toHaveBeenCalledWith(
       'Strict-Transport-Security',
-      `max-age=${maxAge}; preload`
+      `max-age=${maxAge}; preload`,
     );
     expect(next).toHaveBeenCalledTimes(1);
   });
@@ -83,7 +79,7 @@ describe('middlewares/common:hsts', () => {
     expect(appConfiguration.get).toHaveBeenCalledWith('hsts');
   });
 
-  it('should create a middleware even if the configuration doesn\'t have hsts settings', () => {
+  it("should create a middleware even if the configuration doesn't have hsts settings", () => {
     // Given
     const appConfiguration = {
       get: jest.fn(),
@@ -110,12 +106,12 @@ describe('middlewares/common:hsts', () => {
     expect(setHeader).toHaveBeenCalledTimes(1);
     expect(setHeader).toHaveBeenCalledWith(
       'Strict-Transport-Security',
-      'max-age=31536000; includeSubDomains'
+      'max-age=31536000; includeSubDomains',
     );
     expect(next).toHaveBeenCalledTimes(1);
   });
 
-  it('shouldn\'t return the middleware if the \'enabled\' flag is \'false\'', () => {
+  it("shouldn't return the middleware if the 'enabled' flag is 'false'", () => {
     // Given
     const appConfiguration = {
       get: jest.fn(() => ({
@@ -151,7 +147,7 @@ describe('middlewares/common:hsts', () => {
     expect(setHeader).toHaveBeenCalledTimes(1);
     expect(setHeader).toHaveBeenCalledWith(
       'Strict-Transport-Security',
-      `max-age=${maxAge}`
+      `max-age=${maxAge}`,
     );
     expect(next).toHaveBeenCalledTimes(1);
   });

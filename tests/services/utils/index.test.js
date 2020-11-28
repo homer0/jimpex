@@ -1,27 +1,19 @@
-jest.unmock('/src/utils/wrappers');
-jest.unmock('/src/services/utils');
+jest.unmock('../../../src/services/utils');
+jest.mock('../../../src/utils/wrappers', () => ({
+  providerCreator: jest.fn(() => 'providerCreator'),
+  providers: jest.fn(() => 'providers'),
+}));
 
-require('jasmine-expect');
-const utilsServices = require('/src/services/utils');
+const utils = require('../../../src/services/utils');
+const { providers } = require('../../../src/utils/wrappers');
 
 describe('services:utils', () => {
-  it('should export a method to register all the API services', () => {
-    // Given
-    const app = {
-      register: jest.fn(),
-    };
-    const expectedServices = {
-      ensureBearerToken: expect.any(Function),
-    };
-    const expectedServicesNames = Object.keys(expectedServices);
-    // When
-    utilsServices.register(app);
-    // When/Then
-    expect(app.register).toHaveBeenCalledTimes(expectedServicesNames.length);
-    expectedServicesNames.forEach((service, index) => {
-      const [registeredService] = app.register.mock.calls[index];
-      expect(registeredService).toEqual(expectedServices[service]);
-      expect(registeredService.toString()).toBe(utilsServices[service].toString());
+  it('should export a providers collection with all the utility services', () => {
+    // Given/When/Then
+    expect(utils).toBe('providers');
+    expect(providers).toHaveBeenCalledTimes(1);
+    expect(providers).toHaveBeenCalledWith({
+      ensureBearerToken: 'providerCreator',
     });
   });
 });

@@ -1,13 +1,12 @@
-jest.unmock('/src/utils/functions');
+jest.unmock('../../src/utils/functions');
 
-require('jasmine-expect');
 const {
   createRouteExpression,
   escapeForRegExp,
   removeLeadingSlash,
   removeSlashes,
   removeTrailingSlash,
-} = require('/src/utils/functions');
+} = require('../../src/utils/functions');
 
 describe('utils/functions', () => {
   describe('removeLeadingSlash', () => {
@@ -31,7 +30,7 @@ describe('utils/functions', () => {
       expect(result).toBe(url.substr(3));
     });
 
-    it('shouldn\'t modify a URL that doesn\'t start with a slash', () => {
+    it("shouldn't modify a URL that doesn't start with a slash", () => {
       // Given
       const url = 'my/url';
       let result = null;
@@ -63,7 +62,7 @@ describe('utils/functions', () => {
       expect(result).toBe(url.substr(0, url.length - 3));
     });
 
-    it('shouldn\'t modify a URL that doesn\'t start with a slash', () => {
+    it("shouldn't modify a URL that doesn't start with a slash", () => {
       // Given
       const url = 'my/url';
       let result = null;
@@ -95,7 +94,7 @@ describe('utils/functions', () => {
       expect(result).toBe(url.substr(0, url.length - 1));
     });
 
-    it('shouldn\'t remove slashes from a URL', () => {
+    it("shouldn't remove slashes from a URL", () => {
       // Given
       const url = '/my/url/';
       let result = null;
@@ -129,7 +128,7 @@ describe('utils/functions', () => {
       expression = createRouteExpression(definition);
       result = expression.test(route);
       // Then
-      expect(result).toBeTrue();
+      expect(result).toBe(true);
     });
 
     it('should create a expression that matches the route with a trailing slash', () => {
@@ -142,10 +141,10 @@ describe('utils/functions', () => {
       expression = createRouteExpression(definition, false, true);
       result = expression.test(route);
       // Then
-      expect(result).toBeTrue();
+      expect(result).toBe(true);
     });
 
-    it('should create a expression that doesn\'t matches a route', () => {
+    it("should create a expression that doesn't matches a route", () => {
       // Given
       const definition = '/my-route/:my-param/something/:else/end';
       const route = '/my-route/something/something/something';
@@ -155,7 +154,7 @@ describe('utils/functions', () => {
       expression = createRouteExpression(definition);
       result = expression.test(route);
       // Then
-      expect(result).toBeFalse();
+      expect(result).toBe(false);
     });
   });
 });

@@ -1,13 +1,12 @@
-jest.unmock('/src/utils/functions');
-jest.unmock('/src/utils/wrappers');
-jest.unmock('/src/controllers/utils/gateway');
+jest.unmock('../../../src/utils/functions');
+jest.unmock('../../../src/utils/wrappers');
+jest.unmock('../../../src/controllers/utils/gateway');
 
 const { code: statuses } = require('statuses');
-require('jasmine-expect');
 const {
   GatewayController,
   gatewayController,
-} = require('/src/controllers/utils/gateway');
+} = require('../../../src/controllers/utils/gateway');
 
 describe('controllers/utils:gateway', () => {
   describe('instance', () => {
@@ -24,7 +23,7 @@ describe('controllers/utils:gateway', () => {
       sut = new GatewayController(gatewayConfig, route, http);
       // Then
       expect(sut).toBeInstanceOf(GatewayController);
-      expect(sut.addRoutes).toBeFunction();
+      expect(typeof sut.addRoutes).toBe('function');
       expect(sut.gatewayConfig).toEqual(gatewayConfig);
       expect(sut.options).toEqual({
         root: '',
@@ -32,17 +31,8 @@ describe('controllers/utils:gateway', () => {
         headers: {
           useXForwardedFor: true,
           copyCustomHeaders: true,
-          copy: [
-            'authorization',
-            'content-type',
-            'referer',
-            'user-agent',
-          ],
-          remove: [
-            'server',
-            'x-powered-by',
-            'content-encoding',
-          ],
+          copy: ['authorization', 'content-type', 'referer', 'user-agent'],
+          remove: ['server', 'x-powered-by', 'content-encoding'],
         },
       });
     });
@@ -85,8 +75,9 @@ describe('controllers/utils:gateway', () => {
       const route = '/my-gateway';
       const http = 'http';
       // When/Then
-      expect(() => new GatewayController(gatewayConfig, route, http))
-      .toThrow(/You can't have two gateway endpoints to the same path/i);
+      expect(() => new GatewayController(gatewayConfig, route, http)).toThrow(
+        /You can't have two gateway endpoints to the same path/i,
+      );
     });
 
     it('should create a configuration for an API client', () => {
@@ -183,10 +174,9 @@ describe('controllers/utils:gateway', () => {
         expect.any(Function),
       ]);
       expect(router.post).toHaveBeenCalledTimes(1);
-      expect(router.post).toHaveBeenCalledWith(
-        gatewayConfig.gateway.endpointTwo.path,
-        [expect.any(Function)]
-      );
+      expect(router.post).toHaveBeenCalledWith(gatewayConfig.gateway.endpointTwo.path, [
+        expect.any(Function),
+      ]);
     });
 
     it('should add the gateway routes to the router with a custom root', () => {
@@ -215,15 +205,17 @@ describe('controllers/utils:gateway', () => {
       sut.addRoutes(router);
       // Then
       expect(router.all).toHaveBeenCalledTimes(1);
-      expect(router.all).toHaveBeenCalledWith(
-        `/${root}${gatewayConfig.gateway.endpointOne}`,
-        [expect.any(Function)]
-      );
+      expect(
+        router.all,
+      ).toHaveBeenCalledWith(`/${root}${gatewayConfig.gateway.endpointOne}`, [
+        expect.any(Function),
+      ]);
       expect(router.post).toHaveBeenCalledTimes(1);
-      expect(router.post).toHaveBeenCalledWith(
-        `/${root}${gatewayConfig.gateway.endpointTwo.path}`,
-        [expect.any(Function)]
-      );
+      expect(
+        router.post,
+      ).toHaveBeenCalledWith(`/${root}${gatewayConfig.gateway.endpointTwo.path}`, [
+        expect.any(Function),
+      ]);
     });
 
     it('should add the gateway routes to the router with a custom middleware', () => {
@@ -256,16 +248,13 @@ describe('controllers/utils:gateway', () => {
         expect.any(Function),
       ]);
       expect(router.post).toHaveBeenCalledTimes(1);
-      expect(router.post).toHaveBeenCalledWith(
-        gatewayConfig.gateway.endpointTwo.path,
-        [
-          middleware,
-          expect.any(Function),
-        ]
-      );
+      expect(router.post).toHaveBeenCalledWith(gatewayConfig.gateway.endpointTwo.path, [
+        middleware,
+        expect.any(Function),
+      ]);
     });
 
-    it('should use `all` when an endpoint doesn\'t have a valid HTTP method', () => {
+    it("should use `all` when an endpoint doesn't have a valid HTTP method", () => {
       // Given
       const gatewayConfig = {
         url: 'http://my-api.com',
@@ -287,15 +276,14 @@ describe('controllers/utils:gateway', () => {
       sut.addRoutes(router);
       // Then
       expect(router.all).toHaveBeenCalledTimes(1);
-      expect(router.all).toHaveBeenCalledWith(
-        gatewayConfig.gateway.endpointOne.path,
-        [expect.any(Function)]
-      );
+      expect(router.all).toHaveBeenCalledWith(gatewayConfig.gateway.endpointOne.path, [
+        expect.any(Function),
+      ]);
     });
   });
 
   describe('middleware', () => {
-    it('should stream a gateway request response', () => {
+    it('should stream a gateway request response', async () => {
       // Given
       const gatewayConfig = {
         url: 'http://my-api.com',
@@ -310,10 +298,7 @@ describe('controllers/utils:gateway', () => {
           pipe: jest.fn(() => httpResponse.body),
           on: jest.fn(),
         },
-        headers: [
-          'content-type',
-          'server',
-        ],
+        headers: ['content-type', 'server'],
       };
       const ip = '25.09.2015';
       const customHeaderName = 'x-custom-header';
@@ -354,37 +339,35 @@ describe('controllers/utils:gateway', () => {
       sut = new GatewayController(gatewayConfig, route, http, options);
       sut.addRoutes(router);
       [[, [middleware]]] = router.all.mock.calls;
-      return middleware(request, response, next)
-      .then(() => {
-        // Then
-        expect(http.getCustomHeadersFromRequest).toHaveBeenCalledTimes(1);
-        expect(http.getCustomHeadersFromRequest).toHaveBeenCalledWith(request);
-        expect(http.getIPFromRequest).toHaveBeenCalledTimes(1);
-        expect(http.getIPFromRequest).toHaveBeenCalledWith(request);
-        expect(http.fetch).toHaveBeenCalledTimes(1);
-        expect(http.fetch).toHaveBeenCalledWith(
-          `${gatewayConfig.url}/${gatewayConfig.gateway.endpointOne}`,
-          {
-            method: request.method,
-            headers: {
-              [headerToCopy]: [headerToCopyValue],
-              [customHeaderName]: customHeaderValue,
-              'x-forwarded-for': ip,
-            },
-          }
-        );
-        expect(response.status).toHaveBeenCalledTimes(1);
-        expect(response.status).toHaveBeenCalledWith(httpResponse.status);
-        expect(response.setHeader).toHaveBeenCalledTimes(1);
-        expect(response.setHeader).toHaveBeenCalledWith(0, httpResponse.headers[0]);
-        expect(httpResponse.body.pipe).toHaveBeenCalledTimes(1);
-        expect(httpResponse.body.pipe).toHaveBeenCalledWith(response);
-        expect(httpResponse.body.on).toHaveBeenCalledTimes(1);
-        expect(httpResponse.body.on).toHaveBeenCalledWith('error', expect.any(Function));
-      });
+      await middleware(request, response, next);
+      // Then
+      expect(http.getCustomHeadersFromRequest).toHaveBeenCalledTimes(1);
+      expect(http.getCustomHeadersFromRequest).toHaveBeenCalledWith(request);
+      expect(http.getIPFromRequest).toHaveBeenCalledTimes(1);
+      expect(http.getIPFromRequest).toHaveBeenCalledWith(request);
+      expect(http.fetch).toHaveBeenCalledTimes(1);
+      expect(http.fetch).toHaveBeenCalledWith(
+        `${gatewayConfig.url}/${gatewayConfig.gateway.endpointOne}`,
+        {
+          method: request.method,
+          headers: {
+            [headerToCopy]: [headerToCopyValue],
+            [customHeaderName]: customHeaderValue,
+            'x-forwarded-for': ip,
+          },
+        },
+      );
+      expect(response.status).toHaveBeenCalledTimes(1);
+      expect(response.status).toHaveBeenCalledWith(httpResponse.status);
+      expect(response.setHeader).toHaveBeenCalledTimes(1);
+      expect(response.setHeader).toHaveBeenCalledWith(0, httpResponse.headers[0]);
+      expect(httpResponse.body.pipe).toHaveBeenCalledTimes(1);
+      expect(httpResponse.body.pipe).toHaveBeenCalledWith(response);
+      expect(httpResponse.body.on).toHaveBeenCalledTimes(1);
+      expect(httpResponse.body.on).toHaveBeenCalledWith('error', expect.any(Function));
     });
 
-    it('shouldn\'t add custom headers to the request', () => {
+    it("shouldn't add custom headers to the request", async () => {
       // Given
       const gatewayConfig = {
         url: 'http://my-api.com',
@@ -399,10 +382,7 @@ describe('controllers/utils:gateway', () => {
           pipe: jest.fn(() => httpResponse.body),
           on: jest.fn(),
         },
-        headers: [
-          'content-type',
-          'server',
-        ],
+        headers: ['content-type', 'server'],
       };
       const http = {
         fetch: jest.fn(() => Promise.resolve(httpResponse)),
@@ -434,23 +414,21 @@ describe('controllers/utils:gateway', () => {
       sut = new GatewayController(gatewayConfig, route, http, options);
       sut.addRoutes(router);
       [[, [middleware]]] = router.all.mock.calls;
-      return middleware(request, response, next)
-      .then(() => {
-        // Then
-        expect(http.getCustomHeadersFromRequest).toHaveBeenCalledTimes(0);
-        expect(http.getIPFromRequest).toHaveBeenCalledTimes(0);
-        expect(http.fetch).toHaveBeenCalledTimes(1);
-        expect(http.fetch).toHaveBeenCalledWith(
-          `${gatewayConfig.url}/${gatewayConfig.gateway.endpointOne}`,
-          {
-            method: request.method,
-            headers: {},
-          }
-        );
-      });
+      await middleware(request, response, next);
+      // Then
+      expect(http.getCustomHeadersFromRequest).toHaveBeenCalledTimes(0);
+      expect(http.getIPFromRequest).toHaveBeenCalledTimes(0);
+      expect(http.fetch).toHaveBeenCalledTimes(1);
+      expect(http.fetch).toHaveBeenCalledWith(
+        `${gatewayConfig.url}/${gatewayConfig.gateway.endpointOne}`,
+        {
+          method: request.method,
+          headers: {},
+        },
+      );
     });
 
-    it('should stream a gateway request that includes a body', () => {
+    it('should stream a gateway request that includes a body', async () => {
       // Given
       const gatewayConfig = {
         url: 'http://my-api.com',
@@ -501,24 +479,22 @@ describe('controllers/utils:gateway', () => {
       sut = new GatewayController(gatewayConfig, route, http, options);
       sut.addRoutes(router);
       [[, [middleware]]] = router.all.mock.calls;
-      return middleware(request, response, next)
-      .then(() => {
-        // Then
-        expect(http.fetch).toHaveBeenCalledTimes(1);
-        expect(http.fetch).toHaveBeenCalledWith(
-          `${gatewayConfig.url}/${gatewayConfig.gateway.endpointOne}`,
-          {
-            method: request.method,
-            headers: {
-              [headerToCopy]: [headerToCopyValue],
-            },
-            body: JSON.stringify(request.body),
-          }
-        );
-      });
+      await middleware(request, response, next);
+      // Then
+      expect(http.fetch).toHaveBeenCalledTimes(1);
+      expect(http.fetch).toHaveBeenCalledWith(
+        `${gatewayConfig.url}/${gatewayConfig.gateway.endpointOne}`,
+        {
+          method: request.method,
+          headers: {
+            [headerToCopy]: [headerToCopyValue],
+          },
+          body: JSON.stringify(request.body),
+        },
+      );
     });
 
-    it('should add the content type for JSON when there\'s a body but no header', () => {
+    it("should add the content type for JSON when there's a body but no header", async () => {
       // Given
       const gatewayConfig = {
         url: 'http://my-api.com',
@@ -565,24 +541,22 @@ describe('controllers/utils:gateway', () => {
       sut = new GatewayController(gatewayConfig, route, http, options);
       sut.addRoutes(router);
       [[, [middleware]]] = router.all.mock.calls;
-      return middleware(request, response, next)
-      .then(() => {
-        // Then
-        expect(http.fetch).toHaveBeenCalledTimes(1);
-        expect(http.fetch).toHaveBeenCalledWith(
-          `${gatewayConfig.url}/${gatewayConfig.gateway.endpointOne}`,
-          {
-            method: request.method,
-            headers: {
-              'content-type': 'application/json',
-            },
-            body: JSON.stringify(request.body),
-          }
-        );
-      });
+      await middleware(request, response, next);
+      // Then
+      expect(http.fetch).toHaveBeenCalledTimes(1);
+      expect(http.fetch).toHaveBeenCalledWith(
+        `${gatewayConfig.url}/${gatewayConfig.gateway.endpointOne}`,
+        {
+          method: request.method,
+          headers: {
+            'content-type': 'application/json',
+          },
+          body: JSON.stringify(request.body),
+        },
+      );
     });
 
-    it('should call the next middleware if the streaming fails', () => {
+    it('should call the next middleware if the streaming fails', async () => {
       // Given
       const gatewayConfig = {
         url: 'http://my-api.com',
@@ -631,28 +605,26 @@ describe('controllers/utils:gateway', () => {
       sut = new GatewayController(gatewayConfig, route, http, options);
       sut.addRoutes(router);
       [[, [middleware]]] = router.all.mock.calls;
-      return middleware(request, response, next)
-      .then(() => {
-        [[, onError]] = httpResponse.body.on.mock.calls;
-        onError(error);
-        // Then
-        expect(http.fetch).toHaveBeenCalledTimes(1);
-        expect(http.fetch).toHaveBeenCalledWith(
-          `${gatewayConfig.url}/${gatewayConfig.gateway.endpointOne}`,
-          {
-            method: request.method,
-            headers: {
-              'content-type': 'application/json',
-            },
-            body: JSON.stringify(request.body),
-          }
-        );
-        expect(next).toHaveBeenCalledTimes(1);
-        expect(next).toHaveBeenCalledWith(error);
-      });
+      await middleware(request, response, next);
+      [[, onError]] = httpResponse.body.on.mock.calls;
+      onError(error);
+      // Then
+      expect(http.fetch).toHaveBeenCalledTimes(1);
+      expect(http.fetch).toHaveBeenCalledWith(
+        `${gatewayConfig.url}/${gatewayConfig.gateway.endpointOne}`,
+        {
+          method: request.method,
+          headers: {
+            'content-type': 'application/json',
+          },
+          body: JSON.stringify(request.body),
+        },
+      );
+      expect(next).toHaveBeenCalledTimes(1);
+      expect(next).toHaveBeenCalledWith(error);
     });
 
-    it('should call the next middleware if the request fails', () => {
+    it('should call the next middleware if the request fails', async () => {
       // Given
       const gatewayConfig = {
         url: 'http://my-api.com',
@@ -692,17 +664,15 @@ describe('controllers/utils:gateway', () => {
       sut = new GatewayController(gatewayConfig, route, http, options);
       sut.addRoutes(router);
       [[, [middleware]]] = router.all.mock.calls;
-      return middleware(request, response, next)
-      .then(() => {
-        // Then
-        expect(next).toHaveBeenCalledTimes(1);
-        expect(next).toHaveBeenCalledWith(error);
-      });
+      await middleware(request, response, next);
+      // Then
+      expect(next).toHaveBeenCalledTimes(1);
+      expect(next).toHaveBeenCalledWith(error);
     });
   });
 
   describe('middleware with helper', () => {
-    it('should be able to modify the request', () => {
+    it('should be able to modify the request', async () => {
       // Given
       const gatewayConfig = {
         url: 'http://my-api.com',
@@ -717,10 +687,7 @@ describe('controllers/utils:gateway', () => {
           pipe: jest.fn(() => httpResponse.body),
           on: jest.fn(),
         },
-        headers: [
-          'content-type',
-          'server',
-        ],
+        headers: ['content-type', 'server'],
       };
       const ip = '25.09.2015';
       const customHeaderName = 'x-custom-header';
@@ -739,7 +706,8 @@ describe('controllers/utils:gateway', () => {
         },
       };
       const helper = {
-        reduceEndpointRequest: jest.fn((request) => Object.assign({}, request, {
+        reduceEndpointRequest: jest.fn((request) => ({
+          ...request,
           url: `${request.url}-by-helper`,
           options: request.options,
         })),
@@ -767,58 +735,56 @@ describe('controllers/utils:gateway', () => {
       sut = new GatewayController(gatewayConfig, route, http, options, helper);
       sut.addRoutes(router);
       [[, [middleware]]] = router.all.mock.calls;
-      return middleware(request, response, next)
-      .then(() => {
-        // Then
-        expect(http.getCustomHeadersFromRequest).toHaveBeenCalledTimes(1);
-        expect(http.getCustomHeadersFromRequest).toHaveBeenCalledWith(request);
-        expect(http.getIPFromRequest).toHaveBeenCalledTimes(1);
-        expect(http.getIPFromRequest).toHaveBeenCalledWith(request);
-        expect(helper.reduceEndpointRequest).toHaveBeenCalledTimes(1);
-        expect(helper.reduceEndpointRequest).toHaveBeenCalledWith(
-          {
-            url: `${gatewayConfig.url}/${gatewayConfig.gateway.endpointOne}`,
-            options: {
-              method: request.method,
-              headers: {
-                [headerToCopy]: [headerToCopyValue],
-                [customHeaderName]: customHeaderValue,
-                'x-forwarded-for': ip,
-              },
-            },
-          },
-          {
-            name: 'endpointOne',
-            settings: gatewayConfig.gateway.endpointOne,
-          },
-          request,
-          response,
-          next
-        );
-        expect(http.fetch).toHaveBeenCalledTimes(1);
-        expect(http.fetch).toHaveBeenCalledWith(
-          `${gatewayConfig.url}/${gatewayConfig.gateway.endpointOne}-by-helper`,
-          {
+      await middleware(request, response, next);
+      // Then
+      expect(http.getCustomHeadersFromRequest).toHaveBeenCalledTimes(1);
+      expect(http.getCustomHeadersFromRequest).toHaveBeenCalledWith(request);
+      expect(http.getIPFromRequest).toHaveBeenCalledTimes(1);
+      expect(http.getIPFromRequest).toHaveBeenCalledWith(request);
+      expect(helper.reduceEndpointRequest).toHaveBeenCalledTimes(1);
+      expect(helper.reduceEndpointRequest).toHaveBeenCalledWith(
+        {
+          url: `${gatewayConfig.url}/${gatewayConfig.gateway.endpointOne}`,
+          options: {
             method: request.method,
             headers: {
               [headerToCopy]: [headerToCopyValue],
               [customHeaderName]: customHeaderValue,
               'x-forwarded-for': ip,
             },
-          }
-        );
-        expect(response.status).toHaveBeenCalledTimes(1);
-        expect(response.status).toHaveBeenCalledWith(httpResponse.status);
-        expect(response.setHeader).toHaveBeenCalledTimes(1);
-        expect(response.setHeader).toHaveBeenCalledWith(0, httpResponse.headers[0]);
-        expect(httpResponse.body.pipe).toHaveBeenCalledTimes(1);
-        expect(httpResponse.body.pipe).toHaveBeenCalledWith(response);
-        expect(httpResponse.body.on).toHaveBeenCalledTimes(1);
-        expect(httpResponse.body.on).toHaveBeenCalledWith('error', expect.any(Function));
-      });
+          },
+        },
+        {
+          name: 'endpointOne',
+          settings: gatewayConfig.gateway.endpointOne,
+        },
+        request,
+        response,
+        next,
+      );
+      expect(http.fetch).toHaveBeenCalledTimes(1);
+      expect(http.fetch).toHaveBeenCalledWith(
+        `${gatewayConfig.url}/${gatewayConfig.gateway.endpointOne}-by-helper`,
+        {
+          method: request.method,
+          headers: {
+            [headerToCopy]: [headerToCopyValue],
+            [customHeaderName]: customHeaderValue,
+            'x-forwarded-for': ip,
+          },
+        },
+      );
+      expect(response.status).toHaveBeenCalledTimes(1);
+      expect(response.status).toHaveBeenCalledWith(httpResponse.status);
+      expect(response.setHeader).toHaveBeenCalledTimes(1);
+      expect(response.setHeader).toHaveBeenCalledWith(0, httpResponse.headers[0]);
+      expect(httpResponse.body.pipe).toHaveBeenCalledTimes(1);
+      expect(httpResponse.body.pipe).toHaveBeenCalledWith(response);
+      expect(httpResponse.body.on).toHaveBeenCalledTimes(1);
+      expect(httpResponse.body.on).toHaveBeenCalledWith('error', expect.any(Function));
     });
 
-    it('should be able to modify the response', () => {
+    it('should be able to modify the response', async () => {
       // Given
       const gatewayConfig = {
         url: 'http://my-api.com',
@@ -833,10 +799,7 @@ describe('controllers/utils:gateway', () => {
           pipe: jest.fn(() => httpResponse.body),
           on: jest.fn(),
         },
-        headers: [
-          'content-type',
-          'server',
-        ],
+        headers: ['content-type', 'server'],
       };
       const http = {
         fetch: jest.fn(() => Promise.resolve(httpResponse)),
@@ -848,7 +811,8 @@ describe('controllers/utils:gateway', () => {
         },
       };
       const helper = {
-        reduceEndpointResponse: jest.fn((response) => Object.assign({}, response, {
+        reduceEndpointResponse: jest.fn((response) => ({
+          ...response,
           status: statuses.conflict,
         })),
       };
@@ -871,26 +835,24 @@ describe('controllers/utils:gateway', () => {
       sut = new GatewayController(gatewayConfig, route, http, options, helper);
       sut.addRoutes(router);
       [[, [middleware]]] = router.all.mock.calls;
-      return middleware(request, response, next)
-      .then(() => {
-        // Then
-        expect(helper.reduceEndpointResponse).toHaveBeenCalledTimes(1);
-        expect(helper.reduceEndpointResponse).toHaveBeenCalledWith(
-          httpResponse,
-          {
-            name: 'endpointOne',
-            settings: gatewayConfig.gateway.endpointOne,
-          },
-          request,
-          response,
-          next
-        );
-        expect(response.status).toHaveBeenCalledTimes(1);
-        expect(response.status).toHaveBeenCalledWith(statuses.conflict);
-      });
+      await middleware(request, response, next);
+      // Then
+      expect(helper.reduceEndpointResponse).toHaveBeenCalledTimes(1);
+      expect(helper.reduceEndpointResponse).toHaveBeenCalledWith(
+        httpResponse,
+        {
+          name: 'endpointOne',
+          settings: gatewayConfig.gateway.endpointOne,
+        },
+        request,
+        response,
+        next,
+      );
+      expect(response.status).toHaveBeenCalledTimes(1);
+      expect(response.status).toHaveBeenCalledWith(statuses.conflict);
     });
 
-    it('should be able to handle the response', () => {
+    it('should be able to handle the response', async () => {
       // Given
       const gatewayConfig = {
         url: 'http://my-api.com',
@@ -905,10 +867,7 @@ describe('controllers/utils:gateway', () => {
           pipe: jest.fn(() => httpResponse.body),
           on: jest.fn(),
         },
-        headers: [
-          'content-type',
-          'server',
-        ],
+        headers: ['content-type', 'server'],
       };
       const http = {
         fetch: jest.fn(() => Promise.resolve(httpResponse)),
@@ -942,35 +901,33 @@ describe('controllers/utils:gateway', () => {
       sut = new GatewayController(gatewayConfig, route, http, options, helper);
       sut.addRoutes(router);
       [[, [middleware]]] = router.all.mock.calls;
-      return middleware(request, response, next)
-      .then(() => {
-        // Then
-        expect(helper.shouldStreamEndpointResponse).toHaveBeenCalledTimes(1);
-        expect(helper.shouldStreamEndpointResponse).toHaveBeenCalledWith(
-          httpResponse,
-          {
-            name: 'endpointOne',
-            settings: gatewayConfig.gateway.endpointOne,
-          },
-          request,
-          response,
-          next
-        );
-        expect(helper.handleEndpointResponse).toHaveBeenCalledTimes(1);
-        expect(helper.handleEndpointResponse).toHaveBeenCalledWith(
-          httpResponse,
-          {
-            name: 'endpointOne',
-            settings: gatewayConfig.gateway.endpointOne,
-          },
-          request,
-          response,
-          next
-        );
-      });
+      await middleware(request, response, next);
+      // Then
+      expect(helper.shouldStreamEndpointResponse).toHaveBeenCalledTimes(1);
+      expect(helper.shouldStreamEndpointResponse).toHaveBeenCalledWith(
+        httpResponse,
+        {
+          name: 'endpointOne',
+          settings: gatewayConfig.gateway.endpointOne,
+        },
+        request,
+        response,
+        next,
+      );
+      expect(helper.handleEndpointResponse).toHaveBeenCalledTimes(1);
+      expect(helper.handleEndpointResponse).toHaveBeenCalledWith(
+        httpResponse,
+        {
+          name: 'endpointOne',
+          settings: gatewayConfig.gateway.endpointOne,
+        },
+        request,
+        response,
+        next,
+      );
     });
 
-    it('should be able to handle an error', () => {
+    it('should be able to handle an error', async () => {
       // Given
       const gatewayConfig = {
         url: 'http://my-api.com',
@@ -1013,25 +970,23 @@ describe('controllers/utils:gateway', () => {
       sut = new GatewayController(gatewayConfig, route, http, options, helper);
       sut.addRoutes(router);
       [[, [middleware]]] = router.all.mock.calls;
-      return middleware(request, response, next)
-      .then(() => {
-        // Then
-        expect(helper.handleEndpointError).toHaveBeenCalledTimes(1);
-        expect(helper.handleEndpointError).toHaveBeenCalledWith(
-          error,
-          {
-            name: 'endpointOne',
-            settings: gatewayConfig.gateway.endpointOne,
-          },
-          request,
-          response,
-          next
-        );
-      });
+      await middleware(request, response, next);
+      // Then
+      expect(helper.handleEndpointError).toHaveBeenCalledTimes(1);
+      expect(helper.handleEndpointError).toHaveBeenCalledWith(
+        error,
+        {
+          name: 'endpointOne',
+          settings: gatewayConfig.gateway.endpointOne,
+        },
+        request,
+        response,
+        next,
+      );
     });
   });
 
-  describe('shorthand', () => {
+  describe('provider', () => {
     it('should register the routes and return the router', () => {
       // Given
       const gatewayConfig = {
@@ -1052,19 +1007,17 @@ describe('controllers/utils:gateway', () => {
       };
       const app = {
         get: jest.fn((name) => services[name] || name),
-        set: jest.fn(),
+        set: jest.fn((name, fn) => {
+          services[name] = fn();
+        }),
         try: jest.fn(),
       };
       const route = '/my-gateway';
       let result = null;
       let service = null;
-      const expectedGetServices = [
-        'appConfiguration',
-        'http',
-        'router',
-      ];
+      const expectedGetServices = ['appConfiguration', 'http', 'apiGateway', 'router'];
       // When
-      result = gatewayController.connect(app, route);
+      result = gatewayController.register(app, route).connect();
       [[, service]] = app.set.mock.calls;
       // Then
       expect(result).toBe(router);
@@ -1082,7 +1035,7 @@ describe('controllers/utils:gateway', () => {
       expect(app.try).toHaveBeenCalledWith('apiGatewayHelper');
       expect(app.set).toHaveBeenCalledTimes(1);
       expect(app.set).toHaveBeenCalledWith('apiGateway', expect.any(Function));
-      expect(service).toBeFunction();
+      expect(typeof service).toBe('function');
       expect(service()).toBeInstanceOf(GatewayController);
     });
 
@@ -1106,22 +1059,25 @@ describe('controllers/utils:gateway', () => {
       };
       const app = {
         get: jest.fn((name) => services[name] || name),
-        set: jest.fn(),
+        set: jest.fn((name, fn) => {
+          services[name] = fn();
+        }),
         try: jest.fn(),
       };
       const route = '/my-gateway';
       let result = null;
       let service = null;
-      const expectedGetServices = [
-        'appConfiguration',
-        'http',
-        'router',
-      ];
       const options = {
         serviceName: 'myService',
       };
+      const expectedGetServices = [
+        'appConfiguration',
+        'http',
+        `${options.serviceName}Gateway`,
+        'router',
+      ];
       // When
-      result = gatewayController(options).connect(app, route);
+      result = gatewayController(options).register(app, route).connect();
       [[, service]] = app.set.mock.calls;
       // Then
       expect(result).toBe(router);
@@ -1138,8 +1094,11 @@ describe('controllers/utils:gateway', () => {
       expect(app.try).toHaveBeenCalledTimes(1);
       expect(app.try).toHaveBeenCalledWith(`${options.serviceName}GatewayHelper`);
       expect(app.set).toHaveBeenCalledTimes(1);
-      expect(app.set).toHaveBeenCalledWith(`${options.serviceName}Gateway`, expect.any(Function));
-      expect(service).toBeFunction();
+      expect(app.set).toHaveBeenCalledWith(
+        `${options.serviceName}Gateway`,
+        expect.any(Function),
+      );
+      expect(typeof service).toBe('function');
       expect(service()).toBeInstanceOf(GatewayController);
     });
 
@@ -1163,24 +1122,27 @@ describe('controllers/utils:gateway', () => {
       };
       const app = {
         get: jest.fn((name) => services[name] || name),
-        set: jest.fn(),
+        set: jest.fn((name, fn) => {
+          services[name] = fn();
+        }),
         try: jest.fn(),
       };
       const route = '/my-gateway';
       let result = null;
       let service = null;
-      const expectedGetServices = [
-        'appConfiguration',
-        'http',
-        'router',
-      ];
       const options = {
         serviceName: 'myServiceGateway',
         configurationSetting: 'myConfigSetting',
         helperServiceName: 'myGatewayHelper',
       };
+      const expectedGetServices = [
+        'appConfiguration',
+        'http',
+        options.serviceName,
+        'router',
+      ];
       // When
-      result = gatewayController(options).connect(app, route);
+      result = gatewayController(options).register(app, route).connect();
       [[, service]] = app.set.mock.calls;
       // Then
       expect(result).toBe(router);
@@ -1198,7 +1160,7 @@ describe('controllers/utils:gateway', () => {
       expect(app.try).toHaveBeenCalledWith(options.helperServiceName);
       expect(app.set).toHaveBeenCalledTimes(1);
       expect(app.set).toHaveBeenCalledWith(options.serviceName, expect.any(Function));
-      expect(service).toBeFunction();
+      expect(typeof service).toBe('function');
       expect(service()).toBeInstanceOf(GatewayController);
     });
 
@@ -1222,24 +1184,27 @@ describe('controllers/utils:gateway', () => {
       };
       const app = {
         get: jest.fn((name) => services[name] || name),
-        set: jest.fn(),
+        set: jest.fn((name, fn) => {
+          services[name] = fn();
+        }),
         try: jest.fn(),
       };
       const route = '/my-gateway';
       let result = null;
       let service = null;
-      const expectedGetServices = [
-        'appConfiguration',
-        'http',
-        'router',
-      ];
       const options = {
         serviceName: 'myServiceGateway',
         configurationSetting: 'myConfigSetting',
         helperServiceName: null,
       };
+      const expectedGetServices = [
+        'appConfiguration',
+        'http',
+        options.serviceName,
+        'router',
+      ];
       // When
-      result = gatewayController(options).connect(app, route);
+      result = gatewayController(options).register(app, route).connect();
       [[, service]] = app.set.mock.calls;
       // Then
       expect(result).toBe(router);
@@ -1256,7 +1221,7 @@ describe('controllers/utils:gateway', () => {
       expect(app.try).toHaveBeenCalledTimes(0);
       expect(app.set).toHaveBeenCalledTimes(1);
       expect(app.set).toHaveBeenCalledWith(options.serviceName, expect.any(Function));
-      expect(service).toBeFunction();
+      expect(typeof service).toBe('function');
       expect(service()).toBeInstanceOf(GatewayController);
     });
 
@@ -1280,16 +1245,13 @@ describe('controllers/utils:gateway', () => {
       };
       const app = {
         get: jest.fn((name) => services[name] || name),
-        set: jest.fn(),
+        set: jest.fn((name, fn) => {
+          services[name] = fn();
+        }),
         try: jest.fn(),
       };
       const route = '/my-gateway';
       let result = null;
-      const options = {
-        serviceName: 'myServiceGateway',
-        configurationSetting: 'myConfigSetting',
-        helperServiceName: null,
-      };
       const normalMiddleware = 'middlewareOne';
       const jimpexMiddlewareName = 'middlewareTwo';
       const jimpexMiddleware = {
@@ -1297,8 +1259,14 @@ describe('controllers/utils:gateway', () => {
       };
       const middlewares = [normalMiddleware, jimpexMiddleware];
       const middlewareGenerator = jest.fn(() => middlewares);
+      const options = {
+        serviceName: 'myServiceGateway',
+        configurationSetting: 'myConfigSetting',
+        helperServiceName: null,
+        middlewares: middlewareGenerator,
+      };
       // When
-      result = gatewayController(options, middlewareGenerator).connect(app, route);
+      result = gatewayController(options).register(app, route).connect();
       // Then
       expect(result).toBe(router);
       expect(router.all).toHaveBeenCalledTimes(1);

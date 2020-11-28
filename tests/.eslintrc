@@ -1,9 +1,13 @@
 {
   "root": true,
-  "plugins": ["homer0"],
-  "extends": ["plugin:homer0/jest"],
+  "plugins": ["@homer0"],
+  "extends": ["plugin:@homer0/jest-with-prettier"],
   "globals": {
     "process": true,
     "module": true
+  },
+  "rules": {
+    "global-require": "off",
+    "max-classes-per-file": "off"
   }
 }

@@ -1,11 +1,7 @@
-jest.unmock('/src/utils/wrappers');
-jest.unmock('/src/middlewares/common/forceHTTPS');
+jest.unmock('../../../src/utils/wrappers');
+jest.unmock('../../../src/middlewares/common/forceHTTPS');
 
-require('jasmine-expect');
-const {
-  ForceHTTPS,
-  forceHTTPS,
-} = require('/src/middlewares/common/forceHTTPS');
+const { ForceHTTPS, forceHTTPS } = require('../../../src/middlewares/common/forceHTTPS');
 
 describe('middlewares/common:forceHTTPS', () => {
   it('should be instantiated with its default options', () => {
@@ -15,7 +11,7 @@ describe('middlewares/common:forceHTTPS', () => {
     sut = new ForceHTTPS();
     // Then
     expect(sut).toBeInstanceOf(ForceHTTPS);
-    expect(sut.ignoredRoutes).toBeArray();
+    expect(sut.ignoredRoutes).toEqual([expect.any(RegExp)]);
   });
 
   it('should be instantiated with a custom expression for ignored files', () => {
@@ -56,11 +52,13 @@ describe('middlewares/common:forceHTTPS', () => {
       expect(request.get).toHaveBeenCalledWith(prop);
     });
     expect(response.redirect).toHaveBeenCalledTimes(1);
-    expect(response.redirect).toHaveBeenCalledWith(`https://${request.Host}${request.url}`);
+    expect(response.redirect).toHaveBeenCalledWith(
+      `https://${request.Host}${request.url}`,
+    );
     expect(next).toHaveBeenCalledTimes(0);
   });
 
-  it('shouldn\'t redirect if the request is already on HTTPS', () => {
+  it("shouldn't redirect if the request is already on HTTPS", () => {
     // Given
     const request = {
       secure: true,
@@ -86,7 +84,7 @@ describe('middlewares/common:forceHTTPS', () => {
     expect(next).toHaveBeenCalledTimes(1);
   });
 
-  it('shouldn\'t redirect if the request matches one of the ignored routes', () => {
+  it("shouldn't redirect if the request matches one of the ignored routes", () => {
     // Given
     const ignoredRoutes = [/^\/index\.html$/];
     const request = {
@@ -127,13 +125,11 @@ describe('middlewares/common:forceHTTPS', () => {
       appConfiguration,
     };
     const app = {
-      get: jest.fn((service) => (services[service] || service)),
+      get: jest.fn((service) => services[service] || service),
     };
     let middleware = null;
     let toCompare = null;
-    const expectedGets = [
-      'appConfiguration',
-    ];
+    const expectedGets = ['appConfiguration'];
     // When
     middleware = forceHTTPS.connect(app);
     toCompare = new ForceHTTPS();
@@ -147,7 +143,7 @@ describe('middlewares/common:forceHTTPS', () => {
     expect(appConfiguration.get).toHaveBeenCalledWith('forceHTTPS');
   });
 
-  it('shouldn\'t return the middleware if the `forceHTTPS` configuration flag is `false`', () => {
+  it("shouldn't return the middleware if the `forceHTTPS` configuration flag is `false`", () => {
     // Given
     const appConfiguration = {
       forceHTTPS: false,
@@ -157,14 +153,12 @@ describe('middlewares/common:forceHTTPS', () => {
       appConfiguration,
     };
     const app = {
-      get: jest.fn((service) => (services[service] || service)),
+      get: jest.fn((service) => services[service] || service),
     };
     let middleware = null;
-    const expectedGets = [
-      'appConfiguration',
-    ];
+    const expectedGets = ['appConfiguration'];
     // When
-    middleware = forceHTTPS().connect(app);
+    middleware = forceHTTPS.connect(app);
     // Then
     expect(middleware).toBeNull();
     expect(app.get).toHaveBeenCalledTimes(expectedGets.length);
@@ -173,5 +167,39 @@ describe('middlewares/common:forceHTTPS', () => {
     });
     expect(appConfiguration.get).toHaveBeenCalledTimes(1);
     expect(appConfiguration.get).toHaveBeenCalledWith('forceHTTPS');
+  });
+
+  it('should support custom options on its wrapper', () => {
+    // Given
+    const appConfiguration = {
+      forceHTTPS: true,
+      get: jest.fn(() => appConfiguration.forceHTTPS),
+    };
+    const services = {
+      appConfiguration,
+    };
+    const app = {
+      get: jest.fn((service) => services[service] || service),
+    };
+    const ignoredRoutes = [/^\/index\.html$/];
+    const request = {
+      secure: false,
+      'X-Forwarded-Proto': 'http',
+      Host: 'jimpex.github.io',
+      get: jest.fn((prop) => request[prop]),
+      url: '/index.html',
+      originalUrl: '/index.html',
+    };
+    const response = {
+      redirect: jest.fn(),
+    };
+    const next = jest.fn();
+    let middleware = null;
+    // When
+    middleware = forceHTTPS({ ignoredRoutes }).connect(app);
+    middleware(request, response, next);
+    // Then
+    expect(response.redirect).toHaveBeenCalledTimes(0);
+    expect(next).toHaveBeenCalledTimes(1);
   });
 });

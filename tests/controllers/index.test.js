@@ -1,20 +1,20 @@
-jest.unmock('/src/utils/wrappers');
-jest.unmock('/src/controllers');
+jest.unmock('../../src/utils/wrappers');
+jest.unmock('../../src/controllers');
 
-require('jasmine-expect');
-const controllers = require('/src/controllers');
+const controllers = require('../../src/controllers');
 
 describe('controllers', () => {
   it('should export all the app controllers', () => {
     // Given
-    const knownControllers = [
-      'common',
-      'utils',
-    ];
+    const knownControllers = {
+      common: ['configurationController', 'healthController', 'staticsController'],
+      utils: ['gatewayController'],
+    };
+    const knownControllersModules = Object.keys(knownControllers);
     // When/Then
-    expect(Object.keys(controllers).length).toBe(knownControllers.length);
-    knownControllers.forEach((name) => {
-      expect(controllers[name]).toBeObject();
+    expect(Object.keys(controllers).length).toBe(knownControllersModules.length);
+    knownControllersModules.forEach((name) => {
+      expect(Object.keys(controllers[name])).toEqual(knownControllers[name]);
     });
   });
 });

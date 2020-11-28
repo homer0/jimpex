@@ -1,13 +1,9 @@
-jest.unmock('/src/utils/functions');
-jest.unmock('/src/utils/wrappers');
-jest.unmock('/src/middlewares/html/fastHTML');
+jest.unmock('../../../src/utils/functions');
+jest.unmock('../../../src/utils/wrappers');
+jest.unmock('../../../src/middlewares/html/fastHTML');
 
-require('jasmine-expect');
-const {
-  FastHTML,
-  fastHTML,
-} = require('/src/middlewares/html/fastHTML');
-const { eventNames } = require('/src/constants');
+const { FastHTML, fastHTML } = require('../../../src/middlewares/html/fastHTML');
+const { eventNames } = require('../../../src/constants');
 
 describe('middlewares/html:fastHTML', () => {
   it('should be instantiated with its default options', () => {
@@ -79,8 +75,9 @@ describe('middlewares/html:fastHTML', () => {
       useAppRoutes: false,
     };
     // When/Then
-    expect(() => new FastHTML(events, sendFile, options))
-    .toThrow(/You need to either define an HTMLGenerator service or a file/i);
+    expect(() => new FastHTML(events, sendFile, options)).toThrow(
+      /You need to either define an HTMLGenerator service or a file/i,
+    );
   });
 
   it('should throw an error if there are no ignored routes and `useAppRoutes` is `false`', () => {
@@ -92,8 +89,9 @@ describe('middlewares/html:fastHTML', () => {
       useAppRoutes: false,
     };
     // When/Then
-    expect(() => new FastHTML(events, sendFile, options))
-    .toThrow(/You need to either define a list of routes to ignore or use `useAppRoutes`/i);
+    expect(() => new FastHTML(events, sendFile, options)).toThrow(
+      /You need to either define a list of routes to ignore or use `useAppRoutes`/i,
+    );
   });
 
   describe('middleware', () => {
@@ -123,7 +121,7 @@ describe('middlewares/html:fastHTML', () => {
       expect(sendFile).toHaveBeenCalledWith(response, options.file, next);
     });
 
-    it('shouldn\'t show the HTML file if the URL is on the `ignore` list', () => {
+    it("shouldn't show the HTML file if the URL is on the `ignore` list", () => {
       // Given
       const events = 'events';
       const sendFile = jest.fn();
@@ -187,10 +185,7 @@ describe('middlewares/html:fastHTML', () => {
           url: '/other-services/health',
         },
       ];
-      const cases = [
-        ...casesForSuccess,
-        ...casesForFailure,
-      ];
+      const cases = [...casesForSuccess, ...casesForFailure];
       const routes = cases.map(({ route }) => route);
       const response = {
         setHeader: jest.fn(),
@@ -212,73 +207,75 @@ describe('middlewares/html:fastHTML', () => {
       expect(sendFile).toHaveBeenCalledTimes(casesForFailure.length);
     });
 
-    it('should show the HTML file created by an HTMLGenerator', () => new Promise((resolve) => {
-      // Given
-      const events = 'events';
-      const sendFile = jest.fn((res, file, next) => next());
-      const file = 'Pilar.html';
-      const htmlGenerator = {
-        getFile: jest.fn(() => file),
-        whenReady: jest.fn(() => Promise.resolve()),
-      };
-      const options = {
-        file: 'my-file.html',
-        ignore: [/\.png$/i],
-        useAppRoutes: false,
-      };
-      const request = {
-        originalUrl: '/some/path.jpg',
-      };
-      const response = {
-        setHeader: jest.fn(),
-      };
-      let sut = null;
-      // When
-      sut = new FastHTML(events, sendFile, options, htmlGenerator);
-      sut.middleware()(request, response, () => {
-        // Then
-        expect(htmlGenerator.getFile).toHaveBeenCalledTimes(1);
-        expect(htmlGenerator.whenReady).toHaveBeenCalledTimes(1);
-        expect(response.setHeader).toHaveBeenCalledTimes(1);
-        expect(response.setHeader).toHaveBeenCalledWith('Content-Type', 'text/html');
-        expect(sendFile).toHaveBeenCalledTimes(1);
-        expect(sendFile).toHaveBeenCalledWith(response, file, expect.any(Function));
-        resolve();
-      });
-    }));
+    it('should show the HTML file created by an HTMLGenerator', () =>
+      new Promise((resolve) => {
+        // Given
+        const events = 'events';
+        const sendFile = jest.fn((res, file, next) => next());
+        const file = 'Pilar.html';
+        const htmlGenerator = {
+          getFile: jest.fn(() => file),
+          whenReady: jest.fn(() => Promise.resolve()),
+        };
+        const options = {
+          file: 'my-file.html',
+          ignore: [/\.png$/i],
+          useAppRoutes: false,
+        };
+        const request = {
+          originalUrl: '/some/path.jpg',
+        };
+        const response = {
+          setHeader: jest.fn(),
+        };
+        let sut = null;
+        // When
+        sut = new FastHTML(events, sendFile, options, htmlGenerator);
+        sut.middleware()(request, response, () => {
+          // Then
+          expect(htmlGenerator.getFile).toHaveBeenCalledTimes(1);
+          expect(htmlGenerator.whenReady).toHaveBeenCalledTimes(1);
+          expect(response.setHeader).toHaveBeenCalledTimes(1);
+          expect(response.setHeader).toHaveBeenCalledWith('Content-Type', 'text/html');
+          expect(sendFile).toHaveBeenCalledTimes(1);
+          expect(sendFile).toHaveBeenCalledWith(response, file, expect.any(Function));
+          resolve();
+        });
+      }));
 
-    it('should fail to show the HTML file from the HTMLGenerator', () => new Promise((resolve) => {
-      // Given
-      const events = 'events';
-      const sendFile = jest.fn((res, file, next) => next());
-      const file = 'Pilar.html';
-      const error = new Error('Unknown error');
-      const htmlGenerator = {
-        getFile: jest.fn(() => file),
-        whenReady: jest.fn(() => Promise.reject(error)),
-      };
-      const options = {
-        file: 'my-file.html',
-        ignore: [/\.png$/i],
-        useAppRoutes: false,
-      };
-      const request = {
-        originalUrl: '/some/path.jpg',
-      };
-      const response = {
-        setHeader: jest.fn(),
-      };
-      let sut = null;
-      // When
-      sut = new FastHTML(events, sendFile, options, htmlGenerator);
-      sut.middleware()(request, response, (result) => {
-        // Then
-        expect(result).toBe(error);
-        expect(htmlGenerator.getFile).toHaveBeenCalledTimes(1);
-        expect(htmlGenerator.whenReady).toHaveBeenCalledTimes(1);
-        resolve();
-      });
-    }));
+    it('should fail to show the HTML file from the HTMLGenerator', () =>
+      new Promise((resolve) => {
+        // Given
+        const events = 'events';
+        const sendFile = jest.fn((res, file, next) => next());
+        const file = 'Pilar.html';
+        const error = new Error('Unknown error');
+        const htmlGenerator = {
+          getFile: jest.fn(() => file),
+          whenReady: jest.fn(() => Promise.reject(error)),
+        };
+        const options = {
+          file: 'my-file.html',
+          ignore: [/\.png$/i],
+          useAppRoutes: false,
+        };
+        const request = {
+          originalUrl: '/some/path.jpg',
+        };
+        const response = {
+          setHeader: jest.fn(),
+        };
+        let sut = null;
+        // When
+        sut = new FastHTML(events, sendFile, options, htmlGenerator);
+        sut.middleware()(request, response, (result) => {
+          // Then
+          expect(result).toBe(error);
+          expect(htmlGenerator.getFile).toHaveBeenCalledTimes(1);
+          expect(htmlGenerator.whenReady).toHaveBeenCalledTimes(1);
+          resolve();
+        });
+      }));
   });
 
   describe('shorthand', () => {
@@ -296,13 +293,8 @@ describe('middlewares/html:fastHTML', () => {
       };
       let middleware = null;
       let toCompare = null;
-      const expectedGets = [
-        'events',
-        'sendFile',
-      ];
-      const expectedTryAttempts = [
-        'htmlGenerator',
-      ];
+      const expectedGets = ['events', 'sendFile'];
+      const expectedTryAttempts = ['htmlGenerator'];
       // When
       middleware = fastHTML.connect(app);
       toCompare = new FastHTML('events', 'sendFile', { useAppRoutes: false });
@@ -317,7 +309,10 @@ describe('middlewares/html:fastHTML', () => {
         expect(app.try).toHaveBeenCalledWith(service);
       });
       expect(events.once).toHaveBeenCalledTimes(1);
-      expect(events.once).toHaveBeenCalledWith(eventNames.afterStart, expect.any(Function));
+      expect(events.once).toHaveBeenCalledWith(
+        eventNames.afterStart,
+        expect.any(Function),
+      );
     });
 
     it('should allow the options to be customized', () => {
@@ -338,10 +333,7 @@ describe('middlewares/html:fastHTML', () => {
       };
       let middleware = null;
       let toCompare = null;
-      const expectedGets = [
-        'events',
-        'sendFile',
-      ];
+      const expectedGets = ['events', 'sendFile'];
       // When
       middleware = fastHTML(options).connect(app);
       toCompare = new FastHTML('events', 'sendFile', { useAppRoutes: false });

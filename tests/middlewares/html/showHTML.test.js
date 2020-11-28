@@ -1,11 +1,7 @@
-jest.unmock('/src/utils/wrappers');
-jest.unmock('/src/middlewares/html/showHTML');
+jest.unmock('../../../src/utils/wrappers');
+jest.unmock('../../../src/middlewares/html/showHTML');
 
-require('jasmine-expect');
-const {
-  ShowHTML,
-  showHTML,
-} = require('/src/middlewares/html/showHTML');
+const { ShowHTML, showHTML } = require('../../../src/middlewares/html/showHTML');
 
 describe('middlewares/html:showHTML', () => {
   it('should be instantiated', () => {
@@ -55,9 +51,8 @@ describe('middlewares/html:showHTML', () => {
     expect(sendFile).toHaveBeenCalledWith(response, file, next);
   });
 
-  it(
-    'should show the file created by the htmlGenerator service',
-    () => new Promise((resolve) => {
+  it('should show the file created by the htmlGenerator service', () =>
+    new Promise((resolve) => {
       // Given
       const sendFile = jest.fn((res, file, next) => next());
       const file = 'charito.html';
@@ -81,15 +76,10 @@ describe('middlewares/html:showHTML', () => {
         expect(sendFile).toHaveBeenCalledWith(response, file, expect.any(Function));
         resolve();
       });
-    })
-    .catch(() => {
-      expect(true).toBeFalse();
-    })
-  );
+    }));
 
-  it(
-    'should fail to show the file created by the htmlGenerator service',
-    () => new Promise((resolve) => {
+  it('should fail to show the file created by the htmlGenerator service', () =>
+    new Promise((resolve) => {
       // Given
       const sendFile = jest.fn((res, file, next) => next());
       const file = 'charito.html';
@@ -116,11 +106,7 @@ describe('middlewares/html:showHTML', () => {
         expect(sendFile).toHaveBeenCalledTimes(0);
         resolve();
       });
-    })
-    .catch(() => {
-      expect(true).toBeFalse();
-    })
-  );
+    }));
 
   it('should include a middleware shorthand to return its function', () => {
     // Given
@@ -131,12 +117,8 @@ describe('middlewares/html:showHTML', () => {
     };
     let middleware = null;
     let toCompare = null;
-    const expectedGets = [
-      'sendFile',
-    ];
-    const expectedTryAttempts = [
-      'htmlGenerator',
-    ];
+    const expectedGets = ['sendFile'];
+    const expectedTryAttempts = ['htmlGenerator'];
     // When
     middleware = showHTML.connect(app);
     toCompare = new ShowHTML();
@@ -168,12 +150,8 @@ describe('middlewares/html:showHTML', () => {
     };
     let middleware = null;
     let toCompare = null;
-    const expectedGets = [
-      'sendFile',
-    ];
-    const expectedTryAttempts = [
-      htmlGeneratorServiceName,
-    ];
+    const expectedGets = ['sendFile'];
+    const expectedTryAttempts = [htmlGeneratorServiceName];
     // When
     middleware = showHTML(options).connect(app);
     toCompare = new ShowHTML();
@@ -202,9 +180,7 @@ describe('middlewares/html:showHTML', () => {
     };
     let middleware = null;
     let toCompare = null;
-    const expectedGets = [
-      'sendFile',
-    ];
+    const expectedGets = ['sendFile'];
     // When
     middleware = showHTML(options).connect(app);
     toCompare = new ShowHTML();

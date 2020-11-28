@@ -1,12 +1,11 @@
-jest.unmock('/src/utils/wrappers');
-jest.unmock('/src/controllers/common/health');
+jest.unmock('../../../src/utils/wrappers');
+jest.unmock('../../../src/controllers/common/health');
 
-require('jasmine-expect');
 const { code: statuses } = require('statuses');
 const {
   HealthController,
   healthController,
-} = require('/src/controllers/common/health');
+} = require('../../../src/controllers/common/health');
 
 describe('controllers/common:health', () => {
   it('should be instantiated and have a public method', () => {
@@ -18,7 +17,7 @@ describe('controllers/common:health', () => {
     sut = new HealthController(appConfiguration, responsesBuilder);
     // Then
     expect(sut).toBeInstanceOf(HealthController);
-    expect(sut.health).toBeFunction();
+    expect(typeof sut.health).toBe('function');
   });
 
   it('should have a middleware to show "health" information', () => {
@@ -62,7 +61,7 @@ describe('controllers/common:health', () => {
       },
     };
     const app = {
-      get: jest.fn((service) => (services[service] || service)),
+      get: jest.fn((service) => services[service] || service),
     };
     let routes = null;
     let toCompare = null;
@@ -71,9 +70,7 @@ describe('controllers/common:health', () => {
     routes = healthController.connect(app);
     toCompare = new HealthController('appConfiguration', 'responsesBuilder');
     // Then
-    expect(routes).toEqual([
-      ['get:/', toCompare.health().toString()],
-    ]);
+    expect(routes).toEqual([['get:/', toCompare.health().toString()]]);
     expect(app.get).toHaveBeenCalledTimes(expectedGets.length);
     expectedGets.forEach((service) => {
       expect(app.get).toHaveBeenCalledWith(service);

@@ -1,11 +1,7 @@
-jest.unmock('/src/utils/wrappers');
-jest.unmock('/src/services/common/sendFile');
+jest.unmock('../../../src/utils/wrappers');
+jest.unmock('../../../src/services/common/sendFile');
 
-require('jasmine-expect');
-const {
-  sendFile,
-  sendFileProvider,
-} = require('/src/services/common/sendFile');
+const { sendFile, sendFileProvider } = require('../../../src/services/common/sendFile');
 
 describe('services/common:sendFile', () => {
   it('should create a function to send a file on a server response', () => {
@@ -15,7 +11,7 @@ describe('services/common:sendFile', () => {
     // When
     sut = sendFile(pathUtils);
     // Then
-    expect(sut).toBeFunction();
+    expect(typeof sut).toBe('function');
   });
 
   it('should send a file on a server response', () => {

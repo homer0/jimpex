@@ -1,12 +1,8 @@
-jest.unmock('/src/utils/wrappers');
-jest.unmock('/src/services/http/apiClient');
+jest.unmock('../../../src/utils/wrappers');
+jest.unmock('../../../src/services/http/apiClient');
 
-require('jasmine-expect');
-const {
-  APIClient,
-  apiClient,
-} = require('/src/services/http/apiClient');
 const APIClientBase = require('wootils/shared/apiClient');
+const { APIClient, apiClient } = require('../../../src/services/http/apiClient');
 
 describe('services/http:client', () => {
   it('should be instantiated with its configuration', () => {
@@ -55,7 +51,6 @@ describe('services/http:client', () => {
     expect(sut.endpoints).toEqual(apiConfig.gateway);
   });
 
-
   it('should format error responses using the HTTPError service', () => {
     // Given
     const apiConfig = {
@@ -103,7 +98,7 @@ describe('services/http:client', () => {
     });
   });
 
-  it('should have a fallback for when it can\'t find an error on a response', () => {
+  it("should have a fallback for when it can't find an error on a response", () => {
     // Given
     const apiConfig = {
       url: 'my-api',
@@ -144,7 +139,7 @@ describe('services/http:client', () => {
     };
     const app = {
       set: jest.fn(),
-      get: jest.fn((service) => (services[service] || service)),
+      get: jest.fn((service) => services[service] || service),
     };
     let sut = null;
     let serviceName = null;
@@ -185,7 +180,7 @@ describe('services/http:client', () => {
     };
     const app = {
       set: jest.fn(),
-      get: jest.fn((service) => (services[service] || service)),
+      get: jest.fn((service) => services[service] || service),
     };
     const name = 'myAPI';
     const configurationSetting = 'my-api';
@@ -233,7 +228,7 @@ describe('services/http:client', () => {
     };
     const app = {
       set: jest.fn(),
-      get: jest.fn((service) => (services[service] || service)),
+      get: jest.fn((service) => services[service] || service),
     };
     const name = 'myAPI';
     const clientClass = APIClient;

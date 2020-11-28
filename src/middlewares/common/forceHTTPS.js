@@ -1,17 +1,27 @@
 const { middlewareCreator } = require('../../utils/wrappers');
+
+/**
+ * @typedef {Object} ForceHTTPSMiddlewareOptions
+ * @property {RegExp[]} ignoredRoutes  A list of regular expressions to match routes that
+ *                                     should be ignored.
+ * @parent module:middlewares
+ */
+
 /**
  * Force all the app traffice to be through HTTPS.
+ *
+ * @parent module:middlewares
  */
 class ForceHTTPS {
   /**
-   * Class constructor.
-   * @param {Array} [ignoredRoutes=[/^\/service\//]] A list of regular expressions to match routes
-   *                                                 that should be ignored.
+   * @param {RegExp[]} [ignoredRoutes=[/^\/service\//]]
+   * A list of regular expressions to match routes that should be ignored.
    */
   constructor(ignoredRoutes = [/^\/service\//]) {
     /**
      * A list of regular expressions to match routes that should be ignored.
-     * @type {Array}
+     *
+     * @type {RegExp[]}
      * @access protected
      * @ignore
      */
@@ -19,7 +29,8 @@ class ForceHTTPS {
   }
   /**
    * Returns the Express middleware that forces the redirection to HTTPS.
-   * @return {ExpressMiddleware}
+   *
+   * @returns {ExpressMiddleware}
    */
   middleware() {
     return (req, res, next) => {
@@ -37,7 +48,8 @@ class ForceHTTPS {
   }
   /**
    * A list of regular expressions to match routes that should be ignored.
-   * @type {Array}
+   *
+   * @type {RegExp[]}
    */
   get ignoredRoutes() {
     return this._ignoredRoutes.slice();
@@ -45,17 +57,15 @@ class ForceHTTPS {
 }
 /**
  * A middleware to force HTTPS redirections to all the routes.
- * @type {MiddlewareCreator}
- * @param {Array} ignoredRoutes A list of regular expressions to match routes that should be
- *                              ignored.
+ *
+ * @type {MiddlewareCreator<ForceHTTPSMiddlewareOptions>}
+ * @parent module:middlewares
  */
-const forceHTTPS = middlewareCreator((ignoredRoutes) => (app) => (
-  app.get('appConfiguration').get('forceHTTPS') ?
-    new ForceHTTPS(ignoredRoutes).middleware() :
-    null
-));
+const forceHTTPS = middlewareCreator((options = {}) => (app) =>
+  app.get('appConfiguration').get('forceHTTPS')
+    ? new ForceHTTPS(options.ignoredRoutes).middleware()
+    : null,
+);
 
-module.exports = {
-  ForceHTTPS,
-  forceHTTPS,
-};
+module.exports.ForceHTTPS = ForceHTTPS;
+module.exports.forceHTTPS = forceHTTPS;

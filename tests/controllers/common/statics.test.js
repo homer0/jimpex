@@ -1,13 +1,12 @@
-jest.unmock('/src/utils/functions');
-jest.unmock('/src/utils/wrappers');
-jest.unmock('/src/controllers/common/statics');
+jest.unmock('../../../src/utils/functions');
+jest.unmock('../../../src/utils/wrappers');
+jest.unmock('../../../src/controllers/common/statics');
 
 const path = require('path');
-require('jasmine-expect');
 const {
   StaticsController,
   staticsController,
-} = require('/src/controllers/common/statics');
+} = require('../../../src/controllers/common/statics');
 
 describe('controllers/common:statics', () => {
   it('should be instantiated with its default options', () => {
@@ -18,7 +17,7 @@ describe('controllers/common:statics', () => {
     sut = new StaticsController(sendFile);
     // Then
     expect(sut).toBeInstanceOf(StaticsController);
-    expect(sut.addRoutes).toBeFunction();
+    expect(typeof sut.addRoutes).toBe('function');
     expect(sut.options).toEqual({
       files: ['favicon.ico', 'index.html'],
       methods: {
@@ -52,7 +51,7 @@ describe('controllers/common:statics', () => {
     sut = new StaticsController(sendFile, options);
     // Then
     expect(sut).toBeInstanceOf(StaticsController);
-    expect(sut.addRoutes).toBeFunction();
+    expect(typeof sut.addRoutes).toBe('function');
     expect(sut.options).toEqual(options);
   });
 
@@ -63,8 +62,9 @@ describe('controllers/common:statics', () => {
       files: [],
     };
     // When/Then
-    expect(() => new StaticsController(sendFile, options))
-    .toThrow(/You need to specify a list of files/i);
+    expect(() => new StaticsController(sendFile, options)).toThrow(
+      /You need to specify a list of files/i,
+    );
   });
 
   it('should throw an error when instantiated without HTTP methods', () => {
@@ -75,8 +75,9 @@ describe('controllers/common:statics', () => {
       methods: null,
     };
     // When/Then
-    expect(() => new StaticsController(sendFile, options))
-    .toThrow(/You need to specify which HTTP methods are allowed for the files/i);
+    expect(() => new StaticsController(sendFile, options)).toThrow(
+      /You need to specify which HTTP methods are allowed for the files/i,
+    );
   });
 
   it('should throw an error when instantiated without an enabled HTTP method', () => {
@@ -89,8 +90,9 @@ describe('controllers/common:statics', () => {
       },
     };
     // When/Then
-    expect(() => new StaticsController(sendFile, options))
-    .toThrow(/You need to enable at least one HTTP method to serve the files/i);
+    expect(() => new StaticsController(sendFile, options)).toThrow(
+      /You need to enable at least one HTTP method to serve the files/i,
+    );
   });
 
   it('should throw an error when instantiated with an invalid HTTP method', () => {
@@ -104,8 +106,9 @@ describe('controllers/common:statics', () => {
       },
     };
     // When/Then
-    expect(() => new StaticsController(sendFile, options))
-    .toThrow(/is not a valid HTTP method/i);
+    expect(() => new StaticsController(sendFile, options)).toThrow(
+      /is not a valid HTTP method/i,
+    );
   });
 
   it('should register `get` routes for all the files', () => {
@@ -264,7 +267,7 @@ describe('controllers/common:statics', () => {
     expect(sendFile).toHaveBeenCalledWith(
       response,
       path.join(options.paths.source, file),
-      next
+      next,
     );
   });
 
@@ -296,17 +299,16 @@ describe('controllers/common:statics', () => {
     middleware(request, response, next);
     // Then
     expect(router.get).toHaveBeenCalledTimes(1);
-    expect(router.get).toHaveBeenCalledWith(
-      `${options.paths.route}/${file}`,
-      [expect.any(Function)]
-    );
+    expect(router.get).toHaveBeenCalledWith(`${options.paths.route}/${file}`, [
+      expect.any(Function),
+    ]);
     expect(response.setHeader).toHaveBeenCalledTimes(1);
     expect(response.setHeader).toHaveBeenCalledWith('Content-Type', 'text/html');
     expect(sendFile).toHaveBeenCalledTimes(1);
     expect(sendFile).toHaveBeenCalledWith(
       response,
       path.join(options.paths.source, file),
-      next
+      next,
     );
   });
 
@@ -341,17 +343,16 @@ describe('controllers/common:statics', () => {
     middleware(request, response, next);
     // Then
     expect(router.get).toHaveBeenCalledTimes(1);
-    expect(router.get).toHaveBeenCalledWith(
-      `${options.paths.route}/${file.route}`,
-      [expect.any(Function)]
-    );
+    expect(router.get).toHaveBeenCalledWith(`${options.paths.route}/${file.route}`, [
+      expect.any(Function),
+    ]);
     expect(response.setHeader).toHaveBeenCalledTimes(1);
     expect(response.setHeader).toHaveBeenCalledWith('Content-Type', 'image/png');
     expect(sendFile).toHaveBeenCalledTimes(1);
     expect(sendFile).toHaveBeenCalledWith(
       response,
       path.join(options.paths.source, file.source),
-      next
+      next,
     );
   });
 
@@ -395,10 +396,9 @@ describe('controllers/common:statics', () => {
     middleware(request, response, next);
     // Then
     expect(router.get).toHaveBeenCalledTimes(1);
-    expect(router.get).toHaveBeenCalledWith(
-      `${options.paths.route}/${file.route}`,
-      [expect.any(Function)]
-    );
+    expect(router.get).toHaveBeenCalledWith(`${options.paths.route}/${file.route}`, [
+      expect.any(Function),
+    ]);
     expect(response.setHeader).toHaveBeenCalledTimes(expectedHeaders.length);
     expectedHeaders.forEach((setHeaderCall) => {
       expect(response.setHeader).toHaveBeenCalledWith(...setHeaderCall);
@@ -407,7 +407,7 @@ describe('controllers/common:statics', () => {
     expect(sendFile).toHaveBeenCalledWith(
       response,
       path.join(options.paths.source, file.source),
-      next
+      next,
     );
   });
 
@@ -420,7 +420,7 @@ describe('controllers/common:statics', () => {
       router,
     };
     const app = {
-      get: jest.fn((service) => (services[service] || service)),
+      get: jest.fn((service) => services[service] || service),
     };
     let result = null;
     const expectedGets = ['router', 'sendFile'];
@@ -441,9 +441,6 @@ describe('controllers/common:statics', () => {
 
   it('should include a controller creator to send custom options and middlewares', () => {
     // Given
-    const options = {
-      files: ['rosario.html'],
-    };
     const normalMiddleware = 'middlewareOne';
     const jimpexMiddlewareName = 'middlewareTwo';
     const jimpexMiddleware = {
@@ -451,6 +448,10 @@ describe('controllers/common:statics', () => {
     };
     const middlewares = [normalMiddleware, jimpexMiddleware];
     const middlewareGenerator = jest.fn(() => middlewares);
+    const options = {
+      files: ['rosario.html'],
+      middlewares: middlewareGenerator,
+    };
     const router = {
       get: jest.fn(),
     };
@@ -458,12 +459,12 @@ describe('controllers/common:statics', () => {
       router,
     };
     const app = {
-      get: jest.fn((service) => (services[service] || service)),
+      get: jest.fn((service) => services[service] || service),
     };
     let result = null;
     const expectedGets = ['router', 'sendFile'];
     // When
-    result = staticsController(options, middlewareGenerator).connect(app);
+    result = staticsController(options).connect(app);
     // Then
     expect(result).toBe(router);
     expect(router.get).toHaveBeenCalledTimes(options.files.length);

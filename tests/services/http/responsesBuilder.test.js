@@ -1,12 +1,11 @@
-jest.unmock('/src/utils/wrappers');
-jest.unmock('/src/services/http/responsesBuilder');
+jest.unmock('../../../src/utils/wrappers');
+jest.unmock('../../../src/services/http/responsesBuilder');
 
-require('jasmine-expect');
 const { code: statuses } = require('statuses');
 const {
   ResponsesBuilder,
   responsesBuilder,
-} = require('/src/services/http/responsesBuilder');
+} = require('../../../src/services/http/responsesBuilder');
 
 describe('services/http:responsesBuilder', () => {
   it('should be instantiated', () => {
@@ -86,7 +85,7 @@ describe('services/http:responsesBuilder', () => {
     expect(response.end).toHaveBeenCalledTimes(1);
   });
 
-  it('shouldn\'t normalize an invalid string status', () => {
+  it("shouldn't normalize an invalid string status", () => {
     // Given
     const version = 'latest';
     const appConfiguration = {
@@ -140,10 +139,11 @@ describe('services/http:responsesBuilder', () => {
     };
     let sut = null;
     const expectedResponse = {
-      metadata: Object.assign({
+      metadata: {
         version,
         status,
-      }, metadata),
+        ...metadata,
+      },
       data,
     };
     // When
@@ -239,7 +239,9 @@ describe('services/http:responsesBuilder', () => {
     expect(response.write).toHaveBeenCalledWith(expect.any(String));
     expect(response.end).toHaveBeenCalledTimes(1);
     expect(html).toMatch(RegExp(`<title>${title}</title>`));
-    expect(html).toMatch(RegExp(`${options.target}\\.postMessage\\('${message}', '\\*'\\)`));
+    expect(html).toMatch(
+      RegExp(`${options.target}\\.postMessage\\('${message}', '\\*'\\)`),
+    );
   });
 
   it('should include a provider for the DIC', () => {

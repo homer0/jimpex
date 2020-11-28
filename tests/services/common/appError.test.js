@@ -1,12 +1,8 @@
-jest.unmock('/src/utils/wrappers');
-jest.unmock('/src/services/common/appError');
+jest.unmock('../../../src/utils/wrappers');
+jest.unmock('../../../src/services/common/appError');
 
 const { code: statuses } = require('statuses');
-require('jasmine-expect');
-const {
-  AppError,
-  appError,
-} = require('/src/services/common/appError');
+const { AppError, appError } = require('../../../src/services/common/appError');
 
 const originalCaptureStackTrace = Error.captureStackTrace;
 
@@ -61,11 +57,10 @@ describe('services/common:appError', () => {
     sut = new AppError(message, context);
     // Then
     expect(sut).toBeInstanceOf(AppError);
-    expect(sut.status).toBeNumber();
     expect(sut.status).toBe(statuses[context.status]);
   });
 
-  it('shouldn\'t format a status code sent as string if is not a valid status', () => {
+  it("shouldn't format a status code sent as string if is not a valid status", () => {
     // Given
     const message = 'Something went wrong!';
     const context = {
@@ -132,7 +127,7 @@ describe('services/common:appError', () => {
       result = sut(message, context);
       // Then
       expect(serviceName).toBe('appError');
-      expect(sut).toBeFunction();
+      expect(typeof sut).toBe('function');
       expect(result).toBeInstanceOf(AppError);
       expect(result.message).toBe(message);
       expect(result.context).toEqual(context);

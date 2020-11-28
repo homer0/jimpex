@@ -1,19 +1,28 @@
 const { code: statuses } = require('statuses');
 const { controller } = require('../../utils/wrappers');
 /**
+ * @typedef {import('../../types').AppConfiguration} AppConfiguration
+ * @typedef {import('../../services/http/responsesBuilder').ResponsesBuilder}
+ * ResponsesBuilder
+ */
+
+/**
  * Provides the handler to show a some minimal health information about the app:
  * - app version.
  * - configuration name.
+ *
+ * @parent module:controllers
  */
 class HealthController {
   /**
-   * Class constructor.
-   * @param {AppConfiguration} appConfiguration To read the app version and the configuration name.
-   * @param {ResponsesBuilder} responsesBuilder To generate the JSON response.
+   * @param {AppConfiguration} appConfiguration  To read the app version and the
+   *                                             configuration name.
+   * @param {ResponsesBuilder} responsesBuilder  To generate the JSON response.
    */
   constructor(appConfiguration, responsesBuilder) {
     /**
      * A local reference for the `appConfiguration` service.
+     *
      * @type {AppConfiguration}
      * @access protected
      * @ignore
@@ -21,6 +30,7 @@ class HealthController {
     this._appConfiguration = appConfiguration;
     /**
      * A local reference for the `responsesBuilder` service.
+     *
      * @type {ResponsesBuilder}
      * @access protected
      * @ignore
@@ -29,14 +39,15 @@ class HealthController {
   }
   /**
    * Returns the middleware that shows the health information.
-   * @return {ExpressMiddleware}
+   *
+   * @returns {ExpressMiddleware}
    */
   health() {
     return (req, res) => {
-      const {
-        name: configuration,
-        version,
-      } = this._appConfiguration.get(['name', 'version']);
+      const { name: configuration, version } = this._appConfiguration.get([
+        'name',
+        'version',
+      ]);
       this._responsesBuilder.json(res, {
         isHealthy: true,
         status: statuses.ok,
@@ -48,21 +59,19 @@ class HealthController {
 }
 /**
  * Mounts the health route.
+ *
  * @type {Controller}
+ * @parent module:controllers
  */
 const healthController = controller((app) => {
   const router = app.get('router');
   const ctrl = new HealthController(
     app.get('appConfiguration'),
-    app.get('responsesBuilder')
+    app.get('responsesBuilder'),
   );
 
-  return [
-    router.get('/', ctrl.health()),
-  ];
+  return [router.get('/', ctrl.health())];
 });
 
-module.exports = {
-  HealthController,
-  healthController,
-};
+module.exports.HealthController = HealthController;
+module.exports.healthController = healthController;

@@ -1,11 +1,10 @@
-jest.unmock('/src/utils/wrappers');
-jest.unmock('/src/controllers/common/configuration');
+jest.unmock('../../../src/utils/wrappers');
+jest.unmock('../../../src/controllers/common/configuration');
 
-require('jasmine-expect');
 const {
   ConfigurationController,
   configurationController,
-} = require('/src/controllers/common/configuration');
+} = require('../../../src/controllers/common/configuration');
 
 describe('controllers/common:configuration', () => {
   it('should be instantiated an have public methods', () => {
@@ -17,9 +16,9 @@ describe('controllers/common:configuration', () => {
     sut = new ConfigurationController(appConfiguration, responsesBuilder);
     // Then
     expect(sut).toBeInstanceOf(ConfigurationController);
-    expect(sut.getConfigurationResponse).toBeFunction();
-    expect(sut.showConfiguration).toBeFunction();
-    expect(sut.switchConfiguration).toBeFunction();
+    expect(typeof sut.getConfigurationResponse).toBe('function');
+    expect(typeof sut.showConfiguration).toBe('function');
+    expect(typeof sut.switchConfiguration).toBe('function');
   });
 
   it('should have a generic method to generate a configuration reponse', () => {
@@ -33,24 +32,19 @@ describe('controllers/common:configuration', () => {
       get: jest.fn(() => appConfiguration.name),
       getConfig: jest.fn(() => appConfiguration.config),
     };
-    const message = 'success';
     const responsesBuilder = {
-      json: jest.fn(() => message),
+      json: jest.fn(),
     };
     const response = 'response';
-    const expectedData = Object.assign(
-      {
-        name: appConfiguration.name,
-      },
-      appConfiguration.config
-    );
+    const expectedData = {
+      name: appConfiguration.name,
+      ...appConfiguration.config,
+    };
     let sut = null;
-    let result = null;
     // When
     sut = new ConfigurationController(appConfiguration, responsesBuilder);
-    result = sut.getConfigurationResponse(response);
+    sut.getConfigurationResponse(response);
     // Then
-    expect(result).toBe(message);
     expect(appConfiguration.get).toHaveBeenCalledTimes(1);
     expect(appConfiguration.get).toHaveBeenCalledWith('name');
     expect(responsesBuilder.json).toHaveBeenCalledTimes(1);
@@ -73,12 +67,10 @@ describe('controllers/common:configuration', () => {
     };
     const request = 'request';
     const response = 'response';
-    const expectedData = Object.assign(
-      {
-        name: appConfiguration.name,
-      },
-      appConfiguration.config
-    );
+    const expectedData = {
+      name: appConfiguration.name,
+      ...appConfiguration.config,
+    };
     let sut = null;
     let middleware = null;
     // When
@@ -117,12 +109,10 @@ describe('controllers/common:configuration', () => {
     };
     const response = 'response';
     const next = jest.fn();
-    const expectedData = Object.assign(
-      {
-        name: appConfiguration.name,
-      },
-      appConfiguration.config
-    );
+    const expectedData = {
+      name: appConfiguration.name,
+      ...appConfiguration.config,
+    };
     let sut = null;
     let middleware = null;
     // When
@@ -140,7 +130,7 @@ describe('controllers/common:configuration', () => {
     expect(next).toHaveBeenCalledTimes(0);
   });
 
-  it('shouldn\'t switch configurations if the appConfiguration service doesn\'t allow it', () => {
+  it("shouldn't switch configurations if the appConfiguration service doesn't allow it", () => {
     // Given
     const appConfiguration = {
       switchEnabled: false,
@@ -219,7 +209,7 @@ describe('controllers/common:configuration', () => {
       },
     };
     const app = {
-      get: jest.fn((service) => (services[service] || service)),
+      get: jest.fn((service) => services[service] || service),
     };
     let routes = null;
     let toCompare = null;
@@ -238,7 +228,7 @@ describe('controllers/common:configuration', () => {
     });
   });
 
-  it('shouldn\'t return its routes when the debug `configurationController` flag is `false`', () => {
+  it("shouldn't return its routes when the debug `configurationController` flag is `false`", () => {
     // Given
     const appConfiguration = {
       'debug.configurationController': false,
@@ -251,14 +241,14 @@ describe('controllers/common:configuration', () => {
       },
     };
     const app = {
-      get: jest.fn((service) => (services[service] || service)),
+      get: jest.fn((service) => services[service] || service),
     };
     let routes = null;
     const expectedGets = ['appConfiguration'];
     // When
     routes = configurationController.connect(app);
     // Then
-    expect(routes).toBeEmptyArray();
+    expect(routes).toEqual([]);
     expect(app.get).toHaveBeenCalledTimes(expectedGets.length);
     expectedGets.forEach((service) => {
       expect(app.get).toHaveBeenCalledWith(service);
