@@ -33,7 +33,8 @@
     "docdash": "homer0/docdash#semver:^2.1.0",
     "leasot": "^11.4.0",
     "lint-staged": "^10.5.2",
-    "husky": "^4.3.0"
+    "husky": "^4.3.0",
+    "semantic-release": "^17.3.0"
   },
   "engine-strict": true,
   "engines": {
