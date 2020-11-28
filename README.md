@@ -1,5 +1,10 @@
 # Jimpex
 
+[![GitHub Workflow Status (master)](https://img.shields.io/github/workflow/status/homer0/jimpex/Test/master?style=flat-square)](https://github.com/homer0/jimpex/actions?query=workflow%3ATest)
+[![Coveralls GitHub](https://img.shields.io/coveralls/github/homer0/jimpex.svg?style=flat-square)](https://coveralls.io/github/homer0/jimpex?branch=master)
+[![David](https://img.shields.io/david/homer0/jimpex.svg?style=flat-square)](https://david-dm.org/homer0/jimpex)
+[![David](https://img.shields.io/david/dev/homer0/jimpex.svg?style=flat-square)](https://david-dm.org/homer0/jimpex)
+
 Express as dependency injection container.
 
 Jimpex is an implementation of [Express](https://expressjs.com), one of the most popular web frameworks for Node, using [Jimple](https://github.com/fjorgemota/jimple), a Javascript port of [Pimple](https://pimple.symfony.com) dependency injection container.
