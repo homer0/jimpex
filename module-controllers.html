@@ -1,0 +1,4336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8" />
+    <title>controllers - jimpex docs</title>
+    
+    
+    
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css" />
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css" />
+    <script src="scripts/nav.js" defer></script>
+    <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no" />
+    <link rel="shortcut icon" href="icons/favicon-48.png" />
+    <link rel="apple-touch-icon" sizes="48x48" href="icons/favicon-48.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="icons/favicon-72.png" />
+    <link rel="apple-touch-icon" sizes="96x96" href="icons/favicon-96.png" />
+    <link rel="apple-touch-icon" sizes="144x144" href="icons/favicon-144.png" />
+    <link rel="apple-touch-icon" sizes="192x192" href="icons/favicon-192.png" />
+    <link rel="apple-touch-icon" sizes="256x256" href="icons/favicon-256.png" />
+    <link rel="apple-touch-icon" sizes="384x384" href="icons/favicon-384.png" />
+    <link rel="apple-touch-icon" sizes="512x512" href="icons/favicon-512.png" />
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    <h2><a href="index.html" class="home-link">jimpex</a></h2><ul class="ref-links">
+            <li><a
+                class="ref-link -yarn"
+                title="View the package on Yarn"
+                href="https://yarnpkg.com/package/jimpex"
+                target="_blank"
+            >View the package on Yarn</a></li>
+        
+
+            <li><a
+                class="ref-link -github"
+                title="Go to the GitHub repository"
+                href="https://github.com/homer0/jimpex"
+                target="_blank"
+            >Go to the GitHub repository</a></li>
+        
+
+            <li><a
+                class="ref-link -npm"
+                title="View the package on NPM"
+                href="https://www.npmjs.com/package/jimpex"
+                target="_blank"
+            >View the package on NPM</a></li>
+        </ul><h3>Modules</h3><ul><li><a href="module-constants.html">constants</a></li><li><a href="module-controllers.html">controllers</a></li><li><a href="module-core.html">core</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-core.html#~jimpex">jimpex</a></li></ul></li><li><a href="module-functions.html">functions</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-functions.html#.createRouteExpression">createRouteExpression</a></li><li data-type='method' style='display: none;'><a href="module-functions.html#.escapeForRegExp">escapeForRegExp</a></li><li data-type='method' style='display: none;'><a href="module-functions.html#.removeLeadingSlash">removeLeadingSlash</a></li><li data-type='method' style='display: none;'><a href="module-functions.html#.removeSlashes">removeSlashes</a></li><li data-type='method' style='display: none;'><a href="module-functions.html#.removeTrailingSlash">removeTrailingSlash</a></li></ul></li><li><a href="module-middlewares.html">middlewares</a></li><li><a href="module-services.html">services</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-services.html#.appErrorGenerator">appErrorGenerator</a></li><li data-type='method' style='display: none;'><a href="module-services.html#.httpErrorGenerator">httpErrorGenerator</a></li><li data-type='method' style='display: none;'><a href="module-services.html#.sendFile">sendFile</a></li></ul></li><li><a href="module-wrappers.html">wrappers</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-wrappers.html#.controller">controller</a></li><li data-type='method' style='display: none;'><a href="module-wrappers.html#.controllerCreator">controllerCreator</a></li><li data-type='method' style='display: none;'><a href="module-wrappers.html#.middleware">middleware</a></li><li data-type='method' style='display: none;'><a href="module-wrappers.html#.middlewareCreator">middlewareCreator</a></li></ul></li></ul><h3>Tutorials</h3><ul><li><a href="tutorial-controllers.html">controllers</a></li><li><a href="tutorial-middlewares.html">middlewares</a></li><li><a href="tutorial-options.html">options</a></li><li><a href="tutorial-services.html">services</a></li></ul><h3><a href="global.html">Global</a></h3>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">controllers</h1>
+    
+
+    
+
+
+
+
+<section>
+
+<header>
+    
+        
+    
+</header>
+
+<article>
+    
+        <div class="container-overview">
+        
+            
+
+            
+        
+        </div>
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Classes</h3>
+
+        <dl>
+            <dt><a href="module-controllers.ConfigurationController.html">ConfigurationController</a></dt>
+            <dd></dd>
+        
+            <dt><a href="module-controllers.GatewayController.html">GatewayController</a></dt>
+            <dd></dd>
+        
+            <dt><a href="module-controllers.HealthController.html">HealthController</a></dt>
+            <dd></dd>
+        
+            <dt><a href="module-controllers.StaticsController.html">StaticsController</a></dt>
+            <dd></dd>
+        </dl>
+    
+    
+    
+
+     
+
+    
+
+    
+        <h3 class="subsection-title">Members</h3>
+
+        
+            
+<h4 class="name" id=".configurationController"><span class="type-signature">(static, constant) </span>configurationController<span class="type-signature"> :<a href="global.html#Controller">Controller</a></span></h4>
+
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="controllers_common_configuration.js.html">controllers/common/configuration.js</a>, <a href="controllers_common_configuration.js.html#line92">line 92</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-todo">To Do:</dt>
+    <dd class="tag-todo">
+        <ul>
+            <li>Don't use an array to return the routes.</li>
+        </ul>
+    </dd>
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    <p>This controller is kind of special as it will only mount the routes if the
+<code>debug.configurationController</code> setting of the app configuration is <code>true</code>.
+It provides routes for:</p>
+<ul>
+<li>Showing the current configuration.</li>
+<li>Switching the configuration, but only if the service allows it.</li>
+</ul>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="global.html#Controller">Controller</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id=".gatewayController"><span class="type-signature">(static, constant) </span>gatewayController<span class="type-signature"> :<a  target="_blank" href="https://homer0.github.io/wootils/module-shared_jimpleFns.html#~providerCreator">ProviderCreator</a>.&lt;<a href="module-controllers.html#.GatewayControllerCreatorOptions">GatewayControllerCreatorOptions</a>></span></h4>
+
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="controllers_utils_gateway.js.html">controllers/utils/gateway.js</a>, <a href="controllers_utils_gateway.js.html#line958">line 958</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    <p>This controller allows you to have gateway routes that actually make requests and
+respond with the contents from an specified API.</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a  target="_blank" href="https://homer0.github.io/wootils/module-shared_jimpleFns.html#~providerCreator">ProviderCreator</a>.&lt;<a href="module-controllers.html#.GatewayControllerCreatorOptions">GatewayControllerCreatorOptions</a>></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id=".healthController"><span class="type-signature">(static, constant) </span>healthController<span class="type-signature"> :<a href="global.html#Controller">Controller</a></span></h4>
+
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="controllers_common_health.js.html">controllers/common/health.js</a>, <a href="controllers_common_health.js.html#line66">line 66</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    <p>Mounts the health route.</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="global.html#Controller">Controller</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id=".staticsController"><span class="type-signature">(static, constant) </span>staticsController<span class="type-signature"> :<a href="global.html#ControllerCreator">ControllerCreator</a>.&lt;<a href="module-controllers.html#.StaticsControllerWrapperOptions">StaticsControllerWrapperOptions</a>></span></h4>
+
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="controllers_common_statics.js.html">controllers/common/statics.js</a>, <a href="controllers_common_statics.js.html#line313">line 313</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    <p>This controller allows you to serve specific files from any folder to any route without
+the need of mounting directories as &quot;static&quot;.</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="global.html#ControllerCreator">ControllerCreator</a>.&lt;<a href="module-controllers.html#.StaticsControllerWrapperOptions">StaticsControllerWrapperOptions</a>></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+
+        
+    
+
+    
+
+    
+        <h3 class="subsection-title">Type Definitions</h3>
+
+        
+                
+<h4 class="name" id=".GatewayConfiguration">GatewayConfiguration</h4>
+
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="controllers_utils_gateway.js.html">controllers/utils/gateway.js</a>, <a href="controllers_utils_gateway.js.html#line68">line 68</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>url</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a  target="_blank" href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The entry point to the API the
+controller will make the requests
+to.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>gateway</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="module-controllers.html#.GatewayConfigurationEndpoints">GatewayConfigurationEndpoints</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>A dictionary with the endpoints the
+gateway will make available.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<div class="description usertext">
+    <p>This is a configuration object very similar to the one <a href="module-services.APIClient.html"><code>APIClient</code></a> uses in order
+to configure the endpoints; the controller uses it to create the routes and to validate
+the HTTP methods.</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a  target="_blank" href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+
+            
+                
+<h4 class="name" id=".GatewayConfigurationEndpoint">GatewayConfigurationEndpoint</h4>
+
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="controllers_utils_gateway.js.html">controllers/utils/gateway.js</a>, <a href="controllers_utils_gateway.js.html#line43">line 43</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>path</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a  target="_blank" href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The path to the endpoint relative to the entry point. It can
+include placeholders for parameters like <code>/:parameter/</code>.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>method</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a  target="_blank" href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The HTTP method for the endpoint. This will tell the gateway
+the type of route it should mount. If is not specified, it
+will use <code>all</code>.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<div class="description usertext">
+    <p>Normally, you would define an endpoint with just a string path, but you can use this
+type of object to add extra settings.</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a  target="_blank" href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+
+            
+                
+<h4 class="name" id=".GatewayConfigurationEndpoints">GatewayConfigurationEndpoints</h4>
+
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="controllers_utils_gateway.js.html">controllers/utils/gateway.js</a>, <a href="controllers_utils_gateway.js.html#line56">line 56</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>endpointName</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a  target="_blank" href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>
+|
+
+<span class="param-type"><a href="module-controllers.html#.GatewayConfigurationEndpoints">GatewayConfigurationEndpoints</a></span>
+|
+
+<span class="param-type"><a href="module-controllers.html#.GatewayConfigurationEndpoint">GatewayConfigurationEndpoint</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>It can be the path to an actual endpoint, a dictionary of sub endpoints, or a
+definition of an endpoint with settings (<a href="module-controllers.html#.GatewayConfigurationEndpoint"><code>GatewayConfigurationEndpoint</code></a>).</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<div class="description usertext">
+    <p>A dictionary of endpoints or sub endpoints the gateway will use in order to mount
+routes.</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a  target="_blank" href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+
+            
+                
+<h4 class="name" id=".GatewayControllerCreatorOptions">GatewayControllerCreatorOptions</h4>
+
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="controllers_utils_gateway.js.html">controllers/utils/gateway.js</a>, <a href="controllers_utils_gateway.js.html#line126">line 126</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>serviceName</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a  target="_blank" href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The name of the creator will use to register the controller in the container. No, this
+is not a typo. The creator will register the controller so other services can access
+the <code>endpointsForAPIClient</code> getter. The service will be available after the app routes
+are mounted.
+If this is overwritten, the creator will ensure that the name ends with <code>Gateway</code>; and
+if overwritten, but it doesn't include <code>Gateway</code> at the end, and no
+<code>configurationSetting</code> was defined, the creator will use the custom name (without
+<code>Gatway</code>) for <code>configurationSetting</code>.
+Default <code>'apiGeteway'</code>.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>helperServiceName</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a  target="_blank" href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The name of the helper service the creator will try to obtain from the container. If
+<code>serviceName</code> is overwritten, the default for this will be <code>${serviceName}Helper</code>.
+Default:
+<code>'apiGatewayHelper'</code>.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>configurationSetting</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a  target="_blank" href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The name of the configuration setting where the gateway configuration is stored. If not
+overwritten, check the description of <code>serviceName</code> to understand which will be its
+default value. Default <code>'api'</code>.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>gatewayClass</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Class.&lt;<a href="module-controllers.GatewayController.html">GatewayController</a>></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The class the creator will instantiate. Similar to <a href="module-services.APIClient.html"><code>APIClient</code></a>, this allows for
+extra customization in cases you may need multiple gateways. Default
+<a href="module-controllers.GatewayController.html"><code>GatewayController</code></a>.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>middlewares</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="module-controllers.html#.GatewayControllerMiddlewaresFn">GatewayControllerMiddlewaresFn</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                    &lt;nullable><br>
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>This function can be used to add custom middlewares on the gateway routes. If
+implemented, it must return a list of middlewares when executed. Default <code>null</code>.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<div class="description usertext">
+    <p>This are the options sent to the controller creator that instantiates
+<a href="module-controllers.GatewayController.html"><code>GatewayController</code></a>.
+They're basically the same as <a href="module-controllers.html#.GatewayControllerOptions"><code>GatewayControllerOptions</code></a> but with a couple of
+extra ones.</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a  target="_blank" href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+
+            
+                
+<h4 class="name" id=".GatewayControllerEndpointInformation">GatewayControllerEndpointInformation</h4>
+
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="controllers_utils_gateway.js.html">controllers/utils/gateway.js</a>, <a href="controllers_utils_gateway.js.html#line171">line 171</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>name</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a  target="_blank" href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The name of the endpoint, which is actually the path inside the gateway configuration's
+<code>gateway</code> property.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>settings</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a  target="_blank" href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>
+|
+
+<span class="param-type"><a href="module-controllers.html#.GatewayConfigurationEndpoint">GatewayConfigurationEndpoint</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The path for the endpoint, or the dictionary of settings.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<div class="description usertext">
+    <p>This is the information for an specific endpoint that the gateway may use to send to a
+helper method in order to give it context.</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a  target="_blank" href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+
+            
+                
+<h4 class="name" id=".GatewayControllerHeadersOptions">GatewayControllerHeadersOptions</h4>
+
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="controllers_utils_gateway.js.html">controllers/utils/gateway.js</a>, <a href="controllers_utils_gateway.js.html#line82">line 82</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>useXForwardedFor</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a  target="_blank" href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Whether or not to include the header with the
+request's IP address. Default <code>true</code>.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>copyCustomHeaders</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a  target="_blank" href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Whether or not to copy all custom headers from
+the request. By custom header, it means all the
+headers which names start with <code>x-</code>. Default
+<code>true</code>.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>copy</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a  target="_blank" href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a>.&lt;<a  target="_blank" href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>A list of &quot;known&quot; headers the gateway will try
+to copy from the incoming request. Default:
+<code>['authorization','content-type', 'referer',                                         'user-agent']</code>.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>remove</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a  target="_blank" href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a>.&lt;<a  target="_blank" href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>A list of &quot;known&quot; headers the gateway will try
+to remove the response. Default:
+<code>['server', 'x-powered-by']</code>.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<div class="description usertext">
+    <p>The options for how the gateway will handle the headers from the requests and the
+responses.</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a  target="_blank" href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+
+            
+                
+
+    
+
+    <h4 class="name" id=".GatewayControllerMiddlewaresFn"><span class="type-signature"></span>GatewayControllerMiddlewaresFn<span class="signature">(app)</span><span class="type-signature"> &rarr; {<a  target="_blank" href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a>.&lt;<a href="global.html#MiddlewareLike">MiddlewareLike</a>>}</span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="controllers_utils_gateway.js.html">controllers/utils/gateway.js</a>, <a href="controllers_utils_gateway.js.html#line301">line 301</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>app</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="module-core.Jimpex.html">Jimpex</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>A reference for the container.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a  target="_blank" href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a>.&lt;<a href="global.html#MiddlewareLike">MiddlewareLike</a>></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+            
+                
+<h4 class="name" id=".GatewayControllerOptions">GatewayControllerOptions</h4>
+
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="controllers_utils_gateway.js.html">controllers/utils/gateway.js</a>, <a href="controllers_utils_gateway.js.html#line103">line 103</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>root</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a  target="_blank" href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>This is really a helper for when the gateway is used with an API client. The idea is
+that,
+by default, the routes are mounted on the controller route, but with this option, you
+can specify another sub path. For example: The controller is mounted on <code>/routes</code>, if
+you set <code>root</code> to <code>gateway</code>, all the routes will be on <code>/routes/gateway</code>.
+This become important (and useful) when you get the API client configuration (with
+<code>endpointsForAPIClient</code>): The <code>url</code> will be the controller route, but all the endpoints
+will be modified and prefixed with the <code>root</code>. Default <code>''</code>.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>configurationSetting</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a  target="_blank" href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>This is another option for when the gateway is used with an API client. When calling
+<code>endpointsForAPIClient</code>, all the endpoints will be wrapped inside an object named after
+this option. For example: <code>{ url: '...', endpoints: { api: { ... } } }</code>. Default <code>api</code>.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>headers</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="module-controllers.html#.GatewayControllerHeadersOptions">GatewayControllerHeadersOptions</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The options for how the gateway will handle the headers from the requests and the
+responses.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<div class="description usertext">
+    <p>The options to configure how the gateway will manage the requests and the responses.</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a  target="_blank" href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+
+            
+                
+<h4 class="name" id=".GatewayControllerRequest">GatewayControllerRequest</h4>
+
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="controllers_utils_gateway.js.html">controllers/utils/gateway.js</a>, <a href="controllers_utils_gateway.js.html#line162">line 162</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>url</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a  target="_blank" href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The URL for the request.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="module-services.html#.HTTPFetchOptions">HTTPFetchOptions</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The request options.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<div class="description usertext">
+    <p>This is the information for a request the controller will make.</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a  target="_blank" href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+
+            
+                
+<h4 class="name" id=".GatewayHelperService">GatewayHelperService</h4>
+
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="controllers_utils_gateway.js.html">controllers/utils/gateway.js</a>, <a href="controllers_utils_gateway.js.html#line277">line 277</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>reduceEndpointRequest</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="module-controllers.html#.GatewayHelperServiceRequestReducer">GatewayHelperServiceRequestReducer</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                    &lt;nullable><br>
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>This is called in order to allow the helper to modify the information of a request that
+is about the fired.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>reduceEndpointResponse</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="module-controllers.html#.GatewayHelperServiceResponseReducer">GatewayHelperServiceResponseReducer</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                    &lt;nullable><br>
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>This is called in order to allow the helper to modify the information of a response the
+gateway made.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>shouldStreamEndpointResponse</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="module-controllers.html#.GatewayHelperServiceStreamVerification">GatewayHelperServiceStreamVerification</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                    &lt;nullable><br>
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>This is called in order to allow the helper to decide whether a fetch request response
+should be added to the server's response stream. This will only be called if the helper
+also implements <code>handleEndpointResponse</code>.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>handleEndpointResponse</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="module-controllers.html#.GatewayHelperServiceResponseHandler">GatewayHelperServiceResponseHandler</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                    &lt;nullable><br>
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>This is called in order for the helper to handle a response. This is only called if
+<code>shouldStreamEndpointResponse</code> returned <code>false</code>.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>handleEndpointError</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="module-controllers.html#.GatewayHelperServiceErrorHandler">GatewayHelperServiceErrorHandler</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                    &lt;nullable><br>
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>This is called in order for the helper to handle a fetch request error.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<div class="description usertext">
+    <p>A service that can have specific methods the gateway will call in order to modify
+requests,
+responses, handle errors, etc.</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a  target="_blank" href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+
+            
+                
+
+    
+
+    <h4 class="name" id=".GatewayHelperServiceErrorHandler"><span class="type-signature"></span>GatewayHelperServiceErrorHandler<span class="signature">(error, endpoint, req, res, next)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="controllers_utils_gateway.js.html">controllers/utils/gateway.js</a>, <a href="controllers_utils_gateway.js.html#line260">line 260</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    <p>This is called in order for the helper to handle a fetch request error.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>error</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a  target="_blank" href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Error">Error</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The fetch request error.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>endpoint</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="module-controllers.html#.GatewayControllerEndpointInformation">GatewayControllerEndpointInformation</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The information for the endpoint responsible of creating the route.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>req</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a  target="_blank" href="https://expressjs.com/en/4x/api.html#req">ExpressRequest</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The server's incoming request information.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>res</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a  target="_blank" href="https://expressjs.com/en/4x/api.html#res">ExpressResponse</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The server's response information.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>next</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a  target="_blank" href="https://expressjs.com/en/guide/writing-middleware.html">ExpressNext</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The function to call the next middleware.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            
+                
+
+    
+
+    <h4 class="name" id=".GatewayHelperServiceRequestReducer"><span class="type-signature"></span>GatewayHelperServiceRequestReducer<span class="signature">(request, endpoint, req, res, next)</span><span class="type-signature"> &rarr; {<a href="module-controllers.html#.GatewayControllerRequest">GatewayControllerRequest</a>}</span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="controllers_utils_gateway.js.html">controllers/utils/gateway.js</a>, <a href="controllers_utils_gateway.js.html#line184">line 184</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    <p>This is called in order to allow the helper to modify the information of a request that
+is about the fired.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>request</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="module-controllers.html#.GatewayControllerRequest">GatewayControllerRequest</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The information for a request the controller will make.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>endpoint</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="module-controllers.html#.GatewayControllerEndpointInformation">GatewayControllerEndpointInformation</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The information for the endpoint responsible of creating the route.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>req</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a  target="_blank" href="https://expressjs.com/en/4x/api.html#req">ExpressRequest</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The server's incoming request information.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>res</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a  target="_blank" href="https://expressjs.com/en/4x/api.html#res">ExpressResponse</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The server's response information.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>next</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a  target="_blank" href="https://expressjs.com/en/guide/writing-middleware.html">ExpressNext</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The function to call the next middleware.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="module-controllers.html#.GatewayControllerRequest">GatewayControllerRequest</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+            
+                
+
+    
+
+    <h4 class="name" id=".GatewayHelperServiceResponseHandler"><span class="type-signature"></span>GatewayHelperServiceResponseHandler<span class="signature">(response, endpoint, req, res, next)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="controllers_utils_gateway.js.html">controllers/utils/gateway.js</a>, <a href="controllers_utils_gateway.js.html#line242">line 242</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    <p>This is called in order for the helper to handle a response. This is only called if
+<code>shouldStreamEndpointResponse</code> returned <code>false</code>.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>response</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a  target="_blank" href="https://developer.mozilla.org/en-US/docs/Web/API/Response">Response</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The response generated by the fetch request.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>endpoint</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="module-controllers.html#.GatewayControllerEndpointInformation">GatewayControllerEndpointInformation</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The information for the endpoint responsible of creating the route.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>req</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a  target="_blank" href="https://expressjs.com/en/4x/api.html#req">ExpressRequest</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The server's incoming request information.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>res</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a  target="_blank" href="https://expressjs.com/en/4x/api.html#res">ExpressResponse</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The server's response information.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>next</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a  target="_blank" href="https://expressjs.com/en/guide/writing-middleware.html">ExpressNext</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The function to call the next middleware.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            
+                
+
+    
+
+    <h4 class="name" id=".GatewayHelperServiceResponseReducer"><span class="type-signature"></span>GatewayHelperServiceResponseReducer<span class="signature">(response, endpoint, req, res, next)</span><span class="type-signature"> &rarr; {<a  target="_blank" href="https://developer.mozilla.org/en-US/docs/Web/API/Response">Response</a>}</span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="controllers_utils_gateway.js.html">controllers/utils/gateway.js</a>, <a href="controllers_utils_gateway.js.html#line203">line 203</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    <p>This is called in order to allow the helper to modify the information of a response the
+gateway made.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>response</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a  target="_blank" href="https://developer.mozilla.org/en-US/docs/Web/API/Response">Response</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The response generated by the fetch request.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>endpoint</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="module-controllers.html#.GatewayControllerEndpointInformation">GatewayControllerEndpointInformation</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The information for the endpoint responsible of creating the route.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>req</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a  target="_blank" href="https://expressjs.com/en/4x/api.html#req">ExpressRequest</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The server's incoming request information.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>res</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a  target="_blank" href="https://expressjs.com/en/4x/api.html#res">ExpressResponse</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The server's response information.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>next</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a  target="_blank" href="https://expressjs.com/en/guide/writing-middleware.html">ExpressNext</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The function to call the next middleware.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a  target="_blank" href="https://developer.mozilla.org/en-US/docs/Web/API/Response">Response</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+            
+                
+
+    
+
+    <h4 class="name" id=".GatewayHelperServiceStreamVerification"><span class="type-signature"></span>GatewayHelperServiceStreamVerification<span class="signature">(response, endpoint, req, res, next)</span><span class="type-signature"> &rarr; {<a  target="_blank" href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a>}</span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="controllers_utils_gateway.js.html">controllers/utils/gateway.js</a>, <a href="controllers_utils_gateway.js.html#line222">line 222</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    <p>This is called in order to allow the helper to decide whether a fetch request response
+should be added to the server's response stream. This will only be called if the helper
+also implements <code>handleEndpointResponse</code>.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>response</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a  target="_blank" href="https://developer.mozilla.org/en-US/docs/Web/API/Response">Response</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The response generated by the fetch request.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>endpoint</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="module-controllers.html#.GatewayControllerEndpointInformation">GatewayControllerEndpointInformation</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The information for the endpoint responsible of creating the route.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>req</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a  target="_blank" href="https://expressjs.com/en/4x/api.html#req">ExpressRequest</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The server's incoming request information.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>res</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a  target="_blank" href="https://expressjs.com/en/4x/api.html#res">ExpressResponse</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The server's response information.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>next</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a  target="_blank" href="https://expressjs.com/en/guide/writing-middleware.html">ExpressNext</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The function to call the next middleware.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a  target="_blank" href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+            
+                
+<h4 class="name" id=".StaticsControllerFile">StaticsControllerFile</h4>
+
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="controllers_common_statics.js.html">controllers/common/statics.js</a>, <a href="controllers_common_statics.js.html#line11">line 11</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>route</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a  target="_blank" href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The route the controller will use for the
+file.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>path</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a  target="_blank" href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The path for the file, relative to the
+root of the app.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>headers</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a  target="_blank" href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>.&lt;<a  target="_blank" href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>, <a  target="_blank" href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>A dictionary of custom headers to send on
+the file response.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<div class="description usertext">
+    <p>If you wan to customize how, to, and from where files are served, instead of just
+sending a list of strings, you can use an object with these properties.</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a  target="_blank" href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+
+            
+                
+<h4 class="name" id=".StaticsControllerFileLike">StaticsControllerFileLike</h4>
+
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="controllers_common_statics.js.html">controllers/common/statics.js</a>, <a href="controllers_common_statics.js.html#line35">line 35</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a  target="_blank" href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>
+|
+
+<span class="param-type"><a href="module-controllers.html#.StaticsControllerFile">StaticsControllerFile</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+
+            
+                
+
+    
+
+    <h4 class="name" id=".StaticsControllerMiddlewaresFn"><span class="type-signature"></span>StaticsControllerMiddlewaresFn<span class="signature">(app)</span><span class="type-signature"> &rarr; {<a  target="_blank" href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a>.&lt;<a href="global.html#MiddlewareLike">MiddlewareLike</a>>}</span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="controllers_common_statics.js.html">controllers/common/statics.js</a>, <a href="controllers_common_statics.js.html#line74">line 74</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>app</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="module-core.Jimpex.html">Jimpex</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>A reference for the container.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a  target="_blank" href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a>.&lt;<a href="global.html#MiddlewareLike">MiddlewareLike</a>></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+            
+                
+<h4 class="name" id=".StaticsControllerOptions">StaticsControllerOptions</h4>
+
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="controllers_common_statics.js.html">controllers/common/statics.js</a>, <a href="controllers_common_statics.js.html#line40">line 40</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>files</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a  target="_blank" href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a>.&lt;<a href="module-controllers.html#.StaticsControllerFileLike">StaticsControllerFileLike</a>></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>A list of filenames or
+<a href="module-controllers.html#.StaticsControllerFile"><code>StaticsControllerFile</code></a>
+definitions.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>methods</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a  target="_blank" href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>.&lt;<a  target="_blank" href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>, <a  target="_blank" href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a>></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>A dictionary of all the HTTP methods
+the controller will use in order to
+serve the files. If <code>all</code> is set to
+true, all the other flags will be
+ignored.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>paths</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="module-controllers.html#.StaticsControllerPathsOptions">StaticsControllerPathsOptions</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The &quot;master paths&quot; the controller
+uses to prefix all file routes and
+paths.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<div class="description usertext">
+    <p>These are the options that allow you to customize the controller, how, to and from
+where the files are served.</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a  target="_blank" href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+
+            
+                
+<h4 class="name" id=".StaticsControllerPathsOptions">StaticsControllerPathsOptions</h4>
+
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="controllers_common_statics.js.html">controllers/common/statics.js</a>, <a href="controllers_common_statics.js.html#line25">line 25</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>route</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a  target="_blank" href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>A custom route to prefix all the file routes.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>source</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a  target="_blank" href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>A custom path to prefix all the file paths.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<div class="description usertext">
+    <p>They are like &quot;master paths&quot; that get prepended to all the file paths and routes the
+controller use.</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a  target="_blank" href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+
+            
+                
+<h4 class="name" id=".StaticsControllerWrapperOptions">StaticsControllerWrapperOptions</h4>
+
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="controllers_common_statics.js.html">controllers/common/statics.js</a>, <a href="controllers_common_statics.js.html#line59">line 59</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>middlewares</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="module-controllers.html#.StaticsControllerMiddlewaresFn">StaticsControllerMiddlewaresFn</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Function can be used to add custom middlewares on the file routes. If implemented, it
+must return a list of middlewares when executed.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="module-controllers.html#.StaticsControllerOptions">StaticsControllerOptions</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+
+            
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.6</a> using a forked <a href="https://github.com/homer0/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+
+<script src="scripts/collapse.js" defer></script>
+
+
+</body>
+</html>

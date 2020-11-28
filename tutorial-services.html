@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8" />
+    <title>services - jimpex docs</title>
+    
+    
+    
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css" />
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css" />
+    <script src="scripts/nav.js" defer></script>
+    <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no" />
+    <link rel="shortcut icon" href="icons/favicon-48.png" />
+    <link rel="apple-touch-icon" sizes="48x48" href="icons/favicon-48.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="icons/favicon-72.png" />
+    <link rel="apple-touch-icon" sizes="96x96" href="icons/favicon-96.png" />
+    <link rel="apple-touch-icon" sizes="144x144" href="icons/favicon-144.png" />
+    <link rel="apple-touch-icon" sizes="192x192" href="icons/favicon-192.png" />
+    <link rel="apple-touch-icon" sizes="256x256" href="icons/favicon-256.png" />
+    <link rel="apple-touch-icon" sizes="384x384" href="icons/favicon-384.png" />
+    <link rel="apple-touch-icon" sizes="512x512" href="icons/favicon-512.png" />
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    <h2><a href="index.html" class="home-link">jimpex</a></h2><ul class="ref-links">
+            <li><a
+                class="ref-link -yarn"
+                title="View the package on Yarn"
+                href="https://yarnpkg.com/package/jimpex"
+                target="_blank"
+            >View the package on Yarn</a></li>
+        
+
+            <li><a
+                class="ref-link -github"
+                title="Go to the GitHub repository"
+                href="https://github.com/homer0/jimpex"
+                target="_blank"
+            >Go to the GitHub repository</a></li>
+        
+
+            <li><a
+                class="ref-link -npm"
+                title="View the package on NPM"
+                href="https://www.npmjs.com/package/jimpex"
+                target="_blank"
+            >View the package on NPM</a></li>
+        </ul><h3>Modules</h3><ul><li><a href="module-constants.html">constants</a></li><li><a href="module-controllers.html">controllers</a></li><li><a href="module-core.html">core</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-core.html#~jimpex">jimpex</a></li></ul></li><li><a href="module-functions.html">functions</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-functions.html#.createRouteExpression">createRouteExpression</a></li><li data-type='method' style='display: none;'><a href="module-functions.html#.escapeForRegExp">escapeForRegExp</a></li><li data-type='method' style='display: none;'><a href="module-functions.html#.removeLeadingSlash">removeLeadingSlash</a></li><li data-type='method' style='display: none;'><a href="module-functions.html#.removeSlashes">removeSlashes</a></li><li data-type='method' style='display: none;'><a href="module-functions.html#.removeTrailingSlash">removeTrailingSlash</a></li></ul></li><li><a href="module-middlewares.html">middlewares</a></li><li><a href="module-services.html">services</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-services.html#.appErrorGenerator">appErrorGenerator</a></li><li data-type='method' style='display: none;'><a href="module-services.html#.httpErrorGenerator">httpErrorGenerator</a></li><li data-type='method' style='display: none;'><a href="module-services.html#.sendFile">sendFile</a></li></ul></li><li><a href="module-wrappers.html">wrappers</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-wrappers.html#.controller">controller</a></li><li data-type='method' style='display: none;'><a href="module-wrappers.html#.controllerCreator">controllerCreator</a></li><li data-type='method' style='display: none;'><a href="module-wrappers.html#.middleware">middleware</a></li><li data-type='method' style='display: none;'><a href="module-wrappers.html#.middlewareCreator">middlewareCreator</a></li></ul></li></ul><h3>Tutorials</h3><ul><li><a href="tutorial-controllers.html">controllers</a></li><li><a href="tutorial-middlewares.html">middlewares</a></li><li><a href="tutorial-options.html">options</a></li><li><a href="tutorial-services.html">services</a></li></ul><h3><a href="global.html">Global</a></h3>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">services</h1>
+    
+
+    <section>
+  <header>
+    <h2>services</h2>
+  </header>
+  <article class="tutorial">
+    <h1>Built-in Services</h1>
+<p>All of these controllers are available on the Jimpex package and can be easily required and implemented.</p>
+<p>In the case of the services from the modules <code>api</code>, <code>http</code> and <code>common</code>, you can register them when the app starts by using the <code>defaultService</code> option (Check the options document for more information).</p>
+<h2>API Client</h2>
+<p>An implementation of the <a href="https://github.com/homer0/wootils/blob/master/documents/shared/APIClient.md">wootils API Client</a> but that is connected to the HTTP service, to allow logging and forwarding of the headers.</p>
+<ul>
+<li>Module: <code>http</code></li>
+<li>Requires: <code>http</code> and <code>appError</code></li>
+</ul>
+<pre class="prettyprint source lang-js"><code>const {
+  Jimpex,
+  services: {
+    common: { appError },
+    http: { apiClient, http },
+  },
+};
+
+class App extends Jimpex {
+  boot() {
+    // Register the dependencies...
+    this.register(http);
+    this.register(appError);
+
+    // Register the client
+    this.register(apiClient);
+  }
+}
+</code></pre>
+<p>The service has a few options that can be customized:</p>
+<pre class="prettyprint source lang-js"><code>{
+  // The name the service will have in the container; in case you need more than one.
+  serviceName: 'apiClient',
+
+  // The name of the configuration setting that will contain the API `url` and `endpoints`.
+  // If this is not customized, but the `serviceName` is, this value will be set to the
+  // same as the `serviceName`.
+  configurationSetting: 'api',
+
+  // The class the service will instantiate. This is in case you end up extending the
+  // base one in order to add custommethods.
+  clientClass: APIClient,
+}
+</code></pre>
+<p>You can use the provider as a function to modify the options:</p>
+<pre class="prettyprint source lang-js"><code>const {
+  Jimpex,
+  services: {
+    common: { appError },
+    http: { apiClient, http },
+  },
+};
+
+class App extends Jimpex {
+  boot() {
+    // Register the dependencies...
+    this.register(http);
+    this.register(appError);
+
+    // Register the client
+    this.register(apiClient({
+      serviceName: 'myCustomAPIService',
+      configurationSetting: 'myapi',
+    });
+  }
+}
+</code></pre>
+<h2>App Error</h2>
+<p>A very simple subclass of <code>Error</code> but with support for context information. It can be used to customize the error handler responses.</p>
+<ul>
+<li>Module: <code>common</code></li>
+</ul>
+<pre class="prettyprint source lang-js"><code>const {
+  Jimpex,
+  services: {
+    common: { appError },
+  },
+};
+
+class App extends Jimpex {
+  boot() {
+    // Register the service
+    this.register(appError);
+  }
+}
+</code></pre>
+<p>By registering the &quot;service&quot;, two things are added to the container: The class declaration, so you can construct the errors, and a shorthand function that does the same:</p>
+<pre class="prettyprint source lang-js"><code>const AppError = app.get('AppError');
+throw new AppError('Something happened', {
+  someProp: 'someValue',
+});
+// or
+const appError = app.get('appError');
+throw appError('Something happened', {
+  someProp: 'someValue',
+});
+</code></pre>
+<p>This is useful if you are building an app with multiple known exceptions, you can use the context to send useful information.</p>
+<h2>Ensure bearer token</h2>
+<p>A service-middleware that allows you to validate and retrieve a bearer token from the incoming requests <code>Authorization</code> header.</p>
+<p>It's a <em>&quot;service-middleware&quot;</em> because when you access the service, it doesn't return a class/service instance, but a middleware function for you to use on your controller routes.</p>
+<ul>
+<li>Module: <code>utils</code></li>
+<li>Requires: <code>appError</code></li>
+</ul>
+<pre class="prettyprint source lang-js"><code>const {
+  Jimpex,
+  services: {
+    common: { appError },
+    utils: { ensureBearerToken },
+  },
+};
+
+class App extends Jimpex {
+  boot() {
+    // Register the dependencies...
+    this.register(appError);
+
+    // Register the service
+    this.register(ensureBearerToken);
+  }
+}
+</code></pre>
+<p>This service has a few default options:</p>
+<pre class="prettyprint source lang-js"><code>{
+  // The information for the error generated when no token is found.
+  error: {
+    // The error message.
+    message: 'Unauthorized',
+    // The HTTP status associated to the error, this is for the error handler.
+    status: 401,
+    // Extra context information for the error handler to add to the response.
+    response: {},
+  },
+  // The regular expression used to validate and extract the token.
+  expression: /bearer (.*?)(?:$|\s)/i,
+  // The name of the property on `res.locals` where the token will be saved.
+  local: 'token',
+}
+</code></pre>
+<p>You modify those default values by using the provider as a function when registering:</p>
+<pre class="prettyprint source lang-js"><code>const {
+  Jimpex,
+  services: {
+    common: { appError },
+    utils: { ensureBearerToken },
+  },
+};
+
+class App extends Jimpex {
+  boot() {
+    // Register the dependencies...
+    this.register(appError);
+
+    // Register the service
+    this.register(ensureBearerToken({
+      error: {
+        message: 'You are not authorized to access this route',
+      },
+      local: 'userToken',
+    }));
+  }
+}
+</code></pre>
+<p>Now, if the token processes a request and detects a valid token, it will save it on <code>res.locals.token</code>:</p>
+<pre class="prettyprint source lang-js"><code>const myCtrl = controller((app) => {
+  const router = app.get('router');
+  const ensureBearerToken = app.get('ensureBearerToken');
+  return [router.get('/something', [
+    ensureBearerToken,
+    (req, res, next) => {
+      console.log('Token:', res.locals.token);
+      next();
+    },
+  ])];
+});
+</code></pre>
+<h2>HTTP Error</h2>
+<p>Another type of error, but specific for the HTTP requests the app does with the API client. This is a subclass of <code>AppError</code>. The only advantage over <code>AppError</code> is that you know the that the type of error is specific to requests and that it has a paramter for an HTTP status.</p>
+<ul>
+<li>Module: <code>common</code></li>
+</ul>
+<pre class="prettyprint source lang-js"><code>const {
+  Jimpex,
+  services: {
+    common: { httpError },
+  },
+};
+
+class App extends Jimpex {
+  boot() {
+    // Register the service
+    this.register(httpError);
+  }
+}
+</code></pre>
+<p>By registering the &quot;service&quot;, two things are added to the container: The class declaration, so you can construct the errors, and a shorthand function that does the same:</p>
+<pre class="prettyprint source lang-js"><code>const HTTPError = app.get('HTTPError');
+throw new AppError('Not found', 404);
+// or
+const httpError = app.get('httpError');
+throw httpError('Not found', 404);
+</code></pre>
+<h2>Send File</h2>
+<p>It allows you to send a file on a response with a path relative to the app executable.</p>
+<p>The <code>sendFile</code> doesn't return a class service instance but just a function.</p>
+<ul>
+<li>Module: <code>common</code></li>
+</ul>
+<pre class="prettyprint source lang-js"><code>const {
+  Jimpex,
+  services: {
+    common: { sendFile },
+  },
+};
+
+class App extends Jimpex {
+  boot() {
+    // Register the service
+    this.register(sendFile);
+  }
+}
+</code></pre>
+<p>Done, you can now use it on your middlewares and/or controllers routes to send files as responses:</p>
+<pre class="prettyprint source lang-js"><code>const myCtrl = controller((app) => {
+  const router = app.get('router');
+  const sendFile = app.get('sendFile');
+  return [router.get('/something', [
+    (req, res, next) => {
+      sendFile(res, './something.html', next);
+    },
+  ])];
+});
+</code></pre>
+<p>By default, the path of the file is relative to the directory where the app executable is located, but you can change the location (<a href="https://github.com/homer0/wootils/blob/master/documents/node/pathUtils.md#multiple-locations">Check <code>PathUtils</code> locations</a>) by adding an extra parameter:</p>
+<pre class="prettyprint source lang-js"><code>const myCtrl = controller((app) => {
+  const router = app.get('router');
+  const sendFile = app.get('sendFile');
+  return [router.get('/something', [
+    (req, res, next) => {
+      sendFile(res, './something.html', next, 'home');
+    },
+  ])];
+});
+</code></pre>
+<p>In this last example, the path to the file is relative to the project root directory.</p>
+<h2>Frontend Fs</h2>
+<p>This service allows the app to easily read static files. The idea behind centralizing this functionalities into a service is that is pretty common to have bundling tools to generate the frontend, and on that process files can have different paths or not even be generated all, that's why this service exists.</p>
+<p>The service can be extended/overwritten to accommodate any requirements and avoid having to update or add <code>if</code>s to every <code>fs</code> call the app does. Another <em>'feature'</em> of this service is that all the paths are relative to the directory where the app executable is located, so you don't have to remember the relative path from the place you are accessing a file to the place where it's located.</p>
+<ul>
+<li>Module: <code>common</code></li>
+</ul>
+<pre class="prettyprint source lang-js"><code>const {
+  Jimpex,
+  services: {
+    frontend: { frontendFs },
+  },
+};
+
+class App extends Jimpex {
+  boot() {
+    // Register the service
+    this.register(frontendFs);
+  }
+}
+</code></pre>
+<p>Now, whenever you are reading/writing/deleting a file that was generated/belongs to the frontend, you can use this service methods:</p>
+<ul>
+<li><code>.read(filepath, [encoding='utf-8'])</code></li>
+<li><code>.write(filepath, data)</code></li>
+<li><code>.delete(filepath)</code></li>
+</ul>
+<h2>HTML Generator</h2>
+<p>A service that allows you to generate an HTML file when the app gets started and inject contents of the configuration as a <code>window</code> variable.</p>
+<ul>
+<li>Module: <code>html</code></li>
+<li>Requires: <code>frontendFs</code></li>
+</ul>
+<pre class="prettyprint source lang-js"><code>const {
+  Jimpex,
+  services: {
+    frontend: { frontendFs },
+    html: { htmlGenerator },
+  },
+};
+
+class App extends Jimpex {
+  boot() {
+    // Register the dependencies...
+    this.register(frontendFs);
+
+    // Register the service
+    this.register(htmlGenerator);
+  }
+}
+</code></pre>
+<p>The service, after registering, it hooks itself to the app event that gets fired when it starts, so it can create the file automatically.</p>
+<p>Now, this service has a few default options, so instead of explaining which are, we'll see each option on detail:</p>
+<pre class="prettyprint source lang-js"><code>{
+  // The name the service will have in the container; in case you need more than one.
+  serviceName: 'htmlGenerator',
+
+  // The name of a service from will it obtain the values for the template. When
+  // instantiated, it will look for it on the container, and if is not avaiable,
+  // it will just ignore it and use `configurationKeys`.
+  // You can completely by setting the value to `null`.
+  valuesService: 'htmlGeneratorValues',
+
+  // The name of the file it should use as template.
+  template: 'index.tpl.html',
+
+  // The name of the generated file.
+  file: 'index.html',
+
+  // Whether or not to delete the template after generating the file.
+  deleteTemplateAfter: true,
+
+  // The placeholder string where the information will be written.
+  replacePlaceholder: '{{appConfiguration}}',
+
+  // A dynamic placeholder to replace single values on the template.
+  valuesExpression: /\{\{(.*?)\}\}/ig,
+
+  // The name of the variable that will have the information on the file.
+  variable: 'appConfiguration',
+
+  // A list of settings from the app configuration that will be used as the
+  // information to inject on the file.
+  configurationKeys: ['features', 'version', 'postMessagesPrefix'],
+}
+</code></pre>
+<p>To modify the options, you just need to use provider as a function:</p>
+<pre class="prettyprint source lang-js"><code>const {
+  Jimpex,
+  services: {
+    frontend: { frontendFs },
+    html: { htmlGenerator },
+  },
+};
+
+class App extends Jimpex {
+  boot() {
+    // Register the dependencies...
+    this.register(frontendFs);
+
+    // Register the service
+    this.register(htmlGenerator({
+      template: 'template.tpl',
+      file: 'my-index.html',
+      ...
+    }));
+  }
+}
+</code></pre>
+<h2>HTTP</h2>
+<p>A set of utilities to work with HTTP requests and responses.</p>
+<ul>
+<li>Module: <code>http</code></li>
+</ul>
+<pre class="prettyprint source lang-js"><code>const {
+  Jimpex,
+  services: {
+    http: { http },
+  },
+};
+
+class App extends Jimpex {
+  boot() {
+    // Register the service
+    this.register(http);
+  }
+}
+</code></pre>
+<p>The <code>http</code> service has three methods:</p>
+<ul>
+<li><code>getIPFromRequest(req)</code>: It allows you to get the IP address from an app request.</li>
+<li><code>getCustomHeadersFromRequest(req)</code>: It returns a dictionary with all the custom headers a request may have, except for <code>x-forwarded-for</code>.</li>
+<li><code>fetch(url, options)</code>: Probably the most important as is the one the app uses to make requests to external services. This service supports the same signature as the native <code>fetch</code> function, with the addition that you can send a request object as <code>req</code> on the options and the method will include the <code>x-forwarded-for</code> method with the request IP address (<code>getIPFromRequest</code>) and all the request custom headers (<code>getCustomHeadersFromRequest</code>).</li>
+</ul>
+<p>Also, if you have a configuration setting named <code>debug.logRequests</code> with the value of <code>true</code>, it will log information of all the outgoing requests and their responses on the console.</p>
+<h2>Responses builder</h2>
+<p>A service that generates JSON and HTML responses.</p>
+<ul>
+<li>Module: <code>http</code></li>
+</ul>
+<pre class="prettyprint source lang-js"><code>const {
+  Jimpex,
+  services: {
+    http: { responsesBuilder },
+  },
+};
+
+class App extends Jimpex {
+  boot() {
+    // Register the service
+    this.register(responsesBuilder);
+  }
+}
+</code></pre>
+<p>This service has only two methods:</p>
+<ul>
+<li><code>json(res, data, status = 200, metadata = {})</code>: To write regular JSON responses.</li>
+<li><code>htmlPostMessage(res, title, message, status = 200, options = {})</code>: To write an HTML response that sends a post message. Very useful for when the app opened the route using a popup. The last parameter allows you to customize the HTML response:</li>
+</ul>
+<pre class="prettyprint source lang-js"><code>{
+  // The target that will emit the `postMessage`.
+  target: 'window.opener',
+
+  //  Whether or not to do a `window.close` after sending the message.
+  close: true,
+
+  // How many ms should it wait before closing the window, if `options.close` is `true`.
+  closeDelay: 700,
+}
+</code></pre>
+  </article>
+  
+</section>
+
+
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.6</a> using a forked <a href="https://github.com/homer0/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+
+<script src="scripts/collapse.js" defer></script>
+
+
+</body>
+</html>

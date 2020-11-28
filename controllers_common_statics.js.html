@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8" />
+    <title>controllers/common/statics.js - jimpex docs</title>
+    
+    
+    
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css" />
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css" />
+    <script src="scripts/nav.js" defer></script>
+    <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no" />
+    <link rel="shortcut icon" href="icons/favicon-48.png" />
+    <link rel="apple-touch-icon" sizes="48x48" href="icons/favicon-48.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="icons/favicon-72.png" />
+    <link rel="apple-touch-icon" sizes="96x96" href="icons/favicon-96.png" />
+    <link rel="apple-touch-icon" sizes="144x144" href="icons/favicon-144.png" />
+    <link rel="apple-touch-icon" sizes="192x192" href="icons/favicon-192.png" />
+    <link rel="apple-touch-icon" sizes="256x256" href="icons/favicon-256.png" />
+    <link rel="apple-touch-icon" sizes="384x384" href="icons/favicon-384.png" />
+    <link rel="apple-touch-icon" sizes="512x512" href="icons/favicon-512.png" />
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    <h2><a href="index.html" class="home-link">jimpex</a></h2><ul class="ref-links">
+            <li><a
+                class="ref-link -yarn"
+                title="View the package on Yarn"
+                href="https://yarnpkg.com/package/jimpex"
+                target="_blank"
+            >View the package on Yarn</a></li>
+        
+
+            <li><a
+                class="ref-link -github"
+                title="Go to the GitHub repository"
+                href="https://github.com/homer0/jimpex"
+                target="_blank"
+            >Go to the GitHub repository</a></li>
+        
+
+            <li><a
+                class="ref-link -npm"
+                title="View the package on NPM"
+                href="https://www.npmjs.com/package/jimpex"
+                target="_blank"
+            >View the package on NPM</a></li>
+        </ul><h3>Modules</h3><ul><li><a href="module-constants.html">constants</a></li><li><a href="module-controllers.html">controllers</a></li><li><a href="module-core.html">core</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-core.html#~jimpex">jimpex</a></li></ul></li><li><a href="module-functions.html">functions</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-functions.html#.createRouteExpression">createRouteExpression</a></li><li data-type='method' style='display: none;'><a href="module-functions.html#.escapeForRegExp">escapeForRegExp</a></li><li data-type='method' style='display: none;'><a href="module-functions.html#.removeLeadingSlash">removeLeadingSlash</a></li><li data-type='method' style='display: none;'><a href="module-functions.html#.removeSlashes">removeSlashes</a></li><li data-type='method' style='display: none;'><a href="module-functions.html#.removeTrailingSlash">removeTrailingSlash</a></li></ul></li><li><a href="module-middlewares.html">middlewares</a></li><li><a href="module-services.html">services</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-services.html#.appErrorGenerator">appErrorGenerator</a></li><li data-type='method' style='display: none;'><a href="module-services.html#.httpErrorGenerator">httpErrorGenerator</a></li><li data-type='method' style='display: none;'><a href="module-services.html#.sendFile">sendFile</a></li></ul></li><li><a href="module-wrappers.html">wrappers</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-wrappers.html#.controller">controller</a></li><li data-type='method' style='display: none;'><a href="module-wrappers.html#.controllerCreator">controllerCreator</a></li><li data-type='method' style='display: none;'><a href="module-wrappers.html#.middleware">middleware</a></li><li data-type='method' style='display: none;'><a href="module-wrappers.html#.middlewareCreator">middlewareCreator</a></li></ul></li></ul><h3>Tutorials</h3><ul><li><a href="tutorial-controllers.html">controllers</a></li><li><a href="tutorial-middlewares.html">middlewares</a></li><li><a href="tutorial-options.html">options</a></li><li><a href="tutorial-services.html">services</a></li></ul><h3><a href="global.html">Global</a></h3>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">controllers/common/statics.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>const path = require('path');
+const ObjectUtils = require('wootils/shared/objectUtils');
+const mime = require('mime');
+const { controllerCreator } = require('../../utils/wrappers');
+const { removeSlashes } = require('../../utils/functions');
+
+/**
+ * @typedef {import('../../services/common/sendFile').SendFile} SendFile
+ */
+
+/**
+ * If you wan to customize how, to, and from where files are served, instead of just
+ * sending a list of strings, you can use an object with these properties.
+ *
+ * @typedef {Object} StaticsControllerFile
+ * @property {string}                  route    The route the controller will use for the
+ *                                              file.
+ * @property {string}                  path     The path for the file, relative to the
+ *                                              root of the app.
+ * @property {Object.&lt;string, string>} headers  A dictionary of custom headers to send on
+ *                                              the file response.
+ * @parent module:controllers
+ */
+
+/**
+ * They are like "master paths" that get prepended to all the file paths and routes the
+ * controller use.
+ *
+ * @typedef {Object} StaticsControllerPathsOptions
+ * @property {string} route   A custom route to prefix all the file routes.
+ * @property {string} source  A custom path to prefix all the file paths.
+ * @parent module:controllers
+ */
+
+/**
+ * @typedef {string | StaticsControllerFile} StaticsControllerFileLike
+ * @parent module:controllers
+ */
+
+/**
+ * These are the options that allow you to customize the controller, how, to and from
+ * where the files are served.
+ *
+ * @typedef {Object} StaticsControllerOptions
+ * @property {StaticsControllerFileLike[]}   files    A list of filenames or
+ *                                                    {@link StaticsControllerFile}
+ *                                                    definitions.
+ * @property {Object.&lt;string, boolean>}      methods  A dictionary of all the HTTP methods
+ *                                                    the controller will use in order to
+ *                                                    serve the files. If `all` is set to
+ *                                                    true, all the other flags will be
+ *                                                    ignored.
+ * @property {StaticsControllerPathsOptions} paths    The "master paths" the controller
+ *                                                    uses to prefix all file routes and
+ *                                                    paths.
+ * @parent module:controllers
+ */
+
+/**
+ * @typedef {StaticsControllerOptions &amp; StaticsControllerWrapperOptionsProperties}
+ * StaticsControllerWrapperOptions
+ * @parent module:controllers
+ */
+
+/**
+ * @typedef {Object} StaticsControllerWrapperOptionsProperties
+ * @property {StaticsControllerMiddlewaresFn} middlewares
+ * Function can be used to add custom middlewares on the file routes. If implemented, it
+ * must return a list of middlewares when executed.
+ * @augments StaticsControllerWrapperOptions
+ * @parent module:controllers
+ */
+
+/**
+ * @callback StaticsControllerMiddlewaresFn
+ * @param {Jimpex} app  A reference for the container.
+ * @returns {MiddlewareLike[]}
+ * @parent module:controllers
+ */
+
+/**
+ * This controller allows you to serve specific files from any folder to any route without
+ * the need of mounting directories as "static".
+ *
+ * @parent module:controllers
+ */
+class StaticsController {
+  /**
+   * @param {SendFile} sendFile
+   * To send the responses for the files.
+   * @param {Partial&lt;StaticsControllerOptions>} options
+   * The options to customize the controller.
+   */
+  constructor(sendFile, options = {}) {
+    /**
+     * A local reference for the `sendFile` service.
+     *
+     * @type {SendFile}
+     * @access protected
+     * @ignore
+     */
+    this._sendFile = sendFile;
+    /**
+     * The controller configuration options.
+     *
+     * @type {StaticsControllerOptions}
+     * @access protected
+     * @ignore
+     */
+    this._options = this._normalizeOptions(
+      ObjectUtils.merge(
+        {
+          files: options.files || ['favicon.ico', 'index.html'],
+          methods: {
+            all: false,
+            get: true,
+          },
+          paths: {
+            route: '',
+            source: './',
+          },
+        },
+        options,
+      ),
+    );
+    /**
+     * A dictionary of all the formatted files ({@link StaticsControllerFile}). It uses
+     * the files routes as keys.
+     *
+     * @type {Object.&lt;string, StaticsControllerFile>}
+     * @access protected
+     * @ignore
+     */
+    this._files = this._createFiles();
+  }
+  /**
+   * Defines all the needed routes to serve the files.
+   *
+   * @param {ExpressRouter}       router            To generate the routes.
+   * @param {ExpressMiddleware[]} [middlewares=[]]  A list of custom middlewares that will
+   *                                                be added before the one that serves a
+   *                                                file.
+   * @returns {ExpressRouter}
+   */
+  addRoutes(router, middlewares = []) {
+    const { methods } = this._options;
+    const use = methods.all
+      ? ['all']
+      : Object.keys(methods).reduce(
+          (acc, name) => (methods[name] ? [...acc, name] : acc),
+          [],
+        );
+
+    Object.keys(this._files).forEach((route) => {
+      const file = this._files[route];
+      const fileMiddleware = this._getMiddleware(file);
+      use.forEach((method) =>
+        this._addRoute(router, method, file, fileMiddleware, middlewares),
+      );
+    });
+
+    return router;
+  }
+  /**
+   * The controller configuration options.
+   *
+   * @type {StaticsControllerOptions}
+   * @todo Remove Object.freeze.
+   */
+  get options() {
+    return Object.freeze(this._options);
+  }
+  /**
+   * Generates a route for an specific file.
+   *
+   * @param {ExpressRouter}         router          To create the actual route.
+   * @param {string}                method          The HTTP method for the route.
+   * @param {StaticsControllerFile} file            The file information.
+   * @param {ExpressMiddleware}     fileMiddleware  The middleware that serves the file.
+   * @param {ExpressMiddleware[]}   middlewares     A list of custom middlewares to add
+   *                                                before the one that serves the file.
+   * @returns {ExpressRouter}
+   * @access protected
+   * @ignore
+   */
+  _addRoute(router, method, file, fileMiddleware, middlewares) {
+    return router[method](file.route, [...middlewares, fileMiddleware]);
+  }
+  /**
+   * Parses each of the received files in order to create a {@link StaticsControllerFile}.
+   *
+   * @returns {Object.&lt;string, StaticsControllerFile>}
+   * @access protected
+   * @ignore
+   */
+  _createFiles() {
+    const { files, paths } = this._options;
+    const routePath = removeSlashes(paths.route, false, true);
+    return files.reduce((formatted, file) => {
+      let source;
+      let route;
+      let headers;
+      if (typeof file === 'object') {
+        ({ route, source, headers } = file);
+      } else {
+        source = file;
+        route = file;
+      }
+
+      source = path.join(paths.source, source);
+      route = removeSlashes(route, true, false);
+      route = `${routePath}/${route}`;
+
+      return {
+        ...formatted,
+        [route]: {
+          source,
+          route,
+          headers: headers || {},
+        },
+      };
+    }, {});
+  }
+  /**
+   * Generates the middleware to serve a specific file.
+   *
+   * @param {StaticsControllerFile} file  The file information.
+   * @returns {ExpressMiddleware}
+   * @access protected
+   * @ignore
+   */
+  _getMiddleware(file) {
+    return (req, res, next) => {
+      const extension = path.parse(file.source).ext.substr(1);
+      const headers = ObjectUtils.merge(
+        { 'Content-Type': mime.getType(extension) },
+        file.headers,
+      );
+
+      Object.keys(headers).forEach((headerName) => {
+        res.setHeader(headerName, headers[headerName]);
+      });
+
+      this._sendFile(res, file.source, next);
+    };
+  }
+  /**
+   * Helper method that validates and normalizes the options received by the controller.
+   *
+   * @param {StaticsControllerOptions} options  The options to validate.
+   * @returns {StaticsControllerOptions}
+   * @throws {Error} If no files are specified.
+   * @throws {Error} If methods is not defined.
+   * @throws {Error} If no methods are enabled.
+   * @throws {Error} If there's an invalid HTTP method.
+   * @access protected
+   * @ignore
+   */
+  _normalizeOptions(options) {
+    if (!options.files || !options.files.length) {
+      throw new Error('You need to specify a list of files');
+    } else if (!options.methods) {
+      throw new Error('You need to specify which HTTP methods are allowed for the files');
+    }
+
+    const methods = Object.keys(options.methods);
+
+    const atLeastOne = methods.some((method) => options.methods[method]);
+    if (!atLeastOne) {
+      throw new Error('You need to enable at least one HTTP method to serve the files');
+    }
+
+    const allowedMethods = [
+      'all',
+      'get',
+      'head',
+      'post',
+      'put',
+      'delete',
+      'connect',
+      'options',
+      'trace',
+    ];
+
+    const invalid = methods.find(
+      (method) => !allowedMethods.includes(method.toLowerCase()),
+    );
+    if (invalid) {
+      throw new Error(`${invalid} is not a valid HTTP method`);
+    }
+
+    const newMethods = methods.reduce(
+      (acc, method) => ({
+        ...acc,
+        [method.toLowerCase()]: options.methods[method],
+      }),
+      {},
+    );
+
+    return {
+      ...options,
+      methods: newMethods,
+    };
+  }
+}
+/**
+ * This controller allows you to serve specific files from any folder to any route without
+ * the need of mounting directories as "static".
+ *
+ * @type {ControllerCreator&lt;StaticsControllerWrapperOptions>}
+ * @parent module:controllers
+ */
+const staticsController = controllerCreator((options = {}) => (app) => {
+  const router = app.get('router');
+  const ctrl = new StaticsController(app.get('sendFile'), options);
+  let useMiddlewares;
+  if (options.middlewares) {
+    useMiddlewares = options
+      .middlewares(app)
+      .map((middleware) => (middleware.connect ? middleware.connect(app) : middleware));
+  }
+
+  return ctrl.addRoutes(router, useMiddlewares);
+});
+
+module.exports.StaticsController = StaticsController;
+module.exports.staticsController = staticsController;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.6</a> using a forked <a href="https://github.com/homer0/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+
+<script src="scripts/collapse.js" defer></script>
+
+
+</body>
+</html>
