@@ -3,5 +3,5 @@ coverage
 docs
 documents
 tests
-utils
+/utils
 yarn-error.log
