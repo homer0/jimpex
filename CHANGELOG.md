@@ -1,3 +1,10 @@
+## [6.0.1](https://github.com/homer0/jimpex/compare/6.0.0...6.0.1) (2020-12-01)
+
+
+### Bug Fixes
+
+* prevent the utils folder from being ignored ([3b76d86](https://github.com/homer0/jimpex/commit/3b76d86cdbe7b2804faa7778565249a489033908))
+
 # [6.0.0](https://github.com/homer0/jimpex/compare/5.2.0...6.0.0) (2020-11-28)
 
 
