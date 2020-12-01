@@ -21,9 +21,9 @@
     "spdy": "^4.0.2"
   },
   "devDependencies": {
-    "@homer0/eslint-plugin": "^6.0.0",
-    "@homer0/prettier-config": "^1.1.0",
-    "@homer0/prettier-plugin-jsdoc": "^1.1.1",
+    "@homer0/eslint-plugin": "^6.0.1",
+    "@homer0/prettier-config": "^1.1.1",
+    "@homer0/prettier-plugin-jsdoc": "^1.1.2",
     "@semantic-release/changelog": "^5.0.1",
     "@semantic-release/git": "^9.0.0",
     "eslint": "^7.14.0",
