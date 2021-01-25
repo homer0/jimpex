@@ -1,3 +1,4 @@
 #!/bin/bash -e
 
 tsc
+cp ./utils/types/index.d.ts.template ./types/src/app/index.d.ts
