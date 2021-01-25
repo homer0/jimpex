@@ -5,8 +5,8 @@ const { middlewareCreator } = require('../../utils/wrappers');
 /**
  * @typedef {import('../../types').ExpressMiddleware} ExpressMiddleware
  * @typedef {import('../../types').Logger} Logger
- * @typedef {import('../../services/http/responsesBuilder').ResponsesBuilder}
- * ResponsesBuilder
+ * @typedef {import('../../services/http/responsesBuilder').ResponsesBuilder} ResponsesBuilder
+ * @prettierignore
  */
 
 /**

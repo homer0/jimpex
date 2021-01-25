@@ -38,8 +38,8 @@ const { createRouteExpression, removeSlashes } = require('../../utils/functions'
  */
 
 /**
- * @typedef {FastHTMLOptions & FastHTMLMiddlewareOptionsProperties}
- * FastHTMLMiddlewareOptions
+ * @typedef {FastHTMLOptions & FastHTMLMiddlewareOptionsProperties} FastHTMLMiddlewareOptions
+ * @prettierignore
  */
 
 /**

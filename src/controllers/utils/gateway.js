@@ -13,8 +13,8 @@ const { providerCreator, controller } = require('../../utils/wrappers');
  * @typedef {import('../../services/http/http').HTTP} HTTP
  * @typedef {import('../../services/http/http').HTTPFetchOptions} HTTPFetchOptions
  * @typedef {import('../../services/http/http').Response} Response
- * @typedef {import('../../services/http/apiClient').APIClientConfiguration}
- * APIClientConfiguration
+ * @typedef {import('../../services/http/apiClient').APIClientConfiguration} APIClientConfiguration
+ * @prettierignore
  */
 
 /**
@@ -70,11 +70,11 @@ const { providerCreator, controller } = require('../../utils/wrappers');
  * routes.
  *
  * @typedef {Object} GatewayConfigurationEndpoints
- * @property {string | GatewayConfigurationEndpoints | GatewayConfigurationEndpoint}
- * [endpointName]
+ * @property {string | GatewayConfigurationEndpoints | GatewayConfigurationEndpoint} [endpointName]
  * It can be the path to an actual endpoint, a dictionary of sub endpoints, or a
  * definition of an endpoint with settings ({@link GatewayConfigurationEndpoint}).
  * @parent module:controllers
+ * @prettierignore
  */
 
 /**

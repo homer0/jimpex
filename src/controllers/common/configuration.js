@@ -4,9 +4,9 @@ const { controller } = require('../../utils/wrappers');
  * @typedef {import('../../types').ExpressMiddleware} ExpressMiddleware
  * @typedef {import('../../types').ExpressResponse} ExpressResponse
  * @typedef {import('../../types').AppConfiguration} AppConfiguration
- * @typedef {import('../../services/http/responsesBuilder').ResponsesBuilder}
- * ResponsesBuilder
+ * @typedef {import('../../services/http/responsesBuilder').ResponsesBuilder} ResponsesBuilder
  * @typedef {import('../../types').Controller} Controller
+ * @prettierignore
  */
 
 /**

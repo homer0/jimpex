@@ -67,9 +67,9 @@ const { removeSlashes } = require('../../utils/functions');
  */
 
 /**
- * @typedef {StaticsControllerOptions & StaticsControllerWrapperOptionsProperties}
- * StaticsControllerWrapperOptions
+ * @typedef {StaticsControllerOptions & StaticsControllerWrapperOptionsProperties} StaticsControllerWrapperOptions
  * @parent module:controllers
+ * @prettierignore
  */
 
 /**

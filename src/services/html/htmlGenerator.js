@@ -43,9 +43,9 @@ const { providerCreator } = require('../../utils/wrappers');
  */
 
 /**
- * @typedef {HTMLGeneratorOptions & HTMLGeneratorProviderOptionsProperties}
- * HTMLGeneratorProviderOptions
+ * @typedef {HTMLGeneratorOptions & HTMLGeneratorProviderOptionsProperties} HTMLGeneratorProviderOptions
  * @parent module:services
+ * @prettierignore
  */
 
 /**
