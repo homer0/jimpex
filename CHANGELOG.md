@@ -1,3 +1,10 @@
+# [6.1.0](https://github.com/homer0/jimpex/compare/6.0.1...6.1.0) (2021-01-25)
+
+
+### Features
+
+* add type definitions ([b496f00](https://github.com/homer0/jimpex/commit/b496f00c4a99718a37a4ef9e13844d732364a22e))
+
 ## [6.0.1](https://github.com/homer0/jimpex/compare/6.0.0...6.0.1) (2020-12-01)
 
 
