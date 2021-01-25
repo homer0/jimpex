@@ -46,7 +46,7 @@
     "node": ">=10.0.0"
   },
   "main": "./src/index.js",
-  "types": "./types/index.d.ts",
+  "types": "./types/src/index.d.ts",
   "husky": {
     "hooks": {
       "pre-commit": "./utils/hooks/pre-commit",
