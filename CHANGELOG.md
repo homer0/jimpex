@@ -1,3 +1,11 @@
+## [6.1.2](https://github.com/homer0/jimpex/compare/6.1.1...6.1.2) (2021-01-25)
+
+
+### Bug Fixes
+
+* hardcode the class type ([0103222](https://github.com/homer0/jimpex/commit/0103222e009b98cc970ae48df980ef9b2b4d36e8))
+* remove src folder on types ([e2ffc41](https://github.com/homer0/jimpex/commit/e2ffc41240a2076dfb877e8412998e0c0abd991b))
+
 ## [6.1.1](https://github.com/homer0/jimpex/compare/6.1.0...6.1.1) (2021-01-25)
 
 
