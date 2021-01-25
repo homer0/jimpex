@@ -1,3 +1,10 @@
+## [6.1.1](https://github.com/homer0/jimpex/compare/6.1.0...6.1.1) (2021-01-25)
+
+
+### Bug Fixes
+
+* use the right path to the types ([2b36039](https://github.com/homer0/jimpex/commit/2b36039d14bc2a9edefce39a48628b0db6e14101))
+
 # [6.1.0](https://github.com/homer0/jimpex/compare/6.0.1...6.1.0) (2021-01-25)
 
 
