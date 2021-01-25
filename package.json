@@ -60,7 +60,6 @@
     ]
   },
   "scripts": {
-    "hooks": "./utils/hooks/install",
     "test": "./utils/scripts/test",
     "lint": "./utils/scripts/lint",
     "lint:all": "./utils/scripts/lint-all",
