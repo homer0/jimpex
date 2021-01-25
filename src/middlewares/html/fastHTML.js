@@ -5,9 +5,17 @@ const { middlewareCreator } = require('../../utils/wrappers');
 const { createRouteExpression, removeSlashes } = require('../../utils/functions');
 
 /**
+ * @typedef {import('../../types').ExpressMiddleware} ExpressMiddleware
+ * @typedef {import('../../types').ExpressResponse} ExpressResponse
+ * @typedef {import('../../types').ExpressNext} ExpressNext
  * @typedef {import('../../types').EventsHub} EventsHub
  * @typedef {import('../../services/common/sendFile').SendFile} SendFile
  * @typedef {import('../../services/html/htmlGenerator').HTMLGenerator} HTMLGenerator
+ */
+
+/**
+ * @typedef {import('../../types').MiddlewareCreator<O>} MiddlewareCreator<O>
+ * @template O
  */
 
 /**
@@ -30,8 +38,8 @@ const { createRouteExpression, removeSlashes } = require('../../utils/functions'
  */
 
 /**
- * @typedef {FastHTMLOptions & FastHTMLMiddlewareOptionsProperties}
- * FastHTMLMiddlewareOptions
+ * @typedef {FastHTMLOptions & FastHTMLMiddlewareOptionsProperties} FastHTMLMiddlewareOptions
+ * @prettierignore
  */
 
 /**
@@ -39,7 +47,6 @@ const { createRouteExpression, removeSlashes } = require('../../utils/functions'
  * @property {string} htmlGenerator
  * The name of a {@link HTMLGenerator} service for the middleware to use. Default
  * `htmlGenerator`.
- * @augments FastHTMLMiddlewareOptions
  * @parent module:middlewares
  */
 

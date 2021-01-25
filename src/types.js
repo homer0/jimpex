@@ -9,14 +9,14 @@
 // ==============================================
 
 /**
- * @typedef {import('wootils/esm/node/appConfiguration').AppConfiguration}
- * AppConfiguration
+ * @typedef {import('wootils/esm/node/appConfiguration').AppConfiguration} AppConfiguration
  * @external AppConfiguration
  * @see https://homer0.github.io/wootils/module-node_appConfiguration.AppConfiguration.html
+ * @prettierignore
  */
 
 /**
- * @typedef {import('wootils/esm/shared/apiClient').default} APIClientBase
+ * @typedef {import('wootils/esm/shared/apiClient')} APIClientBase
  * @external APIClientBase
  * @see https://homer0.github.io/wootils/module-shared_apiClient.APIClient.html
  */
@@ -40,14 +40,14 @@
  */
 
 /**
- * @typedef {import('wootils/esm/node/environmentUtils').EnvironmentUtils}
- * EnvironmentUtils
+ * @typedef {import('wootils/esm/node/environmentUtils').EnvironmentUtils} EnvironmentUtils
  * @external EnvironmentUtils
  * @see https://homer0.github.io/wootils/module-node_environmentUtils.EnvironmentUtils.html
+ * @prettierignore
  */
 
 /**
- * @typedef {import('wootils/esm/shared/eventsHub').default} EventsHub
+ * @typedef {import('wootils/esm/shared/eventsHub')} EventsHub
  * @external EventsHub
  * @see https://homer0.github.io/wootils/module-shared_eventsHub.html
  */

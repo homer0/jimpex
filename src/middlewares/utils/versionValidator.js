@@ -3,8 +3,15 @@ const { code: statuses } = require('statuses');
 const { middlewareCreator } = require('../../utils/wrappers');
 
 /**
- * @typedef {import('../../services/http/responsesBuilder').ResponsesBuilder}
- * ResponsesBuilder
+ * @typedef {import('../../types').ExpressMiddleware} ExpressMiddleware
+ * @typedef {import('../../types').ExpressRequest} ExpressRequest
+ * @typedef {import('../../services/http/responsesBuilder').ResponsesBuilder} ResponsesBuilder
+ * @prettierignore
+ */
+
+/**
+ * @typedef {import('../../types').MiddlewareCreator<O>} MiddlewareCreator<O>
+ * @template O
  */
 
 /**

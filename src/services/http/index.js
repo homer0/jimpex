@@ -2,6 +2,11 @@ const { apiClient } = require('./apiClient');
 const { http } = require('./http');
 const { responsesBuilder } = require('./responsesBuilder');
 const { providers } = require('../../utils/wrappers');
+
+/**
+ * @typedef {import('../../types').Provider} Provider
+ */
+
 /**
  * The providers collection for the HTTP services.
  *

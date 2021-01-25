@@ -1,5 +1,10 @@
 const { code: statuses } = require('statuses');
 const { provider } = require('../../utils/wrappers');
+
+/**
+ * @typedef {import('../../types').Provider} Provider
+ */
+
 /**
  * A simple subclass of `Error` but with support for context information.
  *

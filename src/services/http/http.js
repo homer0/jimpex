@@ -3,8 +3,10 @@ const urijs = require('urijs');
 const { provider } = require('../../utils/wrappers');
 
 /**
- * @typedef {import('../../types').Logger}  Logger
+ * @typedef {import('../../types').Logger} Logger
+ * @typedef {import('../../types').Provider} Provider
  * @typedef {import('node-fetch').Response} Response
+ * @typedef {import('../../types').ExpressRequest} ExpressRequest
  */
 
 /**

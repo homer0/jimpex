@@ -10,6 +10,11 @@ const { providerCreator } = require('../../utils/wrappers');
  */
 
 /**
+ * @typedef {import('../../types').ProviderCreator<O>} ProviderCreator<O>
+ * @template O
+ */
+
+/**
  * The options to customize how the service gets registered.
  *
  * @typedef {Object} APIClientProviderOptions

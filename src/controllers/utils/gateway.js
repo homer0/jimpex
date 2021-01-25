@@ -3,11 +3,23 @@ const { removeSlashes, createRouteExpression } = require('../../utils/functions'
 const { providerCreator, controller } = require('../../utils/wrappers');
 
 /**
+ * @typedef {import('../../types').ExpressRouter} ExpressRouter
+ * @typedef {import('../../app').Jimpex} Jimpex
+ * @typedef {import('../../types').ExpressRequest} ExpressRequest
+ * @typedef {import('../../types').ExpressResponse} ExpressResponse
+ * @typedef {import('../../types').ExpressNext} ExpressNext
+ * @typedef {import('../../types').ExpressMiddleware} ExpressMiddleware
+ * @typedef {import('../../types').MiddlewareLike} MiddlewareLike
  * @typedef {import('../../services/http/http').HTTP} HTTP
  * @typedef {import('../../services/http/http').HTTPFetchOptions} HTTPFetchOptions
  * @typedef {import('../../services/http/http').Response} Response
- * @typedef {import('../../services/http/apiClient').APIClientConfiguration}
- * APIClientConfiguration
+ * @typedef {import('../../services/http/apiClient').APIClientConfiguration} APIClientConfiguration
+ * @prettierignore
+ */
+
+/**
+ * @typedef {import('../../types').ProviderCreator<O>} ProviderCreator<O>
+ * @template O
  */
 
 /**
@@ -58,11 +70,11 @@ const { providerCreator, controller } = require('../../utils/wrappers');
  * routes.
  *
  * @typedef {Object} GatewayConfigurationEndpoints
- * @property {string | GatewayConfigurationEndpoints | GatewayConfigurationEndpoint}
- * [endpointName]
+ * @property {string | GatewayConfigurationEndpoints | GatewayConfigurationEndpoint} [endpointName]
  * It can be the path to an actual endpoint, a dictionary of sub endpoints, or a
  * definition of an endpoint with settings ({@link GatewayConfigurationEndpoint}).
  * @parent module:controllers
+ * @prettierignore
  */
 
 /**

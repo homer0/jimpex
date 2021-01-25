@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "declaration": true,
+    "allowJs": true,
+    "emitDeclarationOnly": true,
+    "outDir": "types",
+    "rootDir": "./",
+    "target": "es6",
+    "module": "commonjs"
+  },
+  "include": ["src"]
+}

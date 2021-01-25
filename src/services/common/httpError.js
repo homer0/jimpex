@@ -2,6 +2,11 @@ const { code: statuses } = require('statuses');
 const ObjectUtils = require('wootils/shared/objectUtils');
 const { provider } = require('../../utils/wrappers');
 const { AppError } = require('./appError');
+
+/**
+ * @typedef {import('../../types').Provider} Provider
+ */
+
 /**
  * A type of error to be used on HTTP requests.
  *

@@ -1,6 +1,15 @@
 const { middlewareCreator } = require('../../utils/wrappers');
 
 /**
+ * @typedef {import('../../types').ExpressMiddleware} ExpressMiddleware
+ */
+
+/**
+ * @typedef {import('../../types').MiddlewareCreator<O>} MiddlewareCreator<O>
+ * @template O
+ */
+
+/**
  * @typedef {Object} ForceHTTPSMiddlewareOptions
  * @property {RegExp[]} ignoredRoutes  A list of regular expressions to match routes that
  *                                     should be ignored.
