@@ -2,7 +2,9 @@ const { code: statuses } = require('statuses');
 const { provider } = require('../../utils/wrappers');
 
 /**
+ * @typedef {import('../../types').Provider} Provider
  * @typedef {import('../../types').AppConfiguration} AppConfiguration
+ * @typedef {import('../../types').ExpressResponse} ExpressResponse
  */
 
 /**

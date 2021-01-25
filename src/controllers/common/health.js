@@ -1,7 +1,9 @@
 const { code: statuses } = require('statuses');
 const { controller } = require('../../utils/wrappers');
 /**
+ * @typedef {import('../../types').ExpressMiddleware} ExpressMiddleware
  * @typedef {import('../../types').AppConfiguration} AppConfiguration
+ * @typedef {import('../../types').Controller} Controller
  * @typedef {import('../../services/http/responsesBuilder').ResponsesBuilder}
  * ResponsesBuilder
  */

@@ -2,8 +2,16 @@ const mime = require('mime');
 const { middlewareCreator } = require('../../utils/wrappers');
 
 /**
+ * @typedef {import('../../types').ExpressMiddleware} ExpressMiddleware
+ * @typedef {import('../../types').ExpressResponse} ExpressResponse
+ * @typedef {import('../../types').ExpressNext} ExpressNext
  * @typedef {import('../../services/common/sendFile').SendFile} SendFile
  * @typedef {import('../../services/html/htmlGenerator').HTMLGenerator} HTMLGenerator
+ */
+
+/**
+ * @typedef {import('../../types').MiddlewareCreator<O>} MiddlewareCreator<O>
+ * @template O
  */
 
 /**

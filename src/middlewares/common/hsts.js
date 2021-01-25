@@ -1,6 +1,15 @@
 const { middlewareCreator } = require('../../utils/wrappers');
 
 /**
+ * @typedef {import('../../types').ExpressMiddleware} ExpressMiddleware
+ */
+
+/**
+ * @typedef {import('../../types').MiddlewareCreator<O>} MiddlewareCreator<O>
+ * @template O
+ */
+
+/**
  * The options to customize the HSTS header value.
  *
  * @typedef {Object} HSTSOptions

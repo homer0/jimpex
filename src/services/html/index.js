@@ -1,5 +1,10 @@
 const { providers } = require('../../utils/wrappers');
 const { htmlGenerator } = require('./htmlGenerator');
+
+/**
+ * @typedef {import('../../types').Provider} Provider
+ */
+
 /**
  * The providers collection for the HTML services.
  *

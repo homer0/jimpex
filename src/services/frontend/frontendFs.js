@@ -2,6 +2,7 @@ const fs = require('fs-extra');
 const { provider } = require('../../utils/wrappers');
 /**
  * @typedef {import('../../types').PathUtils} PathUtils
+ * @typedef {import('../../types').Provider} Provider
  */
 
 /**

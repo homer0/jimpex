@@ -2,6 +2,9 @@ const { provider } = require('../../utils/wrappers');
 
 /**
  * @typedef {import('../../types').PathUtils} PathUtils
+ * @typedef {import('../../types').Provider} Provider
+ * @typedef {import('../../types').ExpressResponse} ExpressResponse
+ * @typedef {import('../../types').ExpressNext} ExpressNext
  */
 
 /**

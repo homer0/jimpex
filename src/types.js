@@ -16,7 +16,7 @@
  */
 
 /**
- * @typedef {import('wootils/esm/shared/apiClient').default} APIClientBase
+ * @typedef {import('wootils/esm/shared/apiClient')} APIClientBase
  * @external APIClientBase
  * @see https://homer0.github.io/wootils/module-shared_apiClient.APIClient.html
  */
@@ -47,7 +47,7 @@
  */
 
 /**
- * @typedef {import('wootils/esm/shared/eventsHub').default} EventsHub
+ * @typedef {import('wootils/esm/shared/eventsHub')} EventsHub
  * @external EventsHub
  * @see https://homer0.github.io/wootils/module-shared_eventsHub.html
  */

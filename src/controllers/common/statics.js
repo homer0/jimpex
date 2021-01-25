@@ -5,7 +5,17 @@ const { controllerCreator } = require('../../utils/wrappers');
 const { removeSlashes } = require('../../utils/functions');
 
 /**
+ * @typedef {import('../../app').Jimpex} Jimpex
+ * @typedef {import('../../types').ExpressMiddleware} ExpressMiddleware
+ * @typedef {import('../../types').ExpressRouter} ExpressRouter
+ * @typedef {import('../../types').Controller} Controller
+ * @typedef {import('../../types').MiddlewareLike} MiddlewareLike
  * @typedef {import('../../services/common/sendFile').SendFile} SendFile
+ */
+
+/**
+ * @typedef {import('../../types').ControllerCreator<O>} ControllerCreator<O>
+ * @template O
  */
 
 /**
@@ -67,7 +77,6 @@ const { removeSlashes } = require('../../utils/functions');
  * @property {StaticsControllerMiddlewaresFn} middlewares
  * Function can be used to add custom middlewares on the file routes. If implemented, it
  * must return a list of middlewares when executed.
- * @augments StaticsControllerWrapperOptions
  * @parent module:controllers
  */
 

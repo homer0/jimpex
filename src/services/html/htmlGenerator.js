@@ -9,6 +9,11 @@ const { providerCreator } = require('../../utils/wrappers');
  */
 
 /**
+ * @typedef {import('../../types').ProviderCreator<O>} ProviderCreator<O>
+ * @template O
+ */
+
+/**
  * The options to customize the an `HTMLGenerator` service.
  *
  * @typedef {Object} HTMLGeneratorOptions
@@ -53,7 +58,6 @@ const { providerCreator } = require('../../utils/wrappers');
  * be injected on the template. If the service is available, the values from
  * `configurationKeys`
  * will be ignored.
- * @augments HTMLGeneratorProviderOptions
  * @parent module:services
  */
 
