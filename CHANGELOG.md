@@ -1,3 +1,15 @@
+# [7.0.0](https://github.com/homer0/jimpex/compare/6.1.2...7.0.0) (2021-04-11)
+
+
+### Bug Fixes
+
+* drop support for Node 10 ([f6267fc](https://github.com/homer0/jimpex/commit/f6267fc9d3f6c00cd917303ce9c79b95298b8464))
+
+
+### BREAKING CHANGES
+
+* This package no longer supports Node 10.
+
 ## [6.1.2](https://github.com/homer0/jimpex/compare/6.1.1...6.1.2) (2021-01-25)
 
 
