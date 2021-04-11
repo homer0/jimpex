@@ -90,8 +90,8 @@
 
     <section class="readme usertext">
         <article><h1>Jimpex</h1>
-<p><a href="https://github.com/homer0/jimpex/actions?query=workflow%3ATest"><img src="https://img.shields.io/github/workflow/status/homer0/jimpex/Test/master?style=flat-square" alt="GitHub Workflow Status (master)"></a>
-<a href="https://coveralls.io/github/homer0/jimpex?branch=master"><img src="https://img.shields.io/coveralls/github/homer0/jimpex.svg?style=flat-square" alt="Coveralls GitHub"></a>
+<p><a href="https://github.com/homer0/jimpex/actions?query=workflow%3ATest"><img src="https://img.shields.io/github/workflow/status/homer0/jimpex/Test/main?style=flat-square" alt="GitHub Workflow Status (main)"></a>
+<a href="https://coveralls.io/github/homer0/jimpex?branch=main"><img src="https://img.shields.io/coveralls/github/homer0/jimpex.svg?style=flat-square" alt="Coveralls GitHub"></a>
 <a href="https://david-dm.org/homer0/jimpex"><img src="https://img.shields.io/david/homer0/jimpex.svg?style=flat-square" alt="David"></a>
 <a href="https://david-dm.org/homer0/jimpex"><img src="https://img.shields.io/david/dev/homer0/jimpex.svg?style=flat-square" alt="David"></a></p>
 <p>Express as dependency injection container.</p>
@@ -187,7 +187,7 @@ jimpex({ ... }, { port: 2509 });
 <pre class="prettyprint source lang-js"><code>console.log(config.get('port'));
 // Will log 2509
 </code></pre>
-<p>To get more information about how the <code>appConfiguration</code> service works, you can check <a href="https://github.com/homer0/wootils/blob/master/documents/node/appConfiguration.md">its documentation on the wootils repository</a>.</p>
+<p>To get more information about how the <code>appConfiguration</code> service works, you can check <a href="https://github.com/homer0/wootils/blob/main/documents/node/appConfiguration.md">its documentation on the wootils repository</a>.</p>
 <h4>Starting the application</h4>
 <pre class="prettyprint source lang-js"><code>app.listen(2509, () => {
   console.log('The app is running!');
@@ -633,7 +633,7 @@ const app = original.ref();
 <p><a href="tutorial-middlewares.html">Read more about the built-in controllers</a></p>
 <h3>Services</h3>
 <ul>
-<li><strong>API client:</strong> An implementation of the <a href="https://github.com/homer0/wootils/blob/master/documents/shared/APIClient.md">wootils API Client</a> but that is connected to the HTTP service, to allow logging and forwarding of the headers.</li>
+<li><strong>API client:</strong> An implementation of the <a href="https://github.com/homer0/wootils/blob/main/documents/shared/APIClient.md">wootils API Client</a> but that is connected to the HTTP service, to allow logging and forwarding of the headers.</li>
 <li><strong>App Error:</strong> A very simple subclass of <code>Error</code> but with support for context information. It can be used to customize the error handler responses.</li>
 <li><strong>Ensure bearer token:</strong> A service-middleware that allows you to validate and retrieve a bearer token from the incoming requests <code>Authorization</code> header.</li>
 <li><strong>HTTP Error:</strong> Another type of error, but specific for the HTTP requests the app does with the API client.</li>
@@ -646,12 +646,12 @@ const app = original.ref();
 <p><a href="tutorial-services.html">Read more about the built-in services</a></p>
 <p>The service also implements a few other services from the <a href="https://github.com/homer0/wootils">wootils</a> as core utilities:</p>
 <ul>
-<li><a href="https://github.com/homer0/wootils/blob/master/documents/node/logger.md"><code>appLogger</code></a>: The logger service.</li>
-<li><a href="https://github.com/homer0/wootils/blob/master/documents/node/environmentUtils.md"><code>environmentUtils</code></a>: The service that reads the environment variables.</li>
-<li><a href="https://github.com/homer0/wootils/blob/master/documents/node/packageInfo.md"><code>packageInfo</code></a>: The app package.json information.</li>
-<li><a href="https://github.com/homer0/wootils/blob/master/documents/node/pathUtils.md"><code>pathUtils</code></a>: The service to build paths relative to the project root directory.</li>
-<li><a href="https://github.com/homer0/wootils/blob/master/documents/node/rootRequire.md"><code>rootRequire</code></a>: The service to make requires relatives to the project root directory.</li>
-<li><a href="https://github.com/homer0/wootils/blob/master/documents/shared/eventsHub.md"><code>events</code></a>: To handle the app events.</li>
+<li><a href="https://github.com/homer0/wootils/blob/main/documents/node/logger.md"><code>appLogger</code></a>: The logger service.</li>
+<li><a href="https://github.com/homer0/wootils/blob/main/documents/node/environmentUtils.md"><code>environmentUtils</code></a>: The service that reads the environment variables.</li>
+<li><a href="https://github.com/homer0/wootils/blob/main/documents/node/packageInfo.md"><code>packageInfo</code></a>: The app package.json information.</li>
+<li><a href="https://github.com/homer0/wootils/blob/main/documents/node/pathUtils.md"><code>pathUtils</code></a>: The service to build paths relative to the project root directory.</li>
+<li><a href="https://github.com/homer0/wootils/blob/main/documents/node/rootRequire.md"><code>rootRequire</code></a>: The service to make requires relatives to the project root directory.</li>
+<li><a href="https://github.com/homer0/wootils/blob/main/documents/shared/eventsHub.md"><code>events</code></a>: To handle the app events.</li>
 </ul>
 <h2>Development</h2>
 <h3>NPM/Yarn Tasks</h3>
@@ -686,13 +686,12 @@ const app = original.ref();
 </tbody>
 </table>
 <h3>Repository hooks</h3>
-<p>I use <a href="https://yarnpkg.com/package/husky"><code>husky</code></a> to automatically install the repository hooks so the code will be tested and linted before any commit and the dependencies updated after every merge.</p>
-<p>The configuration is on the <code>husky</code> property of the <code>package.json</code> and the hooks' files are on <code>./utils/hooks</code>.</p>
+<p>I use <a href="https://yarnpkg.com/package/husky"><code>husky</code></a> to automatically install the repository hooks so the code will be tested and linted before any commit, and the dependencies updated after every merge.</p>
 <h4>Commits convention</h4>
-<p>I use <a href="https://www.conventionalcommits.org">conventional commits</a> with <a href="https://yarnpkg.com/package/commitizen"><code>commitizen</code></a> in order to support semantic releases. The one that sets it up is actually husky, that installs a script that runs commitizen on the <code>git commit</code> command.</p>
-<p>The hook for this is on <code>./utils/hooks/prepare-commit-msg</code> and the configuration for comitizen is on the <code>config.commitizen</code> property of the <code>package.json</code>.</p>
+<p>I use <a href="https://www.conventionalcommits.org">conventional commits</a> with <a href="https://commitlint.js.org"><code>commitlint</code></a> in order to support semantic releases. The one that sets it up is actually husky, that installs a script that runs <code>commitlint</code> on the <code>git commit</code> command.</p>
+<p>The configuration is on the <code>commitlint</code> property of the <code>package.json</code>.</p>
 <h3>Releases</h3>
-<p>I use <a href="https://yarnpkg.com/package/semantic-release"><code>semantic-release</code></a> and a GitHub action to automatically release on NPM everything that gets merged to master.</p>
+<p>I use <a href="https://yarnpkg.com/package/semantic-release"><code>semantic-release</code></a> and a GitHub action to automatically release on NPM everything that gets merged to main.</p>
 <p>The configuration for <code>semantic-release</code> is on <code>./releaserc</code> and the workflow for the release is on <code>./.github/workflow/release.yml</code>.</p>
 <h3>Testing</h3>
 <p>I use <a href="https://facebook.github.io/jest/">Jest</a> to test the project.</p>

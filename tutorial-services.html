@@ -76,7 +76,7 @@
 <p>All of these controllers are available on the Jimpex package and can be easily required and implemented.</p>
 <p>In the case of the services from the modules <code>api</code>, <code>http</code> and <code>common</code>, you can register them when the app starts by using the <code>defaultService</code> option (Check the options document for more information).</p>
 <h2>API Client</h2>
-<p>An implementation of the <a href="https://github.com/homer0/wootils/blob/master/documents/shared/APIClient.md">wootils API Client</a> but that is connected to the HTTP service, to allow logging and forwarding of the headers.</p>
+<p>An implementation of the <a href="https://github.com/homer0/wootils/blob/main/documents/shared/APIClient.md">wootils API Client</a> but that is connected to the HTTP service, to allow logging and forwarding of the headers.</p>
 <ul>
 <li>Module: <code>http</code></li>
 <li>Requires: <code>http</code> and <code>appError</code></li>
@@ -305,7 +305,7 @@ class App extends Jimpex {
   ])];
 });
 </code></pre>
-<p>By default, the path of the file is relative to the directory where the app executable is located, but you can change the location (<a href="https://github.com/homer0/wootils/blob/master/documents/node/pathUtils.md#multiple-locations">Check <code>PathUtils</code> locations</a>) by adding an extra parameter:</p>
+<p>By default, the path of the file is relative to the directory where the app executable is located, but you can change the location (<a href="https://github.com/homer0/wootils/blob/main/documents/node/pathUtils.md#multiple-locations">Check <code>PathUtils</code> locations</a>) by adding an extra parameter:</p>
 <pre class="prettyprint source lang-js"><code>const myCtrl = controller((app) => {
   const router = app.get('router');
   const sendFile = app.get('sendFile');

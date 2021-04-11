@@ -125,7 +125,7 @@
 }
 </code></pre>
 <p>As you can see, if you don't want to depend on environment variables or just have one single configuration for your app, you can use the <code>default</code> option and turn <code>loadFromEnvironment</code> to <code>false</code>.</p>
-<p>The configuration service is an implementation of <a href="https://github.com/homer0/wootils/blob/master/documents/node/appConfiguration.md">wootils AppConfiguration</a>, so you can check its API in its oficial configuration.</p>
+<p>The configuration service is an implementation of <a href="https://github.com/homer0/wootils/blob/main/documents/node/appConfiguration.md">wootils AppConfiguration</a>, so you can check its API in its oficial configuration.</p>
 <h2>Statics</h2>
 <p>These options are specifically for the Express <a href="https://github.com/expressjs/serve-static"><code>static</code></a> middleware:</p>
 <pre class="prettyprint source lang-js"><code>{
@@ -139,7 +139,7 @@
   // The name of both the route and the folder, relative to whatever you defined with the
   // `onHome` option.
   route: 'statics',
-  
+
   // By default, the folder will be the same as the `route`, but you can use this option
   // to define a relative path that won't affect the route.
   folder: '',
