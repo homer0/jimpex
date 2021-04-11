@@ -66,6 +66,6 @@
     "docs": "./utils/scripts/docs",
     "todo": "./utils/scripts/todo",
     "types": "./utils/scripts/types",
-    "prepublishOnly": "yon run types"
+    "prepublishOnly": "./utils/scripts/prepublishOnly"
   }
 }
