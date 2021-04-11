@@ -1,7 +1,7 @@
 # Jimpex
 
-[![GitHub Workflow Status (master)](https://img.shields.io/github/workflow/status/homer0/jimpex/Test/master?style=flat-square)](https://github.com/homer0/jimpex/actions?query=workflow%3ATest)
-[![Coveralls GitHub](https://img.shields.io/coveralls/github/homer0/jimpex.svg?style=flat-square)](https://coveralls.io/github/homer0/jimpex?branch=master)
+[![GitHub Workflow Status (main)](https://img.shields.io/github/workflow/status/homer0/jimpex/Test/main?style=flat-square)](https://github.com/homer0/jimpex/actions?query=workflow%3ATest)
+[![Coveralls GitHub](https://img.shields.io/coveralls/github/homer0/jimpex.svg?style=flat-square)](https://coveralls.io/github/homer0/jimpex?branch=main)
 [![David](https://img.shields.io/david/homer0/jimpex.svg?style=flat-square)](https://david-dm.org/homer0/jimpex)
 [![David](https://img.shields.io/david/dev/homer0/jimpex.svg?style=flat-square)](https://david-dm.org/homer0/jimpex)
 
@@ -141,7 +141,7 @@ console.log(config.get('port'));
 // Will log 2509
 ```
 
-To get more information about how the `appConfiguration` service works, you can check [its documentation on the wootils repository](https://github.com/homer0/wootils/blob/master/documents/node/appConfiguration.md).
+To get more information about how the `appConfiguration` service works, you can check [its documentation on the wootils repository](https://github.com/homer0/wootils/blob/main/documents/node/appConfiguration.md).
 
 #### Starting the application
 
@@ -678,7 +678,7 @@ Jimpex comes with a few services, middlewares and controllers that you can impor
 
 ### Services
 
-- **API client:** An implementation of the [wootils API Client](https://github.com/homer0/wootils/blob/master/documents/shared/APIClient.md) but that is connected to the HTTP service, to allow logging and forwarding of the headers.
+- **API client:** An implementation of the [wootils API Client](https://github.com/homer0/wootils/blob/main/documents/shared/APIClient.md) but that is connected to the HTTP service, to allow logging and forwarding of the headers.
 - **App Error:** A very simple subclass of `Error` but with support for context information. It can be used to customize the error handler responses.
 - **Ensure bearer token:** A service-middleware that allows you to validate and retrieve a bearer token from the incoming requests `Authorization` header.
 - **HTTP Error:** Another type of error, but specific for the HTTP requests the app does with the API client.
@@ -692,12 +692,12 @@ Jimpex comes with a few services, middlewares and controllers that you can impor
 
 The service also implements a few other services from the [wootils](https://github.com/homer0/wootils) as core utilities:
 
-- [`appLogger`](https://github.com/homer0/wootils/blob/master/documents/node/logger.md): The logger service.
-- [`environmentUtils`](https://github.com/homer0/wootils/blob/master/documents/node/environmentUtils.md): The service that reads the environment variables.
-- [`packageInfo`](https://github.com/homer0/wootils/blob/master/documents/node/packageInfo.md): The app package.json information.
-- [`pathUtils`](https://github.com/homer0/wootils/blob/master/documents/node/pathUtils.md): The service to build paths relative to the project root directory.
-- [`rootRequire`](https://github.com/homer0/wootils/blob/master/documents/node/rootRequire.md): The service to make requires relatives to the project root directory.
-- [`events`](https://github.com/homer0/wootils/blob/master/documents/shared/eventsHub.md): To handle the app events.
+- [`appLogger`](https://github.com/homer0/wootils/blob/main/documents/node/logger.md): The logger service.
+- [`environmentUtils`](https://github.com/homer0/wootils/blob/main/documents/node/environmentUtils.md): The service that reads the environment variables.
+- [`packageInfo`](https://github.com/homer0/wootils/blob/main/documents/node/packageInfo.md): The app package.json information.
+- [`pathUtils`](https://github.com/homer0/wootils/blob/main/documents/node/pathUtils.md): The service to build paths relative to the project root directory.
+- [`rootRequire`](https://github.com/homer0/wootils/blob/main/documents/node/rootRequire.md): The service to make requires relatives to the project root directory.
+- [`events`](https://github.com/homer0/wootils/blob/main/documents/shared/eventsHub.md): To handle the app events.
 
 ## Development
 
@@ -713,19 +713,17 @@ The service also implements a few other services from the [wootils](https://gith
 
 ### Repository hooks
 
-I use [`husky`](https://yarnpkg.com/package/husky) to automatically install the repository hooks so the code will be tested and linted before any commit and the dependencies updated after every merge.
-
-The configuration is on the `husky` property of the `package.json` and the hooks' files are on `./utils/hooks`.
+I use [`husky`](https://yarnpkg.com/package/husky) to automatically install the repository hooks so the code will be tested and linted before any commit, and the dependencies updated after every merge.
 
 #### Commits convention
 
-I use [conventional commits](https://www.conventionalcommits.org) with [`commitizen`](https://yarnpkg.com/package/commitizen) in order to support semantic releases. The one that sets it up is actually husky, that installs a script that runs commitizen on the `git commit` command.
+I use [conventional commits](https://www.conventionalcommits.org) with [`commitlint`](https://commitlint.js.org) in order to support semantic releases. The one that sets it up is actually husky, that installs a script that runs `commitlint` on the `git commit` command.
 
-The hook for this is on `./utils/hooks/prepare-commit-msg` and the configuration for comitizen is on the `config.commitizen` property of the `package.json`.
+The configuration is on the `commitlint` property of the `package.json`.
 
 ### Releases
 
-I use [`semantic-release`](https://yarnpkg.com/package/semantic-release) and a GitHub action to automatically release on NPM everything that gets merged to master.
+I use [`semantic-release`](https://yarnpkg.com/package/semantic-release) and a GitHub action to automatically release on NPM everything that gets merged to main.
 
 The configuration for `semantic-release` is on `./releaserc` and the workflow for the release is on `./.github/workflow/release.yml`.
 
