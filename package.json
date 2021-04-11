@@ -21,6 +21,8 @@
     "spdy": "^4.0.2"
   },
   "devDependencies": {
+    "@commitlint/cli": "^12.1.1",
+    "@commitlint/config-conventional": "^12.1.1",
     "@homer0/eslint-plugin": "^7.0.0",
     "@homer0/prettier-config": "^1.1.1",
     "@homer0/prettier-plugin-jsdoc": "^4.0.0",
@@ -52,6 +54,11 @@
     "*.js": [
       "eslint",
       "prettier --write"
+    ]
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
     ]
   },
   "scripts": {
