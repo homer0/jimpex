@@ -62,7 +62,7 @@ This set of options allows you to customize every aspect of how the configuratio
 
 As you can see, if you don't want to depend on environment variables or just have one single configuration for your app, you can use the `default` option and turn `loadFromEnvironment` to `false`.
 
-The configuration service is an implementation of [wootils AppConfiguration](https://github.com/homer0/wootils/blob/master/documents/node/appConfiguration.md), so you can check its API in its oficial configuration.
+The configuration service is an implementation of [wootils AppConfiguration](https://github.com/homer0/wootils/blob/main/documents/node/appConfiguration.md), so you can check its API in its oficial configuration.
 
 ## Statics
 
@@ -80,7 +80,7 @@ These options are specifically for the Express [`static`](https://github.com/exp
   // The name of both the route and the folder, relative to whatever you defined with the
   // `onHome` option.
   route: 'statics',
-  
+
   // By default, the folder will be the same as the `route`, but you can use this option
   // to define a relative path that won't affect the route.
   folder: '',

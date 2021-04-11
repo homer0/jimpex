@@ -6,7 +6,7 @@ In the case of the services from the modules `api`, `http` and `common`, you can
 
 ## API Client
 
-An implementation of the [wootils API Client](https://github.com/homer0/wootils/blob/master/documents/shared/APIClient.md) but that is connected to the HTTP service, to allow logging and forwarding of the headers.
+An implementation of the [wootils API Client](https://github.com/homer0/wootils/blob/main/documents/shared/APIClient.md) but that is connected to the HTTP service, to allow logging and forwarding of the headers.
 
 - Module: `http`
 - Requires: `http` and `appError`
@@ -275,7 +275,7 @@ const myCtrl = controller((app) => {
 });
 ```
 
-By default, the path of the file is relative to the directory where the app executable is located, but you can change the location ([Check `PathUtils` locations](https://github.com/homer0/wootils/blob/master/documents/node/pathUtils.md#multiple-locations)) by adding an extra parameter:
+By default, the path of the file is relative to the directory where the app executable is located, but you can change the location ([Check `PathUtils` locations](https://github.com/homer0/wootils/blob/main/documents/node/pathUtils.md#multiple-locations)) by adding an extra parameter:
 
 ```js
 const myCtrl = controller((app) => {
