@@ -731,7 +731,7 @@ The configuration for `semantic-release` is on `./releaserc` and the workflow fo
 
 I use [Jest](https://facebook.github.io/jest/) to test the project.
 
-The configuration file is on `./.jestrc.json`, the tests are on `./tests` and the script that runs it is on `./utils/scripts/test`.
+The configuration file is on `./.jestrc.js`, the tests are on `./tests` and the script that runs it is on `./utils/scripts/test`.
 
 ### Code linting and formatting
 
