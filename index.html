@@ -695,7 +695,7 @@ const app = original.ref();
 <p>The configuration for <code>semantic-release</code> is on <code>./releaserc</code> and the workflow for the release is on <code>./.github/workflow/release.yml</code>.</p>
 <h3>Testing</h3>
 <p>I use <a href="https://facebook.github.io/jest/">Jest</a> to test the project.</p>
-<p>The configuration file is on <code>./.jestrc.json</code>, the tests are on <code>./tests</code> and the script that runs it is on <code>./utils/scripts/test</code>.</p>
+<p>The configuration file is on <code>./.jestrc.js</code>, the tests are on <code>./tests</code> and the script that runs it is on <code>./utils/scripts/test</code>.</p>
 <h3>Code linting and formatting</h3>
 <p>For linting, I use <a href="https://eslint.org">ESlint</a> with <a href="https://yarnpkg.com/package/@homer0/eslint-plugin">my own custom configuration</a>; there are two configuration files, <code>./.eslintrc</code> for the source and the tooling, and <code>./tests/.eslintrc</code>, and there's also a <code>./.eslintignore</code> to exclude some files.</p>
 <p>And for formatting, I use <a href="https://prettier.io">Prettier</a> with <a href="https://yarnpkg.com/package/@homer0/prettier-plugin-jsdoc">my JSDoc plugin</a> and <a href="https://yarnpkg.com/package/@homer0/prettier-config">my own custom configuration</a>. The configuration file is <code>./.prettierrc</code>.</p>
