@@ -1,3 +1,10 @@
+## [7.0.2](https://github.com/homer0/jimpex/compare/7.0.1...7.0.2) (2021-10-17)
+
+
+### Bug Fixes
+
+* update dependencies ([e74dc77](https://github.com/homer0/jimpex/commit/e74dc7743f9dccd233a89d550b15efd690b1f0cf))
+
 ## [7.0.1](https://github.com/homer0/jimpex/compare/7.0.0...7.0.1) (2021-09-06)
 
 
