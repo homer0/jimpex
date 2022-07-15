@@ -36,6 +36,9 @@ import type {
   JimpexEventName,
   JimpexEventPayload,
   DeepReadonly,
+  JimpexReducerEventName,
+  JimpexReducerEventPayload,
+  JimpexReducerEventTarget,
 } from '../types';
 import type {
   Controller,
@@ -165,10 +168,14 @@ export class Jimpex extends Jimple {
         : (controller as Controller);
 
     this.mountQueue.push((server) => {
-      /**
-       * @todo Reduce routes.
-       */
-      const router = useController.connect(this, route);
+      const router = this.reduceWithEvent(
+        'controllerWillBeMounted',
+        useController.connect(this, route),
+        {
+          route,
+          controller: useController,
+        },
+      );
       server.use(route, router);
       this.emitEvent('routeAdded', { route });
       this.controlledRoutes.push(route);
@@ -182,20 +189,21 @@ export class Jimpex extends Jimple {
         : (middleware as Middleware | ExpressMiddleware);
     this.mountQueue.push((server) => {
       if ('connect' in useMiddleware && typeof useMiddleware.connect === 'function') {
-        const router = useMiddleware.connect(this);
-        if (router) {
-          /**
-           * @todo Reduce middleware.
-           */
-          server.use(router);
+        const handler = useMiddleware.connect(this);
+        if (handler) {
+          server.use(this.reduceWithEvent('middlewareWillBeUsed', handler, undefined));
         }
 
         return;
       }
-      /**
-       * @todo Reduce middleware.
-       */
-      server.use(useMiddleware as ExpressMiddleware);
+
+      server.use(
+        this.reduceWithEvent(
+          'middlewareWillBeUsed',
+          useMiddleware as ExpressMiddleware,
+          undefined,
+        ),
+      );
     });
   }
 
@@ -341,6 +349,15 @@ export class Jimpex extends Jimple {
   ): void {
     const events = this.get<EventsHub>('events');
     events.emit(name, payload);
+  }
+
+  protected reduceWithEvent<E extends JimpexReducerEventName>(
+    name: E,
+    target: JimpexReducerEventTarget<E>,
+    payload: JimpexReducerEventPayload<E>,
+  ): JimpexReducerEventTarget<E> {
+    const events = this.get<EventsHub>('events');
+    return events.reduceSync(name, target, payload);
   }
 
   protected async loadCredentials(
