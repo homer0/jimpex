@@ -8,8 +8,13 @@
   "license": "MIT",
   "dependencies": {
     "@homer0/deep-assign": "^1.0.2",
+    "@homer0/env-utils": "^1.0.2",
     "@homer0/events-hub": "^1.0.2",
     "@homer0/jimple": "^1.0.2",
+    "@homer0/package-info": "^1.0.2",
+    "@homer0/path-utils": "^1.0.2",
+    "@homer0/root-file": "^1.0.2",
+    "@homer0/simple-logger": "^1.0.2",
     "express": "^4.18.1",
     "body-parser": "^1.20.0",
     "compression": "^1.7.4",
