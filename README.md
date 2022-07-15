@@ -218,7 +218,7 @@ module.exports = {
 
 > **Important:** HTTPS MUST BE enabled in order to use HTTP/2.
 
-Under the hood, Jimpex uses [Spdy](https://yarnpkg.com/package/spdy) for the HTTP/2 support, and Spdy has custom options you can send in order to define how it will work; you can send options to Spdy by adding a `spdy` key inside the `http2` object:
+Under the hood, Jimpex uses [Spdy](https://npmjs.com/package/spdy) for the HTTP/2 support, and Spdy has custom options you can send in order to define how it will work; you can send options to Spdy by adding a `spdy` key inside the `http2` object:
 
 ```js
 {
@@ -701,7 +701,7 @@ The service also implements a few other services from the [wootils](https://gith
 
 ## Development
 
-### NPM/Yarn Tasks
+### NPM Tasks
 
 | Task       | Description                          |
 |------------|--------------------------------------|
@@ -713,7 +713,7 @@ The service also implements a few other services from the [wootils](https://gith
 
 ### Repository hooks
 
-I use [`husky`](https://yarnpkg.com/package/husky) to automatically install the repository hooks so the code will be tested and linted before any commit, and the dependencies updated after every merge.
+I use [`husky`](https://npmjs.com/package/husky) to automatically install the repository hooks so the code will be tested and linted before any commit, and the dependencies updated after every merge.
 
 #### Commits convention
 
@@ -723,7 +723,7 @@ The configuration is on the `commitlint` property of the `package.json`.
 
 ### Releases
 
-I use [`semantic-release`](https://yarnpkg.com/package/semantic-release) and a GitHub action to automatically release on NPM everything that gets merged to main.
+I use [`semantic-release`](https://npmjs.com/package/semantic-release) and a GitHub action to automatically release on NPM everything that gets merged to main.
 
 The configuration for `semantic-release` is on `./releaserc` and the workflow for the release is on `./.github/workflow/release.yml`.
 
@@ -735,9 +735,9 @@ The configuration file is on `./.jestrc.js`, the tests are on `./tests` and the 
 
 ### Code linting and formatting
 
-For linting, I use [ESlint](https://eslint.org) with [my own custom configuration](https://yarnpkg.com/package/@homer0/eslint-plugin); there are two configuration files, `./.eslintrc` for the source and the tooling, and `./tests/.eslintrc`, and there's also a `./.eslintignore` to exclude some files.
+For linting, I use [ESlint](https://eslint.org) with [my own custom configuration](https://npmjs.com/package/@homer0/eslint-plugin); there are two configuration files, `./.eslintrc` for the source and the tooling, and `./tests/.eslintrc`, and there's also a `./.eslintignore` to exclude some files.
 
-And for formatting, I use [Prettier](https://prettier.io) with [my JSDoc plugin](https://yarnpkg.com/package/@homer0/prettier-plugin-jsdoc) and [my own custom configuration](https://yarnpkg.com/package/@homer0/prettier-config). The configuration file is `./.prettierrc`.
+And for formatting, I use [Prettier](https://prettier.io) with [my JSDoc plugin](https://npmjs.com/package/@homer0/prettier-plugin-jsdoc) and [my own custom configuration](https://npmjs.com/package/@homer0/prettier-config). The configuration file is `./.prettierrc`.
 
 The script that runs them is `./utils/scripts/lint`; the script `lint-all` only runs ESLint, and runs it for the entire project.
 
@@ -749,7 +749,7 @@ The configuration file is `./.jsdoc.js` and the script that runs it is on `./uti
 
 ### To-Dos
 
-I use `@todo` comments to write all the pending improvements and fixes, and [Leasot](https://yarnpkg.com/en/package/leasot) to generate a report. The script that runs it is on `./utils/scripts/todo`.
+I use `@todo` comments to write all the pending improvements and fixes, and [Leasot](https://npmjs.com/package/leasot) to generate a report. The script that runs it is on `./utils/scripts/todo`.
 
 ## Motivation/Introduction
 
