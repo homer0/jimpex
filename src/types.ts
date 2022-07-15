@@ -1,12 +1,12 @@
 import type { Server as HTTPSServer } from 'https';
 import type { Server as HTTPServer } from 'http';
-import type { Express } from 'express';
+import type { Express, Router, RequestHandler, ErrorRequestHandler } from 'express';
 import type { PathUtils } from '@homer0/path-utils';
 import type { ServerOptions as SpdyServerOptions } from 'spdy';
 import type { SimpleLogger } from '@homer0/simple-logger';
 import type { SimpleConfig } from '@homer0/simple-config';
 
-export type { Express, PathUtils, SimpleLogger, SimpleConfig, SpdyServerOptions };
+export type { Express, Router, PathUtils, SimpleLogger, SimpleConfig, SpdyServerOptions };
 
 export type Dict = Record<string, unknown>;
 
@@ -102,3 +102,5 @@ export type JimpexLifeCycleEvent =
 export type JimpexEventName = JimpexLifeCycleEvent;
 export type JimpexEventPayload<EventName extends JimpexEventName> =
   EventName extends 'beforeStart' ? undefined : undefined;
+
+export type Middleware = RequestHandler | ErrorRequestHandler;
