@@ -1,0 +1,2 @@
+#!/bin/bash -e
+tsc --noEmit && tsc --noEmit --project ./tests/tsconfig.json
