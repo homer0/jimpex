@@ -24,7 +24,7 @@ export type ProviderLike = Provider | ProviderCreator | Providers;
 export type ControllerConnectFn = <ContainerType extends Jimpex = Jimpex>(
   container: ContainerType,
   route: string,
-) => Router;
+) => Router | ExpressMiddleware;
 
 const controllerFactory = resourceFactory<ControllerConnectFn>();
 export const controller = (connect: ControllerConnectFn) =>

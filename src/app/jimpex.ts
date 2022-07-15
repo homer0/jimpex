@@ -258,7 +258,7 @@ export class Jimpex extends Jimple {
   }
 
   protected setupExpress(): void {
-    const { filesizeLimit, express: expressOptions } = this.options;
+    const { statics, filesizeLimit, express: expressOptions } = this.options;
     if (expressOptions.trustProxy) {
       this.express.enable('trust proxy');
     }
@@ -271,9 +271,9 @@ export class Jimpex extends Jimple {
       this.express.use(compression());
     }
 
-    /**
-     * @todo Implement statics.
-     */
+    if (statics.enabled) {
+      this.addStaticsFolder(statics.route, statics.folder, statics.onHome);
+    }
 
     if (expressOptions.bodyParser) {
       this.express.use(
@@ -297,6 +297,21 @@ export class Jimpex extends Jimple {
       'router',
       this.factory(() => express.Router()),
     );
+  }
+
+  protected addStaticsFolder(
+    route: string,
+    folder: string = '',
+    onHome: boolean = false,
+  ) {
+    const location = onHome ? 'home' : 'app';
+    const staticRoute = route.replace(/^\/+/, '');
+    const pathUtils = this.get<PathUtils>('pathUtils');
+    const staticFolder = pathUtils.joinFrom(location, folder || staticRoute);
+    this.mount(`/${staticRoute}`, {
+      connect: () => express.static(staticFolder),
+      controller: true,
+    });
   }
 
   protected async setupConfiguration(): Promise<void> {
@@ -364,7 +379,7 @@ export class Jimpex extends Jimple {
     credentialsInfo: JimpexHTTPSCredentials,
     onHome: boolean = true,
   ): Promise<JimpexHTTPSCredentials> {
-    const location = onHome === false ? 'app' : 'home';
+    const location = onHome ? 'home' : 'app';
     const pathUtils = this.get<PathUtils>('pathUtils');
     const keys: Array<keyof JimpexHTTPSCredentials> = ['ca', 'cert', 'key'];
     const info = await Promise.all(

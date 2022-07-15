@@ -5,6 +5,7 @@ import type { PathUtils } from '@homer0/path-utils';
 import type { ServerOptions as SpdyServerOptions } from 'spdy';
 import type { SimpleLogger } from '@homer0/simple-logger';
 import type { SimpleConfig } from '@homer0/simple-config';
+import type { Controller } from './app/resources';
 
 export type { Express, Router, PathUtils, SimpleLogger, SimpleConfig, SpdyServerOptions };
 
@@ -91,6 +92,8 @@ export type JimpexStartCallback = (config: SimpleConfig) => void;
 export type JimpexServer = Express | HTTPSServer;
 export type JimpexServerInstance = HTTPServer | HTTPSServer;
 
+export type ExpressMiddleware = RequestHandler | ErrorRequestHandler;
+
 export type JimpexLifeCycleEvent =
   | 'beforeStart'
   | 'start'
@@ -104,4 +107,14 @@ export type JimpexEventName = JimpexLifeCycleEvent | JimpexActionEvent;
 export type JimpexEventPayload<EventName extends JimpexEventName> =
   EventName extends 'routeAdded' ? { route: string } : undefined;
 
-export type ExpressMiddleware = RequestHandler | ErrorRequestHandler;
+export type JimpexReducerEventName = 'controllerWillBeMounted' | 'middlewareWillBeUsed';
+export type JimpexReducerEventTarget<EventName extends JimpexReducerEventName> =
+  EventName extends 'controllerWillBeMounted'
+    ? Router | ExpressMiddleware
+    : EventName extends 'middlewareWillBeUsed'
+    ? ExpressMiddleware
+    : undefined;
+export type JimpexReducerEventPayload<EventName extends JimpexReducerEventName> =
+  EventName extends 'controllerWillBeMounted'
+    ? { route: string; controller: Controller }
+    : undefined;
