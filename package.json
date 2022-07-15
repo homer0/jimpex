@@ -68,7 +68,6 @@
     "lint:all": "./utils/scripts/lint-all",
     "docs": "./utils/scripts/docs",
     "todo": "./utils/scripts/todo",
-    "types": "./utils/scripts/types",
     "prepublishOnly": "./utils/scripts/prepublishOnly",
     "prepare": "./utils/scripts/prepare"
   }
