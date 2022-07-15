@@ -344,10 +344,7 @@ export class Jimpex extends Jimple {
     );
 
     const config = this.getConfig();
-    /**
-     * @todo Make this optional, as the file may not exists.
-     */
-    await config.loadFromFile();
+    await config.loadFromFile('', true, false);
     if (options.loadFromEnvironment) {
       await config.loadFromEnv();
     }
