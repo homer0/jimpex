@@ -1,6 +1,3 @@
 #!/bin/bash -e
 
-tsc
-mv ./types/src/* ./types
-rm -rf ./types/src
-cp ./utils/types/index.d.ts.template ./types/app/index.d.ts
+echo "This will no longer be needed after the update"
