@@ -99,8 +99,9 @@ export type JimpexLifeCycleEvent =
   | 'beforeStop'
   | 'stop'
   | 'afterStop';
-export type JimpexEventName = JimpexLifeCycleEvent;
+export type JimpexActionEvent = 'routeAdded';
+export type JimpexEventName = JimpexLifeCycleEvent | JimpexActionEvent;
 export type JimpexEventPayload<EventName extends JimpexEventName> =
-  EventName extends 'beforeStart' ? undefined : undefined;
+  EventName extends 'routeAdded' ? { route: string } : undefined;
 
-export type Middleware = RequestHandler | ErrorRequestHandler;
+export type ExpressMiddleware = RequestHandler | ErrorRequestHandler;

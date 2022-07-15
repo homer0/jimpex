@@ -36,6 +36,7 @@ import type {
   JimpexEventPayload,
   DeepReadonly,
 } from '../types';
+import type { Controller, ControllerProvider, ControllerLike } from './resources';
 
 export class Jimpex extends Jimple {
   protected options: JimpexOptions;
@@ -43,6 +44,8 @@ export class Jimpex extends Jimple {
   protected configReady: boolean = false;
   protected server?: JimpexServer;
   protected instance?: JimpexServerInstance;
+  protected mountQueue: Array<(server: Express) => void> = [];
+  protected controlledRoutes: string[] = [];
   constructor(options: DeepPartial<JimpexOptions> = {}, configuration: unknown = {}) {
     super();
 
@@ -114,9 +117,7 @@ export class Jimpex extends Jimple {
     this.server = await this.createServer();
     this.instance = this.server!.listen(port, () => {
       this.emitEvent('start', undefined);
-      /**
-       * @todo Mount resources.
-       */
+      this.mountResources();
       this.getLogger().success(`Starting on port ${port}`);
       this.emitEvent('afterStart', undefined);
       if (onStart) {
@@ -147,6 +148,23 @@ export class Jimpex extends Jimple {
     this.instance.close();
     this.instance = undefined;
     this.emitEvent('afterStop', undefined);
+  }
+
+  mount(route: string, controller: ControllerLike): void {
+    const useController =
+      typeof controller.register === 'function'
+        ? (controller as ControllerProvider).register(this, route)
+        : (controller as Controller);
+
+    this.mountQueue.push((server) => {
+      /**
+       * @todo Reduce routes.
+       */
+      const router = useController.connect(this, route);
+      server.use(route, router);
+      this.emitEvent('routeAdded', { route });
+      this.controlledRoutes.push(route);
+    });
   }
 
   getConfig(): SimpleConfig;
@@ -278,6 +296,11 @@ export class Jimpex extends Jimple {
     if (options.loadFromEnvironment) {
       await config.loadFromEnv();
     }
+  }
+
+  protected mountResources(): void {
+    this.mountQueue.forEach((mount) => mount(this.express));
+    this.mountQueue.length = 0;
   }
 
   protected emitEvent<E extends JimpexEventName>(
