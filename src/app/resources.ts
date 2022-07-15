@@ -102,4 +102,4 @@ export type MiddlewareProviderCreator = ReturnType<typeof middlewareProviderCrea
 // --
 
 export type ControllerLike = Controller | ControllerProvider;
-export type MiddlewareLike = Middleware | MiddlewareProvider;
+export type MiddlewareLike = Middleware | MiddlewareProvider | ExpressMiddleware;

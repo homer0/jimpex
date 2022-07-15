@@ -22,6 +22,7 @@ import express from 'express';
 import type {
   DeepPartial,
   Express,
+  ExpressMiddleware,
   PathUtils,
   SimpleConfig,
   SimpleLogger,
@@ -36,7 +37,14 @@ import type {
   JimpexEventPayload,
   DeepReadonly,
 } from '../types';
-import type { Controller, ControllerProvider, ControllerLike } from './resources';
+import type {
+  Controller,
+  ControllerProvider,
+  ControllerLike,
+  MiddlewareLike,
+  MiddlewareProvider,
+  Middleware,
+} from './resources';
 
 export class Jimpex extends Jimple {
   protected options: JimpexOptions;
@@ -164,6 +172,30 @@ export class Jimpex extends Jimple {
       server.use(route, router);
       this.emitEvent('routeAdded', { route });
       this.controlledRoutes.push(route);
+    });
+  }
+
+  use(middleware: MiddlewareLike): void {
+    const useMiddleware =
+      'register' in middleware && typeof middleware.register === 'function'
+        ? (middleware as MiddlewareProvider).register(this)
+        : (middleware as Middleware | ExpressMiddleware);
+    this.mountQueue.push((server) => {
+      if ('connect' in useMiddleware && typeof useMiddleware.connect === 'function') {
+        const router = useMiddleware.connect(this);
+        if (router) {
+          /**
+           * @todo Reduce middleware.
+           */
+          server.use(router);
+        }
+
+        return;
+      }
+      /**
+       * @todo Reduce middleware.
+       */
+      server.use(useMiddleware as ExpressMiddleware);
     });
   }
 
