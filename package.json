@@ -29,7 +29,7 @@
   "devDependencies": {
     "@commitlint/cli": "^17.0.3",
     "@commitlint/config-conventional": "^17.0.3",
-    "@homer0/eslint-plugin": "^9.1.1",
+    "@homer0/eslint-plugin": "^9.1.2",
     "@homer0/prettier-config": "^1.1.2",
     "@homer0/prettier-plugin-jsdoc": "^5.1.4",
     "@homer0/tsconfig": "^1.0.2",
