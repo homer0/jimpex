@@ -237,6 +237,17 @@ export class Jimpex extends Jimple {
     return deepAssignWithOverwrite({}, this.options);
   }
 
+  getEventsHub(): EventsHub {
+    return this.get<EventsHub>('events');
+  }
+
+  on<EventName extends JimpexEventName>(
+    eventName: EventName,
+    payload: JimpexEventPayload<EventName>,
+  ): void {
+    this.emitEvent(eventName, payload);
+  }
+
   protected init(): void {}
 
   protected initOptions(): DeepPartial<JimpexOptions> {
@@ -355,21 +366,19 @@ export class Jimpex extends Jimple {
     this.mountQueue.length = 0;
   }
 
-  protected emitEvent<E extends JimpexEventName>(
-    name: E,
-    payload: JimpexEventPayload<E>,
+  protected emitEvent<EventName extends JimpexEventName>(
+    name: EventName,
+    payload: JimpexEventPayload<EventName>,
   ): void {
-    const events = this.get<EventsHub>('events');
-    events.emit(name, payload);
+    this.getEventsHub().emit(name, payload);
   }
 
-  protected reduceWithEvent<E extends JimpexReducerEventName>(
-    name: E,
-    target: JimpexReducerEventTarget<E>,
-    payload: JimpexReducerEventPayload<E>,
-  ): JimpexReducerEventTarget<E> {
-    const events = this.get<EventsHub>('events');
-    return events.reduceSync(name, target, payload);
+  protected reduceWithEvent<EventName extends JimpexReducerEventName>(
+    name: EventName,
+    target: JimpexReducerEventTarget<EventName>,
+    payload: JimpexReducerEventPayload<EventName>,
+  ): JimpexReducerEventTarget<EventName> {
+    return this.getEventsHub().reduceSync(name, target, payload);
   }
 
   protected async loadCredentials(
