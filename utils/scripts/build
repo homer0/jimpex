@@ -1,0 +1,3 @@
+#!/bin/bash -e
+
+tsup src/index.ts
