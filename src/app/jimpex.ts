@@ -13,12 +13,12 @@ import { simpleConfigProvider } from '@homer0/simple-config';
 import compression from 'compression';
 import bodyParser from 'body-parser';
 import multer from 'multer';
-import statuses from 'statuses';
 import {
   createServer as createSpdyServer,
   type ServerOptions as SpdyServerOptions,
 } from 'spdy';
 import express from 'express';
+import { statuses } from '../utils';
 import type {
   DeepPartial,
   Express,
