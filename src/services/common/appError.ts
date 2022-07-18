@@ -1,5 +1,4 @@
-import { provider } from '../../app/resources';
-import { statuses as statusesFn, type Statuses } from '../../utils';
+import { provider, statuses as statusesFn, type Statuses } from '../../utils';
 
 export type AppErrorContext = {
   response?: unknown;

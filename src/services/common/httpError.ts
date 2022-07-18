@@ -1,5 +1,4 @@
-import { provider } from '../../app/resources';
-import { statuses as statusesFn, type Statuses } from '../../utils';
+import { provider, statuses as statusesFn, type Statuses } from '../../utils';
 import { AppError, type AppErrorContext } from './appError';
 
 export class HTTPError extends AppError {

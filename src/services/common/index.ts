@@ -1,4 +1,4 @@
-import { providers } from '../../app/resources';
+import { providers } from '../../utils';
 import { appError } from './appError';
 import { httpError } from './httpError';
 

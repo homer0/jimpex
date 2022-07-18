@@ -47,7 +47,7 @@ import type {
   MiddlewareLike,
   MiddlewareProvider,
   Middleware,
-} from './resources';
+} from '../utils';
 
 export class Jimpex extends Jimple {
   protected options: JimpexOptions;

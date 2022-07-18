@@ -1,4 +1,4 @@
-jest.unmock('../../src/app/resources');
+jest.unmock('../../src/utils/wrappers');
 
 import { Jimpex } from '../../src/app/jimpex';
 import {
@@ -10,7 +10,7 @@ import {
   middlewareCreator,
   middlewareProvider,
   middlewareProviderCreator,
-} from '../../src/app/resources';
+} from '../../src/utils/wrappers';
 
 describe('app:resources', () => {
   describe('controllers', () => {

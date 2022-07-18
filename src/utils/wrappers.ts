@@ -7,7 +7,7 @@ import {
   type GenericCurriedFn,
   resourceCreatorFactory,
 } from '@homer0/jimple';
-import type { Jimpex } from './jimpex';
+import type { Jimpex } from '../app';
 import type { Router, ExpressMiddleware } from '../types';
 
 export type ProviderRegisterFn = OriginalProviderRegisterFn<Jimpex>;
