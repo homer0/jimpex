@@ -32,7 +32,7 @@ export class AppError extends Error {
   }
 
   get response(): unknown {
-    return this.context.response;
+    return this.context.response || {};
   }
 
   get status(): number | undefined {
@@ -42,7 +42,7 @@ export class AppError extends Error {
   protected parseContext(context: AppErrorContext): AppErrorContext {
     const result = { ...context };
     if (result.status && typeof result.status === 'string') {
-      result.status = this.statuses(result.status.toLowerCase());
+      result.status = this.statuses.code[result.status.toLowerCase()] || result.status;
     }
 
     return result;
