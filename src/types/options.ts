@@ -26,6 +26,11 @@ export type JimpexExpressOptions = {
   multer: boolean;
 };
 
+export type JimpexPathOptions = {
+  appPath: string;
+  useParentPath: boolean;
+};
+
 export type JimpexServicesOptions = {
   common: boolean;
   http: boolean;
@@ -37,6 +42,7 @@ export type JimpexOptions = {
   filesizeLimit: string;
   boot: boolean;
   proxy: boolean;
+  path: JimpexPathOptions;
   configuration: JimpexConfigurationOptions;
   statics: JimpexStaticsOptions;
   express: JimpexExpressOptions;

@@ -66,6 +66,10 @@ export class Jimpex extends Jimple {
         filesizeLimit: '15MB',
         boot: true,
         proxy: false,
+        path: {
+          appPath: '',
+          useParentPath: true,
+        },
         configuration: {
           default: configuration,
           name: 'app',
@@ -102,6 +106,7 @@ export class Jimpex extends Jimple {
     this.express = express();
 
     this.setupCoreServices();
+    this.configurePath();
 
     this.init();
     if (this.options.boot) {
@@ -266,8 +271,18 @@ export class Jimpex extends Jimple {
     this.register(rootFileProvider);
     this.set('events', () => new EventsHub());
     this.set('statuses', () => statuses);
+  }
 
+  protected configurePath(): void {
     const pathUtils = this.get<PathUtils>('pathUtils');
+    const {
+      path: { appPath, useParentPath },
+    } = this.options;
+    if (appPath) {
+      pathUtils.addLocation('app', appPath);
+      return;
+    }
+    if (!useParentPath) return;
     const { stack = '' } = new Error();
     const parentFromStack = stack.split('\n')[2];
     if (parentFromStack) {
