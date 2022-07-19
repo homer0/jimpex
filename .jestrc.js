@@ -1,6 +1,7 @@
 const path = require('path');
 const { pathsToModuleNameMapper } = require('ts-jest');
 const { compilerOptions } = require('./tests/tsconfig');
+
 /**
  * @type {import('ts-jest').InitialOptionsTsJest}
  */
@@ -8,8 +9,9 @@ module.exports = {
   preset: 'ts-jest',
   automock: true,
   collectCoverage: true,
-  testPathIgnorePatterns: ['/node_modules/', '/utils/scripts/', '/mocks/'],
-  unmockedModulePathPatterns: ['/node_modules/', '/mocks/', 'src/utils'],
+  testPathIgnorePatterns: ['/utils/scripts/', 'tests/mocks/'],
+  unmockedModulePathPatterns: ['/node_modules/', 'src/utils', 'tests/mocks/'],
+  coveragePathIgnorePatterns: ['/utils/scripts/', 'tests/mocks/'],
   testEnvironment: 'node',
   globals: {
     'ts-jest': {

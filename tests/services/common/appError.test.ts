@@ -1,12 +1,12 @@
 jest.unmock('@src/services/common/appError');
 
-import { Jimpex } from '@src/app/index';
 import { statuses, type Statuses } from '@src/utils/fns/statuses';
 import {
   AppError,
   createAppError,
   appErrorProvider,
 } from '@src/services/common/appError';
+import { getJimpexMock } from '@tests/mocks';
 
 const originalCaptureStackTrace = Error.captureStackTrace;
 
@@ -133,17 +133,10 @@ describe('services/common:appError', () => {
   describe('provider', () => {
     it('should register the class and the generator', () => {
       // Given
-      const setFn = jest.fn();
-      class Container extends Jimpex {
-        override set(...args: Parameters<Jimpex['set']>): ReturnType<Jimpex['set']> {
-          setFn(...args);
-          return super.set(...args);
-        }
-      }
-      const container = new Container();
+      const { container, containerMocks: mocks } = getJimpexMock();
       // When
       appErrorProvider.register(container);
-      const [[, lazyOne], [, lazyTwo]] = setFn.mock.calls as [
+      const [[, lazyOne], [, lazyTwo]] = mocks.set.mock.calls as [
         [string, () => typeof AppError],
         [string, () => typeof createAppError],
       ];
@@ -152,9 +145,9 @@ describe('services/common:appError', () => {
       // Then
       expect(resultOne).toBe(AppError);
       expect(resultTwo).toBe(createAppError);
-      expect(setFn).toHaveBeenCalledTimes(2);
-      expect(setFn).toHaveBeenNthCalledWith(1, 'AppError', expect.any(Function));
-      expect(setFn).toHaveBeenNthCalledWith(2, 'appError', expect.any(Function));
+      expect(mocks.set).toHaveBeenCalledTimes(2);
+      expect(mocks.set).toHaveBeenNthCalledWith(1, 'AppError', expect.any(Function));
+      expect(mocks.set).toHaveBeenNthCalledWith(2, 'appError', expect.any(Function));
     });
   });
 });
