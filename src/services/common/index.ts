@@ -1,10 +1,10 @@
 import { providers } from '../../utils';
-import { appError } from './appError';
-import { httpError } from './httpError';
+import { appErrorProvider } from './appError';
+import { httpErrorProvider } from './httpError';
 
 export default providers({
-  appError,
-  httpError,
+  appErrorProvider,
+  httpErrorProvider,
 });
 
 export * from './appError';

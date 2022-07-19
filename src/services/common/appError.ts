@@ -55,7 +55,7 @@ export const createAppError = (
 
 export type CreateAppErrorFn = typeof createAppError;
 
-export const appError = provider((app) => {
+export const appErrorProvider = provider((app) => {
   app.set('AppError', () => AppError);
   app.set('appError', () => createAppError);
 });

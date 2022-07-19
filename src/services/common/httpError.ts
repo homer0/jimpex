@@ -18,7 +18,7 @@ export const createHTTPError = (
 
 export type CreateHTTPErrorFn = typeof createHTTPError;
 
-export const httpError = provider((app) => {
+export const httpErrorProvider = provider((app) => {
   app.set('HTTPError', () => HTTPError);
   app.set('httpError', () => createHTTPError);
 });

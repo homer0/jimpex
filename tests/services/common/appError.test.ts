@@ -9,7 +9,7 @@ import { statuses, type Statuses } from '../../../src/utils/fns/statuses';
 import {
   AppError,
   createAppError,
-  appError,
+  appErrorProvider,
 } from '../../../src/services/common/appError';
 
 const originalCaptureStackTrace = Error.captureStackTrace;
@@ -146,7 +146,7 @@ describe('services/common:appError', () => {
       }
       const container = new Container();
       // When
-      appError.register(container);
+      appErrorProvider.register(container);
       const [[, lazyOne], [, lazyTwo]] = setFn.mock.calls;
       const resultOne = lazyOne();
       const resultTwo = lazyTwo();

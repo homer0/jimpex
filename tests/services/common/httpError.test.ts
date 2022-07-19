@@ -10,7 +10,7 @@ import { statuses } from '../../../src/utils/fns/statuses';
 import {
   HTTPError,
   createHTTPError,
-  httpError,
+  httpErrorProvider,
 } from '../../../src/services/common/httpError';
 
 describe('services/common:appError', () => {
@@ -92,7 +92,7 @@ describe('services/common:appError', () => {
       }
       const container = new Container();
       // When
-      httpError.register(container);
+      httpErrorProvider.register(container);
       const [[, lazyOne], [, lazyTwo]] = setFn.mock.calls;
       const resultOne = lazyOne();
       const resultTwo = lazyTwo();
