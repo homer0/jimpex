@@ -266,6 +266,16 @@ export class Jimpex extends Jimple {
     this.register(rootFileProvider);
     this.set('events', () => new EventsHub());
     this.set('statuses', () => statuses);
+
+    const pathUtils = this.get<PathUtils>('pathUtils');
+    const { stack = '' } = new Error();
+    const parentFromStack = stack.split('\n')[2];
+    if (parentFromStack) {
+      const parentFile = parentFromStack.replace(/^.*?\s\(([^\s]+):\d+:\d+\)/, '$1');
+      if (parentFile !== parentFromStack) {
+        pathUtils.addLocation('app', parentFile);
+      }
+    }
   }
 
   protected setupExpress(): void {
