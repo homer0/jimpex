@@ -1,6 +1,6 @@
-jest.unmock('../src');
+jest.unmock('@src/index');
 
-import { hello } from '../src';
+import { hello } from '@src/index';
 
 describe('hello', () => {
   it('should print the message', () => {

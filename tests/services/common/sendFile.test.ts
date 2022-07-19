@@ -1,13 +1,9 @@
-jest.unmock('../../../src/services/common/sendFile');
+jest.unmock('@src/services/common/sendFile');
 
 import { PathUtils } from '@homer0/path-utils';
-import { Jimpex } from '../../../src/app';
-import {
-  sendFile,
-  sendFileProvider,
-  type SendFile,
-} from '../../../src/services/common/sendFile';
-import type { Response } from '../../../src/types';
+import { Jimpex } from '@src/app';
+import { sendFile, sendFileProvider, type SendFile } from '@src/services/common/sendFile';
+import type { Response } from '@src/types';
 
 describe('services/common:sendFile', () => {
   describe('function', () => {

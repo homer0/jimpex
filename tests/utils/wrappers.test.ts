@@ -1,4 +1,4 @@
-import { Jimpex } from '../../src/app/jimpex';
+import { Jimpex } from '@src/app/jimpex';
 import {
   controller,
   controllerCreator,
@@ -8,7 +8,7 @@ import {
   middlewareCreator,
   middlewareProvider,
   middlewareProviderCreator,
-} from '../../src/utils/wrappers';
+} from '@src/utils/wrappers';
 
 describe('app:resources', () => {
   describe('controllers', () => {

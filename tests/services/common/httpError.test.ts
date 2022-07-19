@@ -1,13 +1,13 @@
-jest.unmock('../../../src/services/common/appError');
-jest.unmock('../../../src/services/common/httpError');
+jest.unmock('@src/services/common/appError');
+jest.unmock('@src/services/common/httpError');
 
-import { Jimpex } from '../../../src/app';
-import { statuses } from '../../../src/utils/fns/statuses';
+import { Jimpex } from '@src/app';
+import { statuses } from '@src/utils/fns/statuses';
 import {
   HTTPError,
   createHTTPError,
   httpErrorProvider,
-} from '../../../src/services/common/httpError';
+} from '@src/services/common/httpError';
 
 describe('services/common:appError', () => {
   describe('class', () => {

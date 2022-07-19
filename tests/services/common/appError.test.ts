@@ -1,12 +1,12 @@
-jest.unmock('../../../src/services/common/appError');
+jest.unmock('@src/services/common/appError');
 
-import { Jimpex } from '../../../src/app';
-import { statuses, type Statuses } from '../../../src/utils/fns/statuses';
+import { Jimpex } from '@src/app/index';
+import { statuses, type Statuses } from '@src/utils/fns/statuses';
 import {
   AppError,
   createAppError,
   appErrorProvider,
-} from '../../../src/services/common/appError';
+} from '@src/services/common/appError';
 
 const originalCaptureStackTrace = Error.captureStackTrace;
 
