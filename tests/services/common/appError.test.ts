@@ -147,7 +147,10 @@ describe('services/common:appError', () => {
       const container = new Container();
       // When
       appErrorProvider.register(container);
-      const [[, lazyOne], [, lazyTwo]] = setFn.mock.calls;
+      const [[, lazyOne], [, lazyTwo]] = setFn.mock.calls as [
+        [string, () => typeof AppError],
+        [string, () => typeof createAppError],
+      ];
       const resultOne = lazyOne();
       const resultTwo = lazyTwo();
       // Then
