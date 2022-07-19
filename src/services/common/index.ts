@@ -11,3 +11,4 @@ export default providers({
 
 export * from './appError';
 export * from './httpError';
+export * from './sendFile';
