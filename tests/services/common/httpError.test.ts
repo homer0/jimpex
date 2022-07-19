@@ -1,7 +1,3 @@
-jest.unmock('../../../src/utils/wrappers');
-jest.unmock('../../../src/utils/index');
-jest.unmock('../../../src/utils/fns/index');
-jest.unmock('../../../src/utils/fns/statuses');
 jest.unmock('../../../src/services/common/appError');
 jest.unmock('../../../src/services/common/httpError');
 

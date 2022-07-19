@@ -1,5 +1,3 @@
-jest.unmock('../../src/utils/wrappers');
-
 import { Jimpex } from '../../src/app/jimpex';
 import {
   controller,

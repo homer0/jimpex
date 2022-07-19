@@ -1,5 +1,3 @@
-jest.unmock('../../../src/utils/wrappers');
-jest.unmock('../../../src/utils/index');
 jest.unmock('../../../src/services/common/sendFile');
 
 import { PathUtils } from '@homer0/path-utils';
