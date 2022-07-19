@@ -1,5 +1,5 @@
 import { provider } from '../../utils';
-import { Response, NextFunction, PathUtils } from '../../types';
+import type { Response, NextFunction, PathUtils } from '../../types';
 
 export type SendFileOptions = {
   res: Response;
