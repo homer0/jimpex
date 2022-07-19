@@ -1,6 +1,5 @@
 jest.unmock('@src/services/common/sendFile');
 
-import { PathUtils } from '@homer0/path-utils';
 import { sendFile, sendFileProvider, type SendFile } from '@src/services/common/sendFile';
 import type { Response } from '@src/types';
 import { getPathUtilsMock, getJimpexMock } from '@tests/mocks';
@@ -9,7 +8,7 @@ describe('services/common:sendFile', () => {
   describe('function', () => {
     it('should create a function to send a file on a server response', () => {
       // Given
-      const pathUtils = new PathUtils();
+      const { pathUtils } = getPathUtilsMock();
       let sut = null;
       // When
       sut = sendFile(pathUtils);
@@ -105,12 +104,13 @@ describe('services/common:sendFile', () => {
     it('should register the function', () => {
       // Given
       const { container, containerMocks } = getJimpexMock();
+      const { pathUtils } = getPathUtilsMock();
       // When
       sendFileProvider.register(container);
       const [[, lazy]] = containerMocks.set.mock.calls as [[string, () => SendFile]];
       const result = lazy();
       // Then
-      expect(result.toString()).toBe(sendFile(new PathUtils()).toString());
+      expect(result.toString()).toBe(sendFile(pathUtils).toString());
       expect(containerMocks.set).toHaveBeenCalledTimes(1);
       expect(containerMocks.set).toHaveBeenCalledWith('sendFile', expect.any(Function));
       expect(containerMocks.get).toHaveBeenCalledTimes(1);
