@@ -25,3 +25,15 @@ export type JimpexReducerEventPayload<EventName extends JimpexReducerEventName> 
   EventName extends 'controllerWillBeMounted'
     ? { route: string; controller: Controller }
     : undefined;
+
+export type JimpexEventNameLike = JimpexEventName | JimpexReducerEventName;
+
+export type JimpexEventListener<EventName extends JimpexEventNameLike> =
+  EventName extends JimpexEventName
+    ? (payload: JimpexEventPayload<EventName>) => void
+    : EventName extends JimpexReducerEventName
+    ? (
+        target: JimpexReducerEventTarget<EventName>,
+        payload: JimpexReducerEventPayload<EventName>,
+      ) => JimpexReducerEventTarget<EventName>
+    : never;

@@ -39,6 +39,8 @@ import type {
   JimpexReducerEventName,
   JimpexReducerEventPayload,
   JimpexReducerEventTarget,
+  JimpexEventNameLike,
+  JimpexEventListener,
 } from '../types';
 import type {
   Controller,
@@ -246,11 +248,18 @@ export class Jimpex extends Jimple {
     return this.get<EventsHub>('events');
   }
 
-  on<EventName extends JimpexEventName>(
+  on<EventName extends JimpexEventNameLike>(
     eventName: EventName,
-    payload: JimpexEventPayload<EventName>,
-  ): void {
-    this.emitEvent(eventName, payload);
+    listener: JimpexEventListener<EventName>,
+  ): () => boolean {
+    return this.getEventsHub().on(eventName, listener);
+  }
+
+  once<EventName extends JimpexEventNameLike>(
+    eventName: EventName,
+    listener: JimpexEventListener<EventName>,
+  ): () => boolean {
+    return this.getEventsHub().once(eventName, listener);
   }
 
   protected init(): void {}
