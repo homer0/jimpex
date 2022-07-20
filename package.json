@@ -8,6 +8,7 @@
   "license": "MIT",
   "dependencies": {
     "@homer0/deep-assign": "^1.0.2",
+    "@homer0/deferred": "^1.0.2",
     "@homer0/env-utils": "^1.0.3",
     "@homer0/events-hub": "^1.0.2",
     "@homer0/jimple": "^1.0.3",
