@@ -85,7 +85,7 @@ describe('services/frontend:frontendFs', () => {
   });
 
   describe('provider', () => {
-    it('should register the function', () => {
+    it('should register the service', () => {
       // Given
       const { container, containerMocks: mocks } = getJimpexMock();
       // When
