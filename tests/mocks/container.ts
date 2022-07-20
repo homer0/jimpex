@@ -21,6 +21,7 @@ export const getJimpexMock = (
   const mocks = {
     get: jest.fn(),
     set: jest.fn(),
+    try: jest.fn(),
   };
   class Container extends Jimpex {
     override set(...args: Parameters<Jimpex['set']>): ReturnType<Jimpex['set']> {
@@ -31,6 +32,11 @@ export const getJimpexMock = (
       mocks.get(name);
       if (resources[name]) return resources[name] as T;
       return super.get(name);
+    }
+    override try<T = unknown>(name: string): T | undefined {
+      mocks.try(name);
+      if (resources[name]) return resources[name] as T;
+      return super.try<T>(name);
     }
   }
 
