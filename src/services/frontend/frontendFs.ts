@@ -2,8 +2,17 @@ import fs from 'fs/promises';
 import { provider } from '../../utils';
 import type { PathUtils } from '../../types';
 
+export type FrontendFsOptions = {
+  inject: {
+    pathUtils: PathUtils;
+  };
+};
+
 export class FrontendFs {
-  constructor(protected readonly pathUtils: PathUtils) {}
+  protected readonly pathUtils: PathUtils;
+  constructor({ inject: { pathUtils } }: FrontendFsOptions) {
+    this.pathUtils = pathUtils;
+  }
 
   delete(filepath: string): Promise<void> {
     return fs.unlink(this.getAppPath(filepath));
@@ -23,5 +32,13 @@ export class FrontendFs {
 }
 
 export const frontendFsProvider = provider((app) => {
-  app.set('frontendFs', () => new FrontendFs(app.get<PathUtils>('pathUtils')));
+  app.set(
+    'frontendFs',
+    () =>
+      new FrontendFs({
+        inject: {
+          pathUtils: app.get<PathUtils>('pathUtils'),
+        },
+      }),
+  );
 });

@@ -14,7 +14,7 @@ describe('services/frontend:frontendFs', () => {
       // Given
       const { pathUtils } = getPathUtilsMock();
       // When
-      const sut = new FrontendFs(pathUtils);
+      const sut = new FrontendFs({ inject: { pathUtils } });
       // Then
       expect(sut).toBeInstanceOf(FrontendFs);
     });
@@ -26,7 +26,7 @@ describe('services/frontend:frontendFs', () => {
       jest.spyOn(fs, 'readFile').mockResolvedValueOnce(contents);
       const { pathUtils, pathUtilsMocks } = getPathUtilsMock();
       // When
-      const sut = new FrontendFs(pathUtils);
+      const sut = new FrontendFs({ inject: { pathUtils } });
       const result = await sut.read(filepath);
       // Then
       expect(result).toBe(contents);
@@ -44,7 +44,7 @@ describe('services/frontend:frontendFs', () => {
       jest.spyOn(fs, 'readFile').mockResolvedValueOnce(contents);
       const { pathUtils } = getPathUtilsMock();
       // When
-      const sut = new FrontendFs(pathUtils);
+      const sut = new FrontendFs({ inject: { pathUtils } });
       const result = await sut.read(filepath, encoding);
       // Then
       expect(result).toBe(contents);
@@ -59,7 +59,7 @@ describe('services/frontend:frontendFs', () => {
       jest.spyOn(fs, 'writeFile').mockResolvedValueOnce();
       const { pathUtils, pathUtilsMocks } = getPathUtilsMock();
       // When
-      const sut = new FrontendFs(pathUtils);
+      const sut = new FrontendFs({ inject: { pathUtils } });
       await sut.write(filepath, contents);
       // Then
       expect(fs.writeFile).toHaveBeenCalledTimes(1);
@@ -74,7 +74,7 @@ describe('services/frontend:frontendFs', () => {
       jest.spyOn(fs, 'unlink').mockResolvedValueOnce();
       const { pathUtils, pathUtilsMocks } = getPathUtilsMock();
       // When
-      const sut = new FrontendFs(pathUtils);
+      const sut = new FrontendFs({ inject: { pathUtils } });
       await sut.delete(filepath);
       // Then
       expect(fs.unlink).toHaveBeenCalledTimes(1);

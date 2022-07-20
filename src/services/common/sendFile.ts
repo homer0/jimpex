@@ -1,6 +1,12 @@
 import { provider } from '../../utils';
 import type { Response, NextFunction, PathUtils } from '../../types';
 
+export type SendFileGeneratorOptions = {
+  inject: {
+    pathUtils: PathUtils;
+  };
+};
+
 export type SendFileOptions = {
   res: Response;
   filepath: string;
@@ -11,7 +17,7 @@ export type SendFileOptions = {
 export type SendFile = (options: SendFileOptions) => void;
 
 export const sendFile =
-  (pathUtils: PathUtils): SendFile =>
+  ({ inject: { pathUtils } }: SendFileGeneratorOptions): SendFile =>
   ({ res, filepath, from = 'app', next = () => {} }) => {
     res.sendFile(pathUtils.joinFrom(from, filepath), (error) => {
       if (error) {
@@ -23,5 +29,11 @@ export const sendFile =
   };
 
 export const sendFileProvider = provider((app) => {
-  app.set('sendFile', () => sendFile(app.get<PathUtils>('pathUtils')));
+  app.set('sendFile', () =>
+    sendFile({
+      inject: {
+        pathUtils: app.get<PathUtils>('pathUtils'),
+      },
+    }),
+  );
 });

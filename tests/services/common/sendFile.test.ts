@@ -11,7 +11,7 @@ describe('services/common:sendFile', () => {
       const { pathUtils } = getPathUtilsMock();
       let sut = null;
       // When
-      sut = sendFile(pathUtils);
+      sut = sendFile({ inject: { pathUtils } });
       // Then
       expect(sut).toEqual(expect.any(Function));
     });
@@ -25,7 +25,7 @@ describe('services/common:sendFile', () => {
         end: jest.fn(),
       } as unknown as Response;
       // When
-      sendFile(pathUtils)({
+      sendFile({ inject: { pathUtils } })({
         res: response,
         filepath: file,
       });
@@ -47,7 +47,7 @@ describe('services/common:sendFile', () => {
       } as unknown as Response;
       const location = 'home';
       // When
-      sendFile(pathUtils)({
+      sendFile({ inject: { pathUtils } })({
         res: response,
         filepath: file,
         from: location,
@@ -68,7 +68,7 @@ describe('services/common:sendFile', () => {
       } as unknown as Response;
       const next = jest.fn();
       // When
-      sendFile(pathUtils)({
+      sendFile({ inject: { pathUtils } })({
         res: response,
         filepath: file,
         next,
@@ -89,7 +89,7 @@ describe('services/common:sendFile', () => {
         end: jest.fn(),
       } as unknown as Response;
       // When
-      sendFile(pathUtils)({
+      sendFile({ inject: { pathUtils } })({
         res: response,
         filepath: file,
       });
@@ -110,7 +110,7 @@ describe('services/common:sendFile', () => {
       const [[, lazy]] = containerMocks.set.mock.calls as [[string, () => SendFile]];
       const result = lazy();
       // Then
-      expect(result.toString()).toBe(sendFile(pathUtils).toString());
+      expect(result.toString()).toBe(sendFile({ inject: { pathUtils } }).toString());
       expect(containerMocks.set).toHaveBeenCalledTimes(1);
       expect(containerMocks.set).toHaveBeenCalledWith('sendFile', expect.any(Function));
       expect(containerMocks.get).toHaveBeenCalledTimes(1);
