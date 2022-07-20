@@ -12,6 +12,7 @@
     "@homer0/env-utils": "^1.0.3",
     "@homer0/events-hub": "^1.0.2",
     "@homer0/jimple": "^1.0.3",
+    "@homer0/object-utils": "^1.1.1",
     "@homer0/package-info": "^1.0.4",
     "@homer0/path-utils": "^1.0.3",
     "@homer0/root-file": "^1.0.3",
