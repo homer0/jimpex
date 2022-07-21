@@ -119,7 +119,7 @@ export class HTMLGenerator {
     }
 
     const { configurationKeys } = this.options;
-    if (configurationKeys) {
+    if (configurationKeys && configurationKeys.length) {
       return Promise.resolve(this.config.get(configurationKeys));
     }
 
