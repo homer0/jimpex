@@ -1,10 +1,11 @@
-jest.unmock('@src/services/frontend/index');
+jest.unmock('@src/services/html/index');
+jest.unmock('@src/services/html/htmlGenerator');
 
-import collection from '@src/services/frontend';
+import collection from '@src/services/html';
 
-const SERVICES = ['frontendFs'];
+const SERVICES = ['htmlGenerator'];
 
-describe('services/frontend', () => {
+describe('services/html', () => {
   it('should export a providers collection with all the services', () => {
     expect(collection).toEqual(
       expect.objectContaining({

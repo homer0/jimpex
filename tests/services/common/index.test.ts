@@ -1,22 +1,22 @@
 jest.unmock('@src/services/common/index');
 
-import commonServices from '@src/services/common';
+import collection from '@src/services/common';
 
-const COMMON_SERVICES = ['appError', 'httpError', 'sendFile'];
+const SERVICES = ['appError', 'httpError', 'sendFile'];
 
 describe('services/common', () => {
   it('should export a providers collection with all the services', () => {
-    expect(commonServices).toEqual({
-      provider: true,
-      register: expect.any(Function),
-      ...COMMON_SERVICES.reduce<Record<string, unknown>>((acc, service) => {
-        acc[`${service}Provider`] = {
-          provider: true,
-          register: expect.any(Function),
-        };
-
-        return acc;
-      }, {}),
+    expect(collection).toEqual(
+      expect.objectContaining({
+        provider: true,
+        register: expect.any(Function),
+      }),
+    );
+    SERVICES.forEach((service) => {
+      const key = `${service}Provider`;
+      expect(collection).toHaveProperty(key);
+      expect(collection[key]!.provider).toBe(true);
+      expect(collection[key]!.register).toEqual(expect.any(Function));
     });
   });
 });
