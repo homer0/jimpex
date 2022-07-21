@@ -1,22 +1,23 @@
 import { Jimpex } from '@src/app';
 
-export type GetJimpexMockOptions = {
+export type JimpexMockOptions = {
   resources?: Record<string, unknown>;
 };
 
-export type GetJimpexMockMocks = {
+export type JimpexMockMocks = {
   get: jest.Mock<unknown, [string]>;
   set: jest.Mock<unknown, [string, unknown]>;
+  try: jest.Mock<unknown, [string]>;
+  on: jest.Mock<unknown, [string, (...args: unknown[]) => void]>;
+  once: jest.Mock<unknown, [string, (...args: unknown[]) => void]>;
 };
 
-export type GetJimpexMockResult = {
+export type JimpexMockResult = {
   container: Jimpex;
-  containerMocks: GetJimpexMockMocks;
+  containerMocks: JimpexMockMocks;
 };
 
-export const getJimpexMock = (
-  options: GetJimpexMockOptions = {},
-): GetJimpexMockResult => {
+export const getJimpexMock = (options: JimpexMockOptions = {}): JimpexMockResult => {
   const { resources = {} } = options;
   const mocks = {
     get: jest.fn(),

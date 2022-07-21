@@ -1,18 +1,18 @@
 import { SimpleLogger } from '@homer0/simple-logger';
 
-export type GetLoggerMockMocks = {
+export type LoggerMockMocks = {
   success: jest.Mock<void, Parameters<SimpleLogger['success']>>;
   info: jest.Mock<void, Parameters<SimpleLogger['info']>>;
   warn: jest.Mock<void, Parameters<SimpleLogger['warn']>>;
   error: jest.Mock<void, Parameters<SimpleLogger['error']>>;
 };
 
-export type GetLoggerMockResult = {
+export type LoggerMockResult = {
   logger: SimpleLogger;
-  loggerMocks: GetLoggerMockMocks;
+  loggerMocks: LoggerMockMocks;
 };
 
-export const GetLoggerMock = (): GetLoggerMockResult => {
+export const getLoggerMock = (): LoggerMockResult => {
   const mocks = {
     success: jest.fn(),
     info: jest.fn(),

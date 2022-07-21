@@ -2,22 +2,22 @@ import { PathUtils } from '@homer0/path-utils';
 
 type JoinFromMock = jest.Mock<string, [string, string]>;
 
-export type GetPathUtilsMockOptions = {
+export type PathUtilsMockOptions = {
   joinFrom?: JoinFromMock;
 };
 
-export type GetPathUtilsMockMocks = {
+export type PathUtilsMockMocks = {
   joinFrom: JoinFromMock;
 };
 
-export type GetPathUtilsMockResult = {
+export type PathUtilsMockResult = {
   pathUtils: PathUtils;
-  pathUtilsMocks: GetPathUtilsMockMocks;
+  pathUtilsMocks: PathUtilsMockMocks;
 };
 
 export const getPathUtilsMock = (
-  options: GetPathUtilsMockOptions = {},
-): GetPathUtilsMockResult => {
+  options: PathUtilsMockOptions = {},
+): PathUtilsMockResult => {
   const { joinFrom = jest.fn() } = options;
   const mocks = {
     joinFrom,
