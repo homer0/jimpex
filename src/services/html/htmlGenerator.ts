@@ -68,8 +68,6 @@ export class HTMLGenerator {
     if (this.valuesService && typeof this.valuesService.getValues !== 'function') {
       throw new Error('The HTMLGenerator values service must have a `getValues` method');
     }
-
-    this.fileDeferred = deferred<void>();
   }
 
   getOptions(): Readonly<HTMLGeneratorOptions> {
@@ -81,9 +79,11 @@ export class HTMLGenerator {
   }
 
   async generateHTML(): Promise<void> {
-    if (this.fileReady) {
-      return;
-    }
+    if (this.fileReady) return;
+    // eslint-disable-next-line consistent-return
+    if (this.fileDeferred) return this.fileDeferred.promise;
+
+    this.fileDeferred = deferred<void>();
     const { template, deleteTemplateAfter, file, silent } = this.options;
     try {
       const templateContents = await this.frontendFs.read(template);
