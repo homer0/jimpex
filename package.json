@@ -7,6 +7,7 @@
   "author": "Leonardo Apiwan (@homer0) <me@homer0.com>",
   "license": "MIT",
   "dependencies": {
+    "@homer0/api-utils": "^1.0.4",
     "@homer0/deep-assign": "^1.0.2",
     "@homer0/deferred": "^1.0.2",
     "@homer0/env-utils": "^1.0.3",
