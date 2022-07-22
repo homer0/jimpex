@@ -12,7 +12,7 @@ const fetch = originalNodeFetch as unknown as jest.MockInstance<
   jest.ArgsType<FetchType>
 >;
 
-describe('services/html:htmlGenerator', () => {
+describe('services/http:http', () => {
   describe('class', () => {
     beforeEach(() => {
       fetch.mockClear();

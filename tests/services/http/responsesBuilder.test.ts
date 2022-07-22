@@ -9,7 +9,7 @@ import type { Response } from '@src/types';
 import type { Statuses } from '@src/utils/fns/statuses';
 import { getJimpexMock, getConfigMock } from '@tests/mocks';
 
-describe('services/html:htmlGenerator', () => {
+describe('services/http:responsesBuilder', () => {
   describe('class', () => {
     it('should be instantiated', () => {
       // Given
