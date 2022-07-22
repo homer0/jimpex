@@ -156,14 +156,13 @@ export class HTMLGenerator {
 }
 
 export const htmlGeneratorProvider = providerCreator(
-  (options: HTMLGeneratorProviderOptions = {}) => {
-    const {
-      serviceName = 'htmlGenerator',
-      valuesServiceName = 'htmlGeneratorValues',
-      ...rest
-    } = options;
-
-    return (app) => {
+  (options: HTMLGeneratorProviderOptions = {}) =>
+    (app) => {
+      const {
+        serviceName = 'htmlGenerator',
+        valuesServiceName = 'htmlGeneratorValues',
+        ...rest
+      } = options;
       app.set(
         serviceName,
         () =>
@@ -181,6 +180,5 @@ export const htmlGeneratorProvider = providerCreator(
       app.once('afterStart', () => {
         app.get<HTMLGenerator>(serviceName).generateHTML();
       });
-    };
-  },
+    },
 );
