@@ -39,6 +39,8 @@ export class HTTP {
       },
       options,
     );
+
+    this.fetch = this.fetch.bind(this);
   }
 
   getOptions(): Readonly<HTTPBaseOptions> {
