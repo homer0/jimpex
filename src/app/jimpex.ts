@@ -22,7 +22,7 @@ import { statuses } from '../utils';
 import type {
   DeepPartial,
   Express,
-  ExpressMiddleware,
+  ExpressMiddlewareLike,
   PathUtils,
   SimpleConfig,
   SimpleLogger,
@@ -193,7 +193,7 @@ export class Jimpex extends Jimple {
     const useMiddleware =
       'register' in middleware && typeof middleware.register === 'function'
         ? (middleware as MiddlewareProvider).register(this)
-        : (middleware as Middleware | ExpressMiddleware);
+        : (middleware as Middleware | ExpressMiddlewareLike);
     this.mountQueue.push((server) => {
       if ('connect' in useMiddleware && typeof useMiddleware.connect === 'function') {
         const handler = useMiddleware.connect(this);
@@ -207,7 +207,7 @@ export class Jimpex extends Jimple {
       server.use(
         this.reduceWithEvent(
           'middlewareWillBeUsed',
-          useMiddleware as ExpressMiddleware,
+          useMiddleware as ExpressMiddlewareLike,
           undefined,
         ),
       );

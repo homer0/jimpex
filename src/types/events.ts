@@ -1,4 +1,4 @@
-import type { Router, ExpressMiddleware } from './express';
+import type { Router, ExpressMiddlewareLike } from './express';
 import type { Controller } from '../utils';
 
 export type JimpexLifeCycleEvent =
@@ -17,9 +17,9 @@ export type JimpexEventPayload<EventName extends JimpexEventName> =
 export type JimpexReducerEventName = 'controllerWillBeMounted' | 'middlewareWillBeUsed';
 export type JimpexReducerEventTarget<EventName extends JimpexReducerEventName> =
   EventName extends 'controllerWillBeMounted'
-    ? Router | ExpressMiddleware
+    ? Router | ExpressMiddlewareLike
     : EventName extends 'middlewareWillBeUsed'
-    ? ExpressMiddleware
+    ? ExpressMiddlewareLike
     : undefined;
 export type JimpexReducerEventPayload<EventName extends JimpexReducerEventName> =
   EventName extends 'controllerWillBeMounted'
