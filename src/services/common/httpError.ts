@@ -22,3 +22,5 @@ export const httpErrorProvider = provider((app) => {
   app.set('HTTPError', () => HTTPError);
   app.set('httpError', () => createHTTPError);
 });
+
+export type HTTPErrorClass = typeof HTTPError;

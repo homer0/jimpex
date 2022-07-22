@@ -59,3 +59,5 @@ export const appErrorProvider = provider((app) => {
   app.set('AppError', () => AppError);
   app.set('appError', () => createAppError);
 });
+
+export type AppErrorClass = typeof AppError;
