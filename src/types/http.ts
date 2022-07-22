@@ -3,6 +3,8 @@ import type { Server as HTTPServer } from 'http';
 import type { ServerOptions as SpdyServerOptions } from 'spdy';
 import type { Express } from './express';
 
+export type { Response as HTTPResponse } from 'node-fetch';
+
 export type JimpexServer = Express | HTTPSServer;
 export type JimpexServerInstance = HTTPServer | HTTPSServer;
 
