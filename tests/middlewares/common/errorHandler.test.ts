@@ -3,10 +3,9 @@ import {
   errorHandlerMiddleware,
   type ErrorHandlerConstructorOptions,
 } from '@src/middlewares/common/errorHandler';
-import { AppError, ResponsesBuilder } from '@src/services';
-import { HTTPError } from '@src/services/common/httpError';
+import { AppError, HTTPError, ResponsesBuilder } from '@src/services';
 import type { ExpressErrorHandler, Request, Response } from '@src/types';
-import { statuses as realStatuses, type Statuses } from '@src/utils/fns/statuses';
+import { statuses as realStatuses, type Statuses } from '@src/utils';
 import { getJimpexMock, getLoggerMock } from '@tests/mocks';
 
 describe('middlewares/common:errorHandler', () => {
