@@ -9,7 +9,7 @@ import type { ExpressErrorHandler, Request, Response } from '@src/types';
 import { statuses as realStatuses, type Statuses } from '@src/utils/fns/statuses';
 import { getJimpexMock, getLoggerMock } from '@tests/mocks';
 
-describe('services/utils:ensureBearerToken', () => {
+describe('middlewares/common:errorHandler', () => {
   describe('class', () => {
     it('should be instantiated', () => {
       // Given
