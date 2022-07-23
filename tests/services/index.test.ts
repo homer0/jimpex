@@ -10,12 +10,14 @@ import * as services from '@src/services';
 describe('services', () => {
   it('should export all the app sevices', () => {
     // Given/When/Then
-    expect(services).toEqual({
-      common: 'providers',
-      frontend: 'providers',
-      html: 'providers',
-      http: 'providers',
-      utils: 'providers',
-    });
+    expect(services).toEqual(
+      expect.objectContaining({
+        common: 'providers',
+        frontend: 'providers',
+        html: 'providers',
+        http: 'providers',
+        utils: 'providers',
+      }),
+    );
   });
 });
