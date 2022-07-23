@@ -191,7 +191,7 @@ describe('services/utils:ensureBearerToken', () => {
       });
       // Then
       expect(result).toEqual(expect.any(Function));
-      expect(result.toString()).toEqual(toCompare.middleware().toString());
+      expect(result.toString()).toBe(toCompare.middleware().toString());
       expect(mocks.set).toHaveBeenCalledTimes(1);
       expect(mocks.set).toHaveBeenCalledWith('ensureBearerToken', expect.any(Function));
       expect(mocks.get).toHaveBeenCalledTimes(2);
