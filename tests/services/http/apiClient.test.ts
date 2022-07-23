@@ -1,7 +1,3 @@
-jest.unmock('@src/services/common/appError');
-jest.unmock('@src/services/common/httpError');
-jest.unmock('@src/services/http/apiClient');
-
 import {
   APIClient,
   apiClientProvider,

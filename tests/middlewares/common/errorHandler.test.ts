@@ -1,12 +1,3 @@
-jest.unmock('@src/services/common/appError');
-jest.unmock('@src/services/common/httpError');
-jest.unmock('@src/services/common/index');
-jest.unmock('@src/services/html/htmlGenerator');
-jest.unmock('@src/services/http/apiClient');
-jest.unmock('@src/services/utils/ensureBearerToken');
-jest.unmock('@src/services/index');
-jest.unmock('@src/middlewares/common/errorHandler');
-
 import {
   ErrorHandler,
   errorHandlerMiddleware,

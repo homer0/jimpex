@@ -1,8 +1,4 @@
 /* eslint-disable dot-notation */
-jest.unmock('@src/services/common/appError');
-jest.unmock('@src/services/common/httpError');
-jest.unmock('@src/services/utils/ensureBearerToken');
-
 import {
   EnsureBearerToken,
   ensureBearerTokenProvider,

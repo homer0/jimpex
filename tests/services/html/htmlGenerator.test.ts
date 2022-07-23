@@ -1,5 +1,3 @@
-jest.unmock('@src/services/html/htmlGenerator');
-
 import {
   HTMLGenerator,
   HTMLGeneratorConstructorOptions,

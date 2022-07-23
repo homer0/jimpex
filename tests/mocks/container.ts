@@ -26,33 +26,34 @@ export const getJimpexMock = (options: JimpexMockOptions = {}): JimpexMockResult
     on: jest.fn(),
     once: jest.fn(),
   };
-  class Container extends Jimpex {
-    override set(...args: Parameters<Jimpex['set']>): ReturnType<Jimpex['set']> {
+  class Container {
+    set(...args: Parameters<Jimpex['set']>): ReturnType<Jimpex['set']> {
       mocks.set(...args);
-      return super.set(...args);
     }
-    override get<T = unknown>(name: string): T {
-      mocks.get(name);
+
+    get<T = unknown>(name: string): T {
+      const result = mocks.get(name);
       if (resources[name]) return resources[name] as T;
-      return super.get(name);
+      return result;
     }
-    override try<T = unknown>(name: string): T | undefined {
-      mocks.try(name);
+
+    try<T = unknown>(name: string): T | undefined {
+      const result = mocks.try(name);
       if (resources[name]) return resources[name] as T;
-      return super.try<T>(name);
+      return result;
     }
-    override on(...args: Parameters<Jimpex['on']>): ReturnType<Jimpex['on']> {
-      mocks.on(...args);
-      return super.on(...args);
+
+    on(...args: Parameters<Jimpex['on']>): ReturnType<Jimpex['on']> {
+      return mocks.on(...args);
     }
-    override once(...args: Parameters<Jimpex['once']>): ReturnType<Jimpex['once']> {
-      mocks.once(...args);
-      return super.once(...args);
+
+    once(...args: Parameters<Jimpex['once']>): ReturnType<Jimpex['once']> {
+      return mocks.once(...args);
     }
   }
 
   return {
-    container: new Container(),
+    container: new Container() as Jimpex,
     containerMocks: mocks,
   };
 };

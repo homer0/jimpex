@@ -1,5 +1,3 @@
-jest.unmock('@src/services/common/index');
-
 import collection from '@src/services/common';
 
 const SERVICES = ['appError', 'httpError', 'sendFile'];

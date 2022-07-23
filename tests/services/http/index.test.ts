@@ -1,6 +1,3 @@
-jest.unmock('@src/services/http/index');
-jest.unmock('@src/services/http/apiClient');
-
 import collection from '@src/services/http';
 
 const SERVICES = ['apiClient', 'http', 'responsesBuilder'];

@@ -1,4 +1,3 @@
-jest.unmock('@src/services');
 jest.mock('@src/utils', () => ({
   provider: jest.fn(() => 'provider'),
   providerCreator: jest.fn(() => 'providerCreator'),

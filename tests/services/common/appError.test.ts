@@ -1,5 +1,3 @@
-jest.unmock('@src/services/common/appError');
-
 import { statuses, type Statuses } from '@src/utils/fns/statuses';
 import {
   AppError,

@@ -1,5 +1,3 @@
-jest.unmock('@src/services/common/sendFile');
-
 import { sendFile, sendFileProvider, type SendFile } from '@src/services/common/sendFile';
 import type { Response } from '@src/types';
 import { getPathUtilsMock, getJimpexMock } from '@tests/mocks';

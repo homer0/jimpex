@@ -1,6 +1,3 @@
-jest.unmock('@src/services/html/index');
-jest.unmock('@src/services/html/htmlGenerator');
-
 import collection from '@src/services/html';
 
 const SERVICES = ['htmlGenerator'];
