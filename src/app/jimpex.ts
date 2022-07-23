@@ -44,7 +44,6 @@ import type {
 } from '../types';
 import type {
   Controller,
-  ControllerProvider,
   ControllerLike,
   MiddlewareLike,
   MiddlewareProvider,
@@ -169,20 +168,34 @@ export class Jimpex extends Jimple {
   }
 
   mount(route: string, controller: ControllerLike): void {
-    const useController =
-      typeof controller.register === 'function'
-        ? (controller as ControllerProvider).register(this, route)
-        : (controller as Controller);
+    let useController: Controller | Middleware;
+    if (
+      'register' in controller &&
+      typeof controller.register === 'function' &&
+      controller.provider === true
+    ) {
+      useController = controller.register(this, route);
+    } else if (
+      'connect' in controller &&
+      typeof controller.connect === 'function' &&
+      (('middleware' in controller && controller.middleware === true) ||
+        ('controller' in controller && controller.controller === true))
+    ) {
+      useController = controller;
+    } else {
+      useController = {
+        middleware: true,
+        connect: () => controller as ExpressMiddlewareLike,
+      };
+    }
 
     this.mountQueue.push((server) => {
-      const router = this.reduceWithEvent(
-        'controllerWillBeMounted',
-        useController.connect(this, route),
-        {
-          route,
-          controller: useController,
-        },
-      );
+      const connected = useController.connect(this, route);
+      if (!connected) return;
+      const router = this.reduceWithEvent('controllerWillBeMounted', connected, {
+        route,
+        controller: useController,
+      });
       server.use(route, router);
       this.emitEvent('routeAdded', { route });
       this.controlledRoutes.push(route);

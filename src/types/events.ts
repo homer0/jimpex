@@ -1,5 +1,5 @@
 import type { Router, ExpressMiddlewareLike } from './express';
-import type { Controller } from '../utils';
+import type { Controller, Middleware } from '../utils';
 
 export type JimpexLifeCycleEvent =
   | 'beforeStart'
@@ -23,7 +23,7 @@ export type JimpexReducerEventTarget<EventName extends JimpexReducerEventName> =
     : undefined;
 export type JimpexReducerEventPayload<EventName extends JimpexReducerEventName> =
   EventName extends 'controllerWillBeMounted'
-    ? { route: string; controller: Controller }
+    ? { route: string; controller: Controller | Middleware }
     : undefined;
 
 export type JimpexEventNameLike = JimpexEventName | JimpexReducerEventName;
