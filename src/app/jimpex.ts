@@ -130,17 +130,17 @@ export class Jimpex extends Jimple {
     if (!port) {
       throw new Error('Port is not defined');
     }
-    this.emitEvent('beforeStart', undefined);
+    this.emitEvent('beforeStart', { app: this });
     this.server = await this.createServer();
     this.instance = this.server!.listen(port, () => {
-      this.emitEvent('start', undefined);
+      this.emitEvent('start', { app: this });
       this.mountResources();
       this.getLogger().success(`Starting on port ${port}`);
-      this.emitEvent('afterStart', undefined);
+      this.emitEvent('afterStart', { app: this });
       if (onStart) {
         onStart(config);
       }
-      this.emitEvent('afterStartCallback', undefined);
+      this.emitEvent('afterStartCallback', { app: this });
     });
 
     return this.instance!;
@@ -161,10 +161,10 @@ export class Jimpex extends Jimple {
 
   stop(): void {
     if (!this.instance) return;
-    this.emitEvent('beforeStop', undefined);
+    this.emitEvent('beforeStop', { app: this });
     this.instance.close();
     this.instance = undefined;
-    this.emitEvent('afterStop', undefined);
+    this.emitEvent('afterStop', { app: this });
   }
 
   mount(route: string, controller: ControllerLike): void {
@@ -195,9 +195,10 @@ export class Jimpex extends Jimple {
       const router = this.reduceWithEvent('controllerWillBeMounted', connected, {
         route,
         controller: useController,
+        app: this,
       });
       server.use(route, router);
-      this.emitEvent('routeAdded', { route });
+      this.emitEvent('routeAdded', { route, app: this });
       this.controlledRoutes.push(route);
     });
   }
@@ -211,7 +212,9 @@ export class Jimpex extends Jimple {
       if ('connect' in useMiddleware && typeof useMiddleware.connect === 'function') {
         const handler = useMiddleware.connect(this);
         if (handler) {
-          server.use(this.reduceWithEvent('middlewareWillBeUsed', handler, undefined));
+          server.use(
+            this.reduceWithEvent('middlewareWillBeUsed', handler, { app: this }),
+          );
         }
 
         return;
@@ -221,7 +224,7 @@ export class Jimpex extends Jimple {
         this.reduceWithEvent(
           'middlewareWillBeUsed',
           useMiddleware as ExpressMiddlewareLike,
-          undefined,
+          { app: this },
         ),
       );
     });

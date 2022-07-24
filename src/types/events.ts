@@ -1,5 +1,10 @@
 import type { Router, ExpressMiddlewareLike } from './express';
 import type { Controller, Middleware } from '../utils';
+import type { Jimpex } from '../app/jimpex';
+
+type EventPayload<T = Record<string, unknown>> = {
+  app: Jimpex;
+} & T;
 
 export type JimpexLifeCycleEvent =
   | 'beforeStart'
@@ -12,7 +17,7 @@ export type JimpexLifeCycleEvent =
 export type JimpexActionEvent = 'routeAdded';
 export type JimpexEventName = JimpexLifeCycleEvent | JimpexActionEvent;
 export type JimpexEventPayload<EventName extends JimpexEventName> =
-  EventName extends 'routeAdded' ? { route: string } : undefined;
+  EventName extends 'routeAdded' ? EventPayload<{ route: string }> : EventPayload;
 
 export type JimpexReducerEventName = 'controllerWillBeMounted' | 'middlewareWillBeUsed';
 export type JimpexReducerEventTarget<EventName extends JimpexReducerEventName> =
@@ -21,10 +26,11 @@ export type JimpexReducerEventTarget<EventName extends JimpexReducerEventName> =
     : EventName extends 'middlewareWillBeUsed'
     ? ExpressMiddlewareLike
     : undefined;
+
 export type JimpexReducerEventPayload<EventName extends JimpexReducerEventName> =
   EventName extends 'controllerWillBeMounted'
-    ? { route: string; controller: Controller | Middleware }
-    : undefined;
+    ? EventPayload<{ route: string; controller: Controller | Middleware }>
+    : EventPayload;
 
 export type JimpexEventNameLike = JimpexEventName | JimpexReducerEventName;
 
@@ -37,3 +43,14 @@ export type JimpexEventListener<EventName extends JimpexEventNameLike> =
         payload: JimpexReducerEventPayload<EventName>,
       ) => JimpexReducerEventTarget<EventName>
     : never;
+
+export type Events = {
+  on: <EventName extends JimpexEventNameLike>(
+    eventName: EventName,
+    listener: JimpexEventListener<EventName>,
+  ) => () => boolean;
+  once: <EventName extends JimpexEventNameLike>(
+    eventName: EventName,
+    listener: JimpexEventListener<EventName>,
+  ) => () => boolean;
+};
