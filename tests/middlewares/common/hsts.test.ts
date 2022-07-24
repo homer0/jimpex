@@ -6,7 +6,7 @@ import {
 import type { Request, Response } from '@src/types';
 import { getJimpexMock } from '@tests/mocks';
 
-describe('middlewares/common:forceHTTPS', () => {
+describe('middlewares/common:hsts', () => {
   describe('class', () => {
     it('should be instantiated', () => {
       // Given/When
