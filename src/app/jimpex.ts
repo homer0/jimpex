@@ -264,6 +264,10 @@ export class Jimpex extends Jimple {
     return this.get<EventsHub>('events');
   }
 
+  getRoutes(): string[] {
+    return this.controlledRoutes.slice();
+  }
+
   on<EventName extends JimpexEventNameLike>(
     eventName: EventName,
     listener: JimpexEventListener<EventName>,
