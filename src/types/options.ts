@@ -1,4 +1,5 @@
 import type { SimpleConfig } from './wootils';
+import type { Jimpex } from '../app';
 
 export type JimpexConfigurationOptions = {
   default: unknown;
@@ -37,6 +38,15 @@ export type JimpexServicesOptions = {
   utils: boolean;
 };
 
+export type JimpexHealthStatus =
+  | boolean
+  | {
+      isHealthy?: boolean;
+      services?: Record<string, boolean>;
+    };
+
+export type JimpexHealthCheckFn = (app: Jimpex) => Promise<JimpexHealthStatus>;
+
 export type JimpexOptions = {
   version: string;
   filesizeLimit: string;
@@ -47,6 +57,7 @@ export type JimpexOptions = {
   statics: JimpexStaticsOptions;
   express: JimpexExpressOptions;
   services: JimpexServicesOptions;
+  healthCheck: JimpexHealthCheckFn;
 };
 
 export type JimpexStartCallback = (config: SimpleConfig) => void;
