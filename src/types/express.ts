@@ -8,3 +8,13 @@ export type AsyncExpressMiddleware = (
   ...args: Parameters<ExpressMiddleware>
 ) => Promise<void>;
 export type ExpressErrorHandler = ErrorRequestHandler;
+export type RouterMethod =
+  | 'all'
+  | 'get'
+  | 'head'
+  | 'post'
+  | 'put'
+  | 'delete'
+  | 'connect'
+  | 'options'
+  | 'trace';
