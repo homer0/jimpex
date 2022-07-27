@@ -25,6 +25,7 @@ export const getJimpexMock = (options: JimpexMockOptions = {}): JimpexMockResult
     try: jest.fn(),
     on: jest.fn(),
     once: jest.fn(),
+    isHealthy: jest.fn(),
   };
   class Container {
     set(...args: Parameters<Jimpex['set']>): ReturnType<Jimpex['set']> {
@@ -49,6 +50,10 @@ export const getJimpexMock = (options: JimpexMockOptions = {}): JimpexMockResult
 
     once(...args: Parameters<Jimpex['once']>): ReturnType<Jimpex['once']> {
       return mocks.once(...args);
+    }
+
+    isHealthy(): ReturnType<Jimpex['isHealthy']> {
+      return mocks.isHealthy();
     }
   }
 
