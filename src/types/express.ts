@@ -13,6 +13,7 @@ export type RouterMethod =
   | 'get'
   | 'head'
   | 'post'
+  | 'patch'
   | 'put'
   | 'delete'
   | 'connect'

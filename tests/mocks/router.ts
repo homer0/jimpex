@@ -18,6 +18,7 @@ export const getRouterMock = (): RouterMockResult => {
     'get',
     'head',
     'post',
+    'patch',
     'put',
     'delete',
     'connect',
