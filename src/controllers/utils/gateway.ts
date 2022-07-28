@@ -186,18 +186,20 @@ export class GatewayController {
     this.http = inject.http;
     this.getHelperService = inject.getHelperService || (() => undefined);
     this.route = removeSlashes(route);
-    this.options = deepAssignWithOverwrite(
-      {
-        root: '',
-        apiConfigSetting: 'api',
-        headers: {
-          useXForwardedFor: true,
-          copyCustomHeaders: true,
-          copy: ['authorization', 'content-type', 'referer', 'user-agent'],
-          remove: ['server', 'x-powered-by', 'content-encoding'],
+    this.options = this.formatOptions(
+      deepAssignWithOverwrite(
+        {
+          root: '',
+          apiConfigSetting: 'api',
+          headers: {
+            useXForwardedFor: true,
+            copyCustomHeaders: true,
+            copy: ['authorization', 'content-type', 'referer', 'user-agent'],
+            remove: ['server', 'x-powered-by', 'content-encoding'],
+          },
         },
-      },
-      options,
+        options,
+      ),
     );
     this.gatewayConfig = {
       ...gatewayConfig,
@@ -501,6 +503,17 @@ export class GatewayController {
     }
 
     return options.next(options.error);
+  }
+
+  protected formatOptions(
+    options: GatewayControllerOptionalOptions,
+  ): GatewayControllerOptionalOptions {
+    if (options.root) {
+      const root = removeSlashes(options.root).trim();
+      return { ...options, root };
+    }
+
+    return options;
   }
 
   protected validateHTTPMethod(method: string): RouterMethod {
