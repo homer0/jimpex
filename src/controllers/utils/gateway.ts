@@ -40,7 +40,7 @@ export type GatewayConfig = {
   gateway: GatewayConfigEndpoints;
 };
 
-export type GatewayControllerRequiredOptions = {
+export type GatewayControllerBaseOptions = {
   gatewayConfig: GatewayConfig;
   route: string;
 };
@@ -52,17 +52,16 @@ export type GatewayControllerHeaderOptions = {
   remove: string[];
 };
 
-export type GatewayControllerOptionalOptions = {
+export type GatewayControllerExtraOptions = {
   root: string;
   apiConfigSetting: string;
   headers: GatewayControllerHeaderOptions;
 };
 
-type GatewayControllerPartialOptionalOptions =
-  DeepPartial<GatewayControllerOptionalOptions>;
+type GatewayControllerPartialExtraOptions = DeepPartial<GatewayControllerExtraOptions>;
 
-type GatewayControllerInitOptions = GatewayControllerRequiredOptions &
-  GatewayControllerPartialOptionalOptions;
+type GatewayControllerInitOptions = GatewayControllerBaseOptions &
+  GatewayControllerPartialExtraOptions;
 
 export type GatewayControllerRequest = {
   url: string;
@@ -172,7 +171,7 @@ export class GatewayController {
   protected readonly gatewayConfig: GatewayConfig;
   protected readonly route: string;
   protected readonly routeExpression: RegExp;
-  protected readonly options: GatewayControllerOptionalOptions;
+  protected readonly options: GatewayControllerExtraOptions;
   protected readonly endpoints: Record<string, GatewayConfigEndpointDefinition>;
   protected readonly apiConfigUrl: string;
   protected readonly apiConfigEndpoints: APIClientOptions['endpoints'];
@@ -213,7 +212,7 @@ export class GatewayController {
     this.apiConfigEndpoints = endpoints;
   }
 
-  getOptions(): Readonly<GatewayControllerOptionalOptions> {
+  getOptions(): Readonly<GatewayControllerExtraOptions> {
     return { ...this.options };
   }
 
@@ -506,8 +505,8 @@ export class GatewayController {
   }
 
   protected formatOptions(
-    options: GatewayControllerOptionalOptions,
-  ): GatewayControllerOptionalOptions {
+    options: GatewayControllerExtraOptions,
+  ): GatewayControllerExtraOptions {
     if (options.root) {
       const root = removeSlashes(options.root).trim();
       return { ...options, root };
@@ -569,7 +568,7 @@ export class GatewayController {
 
 export type GatewayControllerGetMiddlewaresFn = (app: Jimpex) => MiddlewareLike[];
 
-export type GatewayControllerCreatorOptions = GatewayControllerPartialOptionalOptions & {
+export type GatewayControllerCreatorOptions = GatewayControllerPartialExtraOptions & {
   serviceName?: string;
   helperServiceName?: string;
   gatewaySettingName?: string;
