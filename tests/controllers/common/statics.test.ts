@@ -6,9 +6,7 @@ import {
   staticsController,
   type StaticsControllerOptions,
   type StaticsControllerConstructorOptions,
-  // type StaticsControllerCreatorOptions,
 } from '@src/controllers/common/statics';
-// import { statuses as realStatuses, type Statuses } from '@src/utils';
 import type { SendFile } from '@src/services';
 import type { MiddlewareLike } from '@src/utils';
 import type { ExpressMiddleware, Request, Response, RouterMethod } from '@src/types';
