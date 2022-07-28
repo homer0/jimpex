@@ -289,7 +289,7 @@ export class GatewayController {
         }
       }
 
-      const method = req.method.toLowerCase();
+      const method = req.method.toUpperCase();
       let body: string | undefined;
       if (method !== 'GET' && typeof req.body === 'object') {
         body = JSON.stringify(req.body);
@@ -335,7 +335,7 @@ export class GatewayController {
         if (shouldStream) {
           res.status(response.status);
           response.headers.forEach((value, name) => {
-            if (headersOptions.remove.includes(name)) {
+            if (!headersOptions.remove.includes(name)) {
               res.setHeader(name, value);
             }
           });
@@ -577,13 +577,12 @@ export type GatewayControllerCreatorOptions = GatewayControllerPartialExtraOptio
 };
 
 export const gatewayController = controllerProviderCreator(
-  (options: GatewayControllerCreatorOptions) => (app, route) => {
-    const defaultServiceName = 'apiGateway';
-    let defaultHelperServiceName = 'apiGatewayHelper';
-    let defaultConfigurationSetting = 'api';
-    let { serviceName = defaultServiceName } = options;
-
-    app.set(serviceName, () => {
+  (options: GatewayControllerCreatorOptions = {}) =>
+    (app, route) => {
+      const defaultServiceName = 'apiGateway';
+      let defaultHelperServiceName = 'apiGatewayHelper';
+      let defaultConfigurationSetting = 'api';
+      let { serviceName = defaultServiceName } = options;
       if (serviceName !== defaultServiceName) {
         defaultConfigurationSetting = serviceName;
         if (!serviceName.match(/gateway$/i)) {
@@ -592,40 +591,45 @@ export const gatewayController = controllerProviderCreator(
         defaultHelperServiceName = `${serviceName}Helper`;
       }
 
-      const {
-        helperServiceName = defaultHelperServiceName,
-        gatewaySettingName = defaultConfigurationSetting,
-        gatewayClass: GatewayClass = GatewayController,
-      } = options;
+      app.set(serviceName, () => {
+        const {
+          helperServiceName = defaultHelperServiceName,
+          gatewaySettingName = defaultConfigurationSetting,
+          gatewayClass: GatewayClass = GatewayController,
+        } = options;
 
-      return new GatewayClass({
-        ...options,
-        gatewayConfig: app.get<SimpleConfig>('config').get(gatewaySettingName),
-        route,
-        inject: {
-          http: app.get('http'),
-          getHelperService: () => app.try(helperServiceName),
-        },
+        const gtConfig = app
+          .get<SimpleConfig>('config')
+          .get<GatewayConfig>(gatewaySettingName);
+
+        return new GatewayClass({
+          ...options,
+          gatewayConfig: gtConfig,
+          route,
+          inject: {
+            http: app.get('http'),
+            getHelperService: () => app.try(helperServiceName),
+          },
+        });
       });
-    });
 
-    return controller(() => {
-      const ctrl = app.get<GatewayController>(serviceName);
-      let useMiddlewares: ExpressMiddleware[] | undefined;
-      if (options.getMiddlewares) {
-        useMiddlewares = options
-          .getMiddlewares(app)
-          .map((middleware) => {
-            if ('middleware' in middleware) {
-              return middleware.connect(app) as ExpressMiddleware | undefined;
-            }
+      return controller(() => {
+        const ctrl = app.get<GatewayController>(serviceName);
+        let useMiddlewares: ExpressMiddleware[] | undefined;
+        if (options.getMiddlewares) {
+          useMiddlewares = options
+            .getMiddlewares(app)
+            .map((middleware) => {
+              if ('middleware' in middleware) {
+                return middleware.connect(app) as ExpressMiddleware | undefined;
+              }
 
-            return middleware as ExpressMiddleware;
-          })
-          .filter(notUndefined);
-      }
+              return middleware as ExpressMiddleware;
+            })
+            .filter(notUndefined);
+        }
 
-      return ctrl.addRoutes(app.get('router'), useMiddlewares);
-    });
-  },
+        return ctrl.addRoutes(app.get('router'), useMiddlewares);
+      });
+    },
 );
