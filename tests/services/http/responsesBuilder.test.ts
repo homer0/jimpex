@@ -58,7 +58,7 @@ describe('services/http:responsesBuilder', () => {
         const [[html]] = response.write.mock.calls as [[string]];
         // Then
         expect(statuses).toHaveBeenCalledTimes(1);
-        expect(statuses).toHaveBeenCalledWith('OK');
+        expect(statuses).toHaveBeenCalledWith('ok');
         expect(response.setHeader).toHaveBeenCalledTimes(2);
         expect(response.setHeader).toHaveBeenCalledWith('Content-Type', 'text/html');
         expect(response.setHeader).toHaveBeenCalledWith(
@@ -174,11 +174,53 @@ describe('services/http:responsesBuilder', () => {
         });
         const [[html]] = response.write.mock.calls as [[string]];
         // Then
-        expect(statuses).toHaveBeenCalledTimes(0);
+        expect(statuses).toHaveBeenCalledTimes(1);
+        expect(statuses).toHaveBeenCalledWith(status);
         expect(response.status).toHaveBeenCalledTimes(1);
         expect(response.status).toHaveBeenCalledWith(status);
         expect(html).toContain(`<title>${title}</title>`);
         expect(html).toContain(`${target}.postMessage('${message}', '*')`);
+      });
+
+      it('should use 200 if the received status is invalid', () => {
+        // Given
+        const title = 'My HTML';
+        const message = 'the-message';
+        const target = 'window.opener.parent';
+        const response = {
+          setHeader: jest.fn(),
+          status: jest.fn(),
+          write: jest.fn(),
+          end: jest.fn(),
+        };
+        const { config, configMocks } = getConfigMock();
+        configMocks.get.mockReturnValueOnce(undefined);
+        const status = 12;
+        const error = new Error('Invalid status');
+        const statuses = jest.fn();
+        statuses.mockImplementationOnce(() => {
+          throw error;
+        });
+        statuses.mockImplementationOnce(() => status);
+        const options: ResponsesBuilderConstructorOptions = {
+          inject: {
+            config,
+            statuses: statuses as unknown as Statuses,
+          },
+        };
+        // When
+        const sut = new ResponsesBuilder(options);
+        sut.htmlPostMessage({
+          res: response as unknown as Response,
+          title,
+          message,
+          status,
+          target,
+        });
+        // Then
+        expect(statuses).toHaveBeenCalledTimes(2);
+        expect(statuses).toHaveBeenNthCalledWith(1, status);
+        expect(statuses).toHaveBeenNthCalledWith(2, 'ok');
       });
     });
 
@@ -212,7 +254,7 @@ describe('services/http:responsesBuilder', () => {
         });
         // Then
         expect(statuses).toHaveBeenCalledTimes(1);
-        expect(statuses).toHaveBeenCalledWith('OK');
+        expect(statuses).toHaveBeenCalledWith('ok');
         expect(response.status).toHaveBeenCalledTimes(1);
         expect(response.status).toHaveBeenCalledWith(status);
         expect(response.json).toHaveBeenCalledTimes(1);
@@ -259,7 +301,8 @@ describe('services/http:responsesBuilder', () => {
           status,
         });
         // Then
-        expect(statuses).toHaveBeenCalledTimes(0);
+        expect(statuses).toHaveBeenCalledTimes(1);
+        expect(statuses).toHaveBeenCalledWith(status);
         expect(response.json).toHaveBeenCalledWith({
           metadata: {
             version,
