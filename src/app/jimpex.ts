@@ -18,7 +18,19 @@ import {
   type ServerOptions as SpdyServerOptions,
 } from 'spdy';
 import express from 'express';
-import { statuses } from '../utils';
+import {
+  common as commonServices,
+  http as httpServices,
+  utils as utilsServices,
+} from '../services';
+import {
+  statuses,
+  type Controller,
+  type ControllerLike,
+  type MiddlewareLike,
+  type MiddlewareProvider,
+  type Middleware,
+} from '../utils';
 import type {
   DeepPartial,
   Express,
@@ -43,13 +55,6 @@ import type {
   JimpexEventListener,
   JimpexHealthCheckFn,
 } from '../types';
-import type {
-  Controller,
-  ControllerLike,
-  MiddlewareLike,
-  MiddlewareProvider,
-  Middleware,
-} from '../utils';
 
 export class Jimpex extends Jimple {
   protected options: JimpexOptions;
@@ -95,7 +100,7 @@ export class Jimpex extends Jimple {
           bodyParser: true,
           multer: true,
         },
-        defaultServices: {
+        services: {
           common: true,
           http: true,
           utils: true,
@@ -304,6 +309,11 @@ export class Jimpex extends Jimple {
     this.register(packageInfoProvider);
     this.register(pathUtilsProvider);
     this.register(rootFileProvider);
+    const { services: enabledServices } = this.options;
+    if (enabledServices.common) this.register(commonServices);
+    if (enabledServices.http) this.register(httpServices);
+    if (enabledServices.utils) this.register(utilsServices);
+
     this.set('events', () => new EventsHub());
     this.set('statuses', () => statuses);
   }
