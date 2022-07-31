@@ -135,7 +135,7 @@ export class Jimpex extends Jimple {
     const config = this.getConfig();
     const port = config.get<number | undefined>('port');
     if (!port) {
-      throw new Error('Port is not defined');
+      throw new Error('No port configured');
     }
     this.emitEvent('beforeStart', { app: this });
     this.server = await this.createServer();
@@ -243,7 +243,10 @@ export class Jimpex extends Jimple {
     setting?: string | string[],
     asArray: boolean = false,
   ): SimpleConfig | T {
-    const config = this.get<SimpleConfig>('config');
+    const config = this.try<SimpleConfig>('config');
+    if (!config) {
+      throw new Error('The config service is not available until the app starts');
+    }
     if (typeof setting === 'undefined') {
       return config;
     }
