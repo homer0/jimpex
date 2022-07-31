@@ -114,6 +114,7 @@ export class Jimpex extends Jimple {
     this.express = express();
 
     this.setupCoreServices();
+    this.setupExpress();
     this.configurePath();
 
     this.init();
