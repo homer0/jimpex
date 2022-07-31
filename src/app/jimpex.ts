@@ -321,26 +321,6 @@ export class Jimpex extends Jimple {
     this.set('statuses', () => statuses);
   }
 
-  protected configurePath(): void {
-    const pathUtils = this.get<PathUtils>('pathUtils');
-    const {
-      path: { appPath, useParentPath },
-    } = this.options;
-    if (appPath) {
-      pathUtils.addLocation('app', appPath);
-      return;
-    }
-    if (!useParentPath) return;
-    const { stack = '' } = new Error();
-    const parentFromStack = stack.split('\n')[2];
-    if (parentFromStack) {
-      const parentFile = parentFromStack.replace(/^.*?\s\(([^\s]+):\d+:\d+\)/, '$1');
-      if (parentFile !== parentFromStack) {
-        pathUtils.addLocation('app', parentFile);
-      }
-    }
-  }
-
   protected setupExpress(): void {
     const { statics, filesizeLimit, express: expressOptions } = this.options;
     if (expressOptions.trustProxy) {
@@ -396,6 +376,35 @@ export class Jimpex extends Jimple {
       connect: () => express.static(staticFolder),
       controller: true,
     });
+  }
+
+  protected configurePath(): void {
+    const pathUtils = this.get<PathUtils>('pathUtils');
+    const {
+      path: { appPath, useParentPath },
+    } = this.options;
+    if (appPath) {
+      pathUtils.addLocation('app', appPath);
+      return;
+    }
+    let foundPath = false;
+    if (useParentPath) {
+      const stack = new Error().stack!;
+      const parentFromStack = stack.split('\n')[2];
+      if (parentFromStack) {
+        const parentFile = parentFromStack.replace(/^.*?\s\(([^\s]+):\d+:\d+\)/, '$1');
+        if (parentFile !== parentFromStack) {
+          foundPath = true;
+          pathUtils.addLocation('app', parentFile);
+        }
+      }
+    }
+
+    if (!foundPath) {
+      throw new Error(
+        'The app location cannot be determined. Please specify the appPath option.',
+      );
+    }
   }
 
   protected async setupConfiguration(): Promise<void> {
