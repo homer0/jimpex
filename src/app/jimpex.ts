@@ -78,7 +78,7 @@ export class Jimpex extends Jimple {
           useParentPath: true,
         },
         configuration: {
-          default: configuration,
+          default: options?.configuration?.default || configuration,
           name: 'app',
           path: 'config/',
           hasFolder: true,
