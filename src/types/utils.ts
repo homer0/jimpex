@@ -1,5 +1,12 @@
+/**
+ * A simple dictionary with unknown values.
+ */
 export type Dict = Record<string, unknown>;
-
+/**
+ * Utility to make a deep "partial" of an existing type.
+ *
+ * @template T  The type to make a partial of.
+ */
 export type DeepPartial<T> = {
   [P in keyof T]?: T[P] extends (infer U)[]
     ? DeepPartial<U>[]
@@ -7,7 +14,11 @@ export type DeepPartial<T> = {
     ? DeepPartial<T[P]>
     : T[P];
 };
-
+/**
+ * Utility to make a deep "readonly" of an existing type.
+ *
+ * @template T  The type to make a readonly of.
+ */
 export type DeepReadonly<T> = {
   readonly [P in keyof T]: T[P] extends (infer U)[]
     ? DeepReadonly<U>[]
@@ -15,5 +26,22 @@ export type DeepReadonly<T> = {
     ? DeepReadonly<T[P]>
     : T[P];
 };
-
+/**
+ * Utility to remove string indexes from types.
+ *
+ * @template T  The type to remove string indexes from.
+ * @example
+ *
+ *   type Foo = {
+ *     a: string;
+ *     b: string;
+ *     [key: string]: string;
+ *   };
+ *   type Bar = RemoveStringIndexes<Foo>;
+ *   // Bar = {
+ *   //  a: string;
+ *   //  b: string;
+ *   // };
+ *
+ */
 export type NoStringIndex<T> = { [K in keyof T as string extends K ? never : K]: T[K] };
