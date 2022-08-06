@@ -72,7 +72,6 @@ export class Jimpex extends Jimple {
         version: '0.0.0',
         filesizeLimit: '15MB',
         boot: true,
-        proxy: false,
         path: {
           appPath: '',
           useParentPath: true,

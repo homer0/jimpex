@@ -208,10 +208,7 @@ export type JimpexOptions = {
    */
   boot: boolean;
   /**
-   * Old proxy mode.
-   *
-   * @default false
-   * @todo Remove.
+   * The options to configure the application executable path.
    */
   path: JimpexPathOptions;
   /**

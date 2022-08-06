@@ -98,7 +98,6 @@ describe('Jimpex', () => {
         version: '0.0.0',
         filesizeLimit: '15MB',
         boot: true,
-        proxy: false,
         path: {
           appPath: '',
           useParentPath: true,
@@ -179,7 +178,6 @@ describe('Jimpex', () => {
         version: '1.0.0',
         filesizeLimit: '10MB',
         boot: false,
-        proxy: true,
         path: {
           appPath: 'app',
           useParentPath: false,
