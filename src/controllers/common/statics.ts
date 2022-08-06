@@ -83,8 +83,8 @@ export type StaticsControllerConstructorOptions = StaticsControllerPartialOption
   };
 };
 /**
- * A function to generate a list of middlewares that can be prepended to the Controller main
- * middleware.
+ * A function to generate a list of middlewares that can be executed before the tontroller
+ * main middleware.
  */
 export type StaticsControllerGetMiddlewaresFn = (app: Jimpex) => MiddlewareLike[];
 /**
@@ -92,8 +92,8 @@ export type StaticsControllerGetMiddlewaresFn = (app: Jimpex) => MiddlewareLike[
  */
 export type StaticsControllerCreatorOptions = StaticsControllerPartialOptions & {
   /**
-   * A function to generate a list of middlewares that can be prepended to the Controller
-   * main middleware.
+   * A function to generate a list of middlewares that can be executed before the
+   * tontroller main middleware.
    */
   getMiddlewares?: StaticsControllerGetMiddlewaresFn;
 };
@@ -118,7 +118,7 @@ type AddRouteOptions = {
    */
   fileMiddleware: ExpressMiddleware;
   /**
-   * A list of extra middlewares to prepend to the file middleware.
+   * A list of extra middlewares to execute before the file middleware.
    */
   middlewares: ExpressMiddleware[];
 };
@@ -174,7 +174,8 @@ export class StaticsController {
    * Mounts the middlewares in the router in order to serve the files.
    *
    * @param router       A reference to the application router.
-   * @param middlewares  A list of extra middlewares to prepend to the file middleware.
+   * @param middlewares  A list of extra middlewares to execute before the file
+   *                     middleware.
    */
   addRoutes(router: Router, middlewares: ExpressMiddleware[] = []): Router {
     const { methods } = this.options;
