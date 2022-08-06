@@ -7,28 +7,48 @@ import type {
   ExpressMiddleware,
   Router,
 } from '../../types';
-
+/**
+ * The options to contruct a {@link ConfigController}.
+ */
 export type ConfigControllerOptions = {
+  /**
+   * A dictionary with the dependencies to inject.
+   */
   inject: {
     responsesBuilder: ResponsesBuilder;
     config: SimpleConfig;
   };
 };
-
+/**
+ * The controller class that allows to show and switch the application configuration.
+ */
 export class ConfigController {
+  /**
+   * The service in charge or building the responses.
+   */
   protected readonly responsesBuilder: ResponsesBuilder;
+  /**
+   * The service in charge of the configuration.
+   */
   protected readonly config: SimpleConfig;
+  /**
+   * @param options  The options to construct the controller.
+   */
   constructor({ inject }: ConfigControllerOptions) {
     this.responsesBuilder = inject.responsesBuilder;
     this.config = inject.config;
   }
-
+  /**
+   * Creates the middleware the shows the current configuration.
+   */
   showConfig(): ExpressMiddleware {
     return (_, res) => {
       this.respondWithConfig(res);
     };
   }
-
+  /**
+   * Creates the middleware the allows to switch the configuration.
+   */
   switchConfig(): AsyncExpressMiddleware {
     return async (req, res, next) => {
       const { name } = req.params;
@@ -45,7 +65,9 @@ export class ConfigController {
       }
     };
   }
-
+  /**
+   * Utility to respond with the current configuration.
+   */
   protected respondWithConfig(res: Response): void {
     const name = this.config.get<string>('name');
     const data = {
@@ -59,7 +81,14 @@ export class ConfigController {
     });
   }
 }
-
+/**
+ * This controller is kind of special as it will only mount the routes if the
+ * `debug.configController` setting of the app configuration is set to `true`.
+ *
+ * It provides routes for:
+ * - `/`: Showing the current configuration.
+ * - `/switch/:name`: Switching the configuration, but only if the service allows it.
+ */
 export const configController = controller((app) => {
   const config = app.get<SimpleConfig>('config');
   const router = app.get<Router>('router');
