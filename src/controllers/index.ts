@@ -1,2 +1,2 @@
-export * as common from './common';
-export * as utils from './utils';
+export * from './common';
+export * from './utils';

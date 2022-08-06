@@ -1,4 +1,4 @@
-import collection from '@src/services/html';
+import { htmlServicesProvider as collection } from '@src/services/html';
 
 const SERVICES = ['htmlGenerator'];
 

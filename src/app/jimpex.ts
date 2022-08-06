@@ -19,9 +19,9 @@ import {
 } from 'spdy';
 import express from 'express';
 import {
-  common as commonServices,
-  http as httpServices,
-  utils as utilsServices,
+  commonServicesProvider,
+  httpServicesProvider,
+  utilsServicesProvider,
 } from '../services';
 import {
   statuses,
@@ -314,9 +314,9 @@ export class Jimpex extends Jimple {
     this.register(pathUtilsProvider);
     this.register(rootFileProvider);
     const { services: enabledServices } = this.options;
-    if (enabledServices.common) this.register(commonServices);
-    if (enabledServices.http) this.register(httpServices);
-    if (enabledServices.utils) this.register(utilsServices);
+    if (enabledServices.common) this.register(commonServicesProvider);
+    if (enabledServices.http) this.register(httpServicesProvider);
+    if (enabledServices.utils) this.register(utilsServicesProvider);
 
     this.set('events', () => new EventsHub());
     this.set('statuses', () => statuses);

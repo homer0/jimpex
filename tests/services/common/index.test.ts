@@ -1,4 +1,4 @@
-import collection from '@src/services/common';
+import { commonServicesProvider as collection } from '@src/services/common';
 
 const SERVICES = ['appError', 'httpError', 'sendFile'];
 

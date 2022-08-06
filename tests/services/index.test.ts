@@ -11,11 +11,11 @@ describe('services', () => {
     // Given/When/Then
     expect(services).toEqual(
       expect.objectContaining({
-        common: 'providers',
-        frontend: 'providers',
-        html: 'providers',
-        http: 'providers',
-        utils: 'providers',
+        commonServicesProvider: 'providers',
+        frontendServicesProvider: 'providers',
+        htmlServicesProvider: 'providers',
+        httpServicesProvider: 'providers',
+        utilsServicesProvider: 'providers',
       }),
     );
   });

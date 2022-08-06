@@ -52,9 +52,9 @@ import {
 import type { Express, ExpressMiddleware, Router } from '@src/types';
 import type { Jimpex } from '@src/app/jimpex';
 import {
-  common as commonServices,
-  http as httpServices,
-  utils as utilsServices,
+  commonServicesProvider,
+  httpServicesProvider,
+  utilsServicesProvider,
 } from '@src/services';
 import {
   getPathUtilsMock,
@@ -282,15 +282,15 @@ export const setupServices = (options: SetupServicesOptions = {}): SetupServices
   } = options;
   const mocks = {
     commonServices: jest
-      .spyOn(commonServices, 'register')
+      .spyOn(commonServicesProvider, 'register')
       .mockClear()
       .mockImplementationOnce(commonServicesRegister),
     httpServices: jest
-      .spyOn(httpServices, 'register')
+      .spyOn(httpServicesProvider, 'register')
       .mockClear()
       .mockImplementationOnce(httpServicesRegister),
     utilsServices: jest
-      .spyOn(utilsServices, 'register')
+      .spyOn(utilsServicesProvider, 'register')
       .mockClear()
       .mockImplementationOnce(utilsServicesRegister),
   };
