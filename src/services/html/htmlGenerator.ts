@@ -100,8 +100,8 @@ export type HTMLGeneratorConstructorOptions = HTMLGeneratorPartialOptions & {
  */
 export type HTMLGeneratorProviderOptions = HTMLGeneratorPartialOptions & {
   /**
-   * The name that will be used to register the service on the app container. This is to
-   * allow multiple "instances" of the service to be created.
+   * The name that will be used to register the service on the container. This is to allow
+   * multiple "instances" of the service to be created.
    *
    * @default 'htmlGenerator'
    */
