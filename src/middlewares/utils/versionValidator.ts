@@ -81,7 +81,7 @@ export type VersionValidatorOptions = {
   error: string;
 };
 /**
- * A partial version of the {@link VersionValidatorOptions}, to be used int he constructor
+ * A partial version of the {@link VersionValidatorOptions}, to be used in the constructor
  * and the middleware creator. The reason it omits `version` it's because for the
  * constructor it's required, but for the middleware creator it's not.
  */

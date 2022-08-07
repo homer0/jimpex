@@ -30,7 +30,7 @@ export type FastHTMLOptions = {
   useAppRoutes: boolean;
 };
 /**
- * A partial version of the {@link FastHTMLOptions}, to be used int he constructor and
+ * A partial version of the {@link FastHTMLOptions}, to be used in the constructor and
  * the middleware creator.
  */
 type FastHTMLPartialOptions = Partial<FastHTMLOptions>;

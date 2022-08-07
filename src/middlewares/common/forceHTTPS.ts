@@ -12,7 +12,7 @@ export type ForceHTTPSOptions = {
   ignoredRoutes: RegExp[];
 };
 /**
- * A partial version of the {@link ForceHTTPSOptions}, to be used int he constructor and
+ * A partial version of the {@link ForceHTTPSOptions}, to be used in the constructor and
  * the middleware creator.
  */
 export type ForceHTTPSPartialOptions = Partial<ForceHTTPSOptions>;

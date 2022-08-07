@@ -43,7 +43,7 @@ export type ErrorHandlerOptions = {
   response: ErrorHandlerResponseOptions;
 };
 /**
- * A partial version of the {@link ErrorHandlerOptions}, to be used int he constructor and
+ * A partial version of the {@link ErrorHandlerOptions}, to be used in the constructor and
  * the middleware creator.
  */
 export type ErrorHandlerPartialOptions = DeepPartial<ErrorHandlerOptions>;

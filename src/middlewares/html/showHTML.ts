@@ -14,7 +14,7 @@ export type ShowHTMLOptions = {
   file: string;
 };
 /**
- * A partial version of the {@link ShowHTMLOptions}, to be used int he constructor and
+ * A partial version of the {@link ShowHTMLOptions}, to be used in the constructor and
  * the middleware creator.
  */
 type ShowHTMLPartialOptions = Partial<ShowHTMLOptions>;
@@ -22,6 +22,9 @@ type ShowHTMLPartialOptions = Partial<ShowHTMLOptions>;
  * The options to construct a {@link ShowHTML}.
  */
 export type ShowHTMLConstructorOptions = ShowHTMLPartialOptions & {
+  /**
+   * A dictionary with the dependencies to inject.
+   */
   inject: {
     sendFile: SendFile;
     /**

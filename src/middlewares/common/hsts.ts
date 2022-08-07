@@ -29,7 +29,7 @@ export type HSTSMiddlewareOptions = {
   preload: boolean;
 };
 /**
- * A partial version of the {@link HSTSMiddlewareOptions}, to be used int he constructor
+ * A partial version of the {@link HSTSMiddlewareOptions}, to be used in the constructor
  * and the middleware creator.
  */
 export type HSTSMiddlewarePartialOptions = Partial<HSTSMiddlewareOptions>;
