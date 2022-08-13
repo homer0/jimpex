@@ -96,7 +96,7 @@ export type StaticsControllerCreatorOptions = DeepPartial<StaticsControllerOptio
 /**
  * The options for {@link StaticsController.addRoute}.
  */
-type AddRouteOptions = {
+export type AddStaticRouteOptions = {
   /**
    * The reference for the router in which the middlewares will be added.
    */
@@ -231,7 +231,7 @@ export class StaticsController {
     file,
     fileMiddleware,
     middlewares,
-  }: AddRouteOptions): void {
+  }: AddStaticRouteOptions): void {
     const { route } = file;
     router[method](route, [...middlewares, fileMiddleware]);
   }

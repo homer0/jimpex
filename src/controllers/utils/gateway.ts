@@ -335,7 +335,7 @@ export type GatewayHelperService = Partial<{
  *
  * @template T  The type of the options for a specific helper service function.
  */
-type GatewayControllerHelperOptions<T> = T & {
+export type GatewayControllerHelperOptions<T> = T & {
   /**
    * The reference for the helper service.
    */
@@ -421,7 +421,7 @@ export type GatewayControllerConstructorOptions = GatewayControllerOptions & {
 /**
  * The options for {@link GatewayController.addRoute}.
  */
-type AddRouteOptions = {
+export type AddGatewayRouteOptions = {
   /**
    * The reference for the router in which the middlewares will be added.
    */
@@ -731,7 +731,7 @@ export class GatewayController {
     route,
     gatewayMiddleware,
     middlewares,
-  }: AddRouteOptions): void {
+  }: AddGatewayRouteOptions): void {
     router[method](route, [...middlewares, gatewayMiddleware]);
   }
   /**
