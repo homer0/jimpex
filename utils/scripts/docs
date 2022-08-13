@@ -1,2 +1,2 @@
 #!/bin/bash -e
-typedoc src/index.ts
+typedoc --options ./typedoc.json
