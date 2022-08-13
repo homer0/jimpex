@@ -21,9 +21,6 @@ export type EnsureBearerTokenErrorOptions = {
   /**
    * Context information for the error handler and that can be added to the actual
    * response.
-   *
-   * @default {}
-   * @prettierignore
    */
   response: unknown;
 };

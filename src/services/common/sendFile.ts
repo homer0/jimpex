@@ -37,7 +37,7 @@ export type SendFileOptions = {
    * The function to move to the next middleware. It can be used to report an error in
    * case the file can't be served.
    *
-   * @default ()  => {}
+   * @default {() => {}}
    */
   next?: NextFunction;
 };

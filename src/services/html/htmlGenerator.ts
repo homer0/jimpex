@@ -35,7 +35,7 @@ export type HTMLGeneratorOptions = {
   /**
    * The placeholder string where the information will be written.
    *
-   * @default '{{appConfiguration}}'
+   * @default '\{\{appConfiguration\}\}'
    */
   replacePlaceholder: string;
   /**

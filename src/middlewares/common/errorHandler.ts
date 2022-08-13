@@ -14,7 +14,7 @@ export type ErrorHandlerResponseOptions = {
   /**
    * The message to show in case `showErrors` is set to `false`.
    *
-   * @default Oops! Something went wrong, please try again'
+   * @default 'Oops! Something went wrong, please try again'
    * @prettierignore
    */
   message: string;
