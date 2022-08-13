@@ -2,7 +2,7 @@ import type { Router, ExpressMiddlewareLike } from './express';
 import type { Controller, Middleware } from '../utils';
 import type { Jimpex } from '../app/jimpex';
 
-type EventPayload<T = Record<string, unknown>> = {
+export type EventPayload<T = Record<string, unknown>> = {
   app: Jimpex;
 } & T;
 

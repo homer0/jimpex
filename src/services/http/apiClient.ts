@@ -19,7 +19,7 @@ export type APIClientConfig = Pick<APIClientOptions, 'url' | 'endpoints'>;
  * A dictionary of endpoints for the API client.
  * This is declared as standalone because it needs to reference them multiple times.
  */
-type EndpointsType = APIClientOptions['endpoints'];
+export type EndpointsType = APIClientOptions['endpoints'];
 /**
  * The format the settings needs to have in the application configuration in order to
  * create a valid API client.
