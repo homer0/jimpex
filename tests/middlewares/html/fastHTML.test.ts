@@ -1,7 +1,7 @@
 import {
   FastHTML,
   fastHTMLMiddleware,
-  type FastHTMLBaseOptions,
+  type FastHTMLOptions,
   type FastHTMLConstructorOptions,
 } from '@src/middlewares/html/fastHTML';
 import type { HTMLGenerator, SendFile } from '@src/services';
@@ -39,7 +39,7 @@ describe('middlewares/html:fastHTML', () => {
       const events = {
         once: jest.fn(),
       };
-      const baseOptions: FastHTMLBaseOptions = {
+      const baseOptions: FastHTMLOptions = {
         file: 'charo.html',
         useAppRoutes: false,
         ignoredRoutes: [/\.jpg$/i],
