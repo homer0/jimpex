@@ -80,15 +80,12 @@ export class HTTP {
       this.logRequest(useURL, fetchOptions);
     }
 
-    let result = fetch(useURL, fetchOptions);
+    const response = await fetch(useURL, fetchOptions);
     if (logRequests) {
-      result = result.then((response) => {
-        this.logResponse(response);
-        return response;
-      });
+      this.logResponse(response);
     }
 
-    return result;
+    return response;
   }
 
   getIPFromRequest(req: Request): string | undefined {
