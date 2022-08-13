@@ -14,14 +14,9 @@ export type ShowHTMLOptions = {
   file: string;
 };
 /**
- * A partial version of the {@link ShowHTMLOptions}, to be used in the constructor and
- * the middleware creator.
- */
-type ShowHTMLPartialOptions = Partial<ShowHTMLOptions>;
-/**
  * The options to construct a {@link ShowHTML}.
  */
-export type ShowHTMLConstructorOptions = ShowHTMLPartialOptions & {
+export type ShowHTMLConstructorOptions = Partial<ShowHTMLOptions> & {
   /**
    * A dictionary with the dependencies to inject.
    */
@@ -39,7 +34,7 @@ export type ShowHTMLConstructorOptions = ShowHTMLPartialOptions & {
 /**
  * The options for the middleware creator that will mount an instance of {@link ShowHTML}.
  */
-export type ShowHTMLMiddlewareOptions = ShowHTMLPartialOptions & {
+export type ShowHTMLMiddlewareOptions = Partial<ShowHTMLOptions> & {
   /**
    * The name of an {@link HTMLGenerator} service already available in the application.
    *

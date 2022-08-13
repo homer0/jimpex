@@ -30,14 +30,9 @@ export type FastHTMLOptions = {
   useAppRoutes: boolean;
 };
 /**
- * A partial version of the {@link FastHTMLOptions}, to be used in the constructor and
- * the middleware creator.
- */
-type FastHTMLPartialOptions = Partial<FastHTMLOptions>;
-/**
  * The options to construct a {@link FastHTML}.
  */
-export type FastHTMLConstructorOptions = FastHTMLPartialOptions & {
+export type FastHTMLConstructorOptions = Partial<FastHTMLOptions> & {
   /**
    * A dictionary with the dependencies to inject.
    */
@@ -56,7 +51,7 @@ export type FastHTMLConstructorOptions = FastHTMLPartialOptions & {
 /**
  * The options for the middleware creator that will mount an instance of {@link FastHTML}.
  */
-export type FastHTMLMiddlewareOptions = FastHTMLPartialOptions & {
+export type FastHTMLMiddlewareOptions = Partial<FastHTMLOptions> & {
   /**
    * The name of an {@link HTMLGenerator} service already available in the application.
    *

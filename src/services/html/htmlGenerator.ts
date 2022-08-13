@@ -60,11 +60,6 @@ export type HTMLGeneratorOptions = {
   configurationKeys: string[];
 };
 /**
- * A partial version of the {@link HTMLGeneratorOptions}, to be used in the constructor and
- * the service provider.
- */
-type HTMLGeneratorPartialOptions = Partial<HTMLGeneratorOptions>;
-/**
  * An external service that can be used to provide the values the generator will replace
  * in the template.
  */
@@ -79,7 +74,7 @@ export type HTMLGeneratorValuesService = {
 /**
  * The options to construct a {@link HTMLGenerator}.
  */
-export type HTMLGeneratorConstructorOptions = HTMLGeneratorPartialOptions & {
+export type HTMLGeneratorConstructorOptions = Partial<HTMLGeneratorOptions> & {
   /**
    * A dictionary with the dependencies to inject.
    */
@@ -98,7 +93,7 @@ export type HTMLGeneratorConstructorOptions = HTMLGeneratorPartialOptions & {
  * Custom options for the provider that will register an instance of {@link HTMLGenerator}
  * as a service.
  */
-export type HTMLGeneratorProviderOptions = HTMLGeneratorPartialOptions & {
+export type HTMLGeneratorProviderOptions = Partial<HTMLGeneratorOptions> & {
   /**
    * The name that will be used to register the service on the container. This is to allow
    * multiple "instances" of the service to be created.

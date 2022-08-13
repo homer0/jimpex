@@ -162,14 +162,9 @@ export type GatewayControllerExtraOptions = {
   headers: GatewayControllerHeaderOptions;
 };
 /**
- * A deep partial version of {@link GatewayControllerExtraOptions}, used for the constructor
- * options and the controller creator options.
- */
-type GatewayControllerPartialExtraOptions = DeepPartial<GatewayControllerExtraOptions>;
-/**
  * The required options for the gateway controller.
  */
-type GatewayControllerOptions = {
+export type GatewayControllerOptions = {
   /**
    * The configuration for the API the gateway will make the requests to.
    */
@@ -178,7 +173,7 @@ type GatewayControllerOptions = {
    * The route where the controller is mounted.
    */
   route: string;
-} & GatewayControllerPartialExtraOptions;
+} & DeepPartial<GatewayControllerExtraOptions>;
 /**
  * The information for a request the controller will make.
  */
@@ -1012,49 +1007,51 @@ export type GatewayControllerGetMiddlewaresFn = (app: Jimpex) => MiddlewareLike[
 /**
  * The options for the controller creator that mounts the {@link GatewayController}.
  */
-export type GatewayControllerCreatorOptions = GatewayControllerPartialExtraOptions & {
-  /**
-   * The name the creator will use to register the controller in the container. No,
-   * this is not a typo. The creator will register the controller so other services can
-   * access the `getAPIConfig` method. The service will be available after the app routes
-   * are mounted.
-   * If this is overwritten, the creator will ensure that the name ends with `Gateway`;
-   * and if overwritten, but it doesn't include `Gateway` at the end, and no
-   * `gatewaySettingName` was defined, the creator will use the custom name (without
-   * `Gatway`) for `gatewaySettingName`.
-   *
-   * @default 'apiGateway'
-   */
-  serviceName?: string;
-  /**
-   * The name of the helper service the creator will try to obtain from the container. If
-   * `serviceName` is overwritten, the default for this will be `${serviceName}Helper`.
-   *
-   * @default 'apiGatewayHelper'
-   */
-  helperServiceName?: string;
-  /**
-   * The name of the configuration setting where the gateway configuration is stored. If
-   * not overwritten, check the description of `serviceName` to understand which will be
-   * its default value.
-   *
-   * @default 'api'
-   */
-  gatewaySettingName?: string;
-  /**
-   * The class the creator will instantiate. Similar to the API Client, this allows for
-   * extra customization as you can send a custom subclass of the
-   * {@link GatewayController}.
-   *
-   * @default GatewayController
-   */
-  gatewayClass?: typeof GatewayController;
-  /**
-   * A function to generate a list of middlewares that can be executed before the
-   * controller main middleware.
-   */
-  getMiddlewares?: GatewayControllerGetMiddlewaresFn;
-};
+export type GatewayControllerCreatorOptions =
+  DeepPartial<GatewayControllerExtraOptions> & {
+    /**
+     * The name the creator will use to register the controller in the container. No,
+     * this is not a typo. The creator will register the controller so other services can
+     * access the `getAPIConfig` method. The service will be available after the app
+     * routes are mounted.
+     * If this is overwritten, the creator will ensure that the name ends with `Gateway`;
+     * and if overwritten, but it doesn't include `Gateway` at the end, and no
+     * `gatewaySettingName` was defined, the creator will use the custom name (without
+     * `Gatway`) for `gatewaySettingName`.
+     *
+     * @default 'apiGateway'
+     */
+    serviceName?: string;
+    /**
+     * The name of the helper service the creator will try to obtain from the container.
+     * If `serviceName` is overwritten, the default for this will be
+     * `${serviceName}Helper`.
+     *
+     * @default 'apiGatewayHelper'
+     */
+    helperServiceName?: string;
+    /**
+     * The name of the configuration setting where the gateway configuration is stored. If
+     * not overwritten, check the description of `serviceName` to understand which will be
+     * its default value.
+     *
+     * @default 'api'
+     */
+    gatewaySettingName?: string;
+    /**
+     * The class the creator will instantiate. Similar to the API Client, this allows for
+     * extra customization as you can send a custom subclass of the
+     * {@link GatewayController}.
+     *
+     * @default GatewayController
+     */
+    gatewayClass?: typeof GatewayController;
+    /**
+     * A function to generate a list of middlewares that can be executed before the
+     * controller main middleware.
+     */
+    getMiddlewares?: GatewayControllerGetMiddlewaresFn;
+  };
 /**
  * Creates a controller that allows the application to mount routes that will work like
  * gateway to a specific API.

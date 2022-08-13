@@ -67,21 +67,17 @@ export type StaticsControllerOptions = {
   paths: StaticsControllerPathsOptions;
 };
 /**
- * A deep partial version of {@link StaticsControllerOptions}, used for the constructor
- * options and the controller creator options.
- */
-type StaticsControllerPartialOptions = DeepPartial<StaticsControllerOptions>;
-/**
  * The options to construct a {@link StaticsController}.
  */
-export type StaticsControllerConstructorOptions = StaticsControllerPartialOptions & {
-  /**
-   * A dictionary with the dependencies to inject.
-   */
-  inject: {
-    sendFile: SendFile;
+export type StaticsControllerConstructorOptions =
+  DeepPartial<StaticsControllerOptions> & {
+    /**
+     * A dictionary with the dependencies to inject.
+     */
+    inject: {
+      sendFile: SendFile;
+    };
   };
-};
 /**
  * A function to generate a list of middlewares that can be executed before the tontroller
  * main middleware.
@@ -90,7 +86,7 @@ export type StaticsControllerGetMiddlewaresFn = (app: Jimpex) => MiddlewareLike[
 /**
  * The options for the controller creator that mounts {@link StaticsController}.
  */
-export type StaticsControllerCreatorOptions = StaticsControllerPartialOptions & {
+export type StaticsControllerCreatorOptions = DeepPartial<StaticsControllerOptions> & {
   /**
    * A function to generate a list of middlewares that can be executed before the
    * tontroller main middleware.
