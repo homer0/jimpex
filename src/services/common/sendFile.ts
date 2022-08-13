@@ -52,11 +52,13 @@ export type SendFile = (options: SendFileOptions) => void;
  * @param options  To inject the required dependencies.
  * @example
  *
+ * <caption>Basic usage</caption>
+ *
  *   // Let's say this is inside an Express middleware.
  *   // Get the function
  *   const send = sendFile(pathUtils);
  *   send({ res, filepath: 'some-file.html', next });
- *   // If your app is on `/app/index.js`, this will send `/app/some-file.html`.
+ *   // If your app is on "/app/index.js", this will send "/app/some-file.html".
  *
  */
 export const sendFile =
