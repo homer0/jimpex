@@ -6,31 +6,39 @@ export type EventPayload<T = Record<string, unknown>> = {
   app: Jimpex;
 } & T;
 
-export type JimpexLifeCycleEvent =
-  | 'beforeStart'
-  | 'start'
-  | 'afterStart'
-  | 'afterStartCallback'
-  | 'beforeStop'
-  | 'stop'
-  | 'afterStop';
-export type JimpexActionEvent = 'routeAdded';
-export type JimpexEventName = JimpexLifeCycleEvent | JimpexActionEvent;
+export interface JimpexEvents {
+  beforeStart: EventPayload;
+  start: EventPayload;
+  afterStart: EventPayload;
+  afterStartCallback: EventPayload;
+  beforeStop: EventPayload;
+  stop: EventPayload;
+  afterStop: EventPayload;
+  routeAdded: EventPayload<{ route: string }>;
+}
+
+export type JimpexEventName = keyof JimpexEvents;
 export type JimpexEventPayload<EventName extends JimpexEventName> =
-  EventName extends 'routeAdded' ? EventPayload<{ route: string }> : EventPayload;
+  JimpexEvents[EventName];
 
-export type JimpexReducerEventName = 'controllerWillBeMounted' | 'middlewareWillBeUsed';
+export interface JimpexReducerEventTargets {
+  controllerWillBeMounted: Router | ExpressMiddlewareLike;
+  middlewareWillBeUsed: ExpressMiddlewareLike;
+}
+
+export interface JimpexReducerEventPayloads {
+  controllerWillBeMounted: EventPayload<{
+    route: string;
+    controller: Controller | Middleware;
+  }>;
+  middlewareWillBeUsed: EventPayload;
+}
+
+export type JimpexReducerEventName = keyof JimpexReducerEventTargets;
 export type JimpexReducerEventTarget<EventName extends JimpexReducerEventName> =
-  EventName extends 'controllerWillBeMounted'
-    ? Router | ExpressMiddlewareLike
-    : EventName extends 'middlewareWillBeUsed'
-    ? ExpressMiddlewareLike
-    : undefined;
-
+  JimpexReducerEventTargets[EventName];
 export type JimpexReducerEventPayload<EventName extends JimpexReducerEventName> =
-  EventName extends 'controllerWillBeMounted'
-    ? EventPayload<{ route: string; controller: Controller | Middleware }>
-    : EventPayload;
+  JimpexReducerEventPayloads[EventName];
 
 export type JimpexEventNameLike = JimpexEventName | JimpexReducerEventName;
 
