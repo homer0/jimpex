@@ -61,4 +61,18 @@ export type Events = {
     eventName: EventName,
     listener: JimpexEventListener<EventName>,
   ) => () => boolean;
+  emit: <EventName extends JimpexEventName>(
+    event: JimpexEventName,
+    payload: JimpexEventPayload<EventName>,
+  ) => void;
+  reduce: <EventName extends JimpexReducerEventName>(
+    event: JimpexReducerEventName,
+    target: JimpexReducerEventTarget<EventName>,
+    payload: JimpexReducerEventPayload<EventName>,
+  ) => Promise<JimpexReducerEventTarget<EventName>>;
+  reduceSync: <EventName extends JimpexReducerEventName>(
+    event: JimpexReducerEventName,
+    target: JimpexReducerEventTarget<EventName>,
+    payload: JimpexReducerEventPayload<EventName>,
+  ) => JimpexReducerEventTarget<EventName>;
 };
