@@ -6,12 +6,20 @@ import type { Express } from './express';
 export type { Response as HTTPResponse } from 'node-fetch';
 
 export type { HTTPSServer, HTTPServer };
+/**
+ * @group Jimpex
+ */
 export type JimpexServer = Express | HTTPSServer;
+/**
+ * @group Jimpex
+ */
 export type JimpexServerInstance = HTTPServer | HTTPSServer;
 /**
  * The paths to the SSL credentials. Depending on the application options, they can be
  * relative to the project root, or the application executable, but they can't be
- * absolute
+ * absolute.
+ *
+ * @group Jimpex
  */
 export type JimpexHTTPSCredentials = {
   /**
@@ -29,6 +37,8 @@ export type JimpexHTTPSCredentials = {
 };
 /**
  * The options to enable HTTP2.
+ *
+ * @group Jimpex
  */
 export type JimpexHTTP2Options = {
   /**
@@ -44,6 +54,8 @@ export type JimpexHTTP2Options = {
 };
 /**
  * The options to enable HTTPS.
+ *
+ * @group Jimpex
  */
 export type JimpexHTTPSOptions = {
   /**

@@ -3,6 +3,9 @@ import { AppError, type AppErrorContext } from './appError';
 /**
  * A type of error to be used on HTTP requests. This is the most common type of error used
  * by Jimpex.
+ *
+ * @group Services
+ * @group Services/HTTPError
  */
 export class HTTPError extends AppError {
   /**
@@ -28,6 +31,8 @@ export class HTTPError extends AppError {
  *
  * @param args  The same parameters as the {@link HTTPError} constructor.
  * @returns A new instance of {@link HTTPError}.
+ * @group Services
+ * @group Services/HTTPError
  */
 export const createHTTPError = (
   ...args: ConstructorParameters<typeof HTTPError>
@@ -35,11 +40,15 @@ export const createHTTPError = (
 /**
  * The type of the function that generates a new instance of {@link HTTPError}.
  * This is exported to make it easy to type the dependency injection.
+ *
+ * @group Services/HTTPError
  */
 export type CreateHTTPErrorFn = typeof createHTTPError;
 /**
  * THe type of the {@link HTTPError} class.
  * This is exported to make it easy to type the dependency injection.
+ *
+ * @group Services/HTTPError
  */
 export type HTTPErrorClass = typeof HTTPError;
 /**
@@ -56,6 +65,8 @@ export type HTTPErrorClass = typeof HTTPError;
  *   // Getting access to the function.
  *   const httpError = container.get<CreateHTTPErrorFn>('httpError');
  *
+ * @group Providers
+ * @group Services/HTTPError
  */
 export const httpErrorProvider = provider((app) => {
   app.set('HTTPError', () => HTTPError);

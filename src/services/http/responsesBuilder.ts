@@ -2,6 +2,8 @@ import type { SimpleConfig, Response } from '../../types';
 import { provider, type Statuses } from '../../utils';
 /**
  * The options to construct a {@link ResponsesBuilder}.
+ *
+ * @group Services/ResponsesBuilder
  */
 export type ResponsesBuilderConstructorOptions = {
   /**
@@ -14,6 +16,8 @@ export type ResponsesBuilderConstructorOptions = {
 };
 /**
  * The options to build a response for a post message.
+ *
+ * @group Services/ResponsesBuilder
  */
 export type HTMLPostMessageResponseOptions = {
   /**
@@ -56,6 +60,8 @@ export type HTMLPostMessageResponseOptions = {
 };
 /**
  * The options to build a reponse for JSON.
+ *
+ * @group Services/ResponsesBuilder
  */
 export type JSONResponseOptions = {
   /**
@@ -83,6 +89,9 @@ export type JSONResponseOptions = {
 const DEFAULT_CLOSE_DELAY_FOR_POST_MESSAGE = 700;
 /**
  * A utility service to build responses.
+ *
+ * @group Services
+ * @group Services/ResponsesBuilder
  */
 export class ResponsesBuilder {
   /**
@@ -239,6 +248,8 @@ export class ResponsesBuilder {
  *   // Getting access to the service instance
  *   const responsesBuilder = container.get<ResponsesBuilder>('responsesBuilder');
  *
+ * @group Providers
+ * @group Services/ResponsesBuilder
  */
 export const responsesBuilderProvider = provider((app) => {
   app.set(

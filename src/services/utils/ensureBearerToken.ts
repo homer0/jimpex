@@ -4,6 +4,8 @@ import type { HTTPErrorClass } from '../common';
 import type { DeepPartial, ExpressMiddleware } from '../../types';
 /**
  * The options for the error the middleare can generate.
+ *
+ * @group Services/EnsureBearerToken
  */
 export type EnsureBearerTokenErrorOptions = {
   /**
@@ -26,6 +28,8 @@ export type EnsureBearerTokenErrorOptions = {
 };
 /**
  * The options to customize the service/middleware.
+ *
+ * @group Services/EnsureBearerToken
  */
 export type EnsureBearerTokenOptions = {
   error: EnsureBearerTokenErrorOptions;
@@ -34,6 +38,8 @@ export type EnsureBearerTokenOptions = {
 };
 /**
  * The options to construct a {@link EnsureBearerToken}.
+ *
+ * @group Services/EnsureBearerToken
  */
 export type EnsureBearerConstructorOptions = DeepPartial<EnsureBearerTokenOptions> & {
   /**
@@ -45,8 +51,11 @@ export type EnsureBearerConstructorOptions = DeepPartial<EnsureBearerTokenOption
   };
 };
 /**
- * Custom options for the provider that will register an instance of {@link EnsureBearerToken}
+ * Custom options for the provider that will register an instance of
+ * {@link EnsureBearerToken}
  * as a service.
+ *
+ * @group Services/EnsureBearerToken
  */
 export type EnsureBearerTokenProviderOptions = DeepPartial<EnsureBearerTokenOptions> & {
   /**
@@ -65,6 +74,9 @@ export type EnsureBearerTokenProviderOptions = DeepPartial<EnsureBearerTokenOpti
  * This is a "service middleware" to allow certain flexibility: you can have controllers
  * where some routes are protected and others are not. For those cases, you get the
  * service from the container, and include it only in the routes that need it.
+ *
+ * @group Services
+ * @group Services/EnsureBearerToken
  */
 export class EnsureBearerToken {
   /**
@@ -149,6 +161,8 @@ export class EnsureBearerToken {
  *   // Getting access to the middleware.
  *   const ensureBearerToken = container.get<ExpressMiddleware>('ensureBearerToken');
  *
+ * @group Providers
+ * @group Services/EnsureBearerToken
  */
 export const ensureBearerTokenProvider = providerCreator(
   (options: EnsureBearerTokenProviderOptions = {}) =>

@@ -2,6 +2,8 @@ import { provider } from '../../utils';
 import type { Response, NextFunction, PathUtils } from '../../types';
 /**
  * The options to create a {@link SendFile} function.
+ *
+ * @group Services/SendFile
  */
 export type SendFileGeneratorOptions = {
   /**
@@ -13,6 +15,8 @@ export type SendFileGeneratorOptions = {
 };
 /**
  * The options for the function that actually serves a file.
+ *
+ * @group Services/SendFile
  */
 export type SendFileOptions = {
   /**
@@ -44,6 +48,8 @@ export type SendFileOptions = {
 /**
  * The type of the function that serves a file.
  * This is exported to make it easy to type the dependency injection.
+ *
+ * @group Services/SendFile
  */
 export type SendFile = (options: SendFileOptions) => void;
 /**
@@ -60,6 +66,8 @@ export type SendFile = (options: SendFileOptions) => void;
  *   send({ res, filepath: 'some-file.html', next });
  *   // If your app is on "/app/index.js", this will send "/app/some-file.html".
  *
+ * @group Services
+ * @group Services/SendFile
  */
 export const sendFile =
   ({ inject: { pathUtils } }: SendFileGeneratorOptions): SendFile =>
@@ -84,7 +92,8 @@ export const sendFile =
  *   // Getting access to the service instance
  *   const sendFile = container.get<SendFile>('sendFile');
  *
- * @parent module:services
+ * @group Providers
+ * @group Services/SendFile
  */
 export const sendFileProvider = provider((app) => {
   app.set('sendFile', () =>

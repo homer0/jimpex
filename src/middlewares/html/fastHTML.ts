@@ -3,6 +3,8 @@ import type { HTMLGenerator, SendFile } from '../../services';
 import type { AsyncExpressMiddleware, Response, NextFunction, Events } from '../../types';
 /**
  * The options to customize the behavior of the middleware.
+ *
+ * @group Middlewares/FastHTML
  */
 export type FastHTMLOptions = {
   /**
@@ -31,6 +33,8 @@ export type FastHTMLOptions = {
 };
 /**
  * The options to construct a {@link FastHTML}.
+ *
+ * @group Middlewares/FastHTML
  */
 export type FastHTMLConstructorOptions = Partial<FastHTMLOptions> & {
   /**
@@ -50,6 +54,8 @@ export type FastHTMLConstructorOptions = Partial<FastHTMLOptions> & {
 };
 /**
  * The options for the middleware creator that will mount an instance of {@link FastHTML}.
+ *
+ * @group Middlewares/FastHTML
  */
 export type FastHTMLMiddlewareOptions = Partial<FastHTMLOptions> & {
   /**
@@ -72,6 +78,10 @@ export type FastHTMLMiddlewareOptions = Partial<FastHTMLOptions> & {
  *
  * **Disclaimer**: Managing statics files with Express is not a best practice, but there
  * are scenarios where there is not other choice.
+ *
+ * @group Middleware Classes
+ * @group Middlewares/FastHTML
+ * @prettierignore
  */
 export class FastHTML {
   /**
@@ -226,6 +236,9 @@ export class FastHTML {
 /**
  * Creates the middleware that filters the routes and serves an HTML before the
  * application gets to evaluate whether there's a controller for the request or not.
+ *
+ * @group Middlewares
+ * @group Middlewares/FastHTML
  */
 export const fastHTMLMiddleware = middlewareCreator(
   (options: FastHTMLMiddlewareOptions = {}) =>

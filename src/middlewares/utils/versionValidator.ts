@@ -10,6 +10,8 @@ import {
 import type { HTTPErrorClass, ResponsesBuilder } from '../../services';
 /**
  * The options for how the middleware should behave if the requested version is `latest`.
+ *
+ * @group Middlewares/VersionValidator
  */
 export type VersionValidatorLatestOptions = {
   /**
@@ -29,6 +31,8 @@ export type VersionValidatorLatestOptions = {
 /**
  * The options for how to detect if the request comes from a popup and how to compose the
  * post message the middleware will use to respond.
+ *
+ * @group Middlewares/VersionValidator
  */
 export type VersionValidatorPopupOptions = {
   /**
@@ -56,6 +60,8 @@ export type VersionValidatorPopupOptions = {
 };
 /**
  * The options used to customize a {@link VersionValidator} instance.
+ *
+ * @group Middlewares/VersionValidator
  */
 export type VersionValidatorOptions = {
   /**
@@ -84,12 +90,16 @@ export type VersionValidatorOptions = {
  * A partial version of the {@link VersionValidatorOptions}, to be used in the constructor
  * and the middleware creator. The reason it omits `version` it's because for the
  * constructor it's required, but for the middleware creator it's not.
+ *
+ * @group Middlewares/VersionValidator
  */
 export type VersionValidatorPartialOptions = DeepPartial<
   Omit<VersionValidatorOptions, 'version'>
 >;
 /**
  * The options to construct a {@link VersionValidator}.
+ *
+ * @group Middlewares/VersionValidator
  */
 export type VersionValidatorConstructorOptions = VersionValidatorPartialOptions & {
   /**
@@ -108,6 +118,8 @@ export type VersionValidatorConstructorOptions = VersionValidatorPartialOptions 
 /**
  * The options for the middleware creator that will mount an instance of
  * {@link VersionValidator}.
+ *
+ * @group Middlewares/VersionValidator
  */
 export type VersionValidatorMiddlewareOptions = VersionValidatorPartialOptions & {
   /**
@@ -125,6 +137,10 @@ export type VersionValidatorMiddlewareOptions = VersionValidatorPartialOptions &
  * validator can be used to let the frontend know.
  * Also, it can be configured to handle requests from popups, in which case, instead of
  * generating an error message, it will send a post message.
+ *
+ * @group Middleware Classes
+ * @group Middlewares/VersionValidator
+ * @prettierignore
  */
 export class VersionValidator {
   /**
@@ -251,6 +267,9 @@ export class VersionValidator {
  * If used as middleware, it will just return the result of
  * {@link VersionValidator.middleware}; but if used as controller, it will mount it on
  * `[route]/:version/*`.
+ *
+ * @group Middlewares
+ * @group Middlewares/VersionValidator
  */
 export const versionValidatorMiddleware = middlewareCreator(
   (options: VersionValidatorMiddlewareOptions = {}) =>

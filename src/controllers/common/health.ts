@@ -8,10 +8,14 @@ import type {
 } from '../../types';
 /**
  * A function that will return the health status of the application.
+ *
+ * @group Controllers/Health
  */
 export type GetHealthStatus = () => Promise<JimpexHealthStatus>;
 /**
  * The options to contruct a {@link HealthController}.
+ *
+ * @group Controllers/Health
  */
 export type HealthControllerOptions = {
   /**
@@ -26,6 +30,10 @@ export type HealthControllerOptions = {
 };
 /**
  * The controller class that shows the application health status.
+ *
+ * @group Controller Classes
+ * @group Controllers/Health
+ * @prettierignore
  */
 export class HealthController {
   /**
@@ -106,6 +114,9 @@ export class HealthController {
 /**
  * The controller that once mounted, it will add an endpoint to show the application
  * health status.
+ *
+ * @group Controllers
+ * @group Controllers/Health
  */
 export const healthController = controller((app) => {
   const router = app.get<Router>('router');

@@ -4,6 +4,7 @@ import type { Jimpex } from '../app';
  * The options for the application's configuration service.
  *
  * @see {@link https://www.npmjs.com/package/@homer0/simple-config}
+ * @group Jimpex
  */
 export type JimpexConfigurationOptions = {
   /**
@@ -60,6 +61,8 @@ export type JimpexConfigurationOptions = {
 };
 /**
  * The options for the middleware that serves static files.
+ *
+ * @group Jimpex
  */
 export type JimpexStaticsOptions = {
   /**
@@ -94,6 +97,8 @@ export type JimpexStaticsOptions = {
 };
 /**
  * The options for the Express application.
+ *
+ * @group Jimpex
  */
 export type JimpexExpressOptions = {
   /**
@@ -129,6 +134,8 @@ export type JimpexExpressOptions = {
 };
 /**
  * The options to configure the application executable path.
+ *
+ * @group Jimpex
  */
 export type JimpexPathOptions = {
   /**
@@ -148,6 +155,8 @@ export type JimpexPathOptions = {
 };
 /**
  * The options to enable some of the default services Jimpex comes with.
+ *
+ * @group Jimpex
  */
 export type JimpexServicesOptions = {
   /**
@@ -172,6 +181,8 @@ export type JimpexServicesOptions = {
 /**
  * The format in which the application's health status can be returned.
  * It's either a simple boolean, or a more detailed object.
+ *
+ * @group Jimpex
  */
 export type JimpexHealthStatus =
   | boolean
@@ -181,10 +192,14 @@ export type JimpexHealthStatus =
     };
 /**
  * Returns the application health status. This is normally used by the `healthController`.
+ *
+ * @group Jimpex
  */
 export type JimpexHealthCheckFn = (app: Jimpex) => Promise<JimpexHealthStatus>;
 /**
  * The options to create a new instance of Jimpex.
+ *
+ * @group Jimpex
  */
 export type JimpexOptions = {
   /**
@@ -236,5 +251,7 @@ export type JimpexOptions = {
 };
 /**
  * The function called when the application starts listening for requests.
+ *
+ * @group Jimpex
  */
 export type JimpexStartCallback = (config: SimpleConfig) => void;

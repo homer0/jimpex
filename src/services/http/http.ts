@@ -5,6 +5,8 @@ import { provider } from '../../utils';
 import { SimpleLogger, SimpleConfig, Request, HTTPResponse } from '../../types';
 /**
  * The options to customize the service.
+ *
+ * @group Services/HTTP
  */
 export type HTTPOptions = {
   /**
@@ -14,6 +16,8 @@ export type HTTPOptions = {
 };
 /**
  * The options to construct a {@link HTTP}.
+ *
+ * @group Services/HTTP
  */
 export type HTTPContructorOptions = Partial<HTTPOptions> & {
   /**
@@ -25,10 +29,14 @@ export type HTTPContructorOptions = Partial<HTTPOptions> & {
 };
 /**
  * The allowed formats for the body of a request.
+ *
+ * @group Services/HTTP
  */
 export type HTTPFetchBody = string | Record<string | number, unknown> | BodyInit;
 /**
  * The options for a request.
+ *
+ * @group Services/HTTP
  */
 export type HTTPFetchOptions = {
   /**
@@ -57,6 +65,8 @@ export type HTTPFetchOptions = {
 };
 /**
  * The options for the method that extracts custom headers from a request.
+ *
+ * @group Services/HTTP
  */
 export type GetCustomHeadersFromRequestOptions = {
   /**
@@ -70,6 +80,9 @@ export type GetCustomHeadersFromRequestOptions = {
 };
 /**
  * A set of utilities to work with HTTP requests and responses.
+ *
+ * @group Services
+ * @group Services/HTTP
  */
 export class HTTP {
   /**
@@ -257,6 +270,8 @@ export class HTTP {
  *   // Getting access to the service instance
  *   const http = container.get<HTTP>('http');
  *
+ * @group Providers
+ * @group Services/HTTP
  */
 export const httpProvider = provider((app) => {
   app.set('http', () => {

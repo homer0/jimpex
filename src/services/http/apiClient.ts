@@ -13,11 +13,15 @@ import type { HTTPErrorClass } from '../common';
 export type { ErrorResponse };
 /**
  * The required settings needed to create the an API client.
+ *
+ * @group Services/APIClient
  */
 export type APIClientConfig = Pick<APIClientOptions, 'url' | 'endpoints'>;
 /**
  * A dictionary of endpoints for the API client.
  * This is declared as standalone because it needs to reference them multiple times.
+ *
+ * @group Services/APIClient
  */
 export type EndpointsType = APIClientOptions['endpoints'];
 /**
@@ -28,6 +32,8 @@ export type EndpointsType = APIClientOptions['endpoints'];
  * The reason for the `gateway` property to be valid, is in case the application also
  * implements a {@link GatewayController}, using the same property for both things will
  * help reduce the amount of duplicated definitions.
+ *
+ * @group Services/APIClient
  */
 export type APIClientSettings = Omit<APIClientConfig, 'endpoints'> &
   (
@@ -42,6 +48,8 @@ export type APIClientSettings = Omit<APIClientConfig, 'endpoints'> &
   );
 /**
  * The options to construct a {@link APIClient}.
+ *
+ * @group Services/APIClient
  */
 export type APIClientConstructorOptions = APIClientSettings & {
   /**
@@ -57,6 +65,9 @@ export type APIClientConstructorOptions = APIClientSettings & {
  * formats received errors using the {@link HTTPError} class, and as fetch client, it uses
  * the {@link HTTP} service, allowing the application to to internally handle all the
  * requests and responses.
+ *
+ * @group Services
+ * @group Services/APIClient
  */
 export class APIClient extends APIClientBase {
   /**
@@ -134,6 +145,8 @@ export class APIClient extends APIClientBase {
  * The options for the provider creator that registers an {@link APIClient} in the
  * container.
  * These options allow the application to register multiple instances for different APIs.
+ *
+ * @group Services/APIClient
  */
 export type APIClientProviderOptions = {
   /**
@@ -179,6 +192,8 @@ export type APIClientProviderOptions = {
  *     }),
  *   );
  *
+ * @group Providers
+ * @group Services/APIClient
  */
 export const apiClientProvider = providerCreator(
   (options: APIClientProviderOptions = {}) =>

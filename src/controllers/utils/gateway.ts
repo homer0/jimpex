@@ -25,6 +25,8 @@ import {
 } from '../../types';
 /**
  * The extended definition for endpoints.
+ *
+ * @group Controllers/Gateway
  */
 export type GatewayConfigEndpointProps = {
   /**
@@ -42,6 +44,8 @@ export type GatewayConfigEndpointProps = {
 /**
  * The definition of an endpoint: it can be just the path, relative to the entry point, or
  * an object in which you can also specify things like the method.
+ *
+ * @group Controllers/Gateway
  */
 export type GatewayConfigEndpointDefinition = string | GatewayConfigEndpointProps;
 /**
@@ -76,12 +80,15 @@ export type GatewayConfigEndpointDefinition = string | GatewayConfigEndpointProp
  *   },
  * }
  *
+ * @group Controllers/Gateway
  */
 export type GatewayConfigEndpoints = {
   [key: string]: GatewayConfigEndpointDefinition | GatewayConfigEndpoints;
 };
 /**
  * The configuration for the gateway the controller uses.
+ *
+ * @group Controllers/Gateway
  */
 export type GatewayConfig = {
   /**
@@ -96,6 +103,8 @@ export type GatewayConfig = {
 /**
  * The options for how the gateway will handle the headers from the requests and the
  * responses.
+ *
+ * @group Controllers/Gateway
  */
 export type GatewayControllerHeaderOptions = {
   /**
@@ -127,6 +136,8 @@ export type GatewayControllerHeaderOptions = {
 /**
  * The extra options for the gateway controller. They are "extra" because they are mostly
  * helpers for when used with an API client, or for optional features.
+ *
+ * @group Controllers/Gateway
  */
 export type GatewayControllerExtraOptions = {
   /**
@@ -163,6 +174,8 @@ export type GatewayControllerExtraOptions = {
 };
 /**
  * The required options for the gateway controller.
+ *
+ * @group Controllers/Gateway
  */
 export type GatewayControllerOptions = {
   /**
@@ -176,6 +189,8 @@ export type GatewayControllerOptions = {
 } & DeepPartial<GatewayControllerExtraOptions>;
 /**
  * The information for a request the controller will make.
+ *
+ * @group Controllers/Gateway
  */
 export type GatewayControllerRequest = {
   /**
@@ -189,6 +204,8 @@ export type GatewayControllerRequest = {
 };
 /**
  * The information for an endpoint the gateway is calling.
+ *
+ * @group Controllers/Gateway
  */
 export type GatewayControllerEndpointInfo = {
   /**
@@ -202,6 +219,8 @@ export type GatewayControllerEndpointInfo = {
 };
 /**
  * These are the base options sent to all the helper service functions.
+ *
+ * @group Controllers/Gateway
  */
 export type GatewayHelperServiceBaseFnOptions = {
   /**
@@ -224,6 +243,8 @@ export type GatewayHelperServiceBaseFnOptions = {
 /**
  * The information sent to the helper service in order to modify, or not, a request before
  * it is sent.
+ *
+ * @group Controllers/Gateway
  */
 export type GatewayHelperServiceRequestReducerOptions =
   GatewayHelperServiceBaseFnOptions & {
@@ -237,6 +258,7 @@ export type GatewayHelperServiceRequestReducerOptions =
  * request.
  *
  * @param options  The information of the request.
+ * @group Controllers/Gateway
  */
 export type GatewayHelperServiceRequestReducer = (
   options: GatewayHelperServiceRequestReducerOptions,
@@ -244,6 +266,8 @@ export type GatewayHelperServiceRequestReducer = (
 /**
  * The information sent to the helper service in order to modify a response before
  * processing it, decide if it should be streamed or not, and even handle it.
+ *
+ * @group Controllers/Gateway
  */
 export type GatewayHelperServiceResponseReducerOptions =
   GatewayHelperServiceBaseFnOptions & {
@@ -257,6 +281,7 @@ export type GatewayHelperServiceResponseReducerOptions =
  * processes it.
  *
  * @param options  The information of the response.
+ * @group Controllers/Gateway
  */
 export type GatewayHelperServiceResponseReducer = (
   options: GatewayHelperServiceResponseReducerOptions,
@@ -268,6 +293,7 @@ export type GatewayHelperServiceResponseReducer = (
  * an error will be generated.
  *
  * @param options  The information of the response.
+ * @group Controllers/Gateway
  */
 export type GatewayHelperServiceStreamVerification = (
   options: GatewayHelperServiceResponseReducerOptions,
@@ -278,6 +304,7 @@ export type GatewayHelperServiceStreamVerification = (
  * should handle the response.
  *
  * @param options  The information of the response.
+ * @group Controllers/Gateway
  */
 export type GatewayHelperServiceResponseHandler = (
   options: GatewayHelperServiceResponseReducerOptions,
@@ -285,6 +312,8 @@ export type GatewayHelperServiceResponseHandler = (
 /**
  * The information sent to the helper service in order to handle a failed request for an
  * endpoint.
+ *
+ * @group Controllers/Gateway
  */
 export type GatewayHelperServiceErrorHandlerOptions =
   GatewayHelperServiceBaseFnOptions & {
@@ -297,6 +326,7 @@ export type GatewayHelperServiceErrorHandlerOptions =
  * A function to handle the error of an endpoint request.
  *
  * @param options  The information of the error.
+ * @group Controllers/Gateway
  */
 export type GatewayHelperServiceErrorHandler = (
   options: GatewayHelperServiceErrorHandlerOptions,
@@ -304,6 +334,8 @@ export type GatewayHelperServiceErrorHandler = (
 /**
  * The interface of a helper service that can intercept/modify the requests and responses
  * the gateway makes.
+ *
+ * @group Controllers/Gateway
  */
 export type GatewayHelperService = Partial<{
   /**
@@ -334,6 +366,7 @@ export type GatewayHelperService = Partial<{
  * the helper service.
  *
  * @template T  The type of the options for a specific helper service function.
+ * @group Controllers/Gateway
  */
 export type GatewayControllerHelperOptions<T> = T & {
   /**
@@ -343,6 +376,8 @@ export type GatewayControllerHelperOptions<T> = T & {
 };
 /**
  * The information for a single HTTP method an endpoint can handle.
+ *
+ * @group Controllers/Gateway
  */
 export type GatewayControllerRouteMethod = {
   /**
@@ -356,6 +391,8 @@ export type GatewayControllerRouteMethod = {
 };
 /**
  * The information for all the HTTP methods that can be handled for an endpoint.
+ *
+ * @group Controllers/Gateway
  */
 export type GatewayControllerRoute = {
   /**
@@ -374,6 +411,8 @@ export type GatewayControllerRoute = {
 };
 /**
  * The API client configuration the gateway can generate for its endpoints.
+ *
+ * @group Controllers/Gateway
  */
 export type GatewayControllerAPIConfig = {
   /**
@@ -387,6 +426,8 @@ export type GatewayControllerAPIConfig = {
 };
 /**
  * The options sent to {@link GatewayController.getAPIConfig}.
+ *
+ * @group Controllers/Gateway
  */
 export type GatewayControllerAPIConfigOptions = {
   /**
@@ -402,6 +443,8 @@ export type GatewayControllerAPIConfigOptions = {
 };
 /**
  * The options to construct a {@link GatewayController}.
+ *
+ * @group Controllers/Gateway
  */
 export type GatewayControllerConstructorOptions = GatewayControllerOptions & {
   /**
@@ -420,6 +463,8 @@ export type GatewayControllerConstructorOptions = GatewayControllerOptions & {
 };
 /**
  * The options for {@link GatewayController.addRoute}.
+ *
+ * @group Controllers/Gateway
  */
 export type AddGatewayRouteOptions = {
   /**
@@ -445,6 +490,10 @@ export type AddGatewayRouteOptions = {
 };
 /**
  * A utility controller that generates routes that act as a gateway for a specific API.
+ *
+ * @group Controller Classes
+ * @group Controllers/Gateway
+ * @prettierignore
  */
 export class GatewayController {
   /**
@@ -1002,10 +1051,14 @@ export class GatewayController {
 /**
  * A function to generate a list of middlewares that can be executed before the tontroller
  * main middleware.
+ *
+ * @group Controllers/Gateway
  */
 export type GatewayControllerGetMiddlewaresFn = (app: Jimpex) => MiddlewareLike[];
 /**
  * The options for the controller creator that mounts the {@link GatewayController}.
+ *
+ * @group Controllers/Gateway
  */
 export type GatewayControllerCreatorOptions =
   DeepPartial<GatewayControllerExtraOptions> & {
@@ -1055,6 +1108,9 @@ export type GatewayControllerCreatorOptions =
 /**
  * Creates a controller that allows the application to mount routes that will work like
  * gateway to a specific API.
+ *
+ * @group Controllers
+ * @group Controllers/Gateway
  */
 export const gatewayController = controllerProviderCreator(
   (options: GatewayControllerCreatorOptions = {}) =>

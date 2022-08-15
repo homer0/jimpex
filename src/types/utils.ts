@@ -1,11 +1,14 @@
 /**
  * A simple dictionary with unknown values.
+ *
+ * @group Utilities
  */
 export type Dict = Record<string, unknown>;
 /**
  * Utility to make a deep "partial" of an existing type.
  *
  * @template T  The type to make a partial of.
+ * @group Utilities
  */
 export type DeepPartial<T> = {
   [P in keyof T]?: T[P] extends (infer U)[]
@@ -18,6 +21,7 @@ export type DeepPartial<T> = {
  * Utility to make a deep "readonly" of an existing type.
  *
  * @template T  The type to make a readonly of.
+ * @group Utilities
  */
 export type DeepReadonly<T> = {
   readonly [P in keyof T]: T[P] extends (infer U)[]
@@ -43,5 +47,6 @@ export type DeepReadonly<T> = {
  *   //  b: string;
  *   // };
  *
+ * @group Utilities
  */
 export type NoStringIndex<T> = { [K in keyof T as string extends K ? never : K]: T[K] };

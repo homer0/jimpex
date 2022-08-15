@@ -1,6 +1,8 @@
 import { provider, statuses as statusesFn, type Statuses } from '../../utils';
 /**
  * A dictionary with some context information that can be provided to {@link AppError}.
+ *
+ * @group Services/AppError
  */
 export type AppErrorContext = {
   /**
@@ -14,6 +16,9 @@ export type AppErrorContext = {
 } & Record<string, unknown>;
 /**
  * A simple subclass of `Error` but with support for context information.
+ *
+ * @group Services
+ * @group Services/AppError
  */
 export class AppError extends Error {
   /**
@@ -98,6 +103,8 @@ export class AppError extends Error {
  *
  * @param args  The same parameters as the {@link AppError} constructor.
  * @returns A new instance of {@link AppError}.
+ * @group Services
+ * @group Services/AppError
  */
 export const createAppError = (
   ...args: ConstructorParameters<typeof AppError>
@@ -105,11 +112,15 @@ export const createAppError = (
 /**
  * The type of the function that generates a new instance of {@link AppError}.
  * This is exported to make it easy to type the dependency injection.
+ *
+ * @group Services/AppError
  */
 export type CreateAppErrorFn = typeof createAppError;
 /**
  * THe type of the {@link AppError} class.
  * This is exported to make it easy to type the dependency injection.
+ *
+ * @group Services/AppError
  */
 export type AppErrorClass = typeof AppError;
 /**
@@ -126,6 +137,8 @@ export type AppErrorClass = typeof AppError;
  *   // Getting access to the function.
  *   const appError = container.get<CreateAppErrorFn>('appError');
  *
+ * @group Providers
+ * @group Services/AppError
  */
 export const appErrorProvider = provider((app) => {
   app.set('AppError', () => AppError);

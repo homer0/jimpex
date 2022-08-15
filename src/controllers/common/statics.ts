@@ -12,6 +12,8 @@ import type { Jimpex } from '../../app';
 import type { DeepPartial, ExpressMiddleware, Router, RouterMethod } from '../../types';
 /**
  * The definition for each file the controller handles.
+ *
+ * @group Controllers/Statics
  */
 export type StaticsControllerFile = {
   /**
@@ -33,6 +35,8 @@ export type StaticsControllerFile = {
 /**
  * These are like "master paths" that get prepended to all the file paths and routes the
  * controller use.
+ *
+ * @group Controllers/Statics
  */
 export type StaticsControllerPathsOptions = {
   /**
@@ -46,6 +50,8 @@ export type StaticsControllerPathsOptions = {
 };
 /**
  * The options to customize the controller.
+ *
+ * @group Controllers/Statics
  */
 export type StaticsControllerOptions = {
   /**
@@ -68,6 +74,8 @@ export type StaticsControllerOptions = {
 };
 /**
  * The options to construct a {@link StaticsController}.
+ *
+ * @group Controllers/Statics
  */
 export type StaticsControllerConstructorOptions =
   DeepPartial<StaticsControllerOptions> & {
@@ -81,10 +89,14 @@ export type StaticsControllerConstructorOptions =
 /**
  * A function to generate a list of middlewares that can be executed before the tontroller
  * main middleware.
+ *
+ * @group Controllers/Statics
  */
 export type StaticsControllerGetMiddlewaresFn = (app: Jimpex) => MiddlewareLike[];
 /**
  * The options for the controller creator that mounts {@link StaticsController}.
+ *
+ * @group Controllers/Statics
  */
 export type StaticsControllerCreatorOptions = DeepPartial<StaticsControllerOptions> & {
   /**
@@ -95,6 +107,8 @@ export type StaticsControllerCreatorOptions = DeepPartial<StaticsControllerOptio
 };
 /**
  * The options for {@link StaticsController.addRoute}.
+ *
+ * @group Controllers/Statics
  */
 export type AddStaticRouteOptions = {
   /**
@@ -122,6 +136,10 @@ export type AddStaticRouteOptions = {
 /**
  * The controller class that allows the application to serve specific files from any
  * folder to any route without the need of mounting directories as "static".
+ *
+ * @group Controller Classes
+ * @group Controllers/Statics
+ * @prettierignore
  */
 export class StaticsController {
   /**
@@ -326,6 +344,9 @@ export class StaticsController {
 /**
  * A controller that allows the application to server specific files from any folder to
  * any route without the need of mounting directories as "static" folders.
+ *
+ * @group Controllers
+ * @group Controllers/Statics
  */
 export const staticsController = controllerCreator(
   ({ getMiddlewares, ...options }: StaticsControllerCreatorOptions = {}) =>

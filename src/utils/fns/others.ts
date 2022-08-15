@@ -10,5 +10,6 @@
  *   const filtered = arr.filter(notUndefined);
  *   // filtered = [1, 2, 3] and its type is number[]
  *
+ * @group Utilities
  */
 export const notUndefined = <T>(value: T | undefined): value is T => value !== undefined;

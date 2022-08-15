@@ -6,6 +6,8 @@ import type { SimpleConfig, SimpleLogger } from '../../types';
 import type { FrontendFs } from '../frontend';
 /**
  * The options to customize a {@link HTMLGenerator} instance.
+ *
+ * @group Services/HTMLGenerator
  */
 export type HTMLGeneratorOptions = {
   /**
@@ -62,6 +64,8 @@ export type HTMLGeneratorOptions = {
 /**
  * An external service that can be used to provide the values the generator will replace
  * in the template.
+ *
+ * @group Services/HTMLGenerator
  */
 export type HTMLGeneratorValuesService = {
   /**
@@ -73,6 +77,8 @@ export type HTMLGeneratorValuesService = {
 };
 /**
  * The options to construct a {@link HTMLGenerator}.
+ *
+ * @group Services/HTMLGenerator
  */
 export type HTMLGeneratorConstructorOptions = Partial<HTMLGeneratorOptions> & {
   /**
@@ -92,6 +98,8 @@ export type HTMLGeneratorConstructorOptions = Partial<HTMLGeneratorOptions> & {
 /**
  * Custom options for the provider that will register an instance of {@link HTMLGenerator}
  * as a service.
+ *
+ * @group Services/HTMLGenerator
  */
 export type HTMLGeneratorProviderOptions = Partial<HTMLGeneratorOptions> & {
   /**
@@ -113,6 +121,9 @@ export type HTMLGeneratorProviderOptions = Partial<HTMLGeneratorOptions> & {
 /**
  * This is a utility service that generates an HTML file with custom information when the
  * application is started.
+ *
+ * @group Services
+ * @group Services/HTMLGenerator
  */
 export class HTMLGenerator {
   /**
@@ -313,6 +324,8 @@ export class HTMLGenerator {
  *     }),
  *   );
  *
+ * @group Providers
+ * @group Services/HTMLGenerator
  */
 export const htmlGeneratorProvider = providerCreator(
   (options: HTMLGeneratorProviderOptions = {}) =>

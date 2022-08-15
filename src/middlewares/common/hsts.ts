@@ -4,6 +4,7 @@ import { ExpressMiddleware, SimpleConfig } from '../../types';
  * The options to customize the HSTS header value.
  *
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Strict-Transport-Security}
+ * @group Middlewares/HSTS
  */
 export type HSTSMiddlewareOptions = {
   /**
@@ -31,11 +32,15 @@ export type HSTSMiddlewareOptions = {
 /**
  * A partial version of the {@link HSTSMiddlewareOptions}, to be used in the constructor
  * and the middleware creator.
+ *
+ * @group Middlewares/HSTS
  */
 export type HSTSMiddlewarePartialOptions = Partial<HSTSMiddlewareOptions>;
 /**
  * The options for the middleware creator that will create the middleware, or not,
  * depending on the `enabled` option.
+ *
+ * @group Middlewares/HSTS
  */
 export type HSTSMiddlewareSettings = HSTSMiddlewarePartialOptions & {
   /**
@@ -47,6 +52,9 @@ export type HSTSMiddlewareSettings = HSTSMiddlewarePartialOptions & {
  * Generates a middleware that includes the HSTS header on the responses.
  *
  * @see {@link https://tools.ietf.org/html/rfc6797}
+ * @group Middleware Classes
+ * @group Middlewares/HSTS
+ * @prettierignore
  */
 export class HSTS {
   /**
@@ -109,6 +117,9 @@ export class HSTS {
 }
 /**
  * Creates the middleware that includes the HSTS header on the responses.
+ *
+ * @group Middlewares
+ * @group Middlewares/HSTS
  */
 export const hstsMiddleware = middlewareCreator(
   (options: HSTSMiddlewareSettings = {}) =>

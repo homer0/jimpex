@@ -2,6 +2,8 @@ import { middlewareCreator } from '../../utils';
 import { ExpressMiddleware, SimpleConfig } from '../../types';
 /**
  * The customization options for the middleware.
+ *
+ * @group Middlewares/ForceHTTPS
  */
 export type ForceHTTPSOptions = {
   /**
@@ -14,10 +16,16 @@ export type ForceHTTPSOptions = {
 /**
  * A partial version of the {@link ForceHTTPSOptions}, to be used in the constructor and
  * the middleware creator.
+ *
+ * @group Middlewares/ForceHTTPS
  */
 export type ForceHTTPSPartialOptions = Partial<ForceHTTPSOptions>;
 /**
  * Creates a middleware that forces all the traffic to be through HTTPS.
+ *
+ * @group Middleware Classes
+ * @group Middlewares/ForceHTTPS
+ * @prettierignore
  */
 export class ForceHTTPS {
   /**
@@ -59,6 +67,9 @@ export class ForceHTTPS {
 }
 /**
  * Creates the middleware that redirects the traffic to HTTPS.
+ *
+ * @group Middlewares
+ * @group Middlewares/ForceHTTPS
  */
 export const forceHTTPSMiddleware = middlewareCreator(
   (options: ForceHTTPSPartialOptions = {}) =>

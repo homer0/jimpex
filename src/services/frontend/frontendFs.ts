@@ -3,6 +3,8 @@ import { provider } from '../../utils';
 import type { PathUtils } from '../../types';
 /**
  * The options to construct a {@link FrontendFs}.
+ *
+ * @group Services/FrontendFs
  */
 export type FrontendFsOptions = {
   /**
@@ -22,6 +24,9 @@ export type FrontendFsOptions = {
  * Another _'feature'_ of this service is that all the paths are relative to the directory
  * where the app executable is located, so you don't have to remember the relative path
  * from the place you are accessing a file to the place where it's located.
+ *
+ * @group Services
+ * @group Services/FrontendFs
  */
 export class FrontendFs {
   /**
@@ -80,6 +85,8 @@ export class FrontendFs {
  *   // Getting access to the service instance
  *   const frontendFs = container.get<FrontendFs>('frontendFs');
  *
+ * @group Providers
+ * @group Services/FrontendFs
  */
 export const frontendFsProvider = provider((app) => {
   app.set(

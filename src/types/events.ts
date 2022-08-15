@@ -5,6 +5,7 @@ import type { Jimpex } from '../app/jimpex';
  * The base payload the events emitted by the application send.
  *
  * @template T  Extra properties beside the reference to the application.
+ * @group Services/Events
  */
 export type EventPayload<T = Record<string, unknown>> = {
   /**
@@ -14,6 +15,8 @@ export type EventPayload<T = Record<string, unknown>> = {
 } & T;
 /**
  * A dictionary with the events emitted by the application and their payloads.
+ *
+ * @group Services/Events
  */
 export interface JimpexEvents {
   /**
@@ -47,6 +50,8 @@ export interface JimpexEvents {
 }
 /**
  * The events emitted by the application.
+ *
+ * @group Services/Events
  */
 export type JimpexEventName = keyof JimpexEvents;
 /**
@@ -54,11 +59,14 @@ export type JimpexEventName = keyof JimpexEvents;
  *
  * @template EventName  The literal type of the event, to obtain the type of the
  *                      payload.
+ * @group Services/Events
  */
 export type JimpexEventPayload<EventName extends JimpexEventName> =
   JimpexEvents[EventName];
 /**
  * A dictionary of the reducer events and their targets.
+ *
+ * @group Services/Events
  */
 export interface JimpexReducerEventTargets {
   /**
@@ -72,6 +80,8 @@ export interface JimpexReducerEventTargets {
 }
 /**
  * A dictionary of the payloads the reducer events the application uses.
+ *
+ * @group Services/Events
  */
 export interface JimpexReducerEventPayloads {
   /**
@@ -94,6 +104,8 @@ export interface JimpexReducerEventPayloads {
 }
 /**
  * The reducer events used by the application.
+ *
+ * @group Services/Events
  */
 export type JimpexReducerEventName = keyof JimpexReducerEventTargets;
 /**
@@ -101,6 +113,7 @@ export type JimpexReducerEventName = keyof JimpexReducerEventTargets;
  *
  * @template EventName  The literal type of the event, to obtain the type of the
  *                      target.
+ * @group Services/Events
  */
 export type JimpexReducerEventTarget<EventName extends JimpexReducerEventName> =
   JimpexReducerEventTargets[EventName];
@@ -109,6 +122,7 @@ export type JimpexReducerEventTarget<EventName extends JimpexReducerEventName> =
  *
  * @template EventName  The literal type of the event, to obtain the type of the
  *                      payload.
+ * @group Services/Events
  */
 export type JimpexReducerEventPayload<EventName extends JimpexReducerEventName> =
   JimpexReducerEventPayloads[EventName];
@@ -116,6 +130,8 @@ export type JimpexReducerEventPayload<EventName extends JimpexReducerEventName> 
  * The name of the events o reducer events emitted/used by the application.
  * This generic type exists because the listener for both types are added using the same
  * method.
+ *
+ * @group Services/Events
  */
 export type JimpexEventNameLike = JimpexEventName | JimpexReducerEventName;
 /**
@@ -123,6 +139,7 @@ export type JimpexEventNameLike = JimpexEventName | JimpexReducerEventName;
  *
  * @template EventName  The literal type of the event, to validate whether the
  *                      parameters should be for a reducer event or an event.
+ * @group Services/Events
  */
 export type JimpexEventListener<EventName extends JimpexEventNameLike> =
   EventName extends JimpexEventName
@@ -137,6 +154,9 @@ export type JimpexEventListener<EventName extends JimpexEventNameLike> =
  * The `events` service Jimpex uses.
  * This is an alternative declaration of the `EventsHub` class that uses the interfaces
  * and types from this project.
+ *
+ * @group Services
+ * @group Services/Events
  */
 export type Events = {
   /**

@@ -59,6 +59,7 @@ import type {
  * Jimpex is a mix of Jimple, a Javascript port of Pimple dependency injection container,
  * and Express, one of the most popular web frameworks for Node.
  *
+ * @group Jimpex
  * @todo Implement `helmet`.
  */
 export class Jimpex extends Jimple {
@@ -728,6 +729,7 @@ export class Jimpex extends Jimple {
  *
  * @param args  The same parameters as the {@link Jimpex} constructor.
  * @returns A new instance of {@link Jimpex}.
+ * @group Jimpex
  */
 export const jimpex = (...args: ConstructorParameters<typeof Jimpex>): Jimpex =>
   new Jimpex(...args);

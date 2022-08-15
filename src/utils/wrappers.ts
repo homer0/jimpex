@@ -11,6 +11,8 @@ import type { Jimpex } from '../app';
 import type { Router, ExpressMiddlewareLike, NoStringIndex } from '../types';
 /**
  * The function a provider uses to configure a resource in the container.
+ *
+ * @group Wrappers
  */
 export type ProviderRegisterFn = OriginalProviderRegisterFn<Jimpex>;
 /**
@@ -24,6 +26,7 @@ export type ProviderRegisterFn = OriginalProviderRegisterFn<Jimpex>;
  *     app.set('apiClient', () => new APIClient());
  *   });
  *
+ * @group Wrappers
  */
 export const provider = createProvider<Jimpex>();
 /**
@@ -53,6 +56,7 @@ export const provider = createProvider<Jimpex>();
  *     }),
  *   );
  *
+ * @group Wrappers
  */
 export const providerCreator = createProviderCreator<Jimpex>();
 /**
@@ -75,24 +79,33 @@ export const providerCreator = createProviderCreator<Jimpex>();
  *
  *   container.register(collection.http);
  *
+ * @group Wrappers
  */
 export const providers = createProviders<Jimpex>();
 /**
  * An object that can configure/extend the container by registering services and
  * resources.
+ *
+ * @group Wrappers
  */
 export type Provider = ReturnType<typeof provider>;
 /**
  * A provider creator is like a provider, but it can also be used as a function, and it
  * expose options for the resources it will configure.
+ *
+ * @group Wrappers
  */
 export type ProviderCreator = ReturnType<typeof providerCreator>;
 /**
  * A collection of providers that can be registered one by one, or all at once.
+ *
+ * @group Wrappers
  */
 export type Providers = ReturnType<typeof providers>;
 /**
  * A union of all types that can be registered in the provider with a `register` function.
+ *
+ * @group Wrappers
  */
 export type ProviderLike = Provider | ProviderCreator | Providers;
 
@@ -102,6 +115,7 @@ export type ProviderLike = Provider | ProviderCreator | Providers;
  *
  * @param container  The reference to the Jimpex container.
  * @param route      The route on which the controller will be mounted on.
+ * @group Wrappers
  */
 export type ControllerConnectFn = <ContainerType extends Jimpex = Jimpex>(
   container: ContainerType,
@@ -126,12 +140,15 @@ const controllerFactory = resourceFactory<ControllerConnectFn>();
  *   // ...
  *   container.mount('/charo', myController);
  *
+ * @group Wrappers
  */
 export const controller = (connect: ControllerConnectFn) =>
   controllerFactory('controller', 'connect', connect);
 /**
  * A high order function that generates a controller. It's used on the definitions of a
  * controller creator.
+ *
+ * @group Wrappers
  */
 export type ControllerCreatorFn = GenericCurriedFn<ControllerConnectFn>;
 const controllerCreatorFactory = resourceCreatorFactory<ControllerConnectFn>();
@@ -161,17 +178,22 @@ const controllerCreatorFactory = resourceCreatorFactory<ControllerConnectFn>();
  *
  *   container.mount('/pili', myController({ foo: 'bar' }));
  *
+ * @group Wrappers
  */
 export const controllerCreator = <CreatorFn extends ControllerCreatorFn>(
   creator: CreatorFn,
 ) => controllerCreatorFactory('controller', 'connect', creator);
 /**
  * A resource that will define middlewares for specific routes.
+ *
+ * @group Wrappers
  */
 export type Controller = ReturnType<typeof controller>;
 /**
  * A controller creator is like a controller, but it can also be used as a function, and
  * it can receive custom parameters to configure its behavior.
+ *
+ * @group Wrappers
  */
 export type ControllerCreator = ReturnType<typeof controllerCreator>;
 
@@ -182,6 +204,7 @@ export type ControllerCreator = ReturnType<typeof controllerCreator>;
  *
  * @param container  The reference to the Jimpex container.
  * @param route      The route on which the controller will be mounted on.
+ * @group Wrappers
  */
 export type ControllerProviderRegisterFn = <ContainerType extends Jimpex = Jimpex>(
   container: ContainerType,
@@ -207,12 +230,15 @@ const controllerProviderFactory = resourceFactory<ControllerProviderRegisterFn>(
  *     });
  *   });
  *
+ * @group Wrappers
  */
 export const controllerProvider = (register: ControllerProviderRegisterFn) =>
   controllerProviderFactory('provider', 'register', register);
 /**
  * A high order function that generates a controller provider. It's used on the
  * definitions of a controller provider creator.
+ *
+ * @group Wrappers
  */
 export type ControllerProviderCreatorFn = GenericCurriedFn<ControllerProviderRegisterFn>;
 const controllerProviderCreatorFactory =
@@ -249,6 +275,7 @@ const controllerProviderCreatorFactory =
  *
  *   container.mount('/pili', myControllerProvider({ serviceName: 'something' }));
  *
+ * @group Wrappers
  */
 export const controllerProviderCreator = <CreatorFn extends ControllerProviderCreatorFn>(
   creator: CreatorFn,
@@ -256,6 +283,8 @@ export const controllerProviderCreator = <CreatorFn extends ControllerProviderCr
 /**
  * A special kind of controller that can be used to configure/extend the container before
  * returning an actual controller.
+ *
+ * @group Wrappers
  */
 export type ControllerProvider = ReturnType<typeof controllerProvider>;
 /**
@@ -263,6 +292,8 @@ export type ControllerProvider = ReturnType<typeof controllerProvider>;
  * configure/extend the container before returning an actual controller, but that can also
  * be called as a function, and it can receive custom parameters to configure its
  * behavior.
+ *
+ * @group Wrappers
  */
 export type ControllerProviderCreator = ReturnType<typeof controllerProviderCreator>;
 
@@ -275,6 +306,7 @@ export type ControllerProviderCreator = ReturnType<typeof controllerProviderCrea
  *                   "global widdleware", or for a specific route.
  * @returns The resource can choose to be enabled or not by returning the function, or
  *          `undefined`.
+ * @group Wrappers
  */
 export type MiddlewareConnectFn = <ContainerType extends Jimpex = Jimpex>(
   app: ContainerType,
@@ -307,12 +339,15 @@ const middlewareFactory = resourceFactory<MiddlewareConnectFn>();
  *
  *   container.mount('/charo', myMiddleware);
  *
+ * @group Wrappers
  */
 export const middleware = (connect: MiddlewareConnectFn) =>
   middlewareFactory('middleware', 'connect', connect);
 /**
  * A high order function that generates a middleware. It's used on the definitions of a
  * middleware creator.
+ *
+ * @group Wrappers
  */
 export type MiddlewareCreatorFn = GenericCurriedFn<MiddlewareConnectFn>;
 const middlewareCreatorFactory = resourceCreatorFactory<MiddlewareConnectFn>();
@@ -343,17 +378,22 @@ const middlewareCreatorFactory = resourceCreatorFactory<MiddlewareConnectFn>();
  *
  *   container.use(myMiddleware({ message: 'Hello Pili!' }));
  *
+ * @group Wrappers
  */
 export const middlewareCreator = <CreatorFn extends MiddlewareCreatorFn>(
   creator: CreatorFn,
 ) => middlewareCreatorFactory('middleware', 'connect', creator);
 /**
  * A resource that will define middlewares the application can use.
+ *
+ * @group Wrappers
  */
 export type Middleware = ReturnType<typeof middleware>;
 /**
  * A middleware creator is like a middleware, but i can also be used as a function, and it
  * can receive custom parameters to configure its behavior.
+ *
+ * @group Wrappers
  */
 export type MiddlewareCreator = ReturnType<typeof middlewareCreator>;
 
@@ -365,6 +405,7 @@ export type MiddlewareCreator = ReturnType<typeof middlewareCreator>;
  * @param container  The reference to the Jimpex container.
  * @param route      This is available only in the case the middleware is mounted on a
  *                   specific route.
+ * @group Wrappers
  */
 export type MiddlewareProviderRegisterFn = <ContainerType extends Jimpex = Jimpex>(
   container: ContainerType,
@@ -398,12 +439,15 @@ const middlewareProviderFactory = resourceFactory<MiddlewareProviderRegisterFn>(
  *     );
  *   });
  *
+ * @group Wrappers
  */
 export const middlewareProvider = (register: MiddlewareProviderRegisterFn) =>
   middlewareProviderFactory('provider', 'register', register);
 /**
  * A high order function that generates a middleware provider. It's used on the
  * definitions of a middleware provider creator.
+ *
+ * @group Wrappers
  */
 export type MiddlewareProviderCreatorFn = GenericCurriedFn<MiddlewareProviderRegisterFn>;
 const middlewareProviderCreatorFactory =
@@ -448,6 +492,7 @@ const middlewareProviderCreatorFactory =
  *
  *   container.use(myMiddlewareProvider({ serviceName: 'something' }));
  *
+ * @group Wrappers
  */
 export const middlewareProviderCreator = <CreatorFn extends MiddlewareProviderCreatorFn>(
   creator: CreatorFn,
@@ -455,6 +500,8 @@ export const middlewareProviderCreator = <CreatorFn extends MiddlewareProviderCr
 /**
  * A special kind of middleware that can be used to configure/extend the container before
  * returning an actual middleware.
+ *
+ * @group Wrappers
  */
 export type MiddlewareProvider = ReturnType<typeof middlewareProvider>;
 /**
@@ -462,19 +509,27 @@ export type MiddlewareProvider = ReturnType<typeof middlewareProvider>;
  * configure/extend the container before returning an actual middleware, but that can also
  * be called as a function, and it can receive custom parameters to configure its
  * behavior.
+ *
+ * @group Wrappers
  */
 export type MiddlewareProviderCreator = ReturnType<typeof middlewareProviderCreator>;
 
 // --
 /**
- * A union types of the different kinds of middlewares that can be used by the application.
+ * A union types of the different kinds of middlewares that can be used by the
+ * application.
+ *
+ * @group Wrappers
  */
 export type MiddlewareLike =
   | NoStringIndex<Middleware>
   | NoStringIndex<MiddlewareProvider>
   | ExpressMiddlewareLike;
 /**
- * A union types of the different kinds of controllers that can be mounted by the application.
+ * A union types of the different kinds of controllers that can be mounted by the
+ * application.
+ *
+ * @group Wrappers
  */
 export type ControllerLike =
   | NoStringIndex<Controller>

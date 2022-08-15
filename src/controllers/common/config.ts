@@ -9,6 +9,8 @@ import type {
 } from '../../types';
 /**
  * The options to contruct a {@link ConfigController}.
+ *
+ * @group Controllers/Config
  */
 export type ConfigControllerOptions = {
   /**
@@ -21,6 +23,10 @@ export type ConfigControllerOptions = {
 };
 /**
  * The controller class that allows to show and switch the application configuration.
+ *
+ * @group Controller Classes
+ * @group Controllers/Config
+ * @prettierignore
  */
 export class ConfigController {
   /**
@@ -88,6 +94,9 @@ export class ConfigController {
  * It provides routes for:
  * - `/`: Showing the current configuration.
  * - `/switch/:name`: Switching the configuration, but only if the service allows it.
+ *
+ * @group Controllers
+ * @group Controllers/Config
  */
 export const configController = controller((app) => {
   const config = app.get<SimpleConfig>('config');

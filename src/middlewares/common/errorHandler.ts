@@ -9,6 +9,8 @@ import type {
 import { AppError, type HTTPErrorClass, type ResponsesBuilder } from '../../services';
 /**
  * The options for the responses the middleware will create.
+ *
+ * @group Middlewares/ErrorHandler
  */
 export type ErrorHandlerResponseOptions = {
   /**
@@ -27,6 +29,8 @@ export type ErrorHandlerResponseOptions = {
 };
 /**
  * The customization options for the middleware.
+ *
+ * @group Middlewares/ErrorHandler
  */
 export type ErrorHandlerOptions = {
   /**
@@ -45,10 +49,14 @@ export type ErrorHandlerOptions = {
 /**
  * A partial version of the {@link ErrorHandlerOptions}, to be used in the constructor and
  * the middleware creator.
+ *
+ * @group Middlewares/ErrorHandler
  */
 export type ErrorHandlerPartialOptions = DeepPartial<ErrorHandlerOptions>;
 /**
  * The options to construct a {@link ErrorHandler}.
+ *
+ * @group Middlewares/ErrorHandler
  */
 export type ErrorHandlerConstructorOptions = ErrorHandlerPartialOptions & {
   /**
@@ -63,6 +71,10 @@ export type ErrorHandlerConstructorOptions = ErrorHandlerPartialOptions & {
 };
 /**
  * Creates a middleware that handles errors and generates the responses.
+ *
+ * @group Middleware Classes
+ * @group Middlewares/ErrorHandler
+ * @prettierignore
  */
 export class ErrorHandler {
   /**
@@ -174,6 +186,9 @@ export class ErrorHandler {
 }
 /**
  * Creates the middleware that handles errors.
+ *
+ * @group Middlewares
+ * @group Middlewares/ErrorHandler
  */
 export const errorHandlerMiddleware = middlewareCreator(
   (options: ErrorHandlerPartialOptions = {}) =>
