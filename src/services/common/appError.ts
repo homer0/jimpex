@@ -124,9 +124,9 @@ export type CreateAppErrorFn = typeof createAppError;
  */
 export type AppErrorClass = typeof AppError;
 /**
- * A service provider that will register both the {@link AppError} and a generator
- * function on the container. `AppError` will be the key for class, and `appError` will be
- * for the generator function.
+ * A service provider that will register both, {@link AppError} and
+ * {@link createAppError}, on the container. `AppError` will be the key for class, and
+ * `appError` will be for the generator function.
  *
  * @example
  *

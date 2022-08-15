@@ -83,7 +83,7 @@ export const sendFile =
 
 /**
  * The service provider that once registered on the container will set the result of
- * `sendFile(pathUtils)` as the `sendFile` service.
+ * {@link sendFile} as the `sendFile` service.
  *
  * @example
  *

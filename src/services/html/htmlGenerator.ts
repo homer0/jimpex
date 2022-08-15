@@ -299,7 +299,7 @@ export class HTMLGenerator {
 }
 /**
  * The service provider that once registered on the container will set an instance of
- * `HTMLGenerator` as the `htmlGenerator` service. it will also hook itself to the
+ * {@link HTMLGenerator} as the `htmlGenerator` service. it will also hook itself to the
  * `after-start` event of the application in order to trigger the generator of the HTML
  * file.
  *

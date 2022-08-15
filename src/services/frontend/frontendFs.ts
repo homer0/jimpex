@@ -76,7 +76,7 @@ export class FrontendFs {
 }
 /**
  * The service provider that once registered on the container will set an instance of
- * `FrontendFs` as the `frontendFs` service.
+ * {@link FrontendFs} as the `frontendFs` service.
  *
  * @example
  *

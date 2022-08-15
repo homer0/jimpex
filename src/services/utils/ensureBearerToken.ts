@@ -152,7 +152,14 @@ export class EnsureBearerToken {
  * Generates a "service middleware" that can be used on route controllers in order to
  * validate the presence of a bearer token on the requests authorization header.
  *
+ * The registered service is an instance of {@link EnsureBearerToken}, and it uses the key
+ * `ensureBearerToken`.
+ *
+ * Since it's a "provider creator", when registering it, you can pass custom options.
+ *
  * @example
+ *
+ * <caption>Basic usage</caption>
  *
  *   // Register it on the container
  *   container.register(ensureBearerTokenProvider);
@@ -160,6 +167,20 @@ export class EnsureBearerToken {
  *   // Let's assume we are in a controller now...
  *   // Getting access to the middleware.
  *   const ensureBearerToken = container.get<ExpressMiddleware>('ensureBearerToken');
+ *
+ * @example
+ *
+ * <caption>Customizing the service</caption>
+ *
+ *   // Register it on the container
+ *   container.register(
+ *     ensureBearerTokenProvider({
+ *       serviceName: 'ensureBearerTokenCustom',
+ *       error: {
+ *         message: 'Missing token!',
+ *       },
+ *     }),
+ *   );
  *
  * @group Providers
  * @group Services/EnsureBearerToken

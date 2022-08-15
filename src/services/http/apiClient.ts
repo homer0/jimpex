@@ -66,6 +66,9 @@ export type APIClientConstructorOptions = APIClientSettings & {
  * the {@link HTTP} service, allowing the application to to internally handle all the
  * requests and responses.
  *
+ * The only reason to use the class directly is if you want to subclass it, as you would
+ * normally just register the {@link apiClientProvider}.
+ *
  * @group Services
  * @group Services/APIClient
  */
@@ -183,7 +186,7 @@ export type APIClientProviderOptions = {
  *
  * @example
  *
- * <caption>Using with custom options</caption>
+ * <caption>With custom options</caption>
  *
  *   container.register(
  *     apiClientProvider({
