@@ -470,7 +470,7 @@ const middlewareProviderCreatorFactory =
  *       };
  *     }
  *   }
- *   const myMiddlewareProvider = middlewareProvider(
+ *   const myMiddlewareProvider = middlewareProviderCreator(
  *     ({ serviceName = 'myMiddleware' }) =>
  *       (app) => {
  *         app.set(
