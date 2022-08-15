@@ -25,7 +25,7 @@ export type SendFileOptions = {
    */
   filepath: string;
   /**
-   * The name of a location on the {@link PathUtils} service from where the `filepath` is
+   * The name of a location on the `pathUtils` service from where the `filepath` is
    * relative to. It can be `app` for the directory containing the application executable,
    * or `project` for the project root. It could also be any other location that the
    * implementation may have registered.

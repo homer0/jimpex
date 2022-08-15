@@ -522,10 +522,10 @@ export class Jimpex extends Jimple {
   }
   /**
    * This helper method validates the `path` options in order to register the `app`
-   * location in the {@link PathUtils} service. The `app` location should be the path to
-   * where the application executable is located, but due to how ESM works, we can't infer
-   * it from the `module` object, so we need either recieved as the `appPath` setting, or
-   * try to get it from the parent module.
+   * location in the `pathUtils` service. The `app` location should be the path to where
+   * the application executable is located, but due to how ESM works, we can't infer it
+   * from the `module` object, so we need either recieved as the `appPath` setting, or try
+   * to get it from the parent module.
    *
    * @throws If the method should use the path from the parent module, but can't find
    *         it.
@@ -608,7 +608,7 @@ export class Jimpex extends Jimple {
     this.mountQueue.length = 0;
   }
   /**
-   * Emits an event using the {@link EventsHub} service.
+   * Emits an event using the `events` service.
    *
    * @param name     The name of the event to emit.
    * @param payload  The event payload.

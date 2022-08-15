@@ -134,8 +134,9 @@ export type JimpexEventListener<EventName extends JimpexEventNameLike> =
       ) => JimpexReducerEventTarget<EventName>
     : never;
 /**
- * An alternative type for {@link EventsHub} that uses the interfaces and types from
- * Jimpex.
+ * The `events` service Jimpex uses.
+ * This is an alternative declaration of the `EventsHub` class that uses the interfaces
+ * and types from this project.
  */
 export type Events = {
   /**
