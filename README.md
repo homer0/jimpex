@@ -696,27 +696,54 @@ TBD
 
 ### NPM scripts
 
-TBD
+| Script        | Description                          |
+| ------------- | ------------------------------------ |
+| `build`       | Transpiles the TypeScript code.      |
+| `docs`        | Generates the project documentation. |
+| `lint`        | Lints and formats the staged files.  |
+| `lint:all`    | Lints the entire project code.       |
+| `types:check` | Validates the types definitions.     |
+| `test`        | Runs the project unit tests.         |
+| `todo`        | Lists all the pending to-do's.       |
 
 ### Repository hooks
 
-TBD
+I use [`husky`](https://npmjs.com/package/husky) to automatically install the repository hooks:
+
+| Hook         | Description                              |
+| ------------ | ---------------------------------------- |
+| `commit-msg` | Ensures the use of conventional commits. |
+| `pre-commit` | Lints and formats the staged files.      |
+| `pre-push`   | Validates the types and run the tests.   |
+| `post-merge` | Updates the dependencies (`npm i`).      |
 
 ### Commits conventions
 
-TBD
+I use [conventional commits](https://www.conventionalcommits.org) with [`commitlint`](https://commitlint.js.org) in order to support semantic releases. The one that sets it up is actually `husky`, since it installs a script that runs `commitlint` on the commit message validation.
+
+The configuration is on the `commitlint` property of the `package.json`.
 
 ### Releases
 
-TBD
+I use [`semantic-release`](https://npmjs.com/package/semantic-release) and a GitHub action to automatically release on NPM everything that gets merged to main.
+
+The configuration for `semantic-release` is on `./releaserc` and the workflow for the release is on `./.github/workflow/release.yml`.
 
 ### Testing
 
-TBD
+I use [Jest](https://jestjs.io) to test the project.
+
+The configuration file is on `./.jestrc.js`, the tests are on `./tests` and the script that runs it is on `./utils/scripts/test`.
 
 ### Code linting and formatting
 
-TBD
+For linting, I use [ESlint](https://eslint.org) with [my own custom configuration](https://npmjs.com/package/@homer0/eslint-plugin).
+
+There are two configuration files, `./.eslintrc` for the source and the tooling, and `./tests/.eslintrc`, and there's also a `./.eslintignore` to exclude some files.
+
+For formatting, I use [Prettier](https://prettier.io) with [my JSDoc plugin](https://npmjs.com/package/@homer0/prettier-plugin-jsdoc) and [my own custom configuration](https://npmjs.com/package/@homer0/prettier-config). The configuration file is `./.prettierrc`.
+
+The script that runs them is `./utils/scripts/lint`; the script `lint-all` only runs ESLint, and runs it for the entire project.
 
 ### Documentation
 
@@ -724,4 +751,6 @@ TBD
 
 ## 👀 Motivation
 
-TBD
+A friend, who's also web developer, brought the idea of start using a dependency injection container on Node, and how Jimple was a great tool for it; from the moment I tried Jimple, I could never think of starting another project without it: It not only allows you to implement dependency injection on a simple and clean way, but it also kind of forces you to have a really good organization of your code.
+
+A couple of months after that, the same friend told me that we should do something similar to [Silex](https://github.com/silexphp/Silex), which is based on Pimple, butwith Express. I ran with the idea and... this project is what I think a mix of Jimple and Express would look like. To be clear, **this is not a port of Silex**.
