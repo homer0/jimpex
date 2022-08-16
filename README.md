@@ -8,9 +8,37 @@ Express as dependency injection container.
 
 Jimpex is an implementation of [Express](https://expressjs.com), one of the most popular web frameworks for Node, using [Jimple](https://github.com/fjorgemota/jimple), a Javascript port of [Pimple](https://github.com/silexphp/Pimple) dependency injection container.
 
-## Usage
+- [🍿 Usage](#🍿-usage)
+  - [🎨 Creating your app](#🎨-creating-your-app)
+  - [🤖 Boot](#🤖-boot)
+  - [⚙️ Options and configuration](#⚙️-options-and-configuration)
+    - [Options](#options)
+    - [Configuration](#configuration)
+  - [🚀 Starting your app](#🚀-starting-the-app)
+  - [✅ HTTPS](#✅-https)
+    - [HTTP2](#http2)
+  - [🛠 Services](#🛠-services)
+    - [Configurable services](#configurable-services)
+  - [🚦 Controllers](#🚦-controller)
+    - [Configurable controllers](#configurable-controllers)
+    - [Controllers with services](#controllers-with-services)
+  - [⚡️ Middlewares](#⚡️-middlewares)
+    - [Configurable middlewares](#configurable-middlewares)
+    - [Middlewares with services](#middlewares-with-services)
+- [🤞 Examples](#🤞-examples)
+- [🤘 Development](#development)
+  - [NPM scripts](#npm-scripts)
+  - [Repository hooks](#repository-hooks)
+  - [Commits conventions](#commits-conventions)
+  - [Releases](#releases)
+  - [Testing](#testing)
+  - [Code linting and formatting](#code-linting-and-formatting)
+  - [Documentation](#documentation)
+- [👀 Motivation](#👀-motivation)
 
-### Creating your app
+## 🍿 Usage
+
+### 🎨 Creating your app
 
 ```ts
 import { jimpex } from 'jimpex';
@@ -43,7 +71,7 @@ app.listen(2509, () => {
 });
 ```
 
-### Boot
+### 🤖 Boot
 
 The `boot` method gets called right from the constructor, when the `boot` option is set to `true` (its default value), and the idea is for you to use it to add all your customizations (as seen in the example above).
 
@@ -67,7 +95,7 @@ app.boot();
 
 Now, this may look like an unnecessary feature, but if you consider the possiblity of different entry points based on environment, maybe to enable debugging tools on dev, this becomes really useful.
 
-### Options and configuration
+### ⚙️ Options and configuration
 
 On Jimpex, you have two sets of "settings": the options, which are in the code when you create the application; and the configuration, which may be related to the environment in which the application is running.
 
@@ -193,7 +221,7 @@ const port = app.get('config').get('port');
 
 > You can read more about the options for the configuration service in the [options documentation](./documents/options.md), but it's basically an implementation of [`@homer0/simple-config`](https://www.npmjs.com/package/@homer0/simple-config).
 
-### Starting the application
+### 🚀 Starting the app
 
 ```js
 app.listen(2509, () => {
@@ -218,7 +246,7 @@ app.stop();
 // Done, the app is not longer running.
 ```
 
-### HTTPS
+### ✅ HTTPS
 
 HTTPS is enabled via configuration, not options, just like the application port:
 
@@ -281,7 +309,7 @@ export default {
 };
 ```
 
-### Defining services
+### 🛠 Services
 
 This is the most-core functionality that Jimple, and Jimpex, provide. You can easily create providers for services/resources that you want to use in your application:
 
@@ -367,7 +395,7 @@ class MyApp extends Jimpex {
 
 Check the README of [`@homer0/jimple`](https://www.npmjs.com/package/@homer0/jimple) for more information about providers.
 
-### Defining and mounting a controller
+### 🚦 Controllers
 
 To define a controller, you just need to use the `controller` wrapper (like `provider`), modify a router, and return it:
 
@@ -513,7 +541,7 @@ The `controllerProvider` wrapper allows you to register something in the callbac
 
 And like `provider`, and `controller`, there's also a `controllerProviderCreator`.
 
-### Using middlewares
+### ⚡️ Middlewares
 
 To create a new middleware, you just need to use the `middleware` wrapper and return it:
 
@@ -659,3 +687,41 @@ export const middlewareService = middlewareProvider((app) => {
 ```
 
 And finally, you also have `middlewareProviderCreator` to create a middleware that can register a service, with custom options.
+
+## 🤞 Examples
+
+TBD
+
+## 🤘 Development
+
+### NPM scripts
+
+TBD
+
+### Repository hooks
+
+TBD
+
+### Commits conventions
+
+TBD
+
+### Releases
+
+TBD
+
+### Testing
+
+TBD
+
+### Code linting and formatting
+
+TBD
+
+### Documentation
+
+TBD
+
+## 👀 Motivation
+
+TBD
