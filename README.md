@@ -2,8 +2,7 @@
 
 [![GitHub Workflow Status (main)](https://img.shields.io/github/workflow/status/homer0/jimpex/Test/main?style=flat-square)](https://github.com/homer0/jimpex/actions?query=workflow%3ATest)
 [![Coveralls GitHub](https://img.shields.io/coveralls/github/homer0/jimpex.svg?style=flat-square)](https://coveralls.io/github/homer0/jimpex?branch=main)
-[![David](https://img.shields.io/david/homer0/jimpex.svg?style=flat-square)](https://david-dm.org/homer0/jimpex)
-[![David](https://img.shields.io/david/dev/homer0/jimpex.svg?style=flat-square)](https://david-dm.org/homer0/jimpex)
+![Libraries.io dependency status for latest release](https://img.shields.io/librariesio/release/npm/jimpex)
 
 Express as dependency injection container.
 
