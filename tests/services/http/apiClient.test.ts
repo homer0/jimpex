@@ -216,7 +216,7 @@ describe('services/html:apiClient', () => {
       });
       // When
       apiClientProvider({
-        configurationSetting: apiConfigKey,
+        configSetting: apiConfigKey,
       }).register(container);
       const [[, lazy]] = mocks.set.mock.calls as [[string, () => APIClient]];
       lazy();

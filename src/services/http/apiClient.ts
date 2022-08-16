@@ -164,7 +164,7 @@ export type APIClientProviderOptions = {
    * @default 'api'
    * @todo rename to `configSetting`
    */
-  configurationSetting?: string;
+  configSetting?: string;
   /**
    * The class the service will instantiate. It has to extend {@link APIClient}.
    *
@@ -191,7 +191,7 @@ export type APIClientProviderOptions = {
  *   container.register(
  *     apiClientProvider({
  *       serviceName: 'myApiClient',
- *       configurationSetting: 'myApi',
+ *       configSetting: 'myApi',
  *     }),
  *   );
  *
@@ -203,9 +203,9 @@ export const apiClientProvider = providerCreator(
     (app) => {
       const defaultName = 'apiClient';
       const { serviceName = defaultName, clientClass: ClientClass = APIClient } = options;
-      let { configurationSetting } = options;
-      if (!configurationSetting) {
-        configurationSetting = serviceName === defaultName ? 'api' : serviceName;
+      let { configSetting } = options;
+      if (!configSetting) {
+        configSetting = serviceName === defaultName ? 'api' : serviceName;
       }
 
       app.set(
@@ -216,9 +216,7 @@ export const apiClientProvider = providerCreator(
               http: app.get('http'),
               HTTPError: app.get('HTTPError'),
             },
-            ...app
-              .get<SimpleConfig>('config')
-              .get<APIClientSettings>(configurationSetting!),
+            ...app.get<SimpleConfig>('config').get<APIClientSettings>(configSetting!),
           }),
       );
     },

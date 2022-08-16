@@ -102,7 +102,7 @@ describe('Jimpex', () => {
           appPath: '',
           useParentPath: true,
         },
-        configuration: {
+        config: {
           default: {},
           name: 'app',
           path: 'config/',
@@ -110,7 +110,7 @@ describe('Jimpex', () => {
           environmentVariable: 'CONFIG',
           loadFromEnvironment: true,
           defaultConfigFilename: '[app-name].config.js',
-          filenameFormat: '[app-name].[configuration-name].config.js',
+          filenameFormat: '[app-name].[config-name].config.js',
         },
         statics: {
           enabled: true,
@@ -182,7 +182,7 @@ describe('Jimpex', () => {
           appPath: 'app',
           useParentPath: false,
         },
-        configuration: {
+        config: {
           default: {
             x: 'y',
           },
@@ -192,7 +192,7 @@ describe('Jimpex', () => {
           environmentVariable: 'CONFIGS',
           loadFromEnvironment: false,
           defaultConfigFilename: '[app-name].xconfig.js',
-          filenameFormat: '[app-name].[configuration-name].xconfig.js',
+          filenameFormat: '[app-name].[config-name].xconfig.js',
         },
         statics: {
           enabled: false,
@@ -237,7 +237,7 @@ describe('Jimpex', () => {
       const customOptions = {
         version: '1.0.0',
         filesizeLimit: '10MB',
-        configuration: {
+        config: {
           default: {
             x: 'y',
           },
@@ -247,7 +247,7 @@ describe('Jimpex', () => {
           environmentVariable: 'CONFIGS',
           loadFromEnvironment: false,
           defaultConfigFilename: '[app-name].xconfig.js',
-          filenameFormat: '[app-name].[configuration-name].xconfig.js',
+          filenameFormat: '[app-name].[config-name].xconfig.js',
         },
       };
       class Sut extends Jimpex {
@@ -1166,7 +1166,7 @@ describe('Jimpex', () => {
       const customOptions = {
         version: '1.0.0',
         filesizeLimit: '10MB',
-        configuration: {
+        config: {
           default: {
             x: 'y',
           },
@@ -1176,7 +1176,7 @@ describe('Jimpex', () => {
           environmentVariable: 'CONFIGS',
           loadFromEnvironment: false,
           defaultConfigFilename: '[app-name].xconfig.js',
-          filenameFormat: '[app-name].[configuration-name].xconfig.js',
+          filenameFormat: '[app-name].[config-name].xconfig.js',
         },
       };
       setupCase();

@@ -37,11 +37,7 @@ describe('services/html:htmlGenerator', () => {
         replacePlaceholder: '{{appConfiguration}}',
         placeholderExpression: expect.any(RegExp),
         variableName: 'appConfiguration',
-        configurationKeys: expect.arrayContaining([
-          'features',
-          'version',
-          'postMessagesPrefix',
-        ]),
+        configKeys: expect.arrayContaining(['features', 'version', 'postMessagesPrefix']),
       });
     });
 
@@ -488,7 +484,7 @@ describe('services/html:htmlGenerator', () => {
         variableName,
         replacePlaceholder: placeholder,
         silent: true,
-        configurationKeys: [],
+        configKeys: [],
       };
       const expectedResult = [
         '<html>',

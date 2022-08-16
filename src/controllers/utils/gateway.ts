@@ -1126,10 +1126,10 @@ export const gatewayController = controllerProviderCreator(
        */
       const defaultServiceName = 'apiGateway';
       let defaultHelperServiceName = 'apiGatewayHelper';
-      let defaultConfigurationSetting = 'api';
+      let defaultConfigSetting = 'api';
       let { serviceName = defaultServiceName } = options;
       if (serviceName !== defaultServiceName) {
-        defaultConfigurationSetting = serviceName;
+        defaultConfigSetting = serviceName;
         if (!serviceName.match(/gateway$/i)) {
           serviceName = `${serviceName}Gateway`;
         }
@@ -1139,7 +1139,7 @@ export const gatewayController = controllerProviderCreator(
       app.set(serviceName, () => {
         const {
           helperServiceName = defaultHelperServiceName,
-          gatewaySettingName = defaultConfigurationSetting,
+          gatewaySettingName = defaultConfigSetting,
           gatewayClass: GatewayClass = GatewayController,
         } = options;
 

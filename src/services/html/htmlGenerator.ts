@@ -38,6 +38,7 @@ export type HTMLGeneratorOptions = {
    * The placeholder string where the information will be written.
    *
    * @default '\{\{appConfiguration\}\}'
+   * @todo make a regex so it can be appConfig(?:uration)?
    */
   replacePlaceholder: string;
   /**
@@ -59,7 +60,7 @@ export type HTMLGeneratorOptions = {
    *
    * @default ['features', 'version', 'postMessagesPrefix']
    */
-  configurationKeys: string[];
+  configKeys: string[];
 };
 /**
  * An external service that can be used to provide the values the generator will replace
@@ -90,7 +91,7 @@ export type HTMLGeneratorConstructorOptions = Partial<HTMLGeneratorOptions> & {
     frontendFs: FrontendFs;
     /**
      * A service that can provide the values to replace in the template. If specified, the
-     * values from `configurationKeys` will be ignored.
+     * values from `configKeys` will be ignored.
      */
     valuesService?: HTMLGeneratorValuesService;
   };
@@ -112,7 +113,7 @@ export type HTMLGeneratorProviderOptions = Partial<HTMLGeneratorOptions> & {
   /**
    * The name of a service that the generator will use in order to read the values that
    * will be replaced on the template. If the service is available, the values from
-   * `configurationKeys` will be ignored.
+   * `configKeys` will be ignored.
    *
    * @default 'htmlGeneratorValues'
    */
@@ -132,7 +133,7 @@ export class HTMLGenerator {
   protected readonly options: HTMLGeneratorOptions;
   /**
    * The application configuration service, to get the settings specified by the
-   * `configurationKeys` option.
+   * `configKeys` option.
    */
   protected readonly config: SimpleConfig;
   /**
@@ -179,7 +180,7 @@ export class HTMLGenerator {
         replacePlaceholder: '{{appConfiguration}}',
         placeholderExpression: /\{\{(.*?)\}\}/gi,
         variableName: 'appConfiguration',
-        configurationKeys: ['features', 'version', 'postMessagesPrefix'],
+        configKeys: ['features', 'version', 'postMessagesPrefix'],
       },
       options,
     );
@@ -248,7 +249,7 @@ export class HTMLGenerator {
   /**
    * Helper method to get the values that will be replaced in the template. If a "values
    * service" was specified in the constructor, it will get the values from there,
-   * otherwise, it will use the `configurationKeys` option to get the values from the
+   * otherwise, it will use the `configKeys` option to get the values from the
    * application configuration.
    */
   protected getValues(): Promise<Record<string, unknown>> {
@@ -256,9 +257,9 @@ export class HTMLGenerator {
       return this.valuesService.getValues(this.options);
     }
 
-    const { configurationKeys } = this.options;
-    if (configurationKeys && configurationKeys.length) {
-      return Promise.resolve(this.config.get(configurationKeys));
+    const { configKeys } = this.options;
+    if (configKeys && configKeys.length) {
+      return Promise.resolve(this.config.get(configKeys));
     }
 
     return Promise.resolve({});

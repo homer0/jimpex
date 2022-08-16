@@ -6,7 +6,7 @@ import type { Jimpex } from '../app';
  * @see {@link https://www.npmjs.com/package/@homer0/simple-config}
  * @group Jimpex
  */
-export type JimpexConfigurationOptions = {
+export type JimpexConfigOptions = {
   /**
    * The default settings for the configuration. If no external configuration is used,
    * this needs to include a `port` property.
@@ -55,7 +55,7 @@ export type JimpexConfigurationOptions = {
   /**
    * The name format of other external configuration files.
    *
-   * @default '[app-name].[configuration-name].config.js'
+   * @default '[app-name].[config-name].config.js'
    */
   filenameFormat: string;
 };
@@ -231,7 +231,7 @@ export type JimpexOptions = {
    *
    * @see {@link https://www.npmjs.com/package/@homer0/simple-config}
    */
-  configuration: JimpexConfigurationOptions;
+  config: JimpexConfigOptions;
   /**
    * Options for the middleware that serves static files.
    */

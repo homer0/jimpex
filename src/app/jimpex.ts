@@ -102,10 +102,11 @@ export class Jimpex extends Jimple {
    */
   protected controlledRoutes: string[] = [];
   /**
-   * @param options        Preferences to customize the application.
-   * @param configuration  The default configuration for the configuration service.
+   * @param options  Preferences to customize the application.
+   * @param config   The default settings for the configuration service. It's a
+   *                 shortcuit for `options.config.default`
    */
-  constructor(options: DeepPartial<JimpexOptions> = {}, configuration: unknown = {}) {
+  constructor(options: DeepPartial<JimpexOptions> = {}, config: unknown = {}) {
     super();
 
     this.options = deepAssignWithOverwrite(
@@ -117,15 +118,15 @@ export class Jimpex extends Jimple {
           appPath: '',
           useParentPath: true,
         },
-        configuration: {
-          default: options?.configuration?.default || configuration,
+        config: {
+          default: options?.config?.default || config,
           name: 'app',
           path: 'config/',
           hasFolder: true,
           loadFromEnvironment: true,
           environmentVariable: 'CONFIG',
           defaultConfigFilename: '[app-name].config.js',
-          filenameFormat: '[app-name].[configuration-name].config.js',
+          filenameFormat: '[app-name].[config-name].config.js',
         },
         statics: {
           enabled: true,
@@ -181,7 +182,7 @@ export class Jimpex extends Jimple {
    * @returns The server instance.
    */
   async start(onStart?: JimpexStartCallback): Promise<JimpexServerInstance> {
-    await this.setupConfiguration();
+    await this.setupConfig();
     const config = this.getConfig();
     const port = config.get<number | undefined>('port');
     if (!port) {
@@ -218,7 +219,7 @@ export class Jimpex extends Jimple {
     onStart?: JimpexStartCallback,
   ): Promise<JimpexServerInstance> {
     if (port) {
-      await this.setupConfiguration();
+      await this.setupConfig();
       const config = this.getConfig();
       config.set('port', port);
     }
@@ -565,10 +566,10 @@ export class Jimpex extends Jimple {
    * so it can't be instantiated as the other services.
    * This method is called just before starting the application.
    */
-  protected async setupConfiguration(): Promise<void> {
+  protected async setupConfig(): Promise<void> {
     if (this.configReady) return;
     this.configReady = true;
-    const { configuration: options } = this.options;
+    const { config: options } = this.options;
 
     let configsPath = options.path.replace(/\/$/, '');
     if (options.hasFolder) {
@@ -577,7 +578,7 @@ export class Jimpex extends Jimple {
 
     const filenameFormat = options.filenameFormat
       .replace(/\[app-name\]/gi, options.name)
-      .replace(/\[configuration-name\]/gi, '[name]');
+      .replace(/\[config-name\]/gi, '[name]');
     const defaultConfigFilename = options.defaultConfigFilename.replace(
       /\[app-name\]/gi,
       options.name,
