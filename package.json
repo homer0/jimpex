@@ -87,7 +87,7 @@
     "types:check": "./utils/scripts/types-check",
     "docs": "./utils/scripts/docs",
     "todo": "./utils/scripts/todo",
-    "prepublishOnly": "./utils/scripts/prepublishOnly",
+    "prepublishOnly": "npm run build",
     "prepare": "./utils/scripts/prepare"
   }
 }
