@@ -34,9 +34,9 @@ describe('services/html:htmlGenerator', () => {
         file: 'index.html',
         silent: false,
         deleteTemplateAfter: true,
-        replacePlaceholder: '{{appConfiguration}}',
+        replacePlaceholder: expect.any(RegExp),
         placeholderExpression: expect.any(RegExp),
-        variableName: 'appConfiguration',
+        variableName: 'appConfig',
         configKeys: expect.arrayContaining(['features', 'version', 'postMessagesPrefix']),
       });
     });

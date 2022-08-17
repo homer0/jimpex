@@ -37,10 +37,9 @@ export type HTMLGeneratorOptions = {
   /**
    * The placeholder string where the information will be written.
    *
-   * @default '\{\{appConfiguration\}\}'
-   * @todo make a regex so it can be appConfig(?:uration)?
+   * @default /\{\{appConfi(?:guration)?\}\}/
    */
-  replacePlaceholder: string;
+  replacePlaceholder: string | RegExp;
   /**
    * A regular expression for dynamic placeholders that will be replaced by values when
    * the file is generated.
@@ -51,7 +50,7 @@ export type HTMLGeneratorOptions = {
   /**
    * The name of the variable that will have the information on the file.
    *
-   * @default 'appConfiguration'
+   * @default 'appConfig'
    */
   variableName: string;
   /**
@@ -177,9 +176,9 @@ export class HTMLGenerator {
         file: 'index.html',
         silent: false,
         deleteTemplateAfter: true,
-        replacePlaceholder: '{{appConfiguration}}',
+        replacePlaceholder: /\{\{appConfig(?:uration)?\}\}/,
         placeholderExpression: /\{\{(.*?)\}\}/gi,
-        variableName: 'appConfiguration',
+        variableName: 'appConfig',
         configKeys: ['features', 'version', 'postMessagesPrefix'],
       },
       options,
