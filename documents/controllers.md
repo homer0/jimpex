@@ -1,47 +1,39 @@
-# Built-in Controllers
+# 🚦 Built-in Controllers
 
 All of these controllers are available on the Jimpex package and can be easily required and implemented.
 
-## Configuration
+## Config
 
 Allows you to see and switch the current configuration. It can be enabled or disabled by using a setting on the configuration.
 
 - Module: `common`
 - Requires: `responsesBuilder`
 
-```js
-const {
-  Jimpex,
-  services: {
-    http: { responsesBuilder },
-  },
-  controllers: {
-    common: { configurationController },
-  },
-};
+```ts
+import { Jimpex, responsesBuilderProvider, configController } from 'jimpex';
 
-class App extends Jimpex {
+export class App extends Jimpex {
   boot() {
     // Register the dependencies...
-    this.register(responsesBuilder);
-    
+    this.register(responsesBuilderProvider);
+
     // Add the controller.
-    this.mount('/config', configurationController);
+    this.mount('/config', configController);
   }
 }
 ```
 
 Now, there are two rules behind this controller:
 
-1. Your configuration must have a setting `debug.configurationController` with the value of `true`.
-2. To be able to switch configurations, the default configuration and/or the first configuration loaded must have a setting `allowConfigurationSwitch` set to `true`.
+1. Your configuration must have a setting `debug.configurationController` with the value of `true`, otherwise the controller will be mounted, but no routes will be available.
+2. To be able to switch configurations, the default configuration and/or the first configuration loaded must have a setting `allowConfigSwitch` set to `true`.
 
-The reason for those rules is that this controller is development purposes as you wouldn't want to make public the settings of your app.
+The reason for those rules is that this controller is for development/debugging purposes, as you wouldn't want to make public the settings of your app.
 
 The controller then will mount two routes:
 
-- `GET /`: It will show the current configuration.
-- `GET /switch/:name`: It will, if allowed, switch to an specified configuration.
+- `GET /`: It will show the current config.
+- `GET /switch/:name`: It will, if allowed, switch to an specified config.
 
 ## Health
 
@@ -50,22 +42,14 @@ Shows the version and name of the configuration, just to check the app is runnin
 - Module: `common`
 - Requires: `responsesBuilder`
 
-```js
-const {
-  Jimpex,
-  services: {
-    http: { responsesBuilder },
-  },
-  controllers: {
-    common: { healthController },
-  },
-};
+```ts
+import { Jimpex, responsesBuilderProvider, healthController } from 'jimpex';
 
 class App extends Jimpex {
   boot() {
     // Register the dependencies...
-    this.register(responsesBuilder);
-    
+    this.register(responsesBuilderProvider);
+
     // Add the controller.
     this.mount('/health', healthController);
   }
@@ -76,6 +60,8 @@ That's all there is, the controller mounts only one route:
 
 - `GET /`: Shows the information.
 
+And the "health status" shown, is the one returned by the Jimpex option `healthCheck`.
+
 ## Statics
 
 It allows your app to server specific files from any directory, without having to use the `static` middleware.
@@ -83,22 +69,14 @@ It allows your app to server specific files from any directory, without having t
 - Module: `common`
 - Requires: `sendFile`
 
-```js
-const {
-  Jimpex,
-  services: {
-    common: { sendFile },
-  },
-  controllers: {
-    common: { staticsController },
-  },
-};
+```ts
+import { Jimpex, sendFileProvider, staticsController } from 'jimpex';
 
-class App extends Jimpex {
+export class App extends Jimpex {
   boot() {
     // Register the dependencies...
-    this.register(sendFile);
-    
+    this.register(sendFileProvider);
+
     // Add the controller.
     this.mount('/', staticsController);
   }
@@ -107,7 +85,7 @@ class App extends Jimpex {
 
 The controller comes with a lot of default options:
 
-```js
+```ts
 {
   // The list of files it will serve.
   files: ['favicon.ico', 'index.html'],
@@ -126,76 +104,69 @@ The controller comes with a lot of default options:
   },
 }
 ```
+
 All of those values can be customized by calling the controller as a function:
 
-```js
-const {
-  Jimpex,
-  services: {
-    common: { sendFile },
-  },
-  controllers: {
-    common: { staticsController },
-  },
-};
+```ts
+import { Jimpex, sendFileProvider, staticsController } from 'jimpex';
 
-class App extends Jimpex {
+export class App extends Jimpex {
   boot() {
     // Register the dependencies...
-    this.register(sendFile);
-    
+    this.register(sendFileProvider);
+
     // Add the controller.
-    this.mount('/', staticsController({
-      paths: {
-        route: 'public',
-        source: 'secret-folder',
-      }
-      files: [
-        'my-file-one.html',
-        'favicon.icon',
-        'index.html',
-        'some-other.html',
-      ],
-    }));
+    this.mount(
+      '/',
+      staticsController({
+        paths: {
+          route: 'public',
+          source: 'secret-folder',
+        },
+        files: ['my-file-one.html', 'favicon.icon', 'index.html', 'some-other.html'],
+      }),
+    );
   }
 }
 ```
 
-You can also specify custom information to each individual file:
+You can even specify custom information to each individual file:
 
-```js
-this.mount('/', staticsController({
-  files: [
-    'my-file-one.html',
-    {
-      route: 'favicon.ico',
-      source: 'icons/fav/icon.ico',
-      headers: {
-        'X-Custom-Icon-Header': 'Something!',
+```ts
+this.mount(
+  '/',
+  staticsController({
+    files: [
+      'my-file-one.html',
+      {
+        route: 'favicon.ico',
+        source: 'icons/fav/icon.ico',
+        headers: {
+          'X-Custom-Icon-Header': 'Something!',
+        },
       },
-    },
-    'index.html',
-  ],
-}));
+      'index.html',
+    ],
+  }),
+);
 ```
 
-Finally, you can also add a custom middleware or middlewares to the routes created by the controller, you just need to send a function that returns the middlewares when called.
+Finally, you can also add a custom middleware or middlewares to the routes created by the controller, you just need to use the `getMiddlewares` option and send a function that returns them:
 
-```js
+```ts
 /**
  * In this case, we'll use Jimpex's `ensureBearerToken` to protect the
  * file routes.
  */
 const filesProtection = (app) => [app.get('ensureBearerToken')];
 
-this.mount('/', staticsController(
-  {
-    files: [
-      'index.html',
-    ],
-  },
-  [filesProtection]
-));
+this.mount(
+  '/',
+  staticsController({
+    files: ['index.html'],
+    getMiddlewares: filesProtection,
+  }),
+);
 ```
 
 And that's all, the middleware will be added to the route, just before serving the file.
@@ -207,31 +178,23 @@ It allows you to automatically generate a set of routes that will make gateway r
 - Module: `utils`
 - Requires: `http`
 
-```js
-const {
-  Jimpex,
-  services: {
-    http: { http },
-  },
-  controllers: {
-    utils: { gateway },
-  },
-};
+```ts
+import { Jimpex, httpProvider, gatewayController } from 'jimpex';
 
 class App extends Jimpex {
   boot() {
     // Register the dependencies...
-    this.register(http);
-    
+    this.register(httpProvider);
+
     // Add the controller.
-    this.mount('/gateway', gateway);
+    this.mount('/gateway', gatewayController);
   }
 }
 ```
 
-The controller will automatically look into your app configuration for a key called `api` with the following format:
+The controller will look into your app configuration for a key called `api` with the following format:
 
-```js
+```ts
 {
   url: 'api-entry-point',
   gateway: {
@@ -240,13 +203,11 @@ The controller will automatically look into your app configuration for a key cal
 }
 ```
 
-> Yes, the format is almost the same as the API Client.
-
 Based on the example above and that configuration, the controller would mount a route on `/gateway/endpoint/one/path` that would fire a request to `api-entry-point/endpoint/one/path`.
 
 The controller has a few options that you can customize:
 
-```js
+```ts
 {
 
   // The name that will be used to register the controller as a sevice (yes!),
@@ -260,9 +221,9 @@ The controller has a few options that you can customize:
   // errors.
   helperServiceName: 'apiGatewayHelper',
 
-  // The name of the configuration setting where the gateway configuration is stored.
+  // The name of the configuration property where the gateway settings are stored.
   // This is also used to wrap the endpoints on the generated API Client configuration.
-  configurationSetting: 'api',
+  gatewaySettingName: 'api',
 
   // This is a helper for when the gateway is used with an API client. The idea is
   // that, by default, the routes are mounted on the controller route, but with
@@ -294,6 +255,7 @@ The controller has a few options that you can customize:
     remove: [
       'server',
       'x-powered-by',
+      'content-encoding',
     ],
   },
 }
@@ -301,29 +263,23 @@ The controller has a few options that you can customize:
 
 The way you overwrite them is by calling the controller as a function:
 
-```js
-const {
-  Jimpex,
-  services: {
-    http: { http },
-  },
-  controllers: {
-    utils: { gateway },
-  },
-};
+```ts
+import { Jimpex, httpProvider, gatewayController } from 'jimpex';
 
-class App extends Jimpex {
+export class App extends Jimpex {
   boot() {
     // Register the dependencies...
-    this.register(http);
-    
+    this.register(httpProvider);
+
     // Add the controller.
-    this.mount('/gateway', gateway({
-      serviceName: 'Batman',
-    }));
+    this.mount(
+      '/gateway',
+      gatewayController({
+        serviceName: 'Batman',
+      }),
+    );
   }
 }
 ```
 
-I strongly recommend you to read the techinical documentation in order to know all the things you
-can do with the helper service and the logic behind the naming convetion the controller creator enforces (the `serviceName` must end with `Gateway`, among other things).
+I strongly recommend you to read the techinical documentation in order to know all the things you can do with the helper service and the logic behind the naming convetion the controller creator enforces (the `serviceName` must end with `Gateway`, among other things).
