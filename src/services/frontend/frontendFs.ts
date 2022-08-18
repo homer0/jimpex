@@ -15,7 +15,7 @@ export type FrontendFsOptions = {
   };
 };
 /**
- * This service allows the application to easily work with static files. The idea behind
+ * This service allows the application to easily work with the filesystem. The idea behind
  * centralizing this functionalities into a service is that is pretty common to have
  * bundling tools to generate the frontend, and on that process files can have different
  * paths or not even be generated all. The service can be extended/overwritten to
