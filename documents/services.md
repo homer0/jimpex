@@ -2,6 +2,14 @@
 
 All of these services are available on the Jimpex package and can be easily required and implemented.
 
+- [Core services](#core-services)
+  - [logger](#logger)
+  - [envUtils](#envutils)
+  - [packageInfo](#packageinfo)
+  - [pathUtils](#pathutils)
+  - [rootFile](#rootfile)
+  - [events](#events)
+  - [config](#config)
 - [API client](#api-client)
 - [App error](#app-error)
 - [HTTP error](#http-error)
@@ -13,6 +21,54 @@ All of these services are available on the Jimpex package and can be easily requ
 - [Responses builder](#responses-builder)
 
 > In the case of the services from the modules `api`, `http` and `common`, you can register them when the app starts by using the `servoces` option (Check the **options document** for more information).
+
+## Core services
+
+There are few essential services that come from other packages created by me:
+
+### logger
+
+A very basic service to log messages in the console.
+
+Package: [`@homer0/simple-logger`](https://www.npmjs.com/package/@homer0/simple-logger)
+
+### envUtils
+
+A service to centralize the place where the project reads/writes environment variables.
+
+Package: [`@homer0/env-utils`](https://www.npmjs.com/package/@homer0/env-utils)
+
+### packageInfo
+
+A tiny service that reads the contents of the project's `package.json`.
+
+Package: [`@homer0/package-info`](https://www.npmjs.com/package/@homer0/package-info)
+
+#### pathUtils
+
+An easy way to manage locations and build paths relative to those locations on a Node app.
+
+Package: [`@homer0/path-utils`](https://www.npmjs.com/package/@homer0/path-utils)
+
+### rootFile
+
+Imports or requires a file for the project root.
+
+Package: [`@homer0/root-file`](https://www.npmjs.com/package/@homer0/root-file)
+
+### events
+
+The events bus the project uses.
+
+Package: [`@homer0/events-hub`](https://www.npmjs.com/package/@homer0/events-hub)
+
+> ⚠️ For TypeScript, the type that should be used when accessing the `events` service should be `Events`, as it's already implemented with the Jimpex types.
+
+### config
+
+The service in charge of managing the project configuration.
+
+Package: [`@homer0/simple-config`](https://www.npmjs.com/package/@homer0/simple-config)
 
 ## API client
 
