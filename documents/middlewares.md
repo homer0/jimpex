@@ -2,7 +2,14 @@
 
 All of these middlewares are available on the Jimpex package and can be easily required and implemented.
 
-## Error Handler
+- [Error handler](#error-handler)
+- [Force HTTPS](#force-https)
+- [HSTS](#hsts)
+- [Fast HTML](#fast-html)
+- [Show HTML](#show-html)
+- [Version validator](#version-validator)
+
+## Error handler
 
 Allows you to generate responses for errors and potentially hide uncaught exceptions under a generic message, unless it's disabled via configuration settings.
 

@@ -2,6 +2,11 @@
 
 All of these controllers are available on the Jimpex package and can be easily required and implemented.
 
+- [Config](#config)
+- [Health](#health)
+- [Statics](#statics)
+- [Gateway](#gateway)
+
 ## Config
 
 Allows you to see and switch the current configuration. It can be enabled or disabled by using a setting on the configuration.

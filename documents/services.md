@@ -2,9 +2,19 @@
 
 All of these services are available on the Jimpex package and can be easily required and implemented.
 
-In the case of the services from the modules `api`, `http` and `common`, you can register them when the app starts by using the `servoces` option (Check the **options document** for more information).
+- [API client](#api-client)
+- [App error](#app-error)
+- [HTTP error](#http-error)
+- [Ensure bearer token](#ensure-bearer-token)
+- [Send file](#send-file)
+- [Frontend fs](#frontend-fs)
+- [HTML Generator](#html-generator)
+- [HTTP](#http)
+- [Responses builder](#responses-builder)
 
-## API Client
+> In the case of the services from the modules `api`, `http` and `common`, you can register them when the app starts by using the `servoces` option (Check the **options document** for more information).
+
+## API client
 
 An implementation of the [`@homer0/api-utils`](https://npmjs.com/package/@homer0/api-utils), but that is connected to the HTTP service, to allow logging and forwarding of the headers.
 
@@ -69,7 +79,7 @@ export class App extends Jimpex {
 }
 ```
 
-## App Error
+## App error
 
 A very simple subclass of `Error` but with support for context information. It can be used to customize the error handler responses.
 
@@ -217,7 +227,7 @@ export const myCtrl = controller((app) => {
 });
 ```
 
-## Send File
+## Send file
 
 It allows you to easily send a file on a response with a path relative to the app executable.
 
@@ -275,7 +285,7 @@ export const myCtrl = controller((app) => {
 
 In this last example, the path to the file is relative to the project root directory (`home`).
 
-## Frontend Fs
+## Frontend fs
 
 This service allows the app to easily work with the filesystem. The idea behind centralizing this functionalities into a service is that is pretty common to have bundling tools to generate the frontend, and on that process files can have different paths or not even be generated all, that's why this service exists.
 
