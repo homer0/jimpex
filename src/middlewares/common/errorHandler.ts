@@ -189,6 +189,7 @@ export class ErrorHandler {
  *
  * @group Middlewares
  * @group Middlewares/ErrorHandler
+ * @todo Allow to override the showError setting with the option.
  */
 export const errorHandlerMiddleware = middlewareCreator(
   (options: ErrorHandlerPartialOptions = {}) =>
