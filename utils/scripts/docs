@@ -1,2 +1,2 @@
 #!/bin/bash -e
-typedoc --options ./typedoc.json
+typedoc --options ./.typedoc.json
