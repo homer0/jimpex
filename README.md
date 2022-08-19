@@ -747,7 +747,9 @@ The script that runs them is `./utils/scripts/lint`; the script `lint-all` only 
 
 ### Documentation
 
-TBD
+I use [TypeDoc](https://typedoc.org) to generate an HTML documentation site for the project.
+
+The configuration file is `./.typedoc.json` and the script that runs it is on `./utils/scripts/docs`.
 
 ## 👀 Motivation
 
