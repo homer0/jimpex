@@ -101,7 +101,7 @@ On Jimpex, you have two sets of "settings": the options, which are in the code w
 
 #### Options
 
-You can read all about the different options in [its own documentation](./documents/options.md), but they're more related to the application capabilities. For example:
+You can read all about the different options in [its own documentation](https://github.com/homer0/jimpex/blob/main/documents/options.md), but they're more related to the application capabilities. For example:
 
 - Whether or not to call `boot`.
 - Whether or not Express should remove the `x-powered-by` header.
@@ -219,7 +219,7 @@ Finally, you can access the configuration settings with the `config` service:
 const port = app.get('config').get('port');
 ```
 
-> You can read more about the options for the configuration service in the [options documentation](./documents/options.md), but it's basically an implementation of [`@homer0/simple-config`](https://www.npmjs.com/package/@homer0/simple-config).
+> You can read more about the options for the configuration service in the [options documentation](https://github.com/homer0/jimpex/blob/main/documents/options.md), but it's basically an implementation of [`@homer0/simple-config`](https://www.npmjs.com/package/@homer0/simple-config).
 
 ### 🚀 Starting the app
 
@@ -349,7 +349,7 @@ class MyApp extends Jimpex {
 
 Done, your service is now available in the container.
 
-Jimpex already comes with a few built-in service providers ready to be used, and you can read about them on the [services document](./documents/services.md).
+Jimpex already comes with a few built-in service providers ready to be used, and you can read about them on the [services document](https://github.com/homer0/jimpex/blob/main/documents/services.md).
 
 ##### Configurable services
 
@@ -442,7 +442,7 @@ class MyApp extends Jimpex {
 }
 ```
 
-Jimpex already comes with a few built-in controllers ready to be used, and you can read about them on the [controllers document](./documents/controllers.md).
+Jimpex already comes with a few built-in controllers ready to be used, and you can read about them on the [controllers document](https://github.com/homer0/jimpex/blob/main/documents/controllers.md).
 
 #### Configurable controllers
 
@@ -612,7 +612,7 @@ class MyApp extends Jimpex {
 }
 ```
 
-Jimpex already comes with a few built-in middlewares ready to be used, and you can read about them on the [middlewares document](./documents/middlewares.md).
+Jimpex already comes with a few built-in middlewares ready to be used, and you can read about them on the [middlewares document](https://github.com/homer0/jimpex/blob/main/documents/middlewares.md).
 
 #### Configurable middlewares
 
