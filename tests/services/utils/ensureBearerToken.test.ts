@@ -25,7 +25,7 @@ describe('services/utils:ensureBearerToken', () => {
       const sut = new EnsureBearerToken(options);
       // Then
       expect(sut).toBeInstanceOf(EnsureBearerToken);
-      expect(sut.getOptions()).toEqual({
+      expect(sut.options).toEqual({
         error: {
           message: 'Unauthorized',
           status,
@@ -56,7 +56,7 @@ describe('services/utils:ensureBearerToken', () => {
       const sut = new EnsureBearerToken(options);
       // Then
       expect(sut).toBeInstanceOf(EnsureBearerToken);
-      expect(sut.getOptions()).toEqual({
+      expect(sut.options).toEqual({
         error: {
           message: options.error!.message,
           status,
@@ -87,7 +87,7 @@ describe('services/utils:ensureBearerToken', () => {
         const next = jest.fn();
         // When
         const sut = new EnsureBearerToken(options);
-        sut.middleware()(request, response, next);
+        sut.getMiddleware()(request, response, next);
         // Then
         expect(response.locals['token']).toBe(token);
         expect(next).toHaveBeenCalledTimes(1);
@@ -119,7 +119,7 @@ describe('services/utils:ensureBearerToken', () => {
         const next = jest.fn();
         // When
         const sut = new EnsureBearerToken(options);
-        sut.middleware()(request, response, next);
+        sut.getMiddleware()(request, response, next);
         // Then
         expect(response.locals['token']).toBeUndefined();
         expect(next).toHaveBeenCalledTimes(1);
@@ -157,7 +157,7 @@ describe('services/utils:ensureBearerToken', () => {
         const next = jest.fn();
         // When
         const sut = new EnsureBearerToken(options);
-        sut.middleware()(request, response, next);
+        sut.getMiddleware()(request, response, next);
         // Then
         expect(response.locals['token']).toBeUndefined();
         expect(next).toHaveBeenCalledTimes(1);
@@ -191,7 +191,7 @@ describe('services/utils:ensureBearerToken', () => {
       });
       // Then
       expect(result).toEqual(expect.any(Function));
-      expect(result.toString()).toBe(toCompare.middleware().toString());
+      expect(result.toString()).toBe(toCompare.getMiddleware().toString());
       expect(mocks.set).toHaveBeenCalledTimes(1);
       expect(mocks.set).toHaveBeenCalledWith('ensureBearerToken', expect.any(Function));
       expect(mocks.get).toHaveBeenCalledTimes(2);

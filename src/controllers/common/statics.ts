@@ -106,8 +106,9 @@ export type StaticsControllerCreatorOptions = DeepPartial<StaticsControllerOptio
   getMiddlewares?: StaticsControllerGetMiddlewaresFn;
 };
 /**
- * The options for {@link StaticsController.addRoute}.
+ * The options for {@link StaticsController._addRoute}.
  *
+ * @access protected
  * @group Controllers/Statics
  */
 export type AddStaticRouteOptions = {
@@ -145,11 +146,11 @@ export class StaticsController {
   /**
    * The service that serves static files.
    */
-  protected readonly sendFile: SendFile;
+  protected readonly _sendFile: SendFile;
   /**
    * The controller customization options.
    */
-  protected options: StaticsControllerOptions;
+  protected _options: StaticsControllerOptions;
   /**
    * A dictionary with the formatted definitions of the files that will be served.
    * It uses the files' routes as keys, for easy access in the middleware.
@@ -159,8 +160,8 @@ export class StaticsController {
    * @param options  The options to construct the controller.
    */
   constructor({ inject, ...options }: StaticsControllerConstructorOptions) {
-    this.sendFile = inject.sendFile;
-    this.options = this.validateOptions(
+    this._sendFile = inject.sendFile;
+    this._options = this._validateOptions(
       deepAssignWithOverwrite(
         {
           files: ['favicon.ico', 'index.html'],
@@ -176,13 +177,7 @@ export class StaticsController {
         options,
       ),
     );
-    this.files = this.createFiles();
-  }
-  /**
-   * Gets the controller options.
-   */
-  getOptions(): Readonly<StaticsControllerOptions> {
-    return { ...this.options };
+    this.files = this._createFiles();
   }
   /**
    * Mounts the middlewares in the router in order to serve the files.
@@ -192,7 +187,7 @@ export class StaticsController {
    *                     middleware.
    */
   addRoutes(router: Router, middlewares: ExpressMiddleware[] = []): Router {
-    const { methods } = this.options;
+    const { methods } = this._options;
     const use: RouterMethod[] = methods.all
       ? ['all']
       : Object.keys(methods).reduce<RouterMethod[]>((acc, name) => {
@@ -206,20 +201,26 @@ export class StaticsController {
 
     Object.keys(this.files).forEach((route) => {
       const file = this.files[route as keyof typeof this.files]!;
-      const fileMiddleware = this.getMiddleware(file);
+      const fileMiddleware = this._getMiddleware(file);
       use.forEach((method) =>
-        this.addRoute({ router, method, file, fileMiddleware, middlewares }),
+        this._addRoute({ router, method, file, fileMiddleware, middlewares }),
       );
     });
 
     return router;
   }
   /**
+   * The controller options.
+   */
+  get options(): Readonly<StaticsControllerOptions> {
+    return { ...this._options };
+  }
+  /**
    * Generates the middleware that will serve the file.
    *
    * @param file  The definition of the file to serve.
    */
-  protected getMiddleware(file: StaticsControllerFile): ExpressMiddleware {
+  protected _getMiddleware(file: StaticsControllerFile): ExpressMiddleware {
     return (_, res, next) => {
       const extension = path.parse(file.path).ext.substring(1);
       const headers = {
@@ -231,7 +232,7 @@ export class StaticsController {
         res.setHeader(key, value);
       });
 
-      this.sendFile({
+      this._sendFile({
         res,
         filepath: file.path,
         next,
@@ -243,7 +244,7 @@ export class StaticsController {
    *
    * @param options  The information of the file and how it needs to be added.
    */
-  protected addRoute({
+  protected _addRoute({
     router,
     method,
     file,
@@ -263,7 +264,9 @@ export class StaticsController {
    * @throws If no methods are enabled.
    * @throws If there's an invalid HTTP method.
    */
-  protected validateOptions(options: StaticsControllerOptions): StaticsControllerOptions {
+  protected _validateOptions(
+    options: StaticsControllerOptions,
+  ): StaticsControllerOptions {
     if (!options.files || !options.files.length) {
       throw new Error('You need to specify a list of files');
     }
@@ -314,8 +317,8 @@ export class StaticsController {
    * Parses the files received from the constructor's options, and formats them into
    * proper definitions the controller can use.
    */
-  protected createFiles(): Record<string, StaticsControllerFile> {
-    const { files, paths } = this.options;
+  protected _createFiles(): Record<string, StaticsControllerFile> {
+    const { files, paths } = this._options;
     const routePath = removeSlashes(paths.route, false, true);
     return files.reduce<Record<string, StaticsControllerFile>>((acc, file) => {
       let src;

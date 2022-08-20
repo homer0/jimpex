@@ -88,17 +88,17 @@ export class HTTP {
   /**
    * The service used to log information in the terminal.
    */
-  protected readonly logger: SimpleLogger;
+  protected readonly _logger: SimpleLogger;
   /**
    * The service customization options.
    */
-  protected readonly options: HTTPOptions;
+  protected readonly _options: HTTPOptions;
   /**
    * @param options  The options to construct the class.
    */
   constructor({ inject: { logger }, ...options }: HTTPContructorOptions) {
-    this.logger = logger;
-    this.options = deepAssignWithOverwrite(
+    this._logger = logger;
+    this._options = deepAssignWithOverwrite(
       {
         logRequests: false,
       },
@@ -106,12 +106,6 @@ export class HTTP {
     );
 
     this.fetch = this.fetch.bind(this);
-  }
-  /**
-   * Gets the customization options.
-   */
-  getOptions(): Readonly<HTTPOptions> {
-    return deepAssignWithOverwrite({}, this.options);
   }
   /**
    * Makes a fetch request.
@@ -147,14 +141,14 @@ export class HTTP {
       fetchOptions.headers = this.normalizeHeaders(headers);
     }
 
-    const { logRequests } = this.options;
+    const { logRequests } = this._options;
     if (logRequests) {
-      this.logRequest(useURL, fetchOptions);
+      this._logRequest(useURL, fetchOptions);
     }
 
     const response = await fetch(useURL, fetchOptions);
     if (logRequests) {
-      this.logResponse(response);
+      this._logResponse(response);
     }
 
     return response;
@@ -215,12 +209,18 @@ export class HTTP {
     }, {});
   }
   /**
+   * The customization options.
+   */
+  get options(): Readonly<HTTPOptions> {
+    return deepAssignWithOverwrite({}, this._options);
+  }
+  /**
    * Logs a request information into the terminal.
    *
    * @param url      The request URL.
    * @param options  The options for the request.
    */
-  protected logRequest(url: string, options: RequestInit): void {
+  protected _logRequest(url: string, options: RequestInit): void {
     const { method, headers } = options;
     const prefix = 'REQUEST> ';
     const lines = ['--->>', `${prefix}${method} ${url}`];
@@ -235,14 +235,14 @@ export class HTTP {
       lines.push(`${prefix}body: "${options.body}"`);
     }
 
-    this.logger.info(lines);
+    this._logger.info(lines);
   }
   /**
    * Logs a response information into the terminal.
    *
    * @param response  The response to log.
    */
-  protected logResponse(response: HTTPResponse) {
+  protected _logResponse(response: HTTPResponse) {
     const prefix = 'RESPONSE> ';
     const lines = [
       '<<---',
@@ -254,7 +254,7 @@ export class HTTP {
       lines.push(`${prefix}${header}: ${value}`);
     });
 
-    this.logger.info(lines);
+    this._logger.info(lines);
   }
 }
 /**

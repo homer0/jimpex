@@ -39,34 +39,34 @@ export class HealthController {
   /**
    * The function that returns the health status of the application.
    */
-  protected readonly getHealthStatus: GetHealthStatus;
+  protected readonly _getHealthStatus: GetHealthStatus;
   /**
    * The service in charge or building the responses.
    */
-  protected readonly responsesBuilder: ResponsesBuilder;
+  protected readonly _responsesBuilder: ResponsesBuilder;
   /**
    * The service in charge of the configuration.
    */
-  protected readonly config: SimpleConfig;
+  protected readonly _config: SimpleConfig;
   /**
    * The uility service to get HTTP status codes.
    */
-  protected readonly statuses: Statuses;
+  protected readonly _statuses: Statuses;
   /**
    * @param options  The options to construct the controller.
    */
   constructor({ inject }: HealthControllerOptions) {
-    this.getHealthStatus = inject.getHealthStatus;
-    this.responsesBuilder = inject.responsesBuilder;
-    this.config = inject.config;
-    this.statuses = inject.statuses;
+    this._getHealthStatus = inject.getHealthStatus;
+    this._responsesBuilder = inject.responsesBuilder;
+    this._config = inject.config;
+    this._statuses = inject.statuses;
   }
   /**
    * Creates the middleware the shows the application health status.
    */
   showHealth(): AsyncExpressMiddleware {
     return async (_, res) => {
-      const healthStatus = await this.getHealthStatus();
+      const healthStatus = await this._getHealthStatus();
       let isHealthy: boolean;
       let extras: Record<string, unknown>;
       if (typeof healthStatus === 'boolean') {
@@ -88,16 +88,16 @@ export class HealthController {
         };
       }
 
-      const { name: config, version } = this.config.get<{
+      const { name: config, version } = this._config.get<{
         name: string;
         version: string;
       }>(['name', 'version']);
 
       const status = isHealthy
-        ? this.statuses('ok')
-        : this.statuses('service unavailable');
+        ? this._statuses('ok')
+        : this._statuses('service unavailable');
 
-      this.responsesBuilder.json({
+      this._responsesBuilder.json({
         res,
         status,
         data: {

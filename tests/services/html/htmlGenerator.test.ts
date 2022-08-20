@@ -29,7 +29,7 @@ describe('services/html:htmlGenerator', () => {
       const sut = new HTMLGenerator(options);
       // Then
       expect(sut).toBeInstanceOf(HTMLGenerator);
-      expect(sut.getOptions()).toEqual({
+      expect(sut.options).toEqual({
         template: 'index.tpl.html',
         file: 'index.html',
         silent: false,

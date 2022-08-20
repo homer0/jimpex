@@ -62,8 +62,8 @@ export type APIClientConstructorOptions = APIClientSettings & {
 };
 /**
  * An API client for the application to use. What makes this service special is that it
- * formats received errors using the {@link HTTPError} class, and as fetch client, it uses
- * the {@link HTTP} service, allowing the application to to internally handle all the
+ * formats received errors using the {@link _HTTPError} class, and as fetch client, it
+ * uses the {@link HTTP} service, allowing the application to to internally handle all the
  * requests and responses.
  *
  * The only reason to use the class directly is if you want to subclass it, as you would
@@ -76,15 +76,15 @@ export class APIClient extends APIClientBase {
   /**
    * The service that makes the requests to the API.
    */
-  protected readonly http: HTTP;
+  protected readonly _http: HTTP;
   /**
    * The class to generate possible errors in the requests.
    */
-  protected readonly HTTPError: HTTPErrorClass;
+  protected readonly _HTTPError: HTTPErrorClass;
   /**
    * The configuration of the API it uses.
    */
-  protected readonly apiConfig: APIClientConfig;
+  protected readonly _apiConfig: APIClientConfig;
   /**
    * @param options  The options to construct the class.
    */
@@ -100,22 +100,22 @@ export class APIClient extends APIClientBase {
       fetchClient: http.fetch as unknown as FetchClient,
     });
 
-    this.http = http;
-    this.HTTPError = HTTPError;
-    this.apiConfig = deepAssignWithOverwrite({}, apiConfig);
+    this._http = http;
+    this._HTTPError = HTTPError;
+    this._apiConfig = deepAssignWithOverwrite({}, apiConfig);
   }
   /**
-   * Gets the configuration for the API.
+   * The configuration for the API.
    */
-  getConfig(): Readonly<APIClientConfig> {
-    return deepAssignWithOverwrite({}, this.apiConfig);
+  get apiConfig(): Readonly<APIClientConfig> {
+    return deepAssignWithOverwrite({}, this._apiConfig);
   }
   /**
    * Tries to obtain a message from an error caused on a failed request.
    *
    * @param response  The response from the failed request.
    */
-  protected getErrorMessageFromResponse(response: unknown) {
+  protected _getErrorMessageFromResponse(response: unknown) {
     const res = response as {
       error?: string;
       data?: {
@@ -132,7 +132,7 @@ export class APIClient extends APIClientBase {
     return 'Unexpected error';
   }
   /**
-   * Generates an {@link HTTPError} from the response of a failed request.
+   * Generates an {@link _HTTPError} from the response of a failed request.
    *
    * @param response  The response from the failed request.
    * @param status    The status code of the response.
@@ -141,7 +141,7 @@ export class APIClient extends APIClientBase {
     response: ResponseType,
     status: number,
   ): Error {
-    return new this.HTTPError(this.getErrorMessageFromResponse(response), status);
+    return new this._HTTPError(this._getErrorMessageFromResponse(response), status);
   }
 }
 /**

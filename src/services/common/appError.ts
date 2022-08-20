@@ -24,16 +24,16 @@ export class AppError extends Error {
   /**
    * The date of when the error was generated.
    */
-  readonly date: Date;
+  readonly _date: Date;
   /**
    * The context information that can be provided to the error, and picked by the error
    * handler.
    */
-  readonly context: AppErrorContext;
+  readonly _context: AppErrorContext;
   /**
    * The service that generates HTTP status codes.
    */
-  protected statuses: Statuses;
+  protected _statuses: Statuses;
   /**
    * @param message   The message of the error.
    * @param context   The context information, for the error handler.
@@ -49,9 +49,9 @@ export class AppError extends Error {
   ) {
     super(message);
     this.name = this.constructor.name;
-    this.date = new Date();
-    this.statuses = statuses;
-    this.context = this.parseContext(context);
+    this._date = new Date();
+    this._statuses = statuses;
+    this._context = this._parseContext(context);
 
     // Limit the stack trace if possible.
     if (Error.captureStackTrace) {
@@ -73,14 +73,26 @@ export class AppError extends Error {
    * `response` key in the `context` option.
    */
   get response(): unknown {
-    return this.context.response || {};
+    return this._context.response || {};
   }
   /**
    * An HTTP status code related to the error. This is set using the `status` key on the
    * `context`.
    */
   get status(): number | undefined {
-    return this.context.status as number | undefined;
+    return this._context.status as number | undefined;
+  }
+  /**
+   * Context information related to the error.
+   */
+  get context(): unknown {
+    return this._context;
+  }
+  /**
+   * The date of when the error was generated.
+   */
+  get date(): Date {
+    return this._date;
   }
   /**
    * Utility method that formats the context before saving it in the instance:
@@ -89,10 +101,10 @@ export class AppError extends Error {
    *
    * @param context  The original context sent to the constructor.
    */
-  protected parseContext(context: AppErrorContext): AppErrorContext {
+  protected _parseContext(context: AppErrorContext): AppErrorContext {
     const result = { ...context };
     if (result.status && typeof result.status === 'string') {
-      result.status = this.statuses.code[result.status.toLowerCase()] || result.status;
+      result.status = this._statuses.code[result.status.toLowerCase()] || result.status;
     }
 
     return result;

@@ -89,12 +89,12 @@ describe('Jimpex', () => {
         router: true,
       });
       expect(sut.get('statuses')).toBe(statuses);
-      expect(sut.getEventsHub()).toBeInstanceOf(EventsHub);
-      expect(sut.getLogger()).toBeInstanceOf(SimpleLogger);
-      expect(sut.getExpress()).toBe(expressMocks);
-      expect(sut.getInstance()).toBeUndefined();
-      expect(sut.getRoutes()).toEqual([]);
-      expect(sut.getOptions()).toEqual({
+      expect(sut.eventsHub).toBeInstanceOf(EventsHub);
+      expect(sut.logger).toBeInstanceOf(SimpleLogger);
+      expect(sut.express).toBe(expressMocks);
+      expect(sut.instance).toBeUndefined();
+      expect(sut.routes).toEqual([]);
+      expect(sut.options).toEqual({
         version: '0.0.0',
         filesizeLimit: '15MB',
         boot: true,
@@ -143,10 +143,10 @@ describe('Jimpex', () => {
         override boot(): void {
           bootFn();
         }
-        protected override init(): void {
+        protected override _init(): void {
           initFn();
         }
-        protected override initOptions(): DeepPartial<JimpexOptions> {
+        protected override _initOptions(): DeepPartial<JimpexOptions> {
           initOptionsFn();
           return {};
         }
@@ -229,7 +229,7 @@ describe('Jimpex', () => {
         'app',
         options.path!.appPath,
       );
-      expect(sut.getOptions()).toEqual(options);
+      expect(sut.options).toEqual(options);
     });
 
     it('should overwrite the options with the protected method', () => {
@@ -251,7 +251,7 @@ describe('Jimpex', () => {
         },
       };
       class Sut extends Jimpex {
-        protected override initOptions(): DeepPartial<JimpexOptions> {
+        protected override _initOptions(): DeepPartial<JimpexOptions> {
           return customOptions;
         }
       }
@@ -259,7 +259,7 @@ describe('Jimpex', () => {
       // When
       const sut = new Sut();
       // Then
-      expect(sut.getOptions()).toEqual(expect.objectContaining(customOptions));
+      expect(sut.options).toEqual(expect.objectContaining(customOptions));
     });
 
     it('should disable the TLS validation (for dev)', () => {
@@ -368,15 +368,15 @@ describe('Jimpex', () => {
           configMocks.get.mockImplementationOnce(() => []);
           // When
           const sut = new Jimpex();
-          const events = sut.getEventsHub();
+          const events = sut.eventsHub;
           events.on('beforeStart', onBeforeStart);
           events.on('start', onStart);
           events.on('afterStart', onAfterStart);
           events.on('beforeStop', onBeforeStop);
           events.on('afterStop', onAfterStop);
-          const instanceBeforeStart = sut.getInstance();
+          const instanceBeforeStart = sut.instance;
           await sut.start();
-          const instanceAfterStart = sut.getInstance();
+          const instanceAfterStart = sut.instance;
           sut.stop();
           // Then
           expect(instanceBeforeStart).toBeUndefined();
@@ -441,7 +441,7 @@ describe('Jimpex', () => {
           setupCase();
           // When
           const sut = new Jimpex();
-          const events = sut.getEventsHub();
+          const events = sut.eventsHub;
           events.on('beforeStop', onBeforeStop);
           sut.stop();
           // Then
@@ -537,8 +537,8 @@ describe('Jimpex', () => {
           const differentPath = 'different-path-statics';
           class Sut extends Jimpex {
             override boot(): void {
-              this.addStaticsFolder(sameRoute);
-              this.addStaticsFolder(differentRoute, differentPath);
+              this._addStaticsFolder(sameRoute);
+              this._addStaticsFolder(differentRoute, differentPath);
             }
           }
           const {
@@ -588,7 +588,7 @@ describe('Jimpex', () => {
           const sut = new Jimpex();
           await sut.listen();
           // Then
-          expect(sut.getInstance()).toBe(instanceMock);
+          expect(sut.instance).toBe(instanceMock);
         });
 
         it('should overwrite the port on the config', async () => {
@@ -604,7 +604,7 @@ describe('Jimpex', () => {
           const sut = new Jimpex();
           await sut.listen(port);
           // Then
-          expect(sut.getInstance()).toBe(instanceMock);
+          expect(sut.instance).toBe(instanceMock);
           expect(configMocks.set).toHaveBeenCalledTimes(1);
           expect(configMocks.set).toHaveBeenCalledWith('port', port);
         });
@@ -623,7 +623,7 @@ describe('Jimpex', () => {
           const sut = new Jimpex();
           await sut.listen(undefined, onStart);
           // Then
-          expect(sut.getInstance()).toBe(instanceMock);
+          expect(sut.instance).toBe(instanceMock);
           expect(onStart).toHaveBeenCalledTimes(1);
           expect(onStart).toHaveBeenCalledWith(sut.getConfig());
         });
@@ -695,7 +695,7 @@ describe('Jimpex', () => {
           const sut = new Jimpex();
           await sut.start();
           // Then
-          expect(sut.getInstance()).toBe(instanceMock);
+          expect(sut.instance).toBe(instanceMock);
           expect(fs.readFile).toHaveBeenCalledTimes(2);
           expect(fs.readFile).toHaveBeenNthCalledWith(1, caPath, 'utf8');
           expect(fs.readFile).toHaveBeenNthCalledWith(2, certPath, 'utf8');
@@ -743,7 +743,7 @@ describe('Jimpex', () => {
           const sut = new Jimpex();
           await sut.start();
           // Then
-          expect(sut.getInstance()).toBe(instanceMock);
+          expect(sut.instance).toBe(instanceMock);
           expect(pathUtilsMocks.joinFrom).toHaveBeenNthCalledWith(1, 'app', 'statics');
           expect(pathUtilsMocks.joinFrom).toHaveBeenNthCalledWith(2, 'app', caPath);
           expect(pathUtilsMocks.joinFrom).toHaveBeenNthCalledWith(3, 'app', certPath);
@@ -828,7 +828,7 @@ describe('Jimpex', () => {
           const sut = new Jimpex();
           await sut.start();
           // Then
-          expect(sut.getInstance()).toBe(instanceMock);
+          expect(sut.instance).toBe(instanceMock);
           expect(fs.readFile).toHaveBeenCalledTimes(2);
           expect(fs.readFile).toHaveBeenNthCalledWith(1, caPath, 'utf8');
           expect(fs.readFile).toHaveBeenNthCalledWith(2, certPath, 'utf8');
@@ -1184,7 +1184,7 @@ describe('Jimpex', () => {
       const sut = jimpex(customOptions);
       // Then
       expect(sut).toBeInstanceOf(Jimpex);
-      expect(sut.getOptions()).toEqual(expect.objectContaining(customOptions));
+      expect(sut.options).toEqual(expect.objectContaining(customOptions));
     });
   });
 });

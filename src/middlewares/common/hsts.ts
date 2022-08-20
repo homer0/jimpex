@@ -60,49 +60,49 @@ export class HSTS {
   /**
    * The customization options for the header.
    */
-  protected readonly options: HSTSMiddlewareOptions;
+  protected readonly _options: HSTSMiddlewareOptions;
   /**
    * The value of the header that will be included in the responses.
    */
-  protected readonly header: string;
+  protected readonly _header: string;
   /**
    * @param options  The options to construct the class.
    */
   constructor(options: HSTSMiddlewarePartialOptions = {}) {
-    this.options = {
+    this._options = {
       maxAge: 31536000,
       includeSubDomains: true,
       preload: false,
       ...options,
     };
-    this.header = this.buildHeader();
-  }
-  /**
-   * Gets the customization options.
-   */
-  getOptions(): Readonly<HSTSMiddlewareOptions> {
-    return { ...this.options };
-  }
-  /**
-   * Gets the value of the header that will be included in the responses.
-   */
-  getHeader(): string {
-    return this.header;
+    this._header = this._buildHeader();
   }
   /**
    * Generates the middleware that includes the HSTS header on the responses.
    */
-  middleware(): ExpressMiddleware {
+  getMiddleware(): ExpressMiddleware {
     return (_, res, next) => {
-      res.setHeader('Strict-Transport-Security', this.header);
+      res.setHeader('Strict-Transport-Security', this._header);
       next();
     };
   }
   /**
+   * The customization options.
+   */
+  get options(): Readonly<HSTSMiddlewareOptions> {
+    return { ...this._options };
+  }
+  /**
+   * The value of the header that will be included in the responses.
+   */
+  get header(): string {
+    return this._header;
+  }
+  /**
    * Creates the header value based on the customization options.
    */
-  protected buildHeader(): string {
-    const { maxAge, includeSubDomains, preload } = this.options;
+  protected _buildHeader(): string {
+    const { maxAge, includeSubDomains, preload } = this._options;
     const directives = [`max-age=${maxAge}`];
     if (includeSubDomains) {
       directives.push('includeSubDomains');
@@ -132,6 +132,6 @@ export const hstsMiddleware = middlewareCreator(
         (typeof options.enabled !== 'undefined' && !options.enabled)
       )
         return undefined;
-      return new HSTS(options).middleware();
+      return new HSTS(options).getMiddleware();
     },
 );

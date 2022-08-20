@@ -32,7 +32,7 @@ describe('services/html:apiClient', () => {
       const sut = new APIClient(options);
       // Then
       expect(sut).toBeInstanceOf(APIClient);
-      expect(sut.getConfig()).toEqual(apiConfig);
+      expect(sut.apiConfig).toEqual(apiConfig);
     });
 
     it('should be instantiated using `gateway`', () => {
@@ -59,7 +59,7 @@ describe('services/html:apiClient', () => {
       const sut = new APIClient(options);
       // Then
       expect(sut).toBeInstanceOf(APIClient);
-      expect(sut.getConfig()).toEqual({
+      expect(sut.apiConfig).toEqual({
         url,
         endpoints,
       });
@@ -150,7 +150,7 @@ describe('services/html:apiClient', () => {
       const result = lazy();
       // Then
       expect(result).toBeInstanceOf(APIClient);
-      expect(result.getConfig()).toEqual(apiConfig);
+      expect(result.apiConfig).toEqual(apiConfig);
       expect(mocks.set).toHaveBeenCalledTimes(1);
       expect(mocks.set).toHaveBeenCalledWith('apiClient', expect.any(Function));
       expect(mocks.get).toHaveBeenCalledTimes(3);
@@ -252,7 +252,7 @@ describe('services/html:apiClient', () => {
       const result = lazy();
       // Then
       expect(result).toBeInstanceOf(MyAPIClient);
-      expect(result.getConfig()).toEqual(apiConfig);
+      expect(result.apiConfig).toEqual(apiConfig);
     });
   });
 });

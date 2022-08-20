@@ -97,17 +97,17 @@ export class ResponsesBuilder {
   /**
    * The application configuration, to get the `version` and the `postMessagesPrefix`.
    */
-  protected readonly config: SimpleConfig;
+  protected readonly _config: SimpleConfig;
   /**
    * The uility service to get HTTP status codes.
    */
-  protected readonly statuses: Statuses;
+  protected readonly _statuses: Statuses;
   /**
    * @param options  The options to construct the service.
    */
   constructor({ inject: { config, statuses } }: ResponsesBuilderConstructorOptions) {
-    this.config = config;
-    this.statuses = statuses;
+    this._config = config;
+    this._statuses = statuses;
   }
   /**
    * Generates and send an HTML response that emits a post message.
@@ -126,12 +126,12 @@ export class ResponsesBuilder {
       close = true,
       closeDelay = DEFAULT_CLOSE_DELAY_FOR_POST_MESSAGE,
     } = options;
-    const prefix = this.config.get<string | undefined>('postMessagesPrefix') ?? '';
+    const prefix = this._config.get<string | undefined>('postMessagesPrefix') ?? '';
     const closeCode = close
       ? `setTimeout(function() { window.close(); }, ${closeDelay});`
       : '';
 
-    const html = this.htmlTemplate(
+    const html = this._htmlTemplate(
       title,
       `
       (function() {
@@ -145,8 +145,8 @@ export class ResponsesBuilder {
 
     const useStatus =
       typeof status === 'undefined'
-        ? (this.statuses('ok') as number)
-        : this.normalizeStatus(status);
+        ? (this._statuses('ok') as number)
+        : this._normalizeStatus(status);
 
     res.setHeader('Content-Type', 'text/html');
     res.setHeader('Cache-Control', 'no-cache, max-age=0, must-revalidate, no-store');
@@ -175,13 +175,13 @@ export class ResponsesBuilder {
     const { res, data, status, metadata = {} } = options;
     const useStatus =
       typeof status === 'undefined'
-        ? (this.statuses('ok') as number)
-        : this.normalizeStatus(status);
+        ? (this._statuses('ok') as number)
+        : this._normalizeStatus(status);
 
     res.status(useStatus);
     res.json({
       metadata: {
-        version: this.config.get<string>('version'),
+        version: this._config.get<string>('version'),
         status: useStatus,
         ...metadata,
       },
@@ -196,7 +196,7 @@ export class ResponsesBuilder {
    * @param title  The HTML `<title />` attribute.
    * @param code   Javascript code to be wrapped on a `<script />` tag.
    */
-  protected htmlTemplate(title: string, code: string): string {
+  protected _htmlTemplate(title: string, code: string): string {
     return `
       <!DOCTYPE html>
       <html>
@@ -221,17 +221,17 @@ export class ResponsesBuilder {
    * @param status  The status to normalize.
    * @returns If `status` is a string, but there's no valid code, it will return 200.
    */
-  protected normalizeStatus(status: number | string): number {
+  protected _normalizeStatus(status: number | string): number {
     let useStatus: number;
     try {
       if (typeof status === 'string') {
-        useStatus = this.statuses(status) as number;
+        useStatus = this._statuses(status) as number;
       } else {
-        this.statuses(status);
+        this._statuses(status);
         useStatus = status;
       }
     } catch (_) {
-      useStatus = this.statuses('ok') as number;
+      useStatus = this._statuses('ok') as number;
     }
 
     return useStatus;

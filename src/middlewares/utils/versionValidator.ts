@@ -146,28 +146,28 @@ export class VersionValidator {
   /**
    * To generate the errors in case the validation fails.
    */
-  protected readonly HTTPError: HTTPErrorClass;
+  protected readonly _HTTPError: HTTPErrorClass;
   /**
    * To generate responses for popups.
    */
-  protected readonly responsesBuilder: ResponsesBuilder;
+  protected readonly _responsesBuilder: ResponsesBuilder;
   /**
    * The uility service to get HTTP status codes.
    */
-  protected readonly statuses: Statuses;
+  protected readonly _statuses: Statuses;
   /**
    * The customization options.
    */
-  protected readonly options: VersionValidatorOptions;
+  protected readonly _options: VersionValidatorOptions;
   /**
    * @param options  The options to construct the class.
    * @throws If no `version` is specified in the options.
    */
   constructor({ inject, version, ...options }: VersionValidatorConstructorOptions) {
-    this.HTTPError = inject.HTTPError;
-    this.responsesBuilder = inject.responsesBuilder;
-    this.statuses = inject.statuses;
-    this.options = deepAssignWithOverwrite(
+    this._HTTPError = inject.HTTPError;
+    this._responsesBuilder = inject.responsesBuilder;
+    this._statuses = inject.statuses;
+    this._options = deepAssignWithOverwrite(
       {
         error: "The application version doesn't match",
         latest: {
@@ -184,20 +184,14 @@ export class VersionValidator {
       options,
     );
 
-    if (!this.options.version) {
+    if (!this._options.version) {
       throw new Error('You need to supply a version');
     }
   }
   /**
-   * Gets the customization options.
-   */
-  getOptions(): Readonly<VersionValidatorOptions> {
-    return deepAssignWithOverwrite({}, this.options);
-  }
-  /**
    * Generates the middleware that validates the version.
    */
-  middleware(): ExpressMiddleware {
+  getMiddleware(): ExpressMiddleware {
     return (req, res, next) => {
       // Get the `version` parameter from the request.
       const { version } = req.params;
@@ -207,16 +201,16 @@ export class VersionValidator {
         return;
       }
       // If the version matches, or it's a "latest" version, move on to the next middleware.
-      if (version === this.options.version || this.isTheAllowedLatest(version)) {
+      if (version === this._options.version || this._isTheAllowedLatest(version)) {
         next();
         return;
       }
 
-      const status = this.statuses('conflict');
+      const status = this._statuses('conflict');
       // If the request comes from a popup, send the post message.
-      if (this.isPopup(req)) {
-        const { title, message } = this.options.popup;
-        this.responsesBuilder.htmlPostMessage({
+      if (this._isPopup(req)) {
+        const { title, message } = this._options.popup;
+        this._responsesBuilder.htmlPostMessage({
           res,
           title,
           message,
@@ -227,7 +221,7 @@ export class VersionValidator {
 
       // Every other validation failed, and it's not a popup, so generate an error.
       next(
-        new this.HTTPError(this.options.error, status, {
+        new this._HTTPError(this._options.error, status, {
           response: {
             validation: true,
           },
@@ -236,13 +230,19 @@ export class VersionValidator {
     };
   }
   /**
+   * The customization options.
+   */
+  get options(): Readonly<VersionValidatorOptions> {
+    return deepAssignWithOverwrite({}, this._options);
+  }
+  /**
    * Helper method that checks if the incoming request is from a popup. It will look for
    * the query string variable defined in the constructor options.
    *
    * @param req  The request object sent by the application.
    */
-  protected isPopup(req: Request): boolean {
-    const popup = req.query[this.options.popup.variable];
+  protected _isPopup(req: Request): boolean {
+    const popup = req.query[this._options.popup.variable];
     return !!(popup && String(popup).toLowerCase() === 'true');
   }
   /**
@@ -251,8 +251,8 @@ export class VersionValidator {
    *
    * @param version  The version received in the request.
    */
-  protected isTheAllowedLatest(version: string): boolean {
-    const { allow, name } = this.options.latest;
+  protected _isTheAllowedLatest(version: string): boolean {
+    const { allow, name } = this._options.latest;
     return allow && version === name;
   }
 }
@@ -265,7 +265,7 @@ export class VersionValidator {
  * By validating the route parameter, the function can know whether the implementation is
  * going to use the middleware by itself or as a route middleware.
  * If used as middleware, it will just return the result of
- * {@link VersionValidator.middleware}; but if used as controller, it will mount it on
+ * {@link VersionValidator.getMiddleware}; but if used as controller, it will mount it on
  * `[route]/:version/*`.
  *
  * @group Middlewares
@@ -283,7 +283,7 @@ export const versionValidatorMiddleware = middlewareCreator(
         },
         version,
         ...options,
-      }).middleware();
+      }).getMiddleware();
 
       if (route) {
         const router = app.get<Router>('router');

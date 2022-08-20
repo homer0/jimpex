@@ -31,31 +31,27 @@ export class ForceHTTPS {
   /**
    * The customization options.
    */
-  protected readonly options: ForceHTTPSOptions;
+  protected readonly _options: ForceHTTPSOptions;
   /**
    * @param options  The options to construct the class.
    */
   constructor(options: ForceHTTPSPartialOptions = {}) {
-    this.options = {
+    this._options = {
       ignoredRoutes: [/^\/service\//],
       ...options,
     };
   }
   /**
-   * Gets the customization options.
-   */
-  getOptions(): Readonly<ForceHTTPSOptions> {
-    return { ...this.options };
-  }
-  /**
    * Generates the middleware that redirects the traffic.
    */
-  middleware(): ExpressMiddleware {
+  getMiddleware(): ExpressMiddleware {
     return (req, res, next) => {
       if (
         !req.secure &&
         req.get('X-Forwarded-Proto') !== 'https' &&
-        !this.options.ignoredRoutes.some((expression) => expression.test(req.originalUrl))
+        !this._options.ignoredRoutes.some((expression) =>
+          expression.test(req.originalUrl),
+        )
       ) {
         const host = req.get('Host');
         res.redirect(`https://${host}${req.url}`);
@@ -63,6 +59,12 @@ export class ForceHTTPS {
         next();
       }
     };
+  }
+  /**
+   * The customization options.
+   */
+  get options(): Readonly<ForceHTTPSOptions> {
+    return { ...this._options };
   }
 }
 /**
@@ -78,6 +80,6 @@ export const forceHTTPSMiddleware = middlewareCreator(
         .get<SimpleConfig>('config')
         .get<boolean | undefined>('forceHTTPS');
       if (!enabled) return undefined;
-      return new ForceHTTPS(options).middleware();
+      return new ForceHTTPS(options).getMiddleware();
     },
 );

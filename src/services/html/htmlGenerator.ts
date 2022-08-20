@@ -129,34 +129,34 @@ export class HTMLGenerator {
   /**
    * The service customization options.
    */
-  protected readonly options: HTMLGeneratorOptions;
+  protected readonly _options: HTMLGeneratorOptions;
   /**
    * The application configuration service, to get the settings specified by the
    * `configKeys` option.
    */
-  protected readonly config: SimpleConfig;
+  protected readonly _config: SimpleConfig;
   /**
    * The service that logs messages on the terminal, in case the `silent` option is `false`.
    */
-  protected readonly logger: SimpleLogger;
+  protected readonly _logger: SimpleLogger;
   /**
    * The service that interacts with the filesystem.
    */
-  protected readonly frontendFs: FrontendFs;
+  protected readonly _frontendFs: FrontendFs;
   /**
    * A service that can provide values to be replaced in the template.
    */
-  protected readonly valuesService?: HTMLGeneratorValuesService;
+  protected readonly _valuesService?: HTMLGeneratorValuesService;
   /**
    * Whether or not the file was already generated.
    */
-  protected fileReady: boolean = false;
+  protected _fileReady: boolean = false;
   /**
    * A deferred promise to return when another service asks if the file has been
    * generated. Once this sevice finishes generating the file, the promise will be
    * resolved for all implementations that hold a reference to this deferred.
    */
-  protected fileDeferred?: DeferredPromise<void>;
+  protected _fileDeferred?: DeferredPromise<void>;
   /**
    * @param options  The options to construct the class.
    * @throws If `valuesService` is specified but it doesn't have a `getValues`
@@ -166,11 +166,11 @@ export class HTMLGenerator {
     inject: { config, logger, frontendFs, valuesService },
     ...options
   }: HTMLGeneratorConstructorOptions) {
-    this.config = config;
-    this.logger = logger;
-    this.frontendFs = frontendFs;
-    this.valuesService = valuesService;
-    this.options = deepAssignWithOverwrite(
+    this._config = config;
+    this._logger = logger;
+    this._frontendFs = frontendFs;
+    this._valuesService = valuesService;
+    this._options = deepAssignWithOverwrite(
       {
         template: 'index.tpl.html',
         file: 'index.html',
@@ -184,66 +184,66 @@ export class HTMLGenerator {
       options,
     );
 
-    if (this.valuesService && typeof this.valuesService.getValues !== 'function') {
+    if (this._valuesService && typeof this._valuesService.getValues !== 'function') {
       throw new Error('The HTMLGenerator values service must have a `getValues` method');
     }
-  }
-  /**
-   * Gets the customization options.
-   */
-  getOptions(): Readonly<HTMLGeneratorOptions> {
-    return deepAssignWithOverwrite({}, this.options);
   }
   /**
    * Gets a promise that will be resolved when the file has been generated.
    */
   whenReady(): Promise<void> {
-    return this.fileDeferred ? this.fileDeferred.promise : Promise.resolve();
+    return this._fileDeferred ? this._fileDeferred.promise : Promise.resolve();
   }
   /**
    * Generates the HTML file.
    */
   async generateHTML(): Promise<void> {
     // The file is already generated, and since this is async, return the promise.
-    if (this.fileReady) return;
+    if (this._fileReady) return;
     // If the file is not ready, but the deferred exists, return the reference to the promise.
     // eslint-disable-next-line consistent-return
-    if (this.fileDeferred) return this.fileDeferred.promise;
+    if (this._fileDeferred) return this._fileDeferred.promise;
     // Create the deferred promise.
-    this.fileDeferred = deferred<void>();
-    const { template, deleteTemplateAfter, file, silent } = this.options;
+    this._fileDeferred = deferred<void>();
+    const { template, deleteTemplateAfter, file, silent } = this._options;
     try {
       // Get the template.
-      const templateContents = await this.frontendFs.read(template);
+      const templateContents = await this._frontendFs.read(template);
       // Get the values to replace.
-      const values = await this.getValues();
+      const values = await this._getValues();
       // Replace/process the template.
-      const html = this.processHTML(templateContents, values);
+      const html = this._processHTML(templateContents, values);
       // Write it in the filesystem.
-      await this.frontendFs.write(file, html);
+      await this._frontendFs.write(file, html);
       if (!silent) {
-        this.logger.success(`The HTML file was successfully generated (${file})`);
+        this._logger.success(`The HTML file was successfully generated (${file})`);
       }
       // Delete the template, if specified by the options.
       if (deleteTemplateAfter) {
-        await this.frontendFs.delete(template);
+        await this._frontendFs.delete(template);
         if (!silent) {
-          this.logger.info(`The HTML template was successfully removed (${template})`);
+          this._logger.info(`The HTML template was successfully removed (${template})`);
         }
       }
 
       // Switch the flag, resolve the deferred promise, and delete it.
-      this.fileReady = true;
-      this.fileDeferred!.resolve();
-      this.fileDeferred = undefined;
+      this._fileReady = true;
+      this._fileDeferred!.resolve();
+      this._fileDeferred = undefined;
     } catch (error) {
-      this.fileDeferred!.reject(error);
-      this.fileDeferred = undefined;
+      this._fileDeferred!.reject(error);
+      this._fileDeferred = undefined;
       if (!silent) {
-        this.logger.error('There was an error while generating the HTML');
+        this._logger.error('There was an error while generating the HTML');
       }
       throw error;
     }
+  }
+  /**
+   * Gets the customization options.
+   */
+  get options(): Readonly<HTMLGeneratorOptions> {
+    return deepAssignWithOverwrite({}, this._options);
   }
   /**
    * Helper method to get the values that will be replaced in the template. If a "values
@@ -251,14 +251,14 @@ export class HTMLGenerator {
    * otherwise, it will use the `configKeys` option to get the values from the
    * application configuration.
    */
-  protected getValues(): Promise<Record<string, unknown>> {
-    if (this.valuesService) {
-      return this.valuesService.getValues(this.options);
+  protected _getValues(): Promise<Record<string, unknown>> {
+    if (this._valuesService) {
+      return this._valuesService.getValues(this._options);
     }
 
-    const { configKeys } = this.options;
+    const { configKeys } = this._options;
     if (configKeys && configKeys.length) {
-      return Promise.resolve(this.config.get(configKeys));
+      return Promise.resolve(this._config.get(configKeys));
     }
 
     return Promise.resolve({});
@@ -269,8 +269,8 @@ export class HTMLGenerator {
    * @param template  The template for the HTML file.
    * @param values    The values dictionary that should be replaced in the template.
    */
-  protected processHTML(template: string, values: Record<string, unknown>) {
-    const { replacePlaceholder, placeholderExpression, variableName } = this.options;
+  protected _processHTML(template: string, values: Record<string, unknown>) {
+    const { replacePlaceholder, placeholderExpression, variableName } = this._options;
     const htmlObject = JSON.stringify(values);
     let code = template.replace(
       replacePlaceholder,
