@@ -131,7 +131,6 @@ export class Jimpex extends Jimple {
           enabled: true,
           onHome: false,
           route: 'statics',
-          folder: '',
         },
         express: {
           trustProxy: true,

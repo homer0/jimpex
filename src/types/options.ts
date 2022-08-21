@@ -91,9 +91,8 @@ export type JimpexStaticsOptions = {
    * but you can use this option to define a relative path that won't affect the route.
    *
    * @default ''
-   * @todo Make optional.
    */
-  folder: string;
+  folder?: string;
 };
 /**
  * The options for the Express application.
@@ -142,9 +141,8 @@ export type JimpexPathOptions = {
    * A "hardcoded" path to the application executable file.
    *
    * @default ''
-   * @todo Make optional.
    */
-  appPath: string;
+  appPath?: string;
   /**
    * If `true`, it will try to figure out the parent file path, and use its directory as
    * the path.
