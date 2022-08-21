@@ -171,7 +171,6 @@ describe('Jimpex', () => {
         services: { commonServices, httpServices, utilsServices },
       } = setupCase();
       const options: DeepPartial<JimpexOptions> = {
-        version: '1.0.0',
         filesizeLimit: '10MB',
         boot: false,
         path: {

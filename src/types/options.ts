@@ -203,13 +203,6 @@ export type JimpexHealthCheckFn = (app: Jimpex) => Promise<JimpexHealthStatus>;
  */
 export type JimpexOptions = {
   /**
-   * The application's version.
-   *
-   * @default '0.0.0'
-   * @todo Remove.
-   */
-  version: string;
-  /**
    * The size limit for the requests payload.
    *
    * @default '15MB'

@@ -111,7 +111,6 @@ export class Jimpex extends Jimple {
 
     this._options = deepAssignWithOverwrite(
       {
-        version: '0.0.0',
         filesizeLimit: '15MB',
         boot: true,
         path: {
