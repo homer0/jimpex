@@ -1,5 +1,4 @@
 /* eslint-disable no-process-env, dot-notation */
-import * as path from 'path';
 import fs from 'fs/promises';
 import {
   https,
@@ -103,7 +102,7 @@ describe('Jimpex', () => {
           default: {},
           name: 'app',
           path: 'config/',
-          hasFolder: true,
+          hasFolder: false,
           environmentVariable: 'CONFIG',
           loadFromEnvironment: true,
           defaultConfigFilename: '[app-name].config.js',
@@ -402,7 +401,7 @@ describe('Jimpex', () => {
             defaultConfig: {},
             defaultConfigFilename: 'app.config.js',
             envVarName: 'CONFIG',
-            path: `config${path.sep}app${path.sep}`,
+            path: `config`,
             filenameFormat: 'app.[name].config.js',
           });
         });

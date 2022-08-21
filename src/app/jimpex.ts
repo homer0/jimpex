@@ -122,10 +122,7 @@ export class Jimpex extends Jimple {
           default: options?.config?.default || config,
           name: 'app',
           path: 'config/',
-          /**
-           * @todo make `false`
-           */
-          hasFolder: true,
+          hasFolder: false,
           loadFromEnvironment: true,
           environmentVariable: 'CONFIG',
           defaultConfigFilename: '[app-name].config.js',
