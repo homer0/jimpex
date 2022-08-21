@@ -162,7 +162,6 @@ export type APIClientProviderOptions = {
    * The name of the configuration setting that has the API information.
    *
    * @default 'api'
-   * @todo rename to `configSetting`
    */
   configSetting?: string;
   /**
