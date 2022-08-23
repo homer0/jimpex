@@ -1151,6 +1151,7 @@ export const gatewayController = controllerProviderCreator(
 
         return new GatewayClass({
           ...options,
+          apiConfigSetting: gatewaySettingName,
           gatewayConfig: gtConfig,
           route,
           inject: {
