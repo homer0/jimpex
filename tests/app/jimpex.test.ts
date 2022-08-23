@@ -1,5 +1,6 @@
 /* eslint-disable no-process-env, dot-notation */
 import fs from 'fs/promises';
+import * as path from 'path';
 import {
   https,
   spdy,
@@ -91,7 +92,6 @@ describe('Jimpex', () => {
       expect(sut.instance).toBeUndefined();
       expect(sut.routes).toEqual([]);
       expect(sut.options).toEqual({
-        version: '0.0.0',
         filesizeLimit: '15MB',
         boot: true,
         path: {
@@ -112,7 +112,6 @@ describe('Jimpex', () => {
           enabled: true,
           onHome: false,
           route: 'statics',
-          folder: '',
         },
         express: {
           trustProxy: true,
@@ -411,6 +410,30 @@ describe('Jimpex', () => {
           // When/Then
           const sut = new Jimpex();
           await expect(() => sut.start()).rejects.toThrow(/No port configured/i);
+        });
+
+        it('should load the config from a folder', async () => {
+          // Given
+          const {
+            wootils: { configMocks },
+          } = setupCase();
+          const port = 2509;
+          configMocks.get.mockImplementationOnce(() => port);
+          configMocks.get.mockImplementationOnce(() => []);
+          const onStart = jest.fn();
+          // When
+          const sut = new Jimpex({
+            config: {
+              hasFolder: true,
+            },
+          });
+          await sut.start(onStart);
+          // Then
+          expect(simpleConfigProvider).toHaveBeenCalledWith(
+            expect.objectContaining({
+              path: `config${path.sep}app${path.sep}`,
+            }),
+          );
         });
 
         it('should invoke a callback when starting', async () => {
