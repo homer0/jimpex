@@ -117,3 +117,32 @@ Controllers already had the `Controller` suffix, so they were not changed.
 
 - The class constructor now has a single parameter that merges the previous `options` and all the injections. The injections are all inside an `inject` property.
 - The `middleware` method was renamed to `getMiddleware`.
+
+## Middlewares
+
+### ErrorHandler
+
+- The class constructor now has a single parameter that merges the previous `options` and all the injections. The injections are all inside an `inject` property.
+- The `showError` setting is now part of the `options`.
+- The `default` setting was renamed to `response`.
+- The `middleware` method was renamed to `getMiddleware`.
+
+### ForceHTTPS
+
+- The class constructor now has a single parameter that merges the previous `options` and all the injections. The injections are all inside an `inject` property.
+- The `middleware` method was renamed to `getMiddleware`.
+
+### HSTS
+
+- The `middleware` method was renamed to `getMiddleware`.
+
+### FastHTML and ShowHTML
+
+- The class constructor now has a single parameter that merges the previous `options` and all the injections. The injections are all inside an `inject` property.
+- The "attempt" to get the `htmlGenerator` service is now injected as a function, so it can be called when the middleware is actually used, thus, avoid "breaking" the lazy load of the service (and its dependencies).
+- The `middleware` method was renamed to `getMiddleware`.
+
+### VersionValidator
+
+- The class constructor now has a single parameter that merges the previous `options` and all the injections. The injections are all inside an `inject` property.
+- The `middleware` method was renamed to `getMiddleware`.
