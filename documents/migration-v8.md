@@ -79,3 +79,41 @@ All services providers now have the `Provider` suffix, and middlewares `Middlewa
 - `fastHTML` -> `fastHTMLMiddleware`.
 
 Controllers already had the `Controller` suffix, so they were not changed.
+
+## Services
+
+### SendFile
+
+- The initializer function now receives an object with the `inject` option.
+- The service function now receives a single object with all the parameters.
+
+### FrontendFs
+
+- The class constructor now receives an object with the `inject` option.
+
+### HTMLGenerator
+
+- The class constructor now has a single parameter that merges the previous `options` and all the injections. The injections are all inside an `inject` property.
+- The `variableName` option default value is now `appConfig`.
+- The `valuesService` provider option was changed to `valuesServiceName`.
+
+### APIClient
+
+- The class now extends from [`@homer0/api-utils`](http://npmjs.com/package/@homer0/api-utils)'s `APIClient` class, which is a migration of [`wooltils`](http://npmjs.com/package/wootils)' `APIClient`.
+- The class constructor now has a single parameter that merges the previous `options` and all the injections. The injections are all inside an `inject` property.
+- The `configurationSetting` provider option was changed to `configSetting`.
+- The `fetch` method now has the `url` as a separated parameter, from the `options` object, in order to have the same signature is the native `fetch`.
+
+### HTTP
+
+- The class constructor now has a single parameter that merges the previous `options` and all the injections. The injections are all inside an `inject` property.
+
+### ResponsesBuilder
+
+- The class constructor now receives an object with the `inject` option.
+- Both `json` and `htmlPostMessage` now receive a single object with all the options.
+
+### EnsureBearerToken
+
+- The class constructor now has a single parameter that merges the previous `options` and all the injections. The injections are all inside an `inject` property.
+- The `middleware` method was renamed to `getMiddleware`.
