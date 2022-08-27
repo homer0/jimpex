@@ -80,6 +80,12 @@ All services providers now have the `Provider` suffix, and middlewares `Middlewa
 
 Controllers already had the `Controller` suffix, so they were not changed.
 
+### Custom Jimple
+
+A few months ago, I moved the [Jimple](http://npmjs.com/package/jimple) helpers functions I had in [Wootils](http://npmjs.com/package/wootils) to an specific _fork_: [`@homer0/jimple`](http://npmjs.com/package/@homer0/jimple).
+
+So now, all custom functionalities, instead of being taken from the helpers and implemented here (like `.try(name)`), now come directly from the custom Jimple.
+
 ### Wootils removal
 
 [Wootils](http://npmjs.com/package/wootils) was a package I used to put all the small generic utilities I needed in most of my projects, but during 2022, I migrated those utilities to small (TypeScript) packages in my "[packages' monorepo](https://github.com/homer0/packages)", so when I rewrote Jimpex, I replaced Wootils with those packages:
