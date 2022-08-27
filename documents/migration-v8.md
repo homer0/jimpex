@@ -80,6 +80,60 @@ All services providers now have the `Provider` suffix, and middlewares `Middlewa
 
 Controllers already had the `Controller` suffix, so they were not changed.
 
+### Wootils removal
+
+[Wootils](http://npmjs.com/package/wootils) was a package I used to put all the small generic utilities I needed in most of my projects, but during 2022, I migrated those utilities to small (TypeScript) packages in my "[packages' monorepo](https://github.com/homer0/packages)", so when I rewrote Jimpex, I replaced Wootils with those packages:
+
+#### Logger
+
+> [`@homer0/simple-logger`](http://npmjs.com/package/@homer0/simple-logger)
+
+The main logger the Jimpex uses. The use of the package brings two important changes:
+
+#### PathUtils
+
+> [`@homer0/path-utils`](http://npmjs.com/package/@homer0/path-utils)
+
+The service that takes care of building relative paths inside the project.
+
+Since this package is now ESM compatible, is no longer able to able to resolve the "top required module", and that's why Jimpex now has the `path.appPath` option.
+
+#### APIUtils
+
+> [`@homer0/api-utils`](http://npmjs.com/package/@homer0/api-utils)
+
+Used as a base for the `APIClient` service. More information in the service's section.
+
+#### Events
+
+> [`@homer0/events-hub`](http://npmjs.com/package/@homer0/events-hub)
+
+The main events' bus Jimpex uses.
+
+#### EnvUtils
+
+> [`@homer0/env-utils`](http://npmjs.com/package/@homer0/env-utils)
+
+The service that reads and writes the environment variables. The name changes from `environmentUtils` to `envUtils`.
+
+#### PackageInfo
+
+> [`@homer0/package-info`](http://npmjs.com/package/@homer0/package-info)
+
+Used by Jimpex to read the project's `package.json` file.
+
+#### RootFile
+
+> [`@homer0/root-file`](http://npmjs.com/package/@homer0/root-file)
+
+This service can import files from the root of the project.
+
+#### SimpleConfig
+
+> [`@homer0/simple-config`](http://npmjs.com/package/@homer0/simple-config)
+
+We already discussed this above, but this is the service in charge of the app configuration.
+
 ## Services
 
 ### SendFile
