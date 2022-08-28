@@ -142,6 +142,15 @@ We already discussed this above, but this is the service in charge of the app co
 
 ## Services
 
+### Configuration
+
+- The service is now called `config`.
+- The settings can only be retrieved after the application is running (with `start` or `listen`).
+
+### Logger
+
+- The service is now called `logger`.
+
 ### SendFile
 
 - The initializer function now receives an object with the `inject` option.
