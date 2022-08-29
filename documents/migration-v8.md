@@ -2,6 +2,37 @@
 
 Jimpex v8 is a complete rewrite from scratch, since it was migrated to TypeScript, and I took the opportunity to change a few things that I didn't like from the previous version.
 
+- [Global changes](#global-changes)
+  - [Configuration vs config, and appConfiguration](#configuration-vs-config-and-appconfiguration)
+  - [Config loaded on start](#config-loaded-on-start)
+  - [Options objects vs parameters](#options-objects-vs-parameters)
+  - [Inject option](#inject-option)
+  - [Sufixes](#sufixes)
+  - [Custom Jimple](#custom-jimple)
+  - [Wootils removal](#wootils-removal)
+    - [SimpleLogger](#simplelogger)
+    - [PathUtils](#pathutils)
+    - [APIUtils](#apiutils)
+    - [EventsHub](#eventshub)
+    - [EnvUtils](#envutils)
+    - [PackageInfo](#packageinfo)
+- [Services](#services)
+  - [Configuration](#configuration)
+  - [Logger](#logger)
+  - [SendFile](#sendfile)
+  - [FrontendFs](#frontendfs)
+  - [HTMLGenerator](#htmlgenerator)
+  - [APIClient](#apiclient)
+  - [HTTP](#http)
+  - [ResponsesBuilder](#responsesbuilder)
+  - [EnsureBearerToken](#ensurebearertoken)
+- [Middlewares](#middlewares)
+  - [ErrorHandler](#errorhandler)
+  - [ForceHTTPS](#forcehttps)
+  - [HSTS](#hsts)
+  - [FastHTML and ShowHTML](#fasthtml-and-showhtml)
+  - [VersionValidator](#versionvalidator)
+
 ## Global changes
 
 ### Configuration vs config, and appConfiguration
@@ -90,7 +121,7 @@ So now, all custom functionalities, instead of being taken from the helpers and 
 
 [Wootils](http://npmjs.com/package/wootils) was a package I used to put all the small generic utilities I needed in most of my projects, but during 2022, I migrated those utilities to small (TypeScript) packages in my "[packages' monorepo](https://github.com/homer0/packages)", so when I rewrote Jimpex, I replaced Wootils with those packages:
 
-#### Logger
+#### SimpleLogger
 
 > [`@homer0/simple-logger`](http://npmjs.com/package/@homer0/simple-logger)
 
@@ -110,7 +141,7 @@ Since this package is now ESM compatible, is no longer able to able to resolve t
 
 Used as a base for the `APIClient` service. More information in the service's section.
 
-#### Events
+#### EventsHub
 
 > [`@homer0/events-hub`](http://npmjs.com/package/@homer0/events-hub)
 
