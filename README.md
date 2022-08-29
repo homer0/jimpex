@@ -8,6 +8,8 @@ Express as dependency injection container.
 
 Jimpex is an implementation of [Express](https://expressjs.com), one of the most popular web frameworks for Node, using [Jimple](https://github.com/fjorgemota/jimple), a Javascript port of [Pimple](https://github.com/silexphp/Pimple) dependency injection container.
 
+> ⚠️ If you want to upgrade to v8, please read the [migration guide](https://github.com/homer0/jimpex/blob/main/documents/migration-v8.md).
+
 - [🍿 Usage](#🍿-usage)
   - [🎨 Creating your app](#🎨-creating-your-app)
   - [🤖 Boot](#🤖-boot)
