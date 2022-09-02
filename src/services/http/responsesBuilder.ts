@@ -1,4 +1,4 @@
-import type { SimpleConfig, Response } from '../../types';
+import type { Config, Response } from '../../types';
 import { provider, type Statuses } from '../../utils';
 /**
  * The options to construct a {@link ResponsesBuilder}.
@@ -10,7 +10,7 @@ export type ResponsesBuilderConstructorOptions = {
    * A dictionary with the dependencies to inject.
    */
   inject: {
-    config: SimpleConfig;
+    config: Config;
     statuses: Statuses;
   };
 };
@@ -97,7 +97,7 @@ export class ResponsesBuilder {
   /**
    * The application configuration, to get the `version` and the `postMessagesPrefix`.
    */
-  protected readonly _config: SimpleConfig;
+  protected readonly _config: Config;
   /**
    * The uility service to get HTTP status codes.
    */
@@ -257,7 +257,7 @@ export const responsesBuilderProvider = provider((app) => {
     () =>
       new ResponsesBuilder({
         inject: {
-          config: app.get<SimpleConfig>('config'),
+          config: app.get<Config>('config'),
           statuses: app.get<Statuses>('statuses'),
         },
       }),

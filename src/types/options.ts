@@ -1,4 +1,4 @@
-import type { SimpleConfig } from './wootils';
+import type { Config } from './wootils';
 import type { Jimpex } from '../app';
 /**
  * The options for the application's configuration service.
@@ -245,4 +245,4 @@ export type JimpexOptions = {
  *
  * @group Jimpex
  */
-export type JimpexStartCallback = (config: SimpleConfig) => void;
+export type JimpexStartCallback = (config: Config) => void;

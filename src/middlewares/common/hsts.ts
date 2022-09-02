@@ -1,5 +1,5 @@
 import { middlewareCreator } from '../../utils';
-import { ExpressMiddleware, SimpleConfig } from '../../types';
+import { ExpressMiddleware, Config } from '../../types';
 /**
  * The options to customize the HSTS header value.
  *
@@ -125,7 +125,7 @@ export const hstsMiddleware = middlewareCreator(
   (options: HSTSMiddlewareSettings = {}) =>
     (app) => {
       const setting = app
-        .get<SimpleConfig>('config')
+        .get<Config>('config')
         .get<HSTSMiddlewareSettings | undefined>('hsts');
       if (
         !setting?.enabled ||

@@ -2,7 +2,7 @@ import { get } from '@homer0/object-utils';
 import { deepAssignWithOverwrite } from '@homer0/deep-assign';
 import { deferred, type DeferredPromise } from '@homer0/deferred';
 import { providerCreator } from '../../utils';
-import type { SimpleConfig, SimpleLogger } from '../../types';
+import type { Config, Logger } from '../../types';
 import type { FrontendFs } from '../frontend';
 /**
  * The options to customize a {@link HTMLGenerator} instance.
@@ -85,8 +85,8 @@ export type HTMLGeneratorConstructorOptions = Partial<HTMLGeneratorOptions> & {
    * A dictionary with the dependencies to inject.
    */
   inject: {
-    config: SimpleConfig;
-    logger: SimpleLogger;
+    config: Config;
+    logger: Logger;
     frontendFs: FrontendFs;
     /**
      * A service that can provide the values to replace in the template. If specified, the
@@ -134,11 +134,11 @@ export class HTMLGenerator {
    * The application configuration service, to get the settings specified by the
    * `configKeys` option.
    */
-  protected readonly _config: SimpleConfig;
+  protected readonly _config: Config;
   /**
    * The service that logs messages on the terminal, in case the `silent` option is `false`.
    */
-  protected readonly _logger: SimpleLogger;
+  protected readonly _logger: Logger;
   /**
    * The service that interacts with the filesystem.
    */

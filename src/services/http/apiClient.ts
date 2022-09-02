@@ -6,7 +6,7 @@ import {
 } from '@homer0/api-utils';
 import { deepAssignWithOverwrite } from '@homer0/deep-assign';
 import { providerCreator } from '../../utils';
-import type { SimpleConfig } from '../../types';
+import type { Config } from '../../types';
 import type { HTTP } from './http';
 import type { HTTPErrorClass } from '../common';
 
@@ -215,7 +215,7 @@ export const apiClientProvider = providerCreator(
               http: app.get('http'),
               HTTPError: app.get('HTTPError'),
             },
-            ...app.get<SimpleConfig>('config').get<APIClientSettings>(configSetting!),
+            ...app.get<Config>('config').get<APIClientSettings>(configSetting!),
           }),
       );
     },

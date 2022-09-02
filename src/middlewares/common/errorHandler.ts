@@ -1,11 +1,6 @@
 import { deepAssignWithOverwrite } from '@homer0/deep-assign';
 import { middlewareCreator, type Statuses } from '../../utils';
-import type {
-  DeepPartial,
-  SimpleLogger,
-  ExpressErrorHandler,
-  SimpleConfig,
-} from '../../types';
+import type { DeepPartial, Logger, ExpressErrorHandler, Config } from '../../types';
 import { AppError, type HTTPErrorClass, type ResponsesBuilder } from '../../services';
 /**
  * The options for the responses the middleware will create.
@@ -63,7 +58,7 @@ export type ErrorHandlerConstructorOptions = ErrorHandlerPartialOptions & {
    * A dictionary with the dependencies to inject.
    */
   inject: {
-    logger: SimpleLogger;
+    logger: Logger;
     responsesBuilder: ResponsesBuilder;
     statuses: Statuses;
     HTTPError: HTTPErrorClass;
@@ -80,7 +75,7 @@ export class ErrorHandler {
   /**
    * The service that will log the messages in the console.
    */
-  protected readonly _logger: SimpleLogger;
+  protected readonly _logger: Logger;
   /**
    * The service to generate the responses.
    */
@@ -195,8 +190,7 @@ export const errorHandlerMiddleware = middlewareCreator(
   (options: ErrorHandlerPartialOptions = {}) =>
     (app) => {
       const showErrors =
-        app.get<SimpleConfig>('config').get<boolean | undefined>('debug.showErrors') ===
-        true;
+        app.get<Config>('config').get<boolean | undefined>('debug.showErrors') === true;
       return new ErrorHandler({
         inject: {
           logger: app.get('logger'),

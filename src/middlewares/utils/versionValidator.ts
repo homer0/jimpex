@@ -1,12 +1,6 @@
 import { deepAssignWithOverwrite } from '@homer0/deep-assign';
 import { middlewareCreator, type Statuses } from '../../utils';
-import {
-  DeepPartial,
-  Request,
-  ExpressMiddleware,
-  SimpleConfig,
-  Router,
-} from '../../types';
+import { DeepPartial, Request, ExpressMiddleware, Config, Router } from '../../types';
 import type { HTTPErrorClass, ResponsesBuilder } from '../../services';
 /**
  * The options for how the middleware should behave if the requested version is `latest`.
@@ -274,7 +268,7 @@ export class VersionValidator {
 export const versionValidatorMiddleware = middlewareCreator(
   (options: VersionValidatorMiddlewareOptions = {}) =>
     (app, route) => {
-      const version = app.get<SimpleConfig>('config').get<string>('version');
+      const version = app.get<Config>('config').get<string>('version');
       const middleware = new VersionValidator({
         inject: {
           HTTPError: app.get('HTTPError'),

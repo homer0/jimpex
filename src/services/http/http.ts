@@ -2,7 +2,7 @@ import fetch, { type RequestInit, type BodyInit } from 'node-fetch';
 import urijs from 'urijs';
 import { deepAssignWithOverwrite } from '@homer0/deep-assign';
 import { provider } from '../../utils';
-import { SimpleLogger, SimpleConfig, Request, HTTPResponse } from '../../types';
+import { Logger, Config, Request, HTTPResponse } from '../../types';
 /**
  * The options to customize the service.
  *
@@ -24,7 +24,7 @@ export type HTTPContructorOptions = Partial<HTTPOptions> & {
    * A dictionary with the dependencies to inject.
    */
   inject: {
-    logger: SimpleLogger;
+    logger: Logger;
   };
 };
 /**
@@ -88,7 +88,7 @@ export class HTTP {
   /**
    * The service used to log information in the terminal.
    */
-  protected readonly _logger: SimpleLogger;
+  protected readonly _logger: Logger;
   /**
    * The service customization options.
    */
@@ -275,7 +275,7 @@ export class HTTP {
  */
 export const httpProvider = provider((app) => {
   app.set('http', () => {
-    const config = app.get<SimpleConfig>('config');
+    const config = app.get<Config>('config');
     const logRequests = config.get<boolean | undefined>('debug.logRequests') === true;
     return new HTTP({
       inject: {

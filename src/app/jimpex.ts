@@ -36,8 +36,8 @@ import type {
   Express,
   ExpressMiddlewareLike,
   PathUtils,
-  SimpleConfig,
-  SimpleLogger,
+  Config,
+  Logger,
   JimpexOptions,
   JimpexHTTPSCredentials,
   JimpexHTTP2Options,
@@ -307,7 +307,7 @@ export class Jimpex extends Jimple {
     });
   }
 
-  getConfig(): SimpleConfig;
+  getConfig(): Config;
   getConfig<T = unknown>(setting: string | string[], asArray?: boolean): T;
   /**
    * Gets a setting from the configuration, or the configuration itself.
@@ -321,8 +321,8 @@ export class Jimpex extends Jimple {
   getConfig<T = unknown>(
     setting?: string | string[],
     asArray: boolean = false,
-  ): SimpleConfig | T {
-    const config = this.try<SimpleConfig>('config');
+  ): Config | T {
+    const config = this.try<Config>('config');
     if (!config) {
       throw new Error('The config service is not available until the app starts');
     }
@@ -335,8 +335,8 @@ export class Jimpex extends Jimple {
   /**
    * The logger service.
    */
-  get logger(): SimpleLogger {
-    return this.get<SimpleLogger>('logger');
+  get logger(): Logger {
+    return this.get<Logger>('logger');
   }
   /**
    * The Express application Jimpex uses under the hood.

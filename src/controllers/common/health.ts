@@ -2,7 +2,7 @@ import { controller, type Statuses } from '../../utils';
 import type { ResponsesBuilder } from '../../services';
 import type {
   JimpexHealthStatus,
-  SimpleConfig,
+  Config,
   AsyncExpressMiddleware,
   Router,
 } from '../../types';
@@ -24,7 +24,7 @@ export type HealthControllerOptions = {
   inject: {
     getHealthStatus: GetHealthStatus;
     responsesBuilder: ResponsesBuilder;
-    config: SimpleConfig;
+    config: Config;
     statuses: Statuses;
   };
 };
@@ -47,7 +47,7 @@ export class HealthController {
   /**
    * The service in charge of the configuration.
    */
-  protected readonly _config: SimpleConfig;
+  protected readonly _config: Config;
   /**
    * The uility service to get HTTP status codes.
    */

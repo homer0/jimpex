@@ -1,7 +1,7 @@
 import { controller } from '../../utils';
 import type { ResponsesBuilder } from '../../services';
 import type {
-  SimpleConfig,
+  Config,
   Response,
   AsyncExpressMiddleware,
   ExpressMiddleware,
@@ -18,7 +18,7 @@ export type ConfigControllerOptions = {
    */
   inject: {
     responsesBuilder: ResponsesBuilder;
-    config: SimpleConfig;
+    config: Config;
   };
 };
 /**
@@ -36,7 +36,7 @@ export class ConfigController {
   /**
    * The service in charge of the configuration.
    */
-  protected readonly _config: SimpleConfig;
+  protected readonly _config: Config;
   /**
    * @param options  The options to construct the controller.
    */
@@ -99,7 +99,7 @@ export class ConfigController {
  * @group Controllers/Config
  */
 export const configController = controller((app) => {
-  const config = app.get<SimpleConfig>('config');
+  const config = app.get<Config>('config');
   const router = app.get<Router>('router');
   if (config.get<boolean | undefined>('debug.configController') !== true) {
     return router;
