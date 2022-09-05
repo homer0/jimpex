@@ -27,6 +27,7 @@ Jimpex is an implementation of [Express](https://expressjs.com), one of the most
   - [⚡️ Middlewares](#⚡️-middlewares)
     - [Configurable middlewares](#configurable-middlewares)
     - [Middlewares with services](#middlewares-with-services)
+- [💪 TypeScript](#💪-typescript)
 - [🤞 Examples](#🤞-examples)
 - [🤘 Development](#development)
   - [NPM scripts](#npm-scripts)
@@ -689,6 +690,10 @@ export const middlewareService = middlewareProvider((app) => {
 ```
 
 And finally, you also have `middlewareProviderCreator` to create a middleware that can register a service, with custom options.
+
+## 💪 TypeScript
+
+After v8, Jimpex was completely rewritten in TypeScript, so you can use it with no problems in your TypeScript projects. For more information, please refer to the [TypeScript document](https://github.com/homer0/jimpex/blob/main/documents/typescript.md).
 
 ## 🤞 Examples
 
