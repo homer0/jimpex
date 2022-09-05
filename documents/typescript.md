@@ -44,3 +44,43 @@ export const helloMiddleware = middleware((app) => {
   return mdl;
 });
 ```
+
+## Events
+
+All events on Jimpex are typed, so when calling `on`/`once`, you'll get autocompletion for the event names, and the payload the can receive
+
+```ts
+import { provider, type Events, type Logger } from 'jimpex';
+
+export const helloProvider = provider((app) => {
+  const events = app.get<Events>('events');
+  const logger = app.get<Logger>('logger');
+  events.on('routeAdded', ({ route }) => {
+    logger.info(`Route added: ${route}`);
+  });
+});
+```
+
+Thanks to [declaration merging](https://www.typescriptlang.org/docs/handbook/declaration-merging.html), you can also add your own events to the `Events` type:
+
+```ts
+import { provider, type Events, type Logger } from 'jimpex';
+
+declare module 'jimpex' {
+  interface JimpexEvents {
+    newRoute: string;
+  }
+}
+
+export const helloProvider = provider((app) => {
+  const events = app.get<Events>('events');
+  const logger = app.get<Logger>('logger');
+  events.on('routeAdded', ({ route }) => {
+    events.emit('newRoute', route);
+  });
+
+  events.on('newRoute', (route) => {
+    logger.info(`New route added: ${route}`);
+  });
+});
+```
