@@ -2,6 +2,12 @@
 
 Jimpex was completely rewritten in TypeScript for v8, so now it's easier a lot easier to type your Jimpex projects.
 
+- [Express types](#express-types)
+- [Middlewares](#middlewares)
+- [Events](#events)
+
+## Express types
+
 Unfortunately, since Express doesn't ship their own types, you'll need to install the `@types/express` package.
 
 ```bash
