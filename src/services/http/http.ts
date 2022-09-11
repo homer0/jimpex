@@ -159,13 +159,12 @@ export class HTTP {
    * @param req  The request from which it will try to obtain the IP address.
    */
   getIPFromRequest(req: Request): string | undefined {
-    return (
-      req.headers['x-forwarded-for'] ||
-      req?.connection?.remoteAddress ||
-      req?.socket?.remoteAddress ||
-      // @ts-expect-error -- This is valid in Node 14
-      req?.connection?.socket?.remoteAddress
-    );
+    const headerValue = req.headers['x-forwarded-for'];
+    if (headerValue) {
+      return String(headerValue);
+    }
+
+    return req?.connection?.remoteAddress || req?.socket?.remoteAddress;
   }
   /**
    * Creates a dictionary with all the custom headers a request has. By custom header it
