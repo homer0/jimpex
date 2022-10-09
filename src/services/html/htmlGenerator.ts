@@ -199,9 +199,8 @@ export class HTMLGenerator {
    */
   async generateHTML(): Promise<void> {
     // The file is already generated, and since this is async, return the promise.
-    if (this._fileReady) return;
+    if (this._fileReady) return undefined;
     // If the file is not ready, but the deferred exists, return the reference to the promise.
-    // eslint-disable-next-line consistent-return
     if (this._fileDeferred) return this._fileDeferred.promise;
     // Create the deferred promise.
     this._fileDeferred = deferred<void>();
@@ -230,6 +229,7 @@ export class HTMLGenerator {
       this._fileReady = true;
       this._fileDeferred!.resolve();
       this._fileDeferred = undefined;
+      return undefined;
     } catch (error) {
       this._fileDeferred!.reject(error);
       this._fileDeferred = undefined;
