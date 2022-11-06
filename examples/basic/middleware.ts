@@ -1,12 +1,13 @@
-import { middleware, type ExpressMiddleware } from '../../src';
+import { middleware, type ExpressMiddleware, type Logger } from '../../src';
 import type { DateService } from './service';
 
-export const dateMiddleware = middleware(
-  (app) =>
-    ((_, __, next) => {
-      const date = app.get<DateService>('date').now();
-      // eslint-disable-next-line no-console
-      console.log('Request received at', date);
-      next();
-    }) as ExpressMiddleware,
-);
+export const dateMiddleware = middleware((app) => {
+  const logger = app.get<Logger>('logger');
+  const service = app.get<DateService>('date');
+  const mdw: ExpressMiddleware = (_, __, next) => {
+    logger.log(`Request received at ${service.now()}`);
+    next();
+  };
+
+  return mdw;
+});
