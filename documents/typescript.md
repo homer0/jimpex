@@ -23,14 +23,14 @@ import { middleware, type ExpressMiddleware, type Logger } from 'jimpex';
 
 export const helloMiddleware = middleware((app) => {
   const logger = app.get<Logger>('logger');
-  const mdl: ExpressMiddleware = (req, res, next) => {
+  const mdw: ExpressMiddleware = (req, res, next) => {
     const hostname = req.get('host')!;
     logger.info(`Request from ${hostname}`);
     next();
   };
 
   // It's defined and then returned so it can be typed.
-  return mdl;
+  return mdw;
 });
 ```
 
@@ -41,13 +41,13 @@ import { middleware, type ExpressErrorHandler, type Logger } from 'jimpex';
 
 export const helloMiddleware = middleware((app) => {
   const logger = app.get<Logger>('logger');
-  const mdl: ExpressErrorHandler = (err, req, res, next) => {
+  const mdw: ExpressErrorHandler = (err, req, res, next) => {
     logger.info(err);
     next(err);
   };
 
   // It's defined and then returned so it can be typed.
-  return mdl;
+  return mdw;
 });
 ```
 
