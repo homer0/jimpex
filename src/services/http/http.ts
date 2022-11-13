@@ -2,7 +2,7 @@ import fetch, { type RequestInit, type BodyInit } from 'node-fetch';
 import urijs from 'urijs';
 import { deepAssignWithOverwrite } from '@homer0/deep-assign';
 import { provider } from '../../utils';
-import { Logger, Config, Request, HTTPResponse } from '../../types';
+import { Logger, Request, HTTPResponse } from '../../types';
 /**
  * The options to customize the service.
  *
@@ -274,7 +274,7 @@ export class HTTP {
  */
 export const httpProvider = provider((app) => {
   app.set('http', () => {
-    const config = app.get<Config>('config');
+    const config = app.getConfig();
     const logRequests = config.get<boolean | undefined>('debug.logRequests') === true;
     return new HTTP({
       inject: {

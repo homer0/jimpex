@@ -1,11 +1,6 @@
 import { controller, type Statuses } from '../../utils';
 import type { ResponsesBuilder } from '../../services';
-import type {
-  JimpexHealthStatus,
-  Config,
-  AsyncExpressMiddleware,
-  Router,
-} from '../../types';
+import type { JimpexHealthStatus, Config, AsyncExpressMiddleware } from '../../types';
 /**
  * A function that will return the health status of the application.
  *
@@ -119,7 +114,7 @@ export class HealthController {
  * @group Controllers/Health
  */
 export const healthController = controller((app) => {
-  const router = app.get<Router>('router');
+  const router = app.getRouter();
   const ctrl = new HealthController({
     inject: {
       getHealthStatus: app.isHealthy.bind(app),

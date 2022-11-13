@@ -54,6 +54,7 @@ import type {
   JimpexEventNameLike,
   JimpexEventListener,
   JimpexHealthCheckFn,
+  Router,
 } from '../types';
 /**
  * Jimpex is a mix of Jimple, a Javascript port of Pimple dependency injection container,
@@ -331,6 +332,12 @@ export class Jimpex extends Jimple {
     }
 
     return config.get<T>(setting, asArray);
+  }
+  /**
+   * Creates a new router instance.
+   */
+  getRouter(): Router {
+    return this.get('router');
   }
   /**
    * The logger service.

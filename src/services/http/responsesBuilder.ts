@@ -257,8 +257,8 @@ export const responsesBuilderProvider = provider((app) => {
     () =>
       new ResponsesBuilder({
         inject: {
-          config: app.get<Config>('config'),
-          statuses: app.get<Statuses>('statuses'),
+          config: app.getConfig(),
+          statuses: app.get('statuses'),
         },
       }),
   );

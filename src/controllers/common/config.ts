@@ -5,7 +5,6 @@ import type {
   Response,
   AsyncExpressMiddleware,
   ExpressMiddleware,
-  Router,
 } from '../../types';
 /**
  * The options to contruct a {@link ConfigController}.
@@ -99,8 +98,8 @@ export class ConfigController {
  * @group Controllers/Config
  */
 export const configController = controller((app) => {
-  const config = app.get<Config>('config');
-  const router = app.get<Router>('router');
+  const config = app.getConfig();
+  const router = app.getRouter();
   if (config.get<boolean | undefined>('debug.configController') !== true) {
     return router;
   }
