@@ -12,7 +12,6 @@ import {
 import type { HTTP, HTTPFetchOptions } from '../../services';
 import type { Jimpex } from '../../app';
 import {
-  Config,
   RouterMethod,
   DeepPartial,
   Request,
@@ -1145,7 +1144,7 @@ export const gatewayController = controllerProviderCreator(
           gatewayClass: GatewayClass = GatewayController,
         } = options;
 
-        const gtConfig = app.get<Config>('config').get<GatewayConfig>(gatewaySettingName);
+        const gtConfig = app.getConfig<GatewayConfig>(gatewaySettingName);
 
         return new GatewayClass({
           ...options,

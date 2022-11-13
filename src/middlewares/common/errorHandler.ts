@@ -1,6 +1,6 @@
 import { deepAssignWithOverwrite } from '@homer0/deep-assign';
 import { middlewareCreator, type Statuses } from '../../utils';
-import type { DeepPartial, Logger, ExpressErrorHandler, Config } from '../../types';
+import type { DeepPartial, Logger, ExpressErrorHandler } from '../../types';
 import { AppError, type HTTPErrorClass, type ResponsesBuilder } from '../../services';
 /**
  * The options for the responses the middleware will create.
@@ -188,8 +188,7 @@ export class ErrorHandler {
 export const errorHandlerMiddleware = middlewareCreator(
   (options: ErrorHandlerPartialOptions = {}) =>
     (app) => {
-      const showErrors =
-        app.get<Config>('config').get<boolean | undefined>('debug.showErrors') === true;
+      const showErrors = app.getConfig<boolean | undefined>('debug.showErrors') === true;
       return new ErrorHandler({
         inject: {
           logger: app.get('logger'),
