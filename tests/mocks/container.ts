@@ -28,6 +28,7 @@ export const getJimpexMock = (options: JimpexMockOptions = {}): JimpexMockResult
     on: jest.fn(),
     once: jest.fn(),
     isHealthy: jest.fn(),
+    getConfig: jest.fn(),
   };
   class Container {
     set(...args: Parameters<Jimpex['set']>): ReturnType<Jimpex['set']> {
@@ -42,6 +43,21 @@ export const getJimpexMock = (options: JimpexMockOptions = {}): JimpexMockResult
     get<T = unknown>(name: string): T {
       const result = mocks.get(name);
       if (resources[name]) return resources[name] as T;
+      return result;
+    }
+
+    getConfig<T = unknown>(key: string): T {
+      const configService = this.get<
+        | {
+            get: (setting: string) => T;
+          }
+        | undefined
+      >('config');
+      if (configService) {
+        return configService.get(key);
+      }
+
+      const result = mocks.getConfig();
       return result;
     }
 
