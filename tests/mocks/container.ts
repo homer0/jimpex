@@ -46,7 +46,7 @@ export const getJimpexMock = (options: JimpexMockOptions = {}): JimpexMockResult
       return result;
     }
 
-    getConfig<T = unknown>(key: string): T {
+    getConfig<T = unknown>(key?: string): T {
       const configService = this.get<
         | {
             get: (setting: string) => T;
@@ -54,11 +54,16 @@ export const getJimpexMock = (options: JimpexMockOptions = {}): JimpexMockResult
         | undefined
       >('config');
       if (configService) {
-        return configService.get(key);
+        if (key) return configService.get(key);
+        return configService as unknown as T;
       }
 
       const result = mocks.getConfig();
       return result;
+    }
+
+    getRouter<T = unknown>(): T {
+      return this.get<T>('router');
     }
 
     try<T = unknown>(name: string): T | undefined {
