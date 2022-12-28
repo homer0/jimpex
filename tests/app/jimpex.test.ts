@@ -85,6 +85,9 @@ describe('Jimpex', () => {
       expect(sut.get('router')).toEqual({
         router: true,
       });
+      expect(sut.getRouter()).toEqual({
+        router: true,
+      });
       expect(sut.get('statuses')).toBe(statuses);
       expect(sut.eventsHub).toBeInstanceOf(EventsHub);
       expect(sut.logger).toBeInstanceOf(SimpleLogger);
