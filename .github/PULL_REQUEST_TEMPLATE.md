@@ -2,6 +2,8 @@
 
 ### How should it be tested manually?
 
-### Are there any related PRs?
+```bash
+npm test
+```
 
-### TODOs
+### Notes

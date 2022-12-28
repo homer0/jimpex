@@ -1,2 +1,2 @@
-#!/bin/bash -e
-jsdoc -c .jsdoc.js
+#!/bin/sh -e
+typedoc --options ./.typedoc.json

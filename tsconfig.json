@@ -1,12 +1,9 @@
 {
+  "extends": "@homer0/tsconfig/tsconfig.node.json",
   "compilerOptions": {
-    "declaration": true,
-    "allowJs": true,
-    "emitDeclarationOnly": true,
-    "outDir": "types/",
-    "rootDir": "./",
-    "target": "es6",
-    "module": "commonjs"
+    "outDir": "dist",
+    "emitDecoratorMetadata": false,
+    "incremental": false
   },
-  "include": ["src"]
+  "include": ["src/**/*.ts", "examples/**/*.ts", "tsup.config.ts"]
 }
