@@ -2,6 +2,7 @@ import { Jimpex } from '@src/app';
 
 export type JimpexMockOptions = {
   resources?: Record<string, unknown>;
+  save?: boolean;
 };
 
 export type JimpexMockMocks = {
@@ -15,20 +16,27 @@ export type JimpexMockMocks = {
 export type JimpexMockResult = {
   container: Jimpex;
   containerMocks: JimpexMockMocks;
+  resources: Record<string, unknown>;
 };
 
 export const getJimpexMock = (options: JimpexMockOptions = {}): JimpexMockResult => {
-  const { resources = {} } = options;
+  const { resources = {}, save = false } = options;
   const mocks = {
     get: jest.fn(),
     set: jest.fn(),
     try: jest.fn(),
     on: jest.fn(),
     once: jest.fn(),
+    isHealthy: jest.fn(),
   };
   class Container {
     set(...args: Parameters<Jimpex['set']>): ReturnType<Jimpex['set']> {
       mocks.set(...args);
+      if (save) {
+        const [name, getter] = args;
+        const getterFn = getter as () => unknown;
+        resources[name] = getterFn();
+      }
     }
 
     get<T = unknown>(name: string): T {
@@ -50,10 +58,15 @@ export const getJimpexMock = (options: JimpexMockOptions = {}): JimpexMockResult
     once(...args: Parameters<Jimpex['once']>): ReturnType<Jimpex['once']> {
       return mocks.once(...args);
     }
+
+    isHealthy(): ReturnType<Jimpex['isHealthy']> {
+      return mocks.isHealthy();
+    }
   }
 
   return {
     container: new Container() as Jimpex,
     containerMocks: mocks,
+    resources,
   };
 };

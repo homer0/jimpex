@@ -41,6 +41,7 @@ import type {
   JimpexReducerEventTarget,
   JimpexEventNameLike,
   JimpexEventListener,
+  JimpexHealthCheckFn,
 } from '../types';
 import type {
   Controller,
@@ -99,6 +100,7 @@ export class Jimpex extends Jimple {
           http: true,
           utils: true,
         },
+        healthCheck: () => Promise.resolve(true),
       },
       options,
       this.initOptions(),
@@ -280,6 +282,10 @@ export class Jimpex extends Jimple {
     listener: JimpexEventListener<EventName>,
   ): () => boolean {
     return this.getEventsHub().once(eventName, listener);
+  }
+
+  isHealthy(): ReturnType<JimpexHealthCheckFn> {
+    return this.options.healthCheck(this);
   }
 
   protected init(): void {}

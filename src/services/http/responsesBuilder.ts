@@ -41,7 +41,7 @@ export class ResponsesBuilder {
       res,
       title,
       message,
-      status = this.statuses('OK'),
+      status,
       target = 'window.opener',
       close = true,
       closeDelay = DEFAULT_CLOSE_DELAY_FOR_POST_MESSAGE,
@@ -63,9 +63,14 @@ export class ResponsesBuilder {
       `,
     );
 
+    const useStatus =
+      typeof status === 'undefined'
+        ? (this.statuses('ok') as number)
+        : this.normalizeStatus(status);
+
     res.setHeader('Content-Type', 'text/html');
     res.setHeader('Cache-Control', 'no-cache, max-age=0, must-revalidate, no-store');
-    res.status(this.normalizeStatus(status));
+    res.status(useStatus);
     res.write(html);
     res.end();
   }
@@ -74,7 +79,7 @@ export class ResponsesBuilder {
     const { res, data, status, metadata = {} } = options;
     const useStatus =
       typeof status === 'undefined'
-        ? (this.statuses('OK') as number)
+        ? (this.statuses('ok') as number)
         : this.normalizeStatus(status);
 
     res.status(useStatus);
@@ -109,7 +114,19 @@ export class ResponsesBuilder {
   }
 
   protected normalizeStatus(status: number | string): number {
-    return typeof status === 'string' ? (this.statuses(status) as number) : status;
+    let useStatus: number;
+    try {
+      if (typeof status === 'string') {
+        useStatus = this.statuses(status) as number;
+      } else {
+        this.statuses(status);
+        useStatus = status;
+      }
+    } catch (_) {
+      useStatus = this.statuses('ok') as number;
+    }
+
+    return useStatus;
   }
 }
 
