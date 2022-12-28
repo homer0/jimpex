@@ -4,12 +4,14 @@ import { escapeForRegExp } from './text';
  * Removes any leading slash from a URL.
  *
  * @param url  The URL to format.
+ * @group Utilities
  */
 export const removeLeadingSlash = (url: string): string => url.replace(/^\/+/, '');
 /**
  * Removes any trailing slash from a URL.
  *
  * @param url  The URL to format.
+ * @group Utilities
  */
 export const removeTrailingSlash = (url: string): string => url.replace(/\/+$/, '');
 /**
@@ -18,6 +20,7 @@ export const removeTrailingSlash = (url: string): string => url.replace(/\/+$/, 
  * @param url       The URL to format.
  * @param leading   Whether or not to remove any leading slash.
  * @param trailing  Whether or not to remove the trailing slash.
+ * @group Utilities
  */
 export const removeSlashes = (
   url: string,
@@ -39,6 +42,7 @@ export const removeSlashes = (
  *                       The reason this is `false` by default is because these
  *                       expressions are often used to match against incoming requests,
  *                       and they don't have a trailing slash.
+ * @group Utilities
  */
 export const createRouteExpression = (
   route: string,

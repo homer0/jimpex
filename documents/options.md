@@ -1,70 +1,105 @@
-# Jimpex Options
+# ⚙️ Jimpex Options
 
-The options the second parameter of the class constructor and it allows you to customize almost every aspect of Jimpex.
+The options allow you to customize the functionality of Jimpex, and of the Express application that runs under the hood.
 
-This is what the options object looks like:
+As mentioned in the `README`, the options are not the same as the "configuration", since the configuration stores settings that are more related to the runtime execution and the environment (like the port), while the options aim to customize the capabilities of the application (like removing the `X-Powered-By` header).
+
+- [Overview](#overview)
+- [.path](#path)
+- [.config](#config)
+- [.statics](#statics)
+- [.express](#express)
+- [.services](#services)
+
+## Overview
+
+Now, this is what the options object looks like:
+
+> The ones with sub objects will be explained below the snippet.
 
 ```js
-{
-  // The version of the app
-  version: '0.0.0',
 
   // The size limit for the requests payload.
   filesizeLimit: '15MB',
 
-  // The options to customize how the app configuration is loaded (details on its section).
-  configuration: ...,
+  // Whether or not to call the `boot` method after initialization.
+  boot: true,
 
-  // The options for the static middleware (details on its section).
-  statics: ...,
+  // A function to validate the health status of the application.
+  healthCheck: () => Promise.resolve(true),
 
-  // The options to customize the express instance and default middlewares (details on its section).
-  express: ...,
+  // The options to configure the application executable path.
+  path: {...},
 
-  // Which built-in services to register (details on its section).
-  defaultServices: ...
+  // The options to customize how the configuration is loaded.
+  config: {...},
+
+  // The options for the static middleware.
+  statics: {...},
+
+  // The options to customize the express instance and default middlewares.
+  express: {...},
+
+  // Which built-in services to register.
+  services: {...},
 }
 ```
 
-Besides the first two, which default values and descriptions are pretty clear, I'll go in detail for all the others.
+## .path
 
-## Configuration
+The options to configure the application executable path.
+
+The reason for these options is that with CJS, finding the top module wasn't very complicated, but with ESM, is not so easy, and the recommended approach no always yields the correct result.
+
+```js
+{
+  // A "hardcoded" path to the application executable file.
+  appPath: '',
+
+  // If `true`, it will try to figure out the parent file path, and use its directory
+  // as the path.
+  useParentPath: true,
+}
+```
+
+## .config
 
 This set of options allows you to customize every aspect of how the configuration service is created. Remember that the app requires a valid configuration with a `port` setting to be started:
 
 ```js
 {
-  // The default configuration. If the value is null, it will load [app-name].config.js
-  default: null,
+  // The default config. It can be used to avoid relying on an external file.
+  default: {},
 
-  // The name of the app, to be used on the configurations directory and filenames.
+  // The name of the app, to be used on the configs directory and filenames.
   name: 'app',
 
-  // The path relative to the root directory where the configurations are located.
+  // The path relative to the root directory where the configs are located.
   path: 'config/',
 
-  // If `true`, the path to the configuration will add a folder with the name of the app.
-  hasFolder: true,
+  // If `true`, the path to the config will add a folder with the name of the app.
+  // `true` -> `config/app/...`, `false` -> `config/...`
+  hasFolder: false,
 
-  // The environment variable the app will check for a configuration name.
+  // The environment variable the app will check for a config name.
   environmentVariable: 'CONFIG',
 
   // Whether or not to check for the environment variable.
   loadFromEnvironment: true,
 
-  // If `true`, the version of the app will be copied from the loaded configuration.
-  loadVersionFromConfiguration: true,
+  // The name format of the default config, loaded if it exists.
+  defaultConfigFilename: '[app-name].config.js',
 
-  // The name format of the configuration files.
-  filenameFormat: '[app-name].[configuration-name].config.js',
+  // The name format of the alternative config files.
+  filenameFormat: '[app-name].[config-name].config.js',
 }
 ```
 
-As you can see, if you don't want to depend on environment variables or just have one single configuration for your app, you can use the `default` option and turn `loadFromEnvironment` to `false`.
+As you can see, if you don't want to depend on environment variables or just have one single configuration for your app, you can use the `default` option.
 
-The configuration service is an implementation of [wootils AppConfiguration](https://github.com/homer0/wootils/blob/main/documents/node/appConfiguration.md), so you can check its API in its oficial configuration.
+The configuration service is an implementation of [`@homer0/simple-config`](https://npmjs.com/package/@homer0/simple-config).
 
-## Statics
+## .statics
 
 These options are specifically for the Express [`static`](https://github.com/expressjs/serve-static) middleware:
 
@@ -73,7 +108,7 @@ These options are specifically for the Express [`static`](https://github.com/exp
   // Whether or not to enable the middleware to serve statics files.
   enabled: true,
 
-  // If true, the statics folder would be relative to the project root directory, otherwise,
+  // If `true`, the statics folder would be relative to the project root directory, otherwise,
   // it would be relative to the app executable.
   onHome: false,
 
@@ -87,7 +122,7 @@ These options are specifically for the Express [`static`](https://github.com/exp
 }
 ```
 
-## Express
+## .express
 
 These are options for miscellaneous things you can add to the Express server:
 
@@ -110,14 +145,15 @@ These are options for miscellaneous things you can add to the Express server:
 }
 ```
 
-## Default services
+## .services
 
 These options allow you to register some of the built-in service that I consider useful enough to be added on any app.
 
 ```js
 {
   // These services include:
-  // - Error handler
+  // - App Error
+  // - HTTP Error
   // - Send File
   common: true,
 

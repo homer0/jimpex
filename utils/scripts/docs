@@ -1,2 +1,2 @@
 #!/bin/bash -e
-echo "This will be changed after the update"
+typedoc --options ./.typedoc.json

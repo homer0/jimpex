@@ -34,14 +34,10 @@ describe('services/html:htmlGenerator', () => {
         file: 'index.html',
         silent: false,
         deleteTemplateAfter: true,
-        replacePlaceholder: '{{appConfiguration}}',
+        replacePlaceholder: expect.any(RegExp),
         placeholderExpression: expect.any(RegExp),
-        variableName: 'appConfiguration',
-        configurationKeys: expect.arrayContaining([
-          'features',
-          'version',
-          'postMessagesPrefix',
-        ]),
+        variableName: 'appConfig',
+        configKeys: expect.arrayContaining(['features', 'version', 'postMessagesPrefix']),
       });
     });
 
@@ -488,7 +484,7 @@ describe('services/html:htmlGenerator', () => {
         variableName,
         replacePlaceholder: placeholder,
         silent: true,
-        configurationKeys: [],
+        configKeys: [],
       };
       const expectedResult = [
         '<html>',

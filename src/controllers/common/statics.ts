@@ -10,50 +10,154 @@ import {
 import type { SendFile } from '../../services';
 import type { Jimpex } from '../../app';
 import type { DeepPartial, ExpressMiddleware, Router, RouterMethod } from '../../types';
-
+/**
+ * The definition for each file the controller handles.
+ *
+ * @group Controllers/Statics
+ */
 export type StaticsControllerFile = {
+  /**
+   * The route, relative to the controller root, to the file.
+   */
   route: string;
+  /**
+   * The path to the file in the filesystem. Since the file is served using the
+   * {@link SendFile} service, whether the file is relative to the project root or the
+   * application executable depends on how the service is configured (relative to the
+   * executable by default).
+   */
   path: string;
+  /**
+   * A dictionary of headers for the response.
+   */
   headers?: Record<string, string>;
 };
-
+/**
+ * These are like "master paths" that get prepended to all the file paths and routes the
+ * controller use.
+ *
+ * @group Controllers/Statics
+ */
 export type StaticsControllerPathsOptions = {
+  /**
+   * A custom route to prefix all the file routes with.
+   */
   route: string;
+  /**
+   * A custom path to prefix all the file paths with.
+   */
   source: string;
 };
-
+/**
+ * The options to customize the controller.
+ *
+ * @group Controllers/Statics
+ */
 export type StaticsControllerOptions = {
+  /**
+   * A list of filenames, or definitions for the files to handle.
+   */
   files: Array<string | StaticsControllerFile>;
+  /**
+   * A dictionary with the allowed router (HTTP) methods the controller can use to serve
+   * the files. If `all` is set to `true`, the rest of the values will be ignored.
+   *
+   * @default {get: true, all: false}
+   */
   methods: Partial<Record<RouterMethod, boolean>>;
+  /**
+   * The "master paths" the controller can use to prefix the file paths and routes.
+   *
+   * @default {route: '', source: './',}
+   */
   paths: StaticsControllerPathsOptions;
 };
-
-type StaticsControllerPartialOptions = DeepPartial<StaticsControllerOptions>;
-
-export type StaticsControllerConstructorOptions = StaticsControllerPartialOptions & {
-  inject: {
-    sendFile: SendFile;
+/**
+ * The options to construct a {@link StaticsController}.
+ *
+ * @group Controllers/Statics
+ */
+export type StaticsControllerConstructorOptions =
+  DeepPartial<StaticsControllerOptions> & {
+    /**
+     * A dictionary with the dependencies to inject.
+     */
+    inject: {
+      sendFile: SendFile;
+    };
   };
-};
-
+/**
+ * A function to generate a list of middlewares that can be executed before the tontroller
+ * main middleware.
+ *
+ * @group Controllers/Statics
+ */
 export type StaticsControllerGetMiddlewaresFn = (app: Jimpex) => MiddlewareLike[];
-
-export type StaticsControllerCreatorOptions = StaticsControllerPartialOptions & {
+/**
+ * The options for the controller creator that mounts {@link StaticsController}.
+ *
+ * @group Controllers/Statics
+ */
+export type StaticsControllerCreatorOptions = DeepPartial<StaticsControllerOptions> & {
+  /**
+   * A function to generate a list of middlewares that can be executed before the
+   * tontroller main middleware.
+   */
   getMiddlewares?: StaticsControllerGetMiddlewaresFn;
 };
-
-type AddRouteOptions = {
+/**
+ * The options for {@link StaticsController.addRoute}.
+ *
+ * @group Controllers/Statics
+ */
+export type AddStaticRouteOptions = {
+  /**
+   * The reference for the router in which the middlewares will be added.
+   */
   router: Router;
+  /**
+   * The router method in which the middlewares will be added.
+   */
   method: RouterMethod;
+  /**
+   * The definition of the file to serve.
+   */
   file: StaticsControllerFile;
+  /**
+   * The middleware created by {@link StaticsController}, that will serve the file.
+   */
   fileMiddleware: ExpressMiddleware;
+  /**
+   * A list of extra middlewares to execute before the file middleware.
+   */
   middlewares: ExpressMiddleware[];
 };
 
+/**
+ * The controller class that allows the application to serve specific files from any
+ * folder to any route without the need of mounting directories as "static".
+ *
+ * @group Controller Classes
+ * @group Controllers/Statics
+ * @prettierignore
+ */
 export class StaticsController {
+  /**
+   * The service that serves static files.
+   */
   protected readonly sendFile: SendFile;
+  /**
+   * The controller customization options.
+   */
   protected options: StaticsControllerOptions;
+  /**
+   * A dictionary with the formatted definitions of the files that will be served.
+   * It uses the files' routes as keys, for easy access in the middleware.
+   */
   protected files: Record<string, StaticsControllerFile>;
+  /**
+   * @param options  The options to construct the controller.
+   */
   constructor({ inject, ...options }: StaticsControllerConstructorOptions) {
     this.sendFile = inject.sendFile;
     this.options = this.validateOptions(
@@ -74,11 +178,19 @@ export class StaticsController {
     );
     this.files = this.createFiles();
   }
-
+  /**
+   * Gets the controller options.
+   */
   getOptions(): Readonly<StaticsControllerOptions> {
     return { ...this.options };
   }
-
+  /**
+   * Mounts the middlewares in the router in order to serve the files.
+   *
+   * @param router       A reference to the application router.
+   * @param middlewares  A list of extra middlewares to execute before the file
+   *                     middleware.
+   */
   addRoutes(router: Router, middlewares: ExpressMiddleware[] = []): Router {
     const { methods } = this.options;
     const use: RouterMethod[] = methods.all
@@ -102,7 +214,11 @@ export class StaticsController {
 
     return router;
   }
-
+  /**
+   * Generates the middleware that will serve the file.
+   *
+   * @param file  The definition of the file to serve.
+   */
   protected getMiddleware(file: StaticsControllerFile): ExpressMiddleware {
     return (_, res, next) => {
       const extension = path.parse(file.path).ext.substring(1);
@@ -122,18 +238,31 @@ export class StaticsController {
       });
     };
   }
-
+  /**
+   * Mounts the middleware(s) for a file in the router.
+   *
+   * @param options  The information of the file and how it needs to be added.
+   */
   protected addRoute({
     router,
     method,
     file,
     fileMiddleware,
     middlewares,
-  }: AddRouteOptions): void {
+  }: AddStaticRouteOptions): void {
     const { route } = file;
     router[method](route, [...middlewares, fileMiddleware]);
   }
-
+  /**
+   * Validates and formats the options sent to the constructor in order to get the final
+   * set that will be stored in the controller.
+   *
+   * @param options  The options to validate.
+   * @throws If no files are specified.
+   * @throws If methods is not defined.
+   * @throws If no methods are enabled.
+   * @throws If there's an invalid HTTP method.
+   */
   protected validateOptions(options: StaticsControllerOptions): StaticsControllerOptions {
     if (!options.files || !options.files.length) {
       throw new Error('You need to specify a list of files');
@@ -181,7 +310,10 @@ export class StaticsController {
       methods: newMethods,
     };
   }
-
+  /**
+   * Parses the files received from the constructor's options, and formats them into
+   * proper definitions the controller can use.
+   */
   protected createFiles(): Record<string, StaticsControllerFile> {
     const { files, paths } = this.options;
     const routePath = removeSlashes(paths.route, false, true);
@@ -209,7 +341,13 @@ export class StaticsController {
     }, {});
   }
 }
-
+/**
+ * A controller that allows the application to server specific files from any folder to
+ * any route without the need of mounting directories as "static" folders.
+ *
+ * @group Controllers
+ * @group Controllers/Statics
+ */
 export const staticsController = controllerCreator(
   ({ getMiddlewares, ...options }: StaticsControllerCreatorOptions = {}) =>
     (app) => {
