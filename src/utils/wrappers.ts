@@ -7,8 +7,8 @@ import {
   type GenericCurriedFn,
   resourceCreatorFactory,
 } from '@homer0/jimple';
-import type { Jimpex } from './jimpex';
-import type { Router, ExpressMiddleware } from '../types';
+import type { Jimpex } from '../app';
+import type { Router, ExpressMiddlewareLike } from '../types';
 
 export type ProviderRegisterFn = OriginalProviderRegisterFn<Jimpex>;
 export const provider = createProvider<Jimpex>();
@@ -24,7 +24,7 @@ export type ProviderLike = Provider | ProviderCreator | Providers;
 export type ControllerConnectFn = <ContainerType extends Jimpex = Jimpex>(
   container: ContainerType,
   route: string,
-) => Router | ExpressMiddleware;
+) => Router | ExpressMiddlewareLike;
 
 const controllerFactory = resourceFactory<ControllerConnectFn>();
 export const controller = (connect: ControllerConnectFn) =>
@@ -64,7 +64,7 @@ export type ControllerProviderCreator = ReturnType<typeof controllerProviderCrea
 
 export type MiddlewareConnectFn = <ContainerType extends Jimpex = Jimpex>(
   app: ContainerType,
-) => ExpressMiddleware | undefined;
+) => ExpressMiddlewareLike | undefined;
 
 const middlewareFactory = resourceFactory<MiddlewareConnectFn>();
 export const middleware = (connect: MiddlewareConnectFn) =>
@@ -102,4 +102,4 @@ export type MiddlewareProviderCreator = ReturnType<typeof middlewareProviderCrea
 // --
 
 export type ControllerLike = Controller | ControllerProvider;
-export type MiddlewareLike = Middleware | MiddlewareProvider | ExpressMiddleware;
+export type MiddlewareLike = Middleware | MiddlewareProvider | ExpressMiddlewareLike;

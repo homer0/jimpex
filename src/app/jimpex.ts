@@ -13,16 +13,16 @@ import { simpleConfigProvider } from '@homer0/simple-config';
 import compression from 'compression';
 import bodyParser from 'body-parser';
 import multer from 'multer';
-import statuses from 'statuses';
 import {
   createServer as createSpdyServer,
   type ServerOptions as SpdyServerOptions,
 } from 'spdy';
 import express from 'express';
+import { statuses } from '../utils';
 import type {
   DeepPartial,
   Express,
-  ExpressMiddleware,
+  ExpressMiddlewareLike,
   PathUtils,
   SimpleConfig,
   SimpleLogger,
@@ -39,6 +39,8 @@ import type {
   JimpexReducerEventName,
   JimpexReducerEventPayload,
   JimpexReducerEventTarget,
+  JimpexEventNameLike,
+  JimpexEventListener,
 } from '../types';
 import type {
   Controller,
@@ -47,7 +49,7 @@ import type {
   MiddlewareLike,
   MiddlewareProvider,
   Middleware,
-} from './resources';
+} from '../utils';
 
 export class Jimpex extends Jimple {
   protected options: JimpexOptions;
@@ -66,6 +68,10 @@ export class Jimpex extends Jimple {
         filesizeLimit: '15MB',
         boot: true,
         proxy: false,
+        path: {
+          appPath: '',
+          useParentPath: true,
+        },
         configuration: {
           default: configuration,
           name: 'app',
@@ -102,6 +108,7 @@ export class Jimpex extends Jimple {
     this.express = express();
 
     this.setupCoreServices();
+    this.configurePath();
 
     this.init();
     if (this.options.boot) {
@@ -186,7 +193,7 @@ export class Jimpex extends Jimple {
     const useMiddleware =
       'register' in middleware && typeof middleware.register === 'function'
         ? (middleware as MiddlewareProvider).register(this)
-        : (middleware as Middleware | ExpressMiddleware);
+        : (middleware as Middleware | ExpressMiddlewareLike);
     this.mountQueue.push((server) => {
       if ('connect' in useMiddleware && typeof useMiddleware.connect === 'function') {
         const handler = useMiddleware.connect(this);
@@ -200,7 +207,7 @@ export class Jimpex extends Jimple {
       server.use(
         this.reduceWithEvent(
           'middlewareWillBeUsed',
-          useMiddleware as ExpressMiddleware,
+          useMiddleware as ExpressMiddlewareLike,
           undefined,
         ),
       );
@@ -237,6 +244,24 @@ export class Jimpex extends Jimple {
     return deepAssignWithOverwrite({}, this.options);
   }
 
+  getEventsHub(): EventsHub {
+    return this.get<EventsHub>('events');
+  }
+
+  on<EventName extends JimpexEventNameLike>(
+    eventName: EventName,
+    listener: JimpexEventListener<EventName>,
+  ): () => boolean {
+    return this.getEventsHub().on(eventName, listener);
+  }
+
+  once<EventName extends JimpexEventNameLike>(
+    eventName: EventName,
+    listener: JimpexEventListener<EventName>,
+  ): () => boolean {
+    return this.getEventsHub().once(eventName, listener);
+  }
+
   protected init(): void {}
 
   protected initOptions(): DeepPartial<JimpexOptions> {
@@ -255,6 +280,26 @@ export class Jimpex extends Jimple {
     this.register(rootFileProvider);
     this.set('events', () => new EventsHub());
     this.set('statuses', () => statuses);
+  }
+
+  protected configurePath(): void {
+    const pathUtils = this.get<PathUtils>('pathUtils');
+    const {
+      path: { appPath, useParentPath },
+    } = this.options;
+    if (appPath) {
+      pathUtils.addLocation('app', appPath);
+      return;
+    }
+    if (!useParentPath) return;
+    const { stack = '' } = new Error();
+    const parentFromStack = stack.split('\n')[2];
+    if (parentFromStack) {
+      const parentFile = parentFromStack.replace(/^.*?\s\(([^\s]+):\d+:\d+\)/, '$1');
+      if (parentFile !== parentFromStack) {
+        pathUtils.addLocation('app', parentFile);
+      }
+    }
   }
 
   protected setupExpress(): void {
@@ -355,21 +400,19 @@ export class Jimpex extends Jimple {
     this.mountQueue.length = 0;
   }
 
-  protected emitEvent<E extends JimpexEventName>(
-    name: E,
-    payload: JimpexEventPayload<E>,
+  protected emitEvent<EventName extends JimpexEventName>(
+    name: EventName,
+    payload: JimpexEventPayload<EventName>,
   ): void {
-    const events = this.get<EventsHub>('events');
-    events.emit(name, payload);
+    this.getEventsHub().emit(name, payload);
   }
 
-  protected reduceWithEvent<E extends JimpexReducerEventName>(
-    name: E,
-    target: JimpexReducerEventTarget<E>,
-    payload: JimpexReducerEventPayload<E>,
-  ): JimpexReducerEventTarget<E> {
-    const events = this.get<EventsHub>('events');
-    return events.reduceSync(name, target, payload);
+  protected reduceWithEvent<EventName extends JimpexReducerEventName>(
+    name: EventName,
+    target: JimpexReducerEventTarget<EventName>,
+    payload: JimpexReducerEventPayload<EventName>,
+  ): JimpexReducerEventTarget<EventName> {
+    return this.getEventsHub().reduceSync(name, target, payload);
   }
 
   protected async loadCredentials(
