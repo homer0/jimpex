@@ -1,5 +1,3 @@
-jest.unmock('@src/services/http/responsesBuilder');
-
 import {
   ResponsesBuilder,
   responsesBuilderProvider,

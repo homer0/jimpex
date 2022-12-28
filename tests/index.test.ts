@@ -1,5 +1,3 @@
-jest.unmock('@src/index');
-
 import { hello } from '@src/index';
 
 describe('hello', () => {

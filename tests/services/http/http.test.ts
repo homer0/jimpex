@@ -1,5 +1,4 @@
 jest.mock('node-fetch');
-jest.unmock('@src/services/http/http');
 
 import originalNodeFetch from 'node-fetch';
 import { HTTP, httpProvider, HTTPContructorOptions } from '@src/services/http/http';

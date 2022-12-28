@@ -7,7 +7,7 @@ const { compilerOptions } = require('./tests/tsconfig');
  */
 module.exports = {
   preset: 'ts-jest',
-  automock: true,
+  automock: false,
   collectCoverage: true,
   testPathIgnorePatterns: ['/utils/scripts/', 'tests/mocks/'],
   unmockedModulePathPatterns: ['/node_modules/', 'src/utils', 'tests/mocks/'],

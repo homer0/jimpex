@@ -1,6 +1,3 @@
-jest.unmock('@src/services/common/appError');
-jest.unmock('@src/services/common/httpError');
-
 import { statuses } from '@src/utils/fns/statuses';
 import {
   HTTPError,

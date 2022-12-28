@@ -1,6 +1,3 @@
-jest.unmock('@src/services/utils/index');
-jest.unmock('@src/services/utils/ensureBearerToken');
-
 import collection from '@src/services/utils';
 
 const SERVICES = ['ensureBearerToken'];

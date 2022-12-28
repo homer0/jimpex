@@ -1,5 +1,3 @@
-jest.unmock('@src/services/frontend/frontendFs');
-
 import fs from 'fs/promises';
 import { FrontendFs, frontendFsProvider } from '@src/services/frontend/frontendFs';
 import { getPathUtilsMock, getJimpexMock } from '@tests/mocks';

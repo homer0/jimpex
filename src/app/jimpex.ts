@@ -44,7 +44,6 @@ import type {
 } from '../types';
 import type {
   Controller,
-  ControllerProvider,
   ControllerLike,
   MiddlewareLike,
   MiddlewareProvider,
@@ -131,17 +130,17 @@ export class Jimpex extends Jimple {
     if (!port) {
       throw new Error('Port is not defined');
     }
-    this.emitEvent('beforeStart', undefined);
+    this.emitEvent('beforeStart', { app: this });
     this.server = await this.createServer();
     this.instance = this.server!.listen(port, () => {
-      this.emitEvent('start', undefined);
+      this.emitEvent('start', { app: this });
       this.mountResources();
       this.getLogger().success(`Starting on port ${port}`);
-      this.emitEvent('afterStart', undefined);
+      this.emitEvent('afterStart', { app: this });
       if (onStart) {
         onStart(config);
       }
-      this.emitEvent('afterStartCallback', undefined);
+      this.emitEvent('afterStartCallback', { app: this });
     });
 
     return this.instance!;
@@ -162,29 +161,44 @@ export class Jimpex extends Jimple {
 
   stop(): void {
     if (!this.instance) return;
-    this.emitEvent('beforeStop', undefined);
+    this.emitEvent('beforeStop', { app: this });
     this.instance.close();
     this.instance = undefined;
-    this.emitEvent('afterStop', undefined);
+    this.emitEvent('afterStop', { app: this });
   }
 
   mount(route: string, controller: ControllerLike): void {
-    const useController =
-      typeof controller.register === 'function'
-        ? (controller as ControllerProvider).register(this, route)
-        : (controller as Controller);
+    let useController: Controller | Middleware;
+    if (
+      'register' in controller &&
+      typeof controller.register === 'function' &&
+      controller.provider === true
+    ) {
+      useController = controller.register(this, route);
+    } else if (
+      'connect' in controller &&
+      typeof controller.connect === 'function' &&
+      (('middleware' in controller && controller.middleware === true) ||
+        ('controller' in controller && controller.controller === true))
+    ) {
+      useController = controller;
+    } else {
+      useController = {
+        middleware: true,
+        connect: () => controller as ExpressMiddlewareLike,
+      };
+    }
 
     this.mountQueue.push((server) => {
-      const router = this.reduceWithEvent(
-        'controllerWillBeMounted',
-        useController.connect(this, route),
-        {
-          route,
-          controller: useController,
-        },
-      );
+      const connected = useController.connect(this, route);
+      if (!connected) return;
+      const router = this.reduceWithEvent('controllerWillBeMounted', connected, {
+        route,
+        controller: useController,
+        app: this,
+      });
       server.use(route, router);
-      this.emitEvent('routeAdded', { route });
+      this.emitEvent('routeAdded', { route, app: this });
       this.controlledRoutes.push(route);
     });
   }
@@ -198,7 +212,9 @@ export class Jimpex extends Jimple {
       if ('connect' in useMiddleware && typeof useMiddleware.connect === 'function') {
         const handler = useMiddleware.connect(this);
         if (handler) {
-          server.use(this.reduceWithEvent('middlewareWillBeUsed', handler, undefined));
+          server.use(
+            this.reduceWithEvent('middlewareWillBeUsed', handler, { app: this }),
+          );
         }
 
         return;
@@ -208,7 +224,7 @@ export class Jimpex extends Jimple {
         this.reduceWithEvent(
           'middlewareWillBeUsed',
           useMiddleware as ExpressMiddlewareLike,
-          undefined,
+          { app: this },
         ),
       );
     });
@@ -246,6 +262,10 @@ export class Jimpex extends Jimple {
 
   getEventsHub(): EventsHub {
     return this.get<EventsHub>('events');
+  }
+
+  getRoutes(): string[] {
+    return this.controlledRoutes.slice();
   }
 
   on<EventName extends JimpexEventNameLike>(

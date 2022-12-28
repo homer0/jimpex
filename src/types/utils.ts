@@ -15,3 +15,5 @@ export type DeepReadonly<T> = {
     ? DeepReadonly<T[P]>
     : T[P];
 };
+
+export type NoStringIndex<T> = { [K in keyof T as string extends K ? never : K]: T[K] };

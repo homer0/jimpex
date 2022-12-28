@@ -8,7 +8,7 @@ import {
   resourceCreatorFactory,
 } from '@homer0/jimple';
 import type { Jimpex } from '../app';
-import type { Router, ExpressMiddlewareLike } from '../types';
+import type { Router, ExpressMiddlewareLike, NoStringIndex } from '../types';
 
 export type ProviderRegisterFn = OriginalProviderRegisterFn<Jimpex>;
 export const provider = createProvider<Jimpex>();
@@ -64,7 +64,8 @@ export type ControllerProviderCreator = ReturnType<typeof controllerProviderCrea
 
 export type MiddlewareConnectFn = <ContainerType extends Jimpex = Jimpex>(
   app: ContainerType,
-) => ExpressMiddlewareLike | undefined;
+  route?: string,
+) => Router | ExpressMiddlewareLike | undefined;
 
 const middlewareFactory = resourceFactory<MiddlewareConnectFn>();
 export const middleware = (connect: MiddlewareConnectFn) =>
@@ -83,6 +84,7 @@ export type MiddlewareCreator = ReturnType<typeof middlewareCreator>;
 
 export type MiddlewareProviderRegisterFn = <ContainerType extends Jimpex = Jimpex>(
   container: ContainerType,
+  route?: string,
 ) => Middleware;
 
 const middlewareProviderFactory = resourceFactory<MiddlewareProviderRegisterFn>();
@@ -101,5 +103,11 @@ export type MiddlewareProviderCreator = ReturnType<typeof middlewareProviderCrea
 
 // --
 
-export type ControllerLike = Controller | ControllerProvider;
-export type MiddlewareLike = Middleware | MiddlewareProvider | ExpressMiddlewareLike;
+export type MiddlewareLike =
+  | NoStringIndex<Middleware>
+  | NoStringIndex<MiddlewareProvider>
+  | ExpressMiddlewareLike;
+export type ControllerLike =
+  | NoStringIndex<Controller>
+  | NoStringIndex<ControllerProvider>
+  | MiddlewareLike;

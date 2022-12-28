@@ -1,5 +1,3 @@
-jest.unmock('@src/services/frontend/index');
-
 import collection from '@src/services/frontend';
 
 const SERVICES = ['frontendFs'];
