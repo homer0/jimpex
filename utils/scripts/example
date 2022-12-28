@@ -1,0 +1,9 @@
+#!/bin/bash -e
+FOLDER=$1
+# IF FOLDER IS NOT PROVIDED, DEFAULT TO "basic"
+if [ -z "$FOLDER" ]; then
+  FOLDER="basic"
+fi
+
+tsnd "./examples/$FOLDER/index.ts"
+

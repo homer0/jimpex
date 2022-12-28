@@ -81,10 +81,7 @@ describe('Jimpex', () => {
         multerAny: true,
       });
       expect(pathUtilsMocks.addLocation).toHaveBeenCalledTimes(1);
-      expect(pathUtilsMocks.addLocation).toHaveBeenCalledWith(
-        'app',
-        expect.stringMatching(/src\/app\/jimpex\.ts$/),
-      );
+      expect(pathUtilsMocks.addLocation).toHaveBeenCalledWith('app', __dirname);
       expect(sut.get('router')).toEqual({
         router: true,
       });

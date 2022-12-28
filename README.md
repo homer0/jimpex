@@ -690,7 +690,11 @@ And finally, you also have `middlewareProviderCreator` to create a middleware th
 
 ## 🤞 Examples
 
-TBD
+You can find the example projects in the `example` directory. To run them, you can use the `npm run example` command. By default, it runs the `basic` example, but you can also specify the name of the example you want to run:
+
+```bash
+npm run example [name-of-the-directory]
+```
 
 ## 🤘 Development
 
@@ -705,6 +709,7 @@ TBD
 | `types:check` | Validates the types definitions.     |
 | `test`        | Runs the project unit tests.         |
 | `todo`        | Lists all the pending to-do's.       |
+| `example`     | Runs an example project.             |
 
 ### Repository hooks
 
