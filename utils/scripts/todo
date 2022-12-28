@@ -1,2 +1,2 @@
-#!/bin/bash -e
+#!/bin/sh -e
 leasot 'src/**/*.{js,jsx,ts,tsx}' -x

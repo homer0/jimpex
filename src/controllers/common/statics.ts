@@ -354,7 +354,7 @@ export class StaticsController {
 export const staticsController = controllerCreator(
   ({ getMiddlewares, ...options }: StaticsControllerCreatorOptions = {}) =>
     (app) => {
-      const router = app.get<Router>('router');
+      const router = app.getRouter();
       const ctrl = new StaticsController({
         inject: {
           sendFile: app.get('sendFile'),

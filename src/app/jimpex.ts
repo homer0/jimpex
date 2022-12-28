@@ -36,8 +36,8 @@ import type {
   Express,
   ExpressMiddlewareLike,
   PathUtils,
-  SimpleConfig,
-  SimpleLogger,
+  Config,
+  Logger,
   JimpexOptions,
   JimpexHTTPSCredentials,
   JimpexHTTP2Options,
@@ -54,6 +54,7 @@ import type {
   JimpexEventNameLike,
   JimpexEventListener,
   JimpexHealthCheckFn,
+  Router,
 } from '../types';
 /**
  * Jimpex is a mix of Jimple, a Javascript port of Pimple dependency injection container,
@@ -111,7 +112,6 @@ export class Jimpex extends Jimple {
 
     this._options = deepAssignWithOverwrite(
       {
-        version: '0.0.0',
         filesizeLimit: '15MB',
         boot: true,
         path: {
@@ -122,10 +122,7 @@ export class Jimpex extends Jimple {
           default: options?.config?.default || config,
           name: 'app',
           path: 'config/',
-          /**
-           * @todo make `false`
-           */
-          hasFolder: true,
+          hasFolder: false,
           loadFromEnvironment: true,
           environmentVariable: 'CONFIG',
           defaultConfigFilename: '[app-name].config.js',
@@ -135,7 +132,6 @@ export class Jimpex extends Jimple {
           enabled: true,
           onHome: false,
           route: 'statics',
-          folder: '',
         },
         express: {
           trustProxy: true,
@@ -312,7 +308,7 @@ export class Jimpex extends Jimple {
     });
   }
 
-  getConfig(): SimpleConfig;
+  getConfig(): Config;
   getConfig<T = unknown>(setting: string | string[], asArray?: boolean): T;
   /**
    * Gets a setting from the configuration, or the configuration itself.
@@ -326,8 +322,8 @@ export class Jimpex extends Jimple {
   getConfig<T = unknown>(
     setting?: string | string[],
     asArray: boolean = false,
-  ): SimpleConfig | T {
-    const config = this.try<SimpleConfig>('config');
+  ): Config | T {
+    const config = this.try<Config>('config');
     if (!config) {
       throw new Error('The config service is not available until the app starts');
     }
@@ -338,10 +334,16 @@ export class Jimpex extends Jimple {
     return config.get<T>(setting, asArray);
   }
   /**
+   * Creates a new router instance.
+   */
+  getRouter(): Router {
+    return this.get('router');
+  }
+  /**
    * The logger service.
    */
-  get logger(): SimpleLogger {
-    return this.get<SimpleLogger>('logger');
+  get logger(): Logger {
+    return this.get<Logger>('logger');
   }
   /**
    * The Express application Jimpex uses under the hood.

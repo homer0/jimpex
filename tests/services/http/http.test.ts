@@ -56,15 +56,6 @@ describe('services/http:http', () => {
             remoteAddress: ip,
           },
         },
-        requestWithConnectionSocketRemoteAddr: {
-          headers: {},
-          socket: {},
-          connection: {
-            socket: {
-              remoteAddress: ip,
-            },
-          },
-        },
       };
       const requestWithNoIP = {
         headers: {},
@@ -250,10 +241,8 @@ describe('services/http:http', () => {
       const ip = '25.09.2015';
       const request = {
         headers: {},
-        connection: {
-          socket: {
-            remoteAddress: ip,
-          },
+        socket: {
+          remoteAddress: ip,
         },
       } as unknown as Request;
       const { logger } = getLoggerMock();

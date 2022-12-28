@@ -1,4 +1,4 @@
-import type { SimpleConfig } from './wootils';
+import type { Config } from './wootils';
 import type { Jimpex } from '../app';
 /**
  * The options for the application's configuration service.
@@ -91,9 +91,8 @@ export type JimpexStaticsOptions = {
    * but you can use this option to define a relative path that won't affect the route.
    *
    * @default ''
-   * @todo Make optional.
    */
-  folder: string;
+  folder?: string;
 };
 /**
  * The options for the Express application.
@@ -142,9 +141,8 @@ export type JimpexPathOptions = {
    * A "hardcoded" path to the application executable file.
    *
    * @default ''
-   * @todo Make optional.
    */
-  appPath: string;
+  appPath?: string;
   /**
    * If `true`, it will try to figure out the parent file path, and use its directory as
    * the path.
@@ -203,13 +201,6 @@ export type JimpexHealthCheckFn = (app: Jimpex) => Promise<JimpexHealthStatus>;
  */
 export type JimpexOptions = {
   /**
-   * The application's version.
-   *
-   * @default '0.0.0'
-   * @todo Remove.
-   */
-  version: string;
-  /**
    * The size limit for the requests payload.
    *
    * @default '15MB'
@@ -254,4 +245,4 @@ export type JimpexOptions = {
  *
  * @group Jimpex
  */
-export type JimpexStartCallback = (config: SimpleConfig) => void;
+export type JimpexStartCallback = (config: Config) => void;

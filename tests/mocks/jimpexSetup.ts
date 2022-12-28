@@ -180,7 +180,7 @@ export const setupExpress = (): SetupExpressResult => {
   const expressRouterInstance = {
     router: true,
   };
-  express.Router.mockReturnValueOnce(expressRouterInstance as unknown as Router);
+  express.Router.mockReturnValue(expressRouterInstance as unknown as Router);
   const expressStaticInstance = {
     static: true,
   };

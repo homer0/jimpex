@@ -1,6 +1,6 @@
 /* eslint-disable no-process-env, dot-notation */
-import * as path from 'path';
 import fs from 'fs/promises';
+import * as path from 'path';
 import {
   https,
   spdy,
@@ -85,6 +85,9 @@ describe('Jimpex', () => {
       expect(sut.get('router')).toEqual({
         router: true,
       });
+      expect(sut.getRouter()).toEqual({
+        router: true,
+      });
       expect(sut.get('statuses')).toBe(statuses);
       expect(sut.eventsHub).toBeInstanceOf(EventsHub);
       expect(sut.logger).toBeInstanceOf(SimpleLogger);
@@ -92,7 +95,6 @@ describe('Jimpex', () => {
       expect(sut.instance).toBeUndefined();
       expect(sut.routes).toEqual([]);
       expect(sut.options).toEqual({
-        version: '0.0.0',
         filesizeLimit: '15MB',
         boot: true,
         path: {
@@ -103,7 +105,7 @@ describe('Jimpex', () => {
           default: {},
           name: 'app',
           path: 'config/',
-          hasFolder: true,
+          hasFolder: false,
           environmentVariable: 'CONFIG',
           loadFromEnvironment: true,
           defaultConfigFilename: '[app-name].config.js',
@@ -113,7 +115,6 @@ describe('Jimpex', () => {
           enabled: true,
           onHome: false,
           route: 'statics',
-          folder: '',
         },
         express: {
           trustProxy: true,
@@ -172,7 +173,6 @@ describe('Jimpex', () => {
         services: { commonServices, httpServices, utilsServices },
       } = setupCase();
       const options: DeepPartial<JimpexOptions> = {
-        version: '1.0.0',
         filesizeLimit: '10MB',
         boot: false,
         path: {
@@ -402,7 +402,7 @@ describe('Jimpex', () => {
             defaultConfig: {},
             defaultConfigFilename: 'app.config.js',
             envVarName: 'CONFIG',
-            path: `config${path.sep}app${path.sep}`,
+            path: `config`,
             filenameFormat: 'app.[name].config.js',
           });
         });
@@ -413,6 +413,30 @@ describe('Jimpex', () => {
           // When/Then
           const sut = new Jimpex();
           await expect(() => sut.start()).rejects.toThrow(/No port configured/i);
+        });
+
+        it('should load the config from a folder', async () => {
+          // Given
+          const {
+            wootils: { configMocks },
+          } = setupCase();
+          const port = 2509;
+          configMocks.get.mockImplementationOnce(() => port);
+          configMocks.get.mockImplementationOnce(() => []);
+          const onStart = jest.fn();
+          // When
+          const sut = new Jimpex({
+            config: {
+              hasFolder: true,
+            },
+          });
+          await sut.start(onStart);
+          // Then
+          expect(simpleConfigProvider).toHaveBeenCalledWith(
+            expect.objectContaining({
+              path: `config${path.sep}app${path.sep}`,
+            }),
+          );
         });
 
         it('should invoke a callback when starting', async () => {

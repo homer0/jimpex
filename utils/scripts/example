@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/bin/sh -e
 FOLDER=$1
 # IF FOLDER IS NOT PROVIDED, DEFAULT TO "basic"
 if [ -z "$FOLDER" ]; then

@@ -1,5 +1,5 @@
 import { middlewareCreator } from '../../utils';
-import { ExpressMiddleware, SimpleConfig } from '../../types';
+import { ExpressMiddleware } from '../../types';
 /**
  * The customization options for the middleware.
  *
@@ -76,9 +76,7 @@ export class ForceHTTPS {
 export const forceHTTPSMiddleware = middlewareCreator(
   (options: ForceHTTPSPartialOptions = {}) =>
     (app) => {
-      const enabled = app
-        .get<SimpleConfig>('config')
-        .get<boolean | undefined>('forceHTTPS');
+      const enabled = app.getConfig<boolean | undefined>('forceHTTPS');
       if (!enabled) return undefined;
       return new ForceHTTPS(options).getMiddleware();
     },

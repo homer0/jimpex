@@ -2,7 +2,7 @@ import fetch, { type RequestInit, type BodyInit } from 'node-fetch';
 import urijs from 'urijs';
 import { deepAssignWithOverwrite } from '@homer0/deep-assign';
 import { provider } from '../../utils';
-import { SimpleLogger, SimpleConfig, Request, HTTPResponse } from '../../types';
+import { Logger, Request, HTTPResponse } from '../../types';
 /**
  * The options to customize the service.
  *
@@ -24,7 +24,7 @@ export type HTTPContructorOptions = Partial<HTTPOptions> & {
    * A dictionary with the dependencies to inject.
    */
   inject: {
-    logger: SimpleLogger;
+    logger: Logger;
   };
 };
 /**
@@ -88,7 +88,7 @@ export class HTTP {
   /**
    * The service used to log information in the terminal.
    */
-  protected readonly _logger: SimpleLogger;
+  protected readonly _logger: Logger;
   /**
    * The service customization options.
    */
@@ -159,13 +159,12 @@ export class HTTP {
    * @param req  The request from which it will try to obtain the IP address.
    */
   getIPFromRequest(req: Request): string | undefined {
-    return (
-      req.headers['x-forwarded-for'] ||
-      req?.connection?.remoteAddress ||
-      req?.socket?.remoteAddress ||
-      // @ts-expect-error -- This is valid in Node 14
-      req?.connection?.socket?.remoteAddress
-    );
+    const headerValue = req.headers['x-forwarded-for'];
+    if (headerValue) {
+      return String(headerValue);
+    }
+
+    return req?.connection?.remoteAddress || req?.socket?.remoteAddress;
   }
   /**
    * Creates a dictionary with all the custom headers a request has. By custom header it
@@ -275,7 +274,7 @@ export class HTTP {
  */
 export const httpProvider = provider((app) => {
   app.set('http', () => {
-    const config = app.get<SimpleConfig>('config');
+    const config = app.getConfig();
     const logRequests = config.get<boolean | undefined>('debug.logRequests') === true;
     return new HTTP({
       inject: {

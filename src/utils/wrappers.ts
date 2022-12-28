@@ -132,7 +132,7 @@ const controllerFactory = resourceFactory<ControllerConnectFn>();
  * @example
  *
  *   const myController = controller((app) => {
- *     const router = app.get<Router>('router');
+ *     const router = app.getRouter();
  *     const ctrl = new MyController();
  *     return router.get('...', ctrl.doSomething()).post('...', ctrl.doSomethingElse());
  *   });
@@ -164,7 +164,7 @@ const controllerCreatorFactory = resourceCreatorFactory<ControllerConnectFn>();
  * <caption>Basic usage</caption>
  *
  *   const myController = controllerCreator((options = {}) => (app) => {
- *     const router = app.get<Router>('router');
+ *     const router = app.getRouter();
  *     const ctrl = new MyController(options);
  *     return router.get('...', ctrl.doSomething()).post('...', ctrl.doSomethingElse());
  *   });
@@ -225,7 +225,7 @@ const controllerProviderFactory = resourceFactory<ControllerProviderRegisterFn>(
  *     app.set('myController', () => new MyController());
  *     return controller(() => {
  *       const ctrl = app.get<MyController>('myController');
- *       const router = app.get<Router>('router');
+ *       const router = app.getRouter();
  *       return router.get('/', ctrl.doSomething());
  *     });
  *   });
@@ -260,7 +260,7 @@ const controllerProviderCreatorFactory =
  *         app.set(serviceName, () => new MyController());
  *         return controller(() => {
  *           const ctrl = app.get<MyController>(serviceName);
- *           const router = app.get<Router>('router');
+ *           const router = app.getRouter();
  *           return router.get('/', ctrl.doSomething());
  *         });
  *       },

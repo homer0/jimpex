@@ -13,10 +13,13 @@ module.exports = {
   unmockedModulePathPatterns: ['/node_modules/', 'src/utils', 'tests/mocks/'],
   coveragePathIgnorePatterns: ['/utils/scripts/', 'tests/mocks/'],
   testEnvironment: 'node',
-  globals: {
-    'ts-jest': {
-      tsconfig: path.join(__dirname, 'tests', 'tsconfig.json'),
-    },
+  transform: {
+    '^.+\\.tsx?$': [
+      'ts-jest',
+      {
+        tsconfig: path.join(__dirname, 'tests', 'tsconfig.json'),
+      },
+    ],
   },
   moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, {
     prefix: '<rootDir>/tests',
