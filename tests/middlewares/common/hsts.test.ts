@@ -13,12 +13,12 @@ describe('middlewares/common:hsts', () => {
       const sut = new HSTS();
       // Then
       expect(sut).toBeInstanceOf(HSTS);
-      expect(sut.getOptions()).toEqual({
+      expect(sut.options).toEqual({
         maxAge: 31536000,
         includeSubDomains: true,
         preload: false,
       });
-      expect(sut.getHeader()).toBe('max-age=31536000; includeSubDomains');
+      expect(sut.header).toBe('max-age=31536000; includeSubDomains');
     });
 
     it('should be instantiated with custom options', () => {
@@ -31,8 +31,8 @@ describe('middlewares/common:hsts', () => {
       // When
       const sut = new HSTS(options);
       // Then
-      expect(sut.getOptions()).toEqual(options);
-      expect(sut.getHeader()).toBe(`max-age=${options.maxAge}; preload`);
+      expect(sut.options).toEqual(options);
+      expect(sut.header).toBe(`max-age=${options.maxAge}; preload`);
     });
 
     describe('middleware', () => {
@@ -46,7 +46,7 @@ describe('middlewares/common:hsts', () => {
         const next = jest.fn();
         // When
         const sut = new HSTS();
-        sut.middleware()(request, response, next);
+        sut.getMiddleware()(request, response, next);
         // Then
         expect(setHeader).toHaveBeenCalledTimes(1);
         expect(setHeader).toHaveBeenCalledWith(
@@ -94,7 +94,7 @@ describe('middlewares/common:hsts', () => {
       const sut = hstsMiddleware.connect(container);
       const toCompare = new HSTS();
       // Then
-      expect(sut!.toString()).toBe(toCompare.middleware().toString());
+      expect(sut!.toString()).toBe(toCompare.getMiddleware().toString());
     });
 
     it('should disable it from the options', () => {

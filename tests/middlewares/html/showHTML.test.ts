@@ -20,7 +20,7 @@ describe('middlewares/html:showHTML', () => {
       const sut = new ShowHTML(options);
       // Then
       expect(sut).toBeInstanceOf(ShowHTML);
-      expect(sut.getOptions()).toEqual({
+      expect(sut.options).toEqual({
         file: 'index.html',
       });
     });
@@ -37,7 +37,7 @@ describe('middlewares/html:showHTML', () => {
       const sut = new ShowHTML(options);
       // Then
       expect(sut).toBeInstanceOf(ShowHTML);
-      expect(sut.getOptions()).toEqual({
+      expect(sut.options).toEqual({
         file: options.file,
       });
     });
@@ -62,7 +62,7 @@ describe('middlewares/html:showHTML', () => {
         const next = () => {};
         // When
         const sut = new ShowHTML(options);
-        await sut.middleware()(request, response, next);
+        await sut.getMiddleware()(request, response, next);
         // Then
         expect(sendFile).toHaveBeenCalledTimes(1);
         expect(sendFile).toHaveBeenCalledWith({
@@ -80,9 +80,9 @@ describe('middlewares/html:showHTML', () => {
         const htmlGeneratorFile = 'charo.html';
         const htmlGenerator = {
           whenReady: jest.fn(() => Promise.resolve()),
-          getOptions: jest.fn(() => ({
+          options: {
             file: htmlGeneratorFile,
-          })),
+          },
         };
         const getHTMLGenerator = jest.fn(() => htmlGenerator as unknown as HTMLGenerator);
         const options: ShowHTMLConstructorOptions = {
@@ -102,10 +102,10 @@ describe('middlewares/html:showHTML', () => {
         const next = () => {};
         // When
         const sut = new ShowHTML(options);
-        await sut.middleware()(request, response, next);
-        await sut.middleware()(request, response, next);
+        await sut.getMiddleware()(request, response, next);
+        await sut.getMiddleware()(request, response, next);
         // Then
-        expect(sut.getOptions()).toEqual({
+        expect(sut.options).toEqual({
           file: htmlGeneratorFile,
         });
         expect(sendFile).toHaveBeenCalledTimes(2);
@@ -121,7 +121,6 @@ describe('middlewares/html:showHTML', () => {
         });
         expect(getHTMLGenerator).toHaveBeenCalledTimes(1);
         expect(htmlGenerator.whenReady).toHaveBeenCalledTimes(1);
-        expect(htmlGenerator.getOptions).toHaveBeenCalledTimes(1);
       });
 
       it('should fail serve an HTML file from the HTMLGenerator', async () => {
@@ -149,7 +148,7 @@ describe('middlewares/html:showHTML', () => {
         const next = jest.fn();
         // When
         const sut = new ShowHTML(options);
-        await sut.middleware()(request, response, next);
+        await sut.getMiddleware()(request, response, next);
         // Then
         expect(next).toHaveBeenCalledTimes(1);
         expect(next).toHaveBeenCalledWith(htmlGeneratorError);
@@ -198,9 +197,9 @@ describe('middlewares/html:showHTML', () => {
       const htmlGeneratorFile = 'charo.html';
       const htmlGenerator = {
         whenReady: jest.fn(() => Promise.resolve()),
-        getOptions: jest.fn(() => ({
+        options: {
           file: htmlGeneratorFile,
-        })),
+        },
       };
       const htmlGeneratorName = 'myHtmlGenerator';
       const { container, containerMocks: mocks } = getJimpexMock({
@@ -227,7 +226,6 @@ describe('middlewares/html:showHTML', () => {
       expect(mocks.try).toHaveBeenCalledTimes(1);
       expect(mocks.try).toHaveBeenCalledWith(htmlGeneratorName);
       expect(htmlGenerator.whenReady).toHaveBeenCalledTimes(1);
-      expect(htmlGenerator.getOptions).toHaveBeenCalledTimes(1);
       expect(sendFile).toHaveBeenCalledTimes(1);
       expect(sendFile).toHaveBeenCalledWith({
         res: response,

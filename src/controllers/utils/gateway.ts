@@ -366,6 +366,7 @@ export type GatewayHelperService = Partial<{
  * the helper service.
  *
  * @template T  The type of the options for a specific helper service function.
+ * @access protected
  * @group Controllers/Gateway
  */
 export type GatewayControllerHelperOptions<T> = T & {
@@ -462,8 +463,9 @@ export type GatewayControllerConstructorOptions = GatewayControllerOptions & {
   };
 };
 /**
- * The options for {@link GatewayController.addRoute}.
+ * The options for {@link GatewayController._addRoute}.
  *
+ * @access protected
  * @group Controllers/Gateway
  */
 export type AddGatewayRouteOptions = {
@@ -506,41 +508,41 @@ export class GatewayController {
    * starts, and injecting a reference would force the service to be initialized too,
    * even if a request is not being made.
    */
-  protected readonly getHelperService: () => GatewayHelperService | undefined;
+  protected readonly _getHelperService: () => GatewayHelperService | undefined;
   /**
    * The information, url and endpoints, for the gateway the controller will make requests to.
    */
-  protected readonly gatewayConfig: GatewayConfig;
+  protected readonly _gatewayConfig: GatewayConfig;
   /**
    * The route in which the controller is mounted.
    */
-  protected readonly route: string;
+  protected readonly _route: string;
   /**
    * A regular expression that will be used to remove the controller route from a
    * request path. This will allow the main middleware to extract the path to where the
    * request should be made.
    */
-  protected readonly routeExpression: RegExp;
+  protected readonly _routeExpression: RegExp;
   /**
    * The controller customization options.
    */
-  protected readonly options: GatewayControllerExtraOptions;
+  protected readonly _options: GatewayControllerExtraOptions;
   /**
    * A flat dictionary with the endpoints information.
    */
-  protected readonly endpoints: Record<string, GatewayConfigEndpointDefinition>;
+  protected readonly _endpoints: Record<string, GatewayConfigEndpointDefinition>;
   /**
    * The entry URL for the API client configuration the controller can generate.
    */
-  protected readonly apiConfigUrl: string;
+  protected readonly _apiConfigUrl: string;
   /**
    * The generated endpoints for the API client configuration the controller can generate.
    */
-  protected readonly apiConfigEndpoints: APIClientOptions['endpoints'];
+  protected readonly _apiConfigEndpoints: APIClientOptions['endpoints'];
   /**
    * The list of routes the controller can handle.
    */
-  protected readonly routes: GatewayControllerRoute[];
+  protected readonly _routes: GatewayControllerRoute[];
   /**
    * @param options  The options to construct the controller.
    */
@@ -551,9 +553,9 @@ export class GatewayController {
     ...options
   }: GatewayControllerConstructorOptions) {
     this.http = inject.http;
-    this.getHelperService = inject.getHelperService || (() => undefined);
-    this.route = removeSlashes(route);
-    this.options = this.formatOptions(
+    this._getHelperService = inject.getHelperService || (() => undefined);
+    this._route = removeSlashes(route);
+    this._options = this._formatOptions(
       deepAssignWithOverwrite(
         {
           root: '',
@@ -568,32 +570,20 @@ export class GatewayController {
         options,
       ),
     );
-    this.gatewayConfig = {
+    this._gatewayConfig = {
       ...gatewayConfig,
       url: removeSlashes(gatewayConfig.url, false, true),
     };
-    this.routeExpression = createRouteExpression(
-      this.options.root ? `${this.route}/${this.options.root}` : this.route,
+    this._routeExpression = createRouteExpression(
+      this._options.root ? `${this._route}/${this._options.root}` : this._route,
       true,
       true,
     );
-    this.endpoints = this.formatEndpoints();
-    this.routes = this.createRoutes();
-    const { url, endpoints } = this.createAPIConfig();
-    this.apiConfigUrl = url;
-    this.apiConfigEndpoints = endpoints;
-  }
-  /**
-   * Gets the customization options.
-   */
-  getOptions(): Readonly<GatewayControllerExtraOptions> {
-    return { ...this.options };
-  }
-  /**
-   * Gets the configuration for the gateway the controller will make requests to.
-   */
-  getGatewayConfig(): Readonly<GatewayConfig> {
-    return { ...this.gatewayConfig };
+    this._endpoints = this._formatEndpoints();
+    this._routes = this._createRoutes();
+    const { url, endpoints } = this._createAPIConfig();
+    this._apiConfigUrl = url;
+    this._apiConfigEndpoints = endpoints;
   }
   /**
    * Generates an API client configuration based on the controller routes.
@@ -604,22 +594,22 @@ export class GatewayController {
     setting,
     placeholders = {},
   }: GatewayControllerAPIConfigOptions = {}): Readonly<GatewayControllerAPIConfig> {
-    const useSetting = setting || this.options.apiConfigSetting;
+    const useSetting = setting || this._options.apiConfigSetting;
     let url: string;
     const placeholdersEntries = Object.entries(placeholders);
     if (placeholdersEntries.length) {
       url = placeholdersEntries.reduce<string>(
         (acc, [key, value]) => acc.replace(`:${key}`, value),
-        this.apiConfigUrl,
+        this._apiConfigUrl,
       );
     } else {
-      url = this.apiConfigUrl;
+      url = this._apiConfigUrl;
     }
 
     return {
       url,
       endpoints: {
-        [useSetting]: this.apiConfigEndpoints,
+        [useSetting]: this._apiConfigEndpoints,
       },
     };
   }
@@ -631,13 +621,13 @@ export class GatewayController {
    *                     middleware.
    */
   addRoutes(router: Router, middlewares: ExpressMiddleware[] = []): Router {
-    this.routes.forEach((route) => {
+    this._routes.forEach((route) => {
       route.methods.forEach((info) => {
-        this.addRoute({
+        this._addRoute({
           router,
           method: info.method,
           route: route.route,
-          gatewayMiddleware: this.createGatewayMiddleware(info.endpoint),
+          gatewayMiddleware: this._createGatewayMiddleware(info.endpoint),
           middlewares,
         });
       });
@@ -646,19 +636,31 @@ export class GatewayController {
     return router;
   }
   /**
+   * The customization options.
+   */
+  get options(): Readonly<GatewayControllerExtraOptions> {
+    return { ...this._options };
+  }
+  /**
+   * The configuration for the gateway the controller will make requests to.
+   */
+  get gatewayConfig(): Readonly<GatewayConfig> {
+    return { ...this._gatewayConfig };
+  }
+  /**
    * Generates a middleware that will make the request to an endpoint and stream the
    * response.
    *
    * @param endpoint  The information of the endpoint the middleware will handle.
    */
-  protected createGatewayMiddleware(
+  protected _createGatewayMiddleware(
     endpoint: GatewayControllerEndpointInfo,
   ): AsyncExpressMiddleware {
     return async (req, res, next) => {
       const {
-        options: { headers: headersOptions },
-        gatewayConfig: { url: gatewayUrl },
-        routeExpression,
+        _options: { headers: headersOptions },
+        _gatewayConfig: { url: gatewayUrl },
+        _routeExpression: routeExpression,
       } = this;
       // Remove the controller route from the requested URL.
       const reqPath = req.originalUrl.replace(routeExpression, '');
@@ -700,7 +702,7 @@ export class GatewayController {
        * Get the helper service, if there's one, and define the base options for its
        * methods.
        */
-      const helper = this.getHelperService() || {};
+      const helper = this._getHelperService() || {};
       const helperBasePayload = {
         endpoint,
         req,
@@ -711,7 +713,7 @@ export class GatewayController {
 
       try {
         // Reduce the request information before using it.
-        const request = await this.reduceEndpointRequest({
+        const request = await this._reduceEndpointRequest({
           endpointReq: {
             url: `${gatewayUrl}/${reqPath}`,
             options: {
@@ -725,12 +727,12 @@ export class GatewayController {
         // Make the actual request.
         const responseRaw = await this.http.fetch(request.url, request.options);
         // Reduce the response information before using it.
-        const response = await this.reduceEndpointResponse({
+        const response = await this._reduceEndpointResponse({
           endpointRes: responseRaw,
           ...helperBasePayload,
         });
         // Validate if the response should be streamed.
-        const shouldStream = await this.shouldStreamEndpointResponse({
+        const shouldStream = await this._shouldStreamEndpointResponse({
           endpointRes: responseRaw,
           ...helperBasePayload,
         });
@@ -755,14 +757,14 @@ export class GatewayController {
            * If the response should not be streamed, send it to the helper method to
            * handle it.
            */
-          await this.handleEndpointResponse({
+          await this._handleEndpointResponse({
             endpointRes: response,
             ...helperBasePayload,
           });
         }
       } catch (error) {
         // Something failed, so let's pass the error to the helper service.
-        this.handleEndpointError({
+        this._handleEndpointError({
           error: error as Error,
           ...helperBasePayload,
         });
@@ -774,7 +776,7 @@ export class GatewayController {
    *
    * @param options  The information of the endpoint and how it needs to be added.
    */
-  protected addRoute({
+  protected _addRoute({
     router,
     method,
     route,
@@ -786,9 +788,9 @@ export class GatewayController {
   /**
    * Formats the endpoints for the gateway into a flat dictionary without nesting.
    */
-  protected formatEndpoints(): Record<string, GatewayConfigEndpointDefinition> {
+  protected _formatEndpoints(): Record<string, GatewayConfigEndpointDefinition> {
     return flat({
-      target: this.gatewayConfig.gateway,
+      target: this._gatewayConfig.gateway,
       shouldFlatten: (_, value) => {
         const useValue = value as { path?: string };
         return typeof useValue.path === 'undefined';
@@ -802,7 +804,7 @@ export class GatewayController {
    * @throws If there's more than one endpoint using the same path with the same HTTP
    *         method.
    */
-  protected createRoutes(): GatewayControllerRoute[] {
+  protected _createRoutes(): GatewayControllerRoute[] {
     const routes: Record<
       string,
       {
@@ -810,8 +812,8 @@ export class GatewayController {
         methods: Partial<Record<RouterMethod, string>>;
       }
     > = {};
-    Object.keys(this.endpoints).forEach((name) => {
-      const endpoint = this.endpoints[name]!;
+    Object.keys(this._endpoints).forEach((name) => {
+      const endpoint = this._endpoints[name]!;
       let endpointPath: string;
       let endpointMethod: RouterMethod;
       if (typeof endpoint === 'string') {
@@ -820,7 +822,7 @@ export class GatewayController {
       } else {
         endpointPath = endpoint.path;
         endpointMethod = endpoint.method
-          ? this.validateHTTPMethod(endpoint.method)
+          ? this._validateHTTPMethod(endpoint.method)
           : 'all';
       }
 
@@ -843,7 +845,7 @@ export class GatewayController {
       routes[endpointPath]!.methods[endpointMethod] = name;
     });
 
-    const routePrefixes = this.options.root ? `/${this.options.root}/` : '/';
+    const routePrefixes = this._options.root ? `/${this._options.root}/` : '/';
     return Object.keys(routes).map((endpointPath) => {
       const info = routes[endpointPath]!;
       return {
@@ -852,7 +854,7 @@ export class GatewayController {
         methods: Object.keys(info.methods).map((methodNameRaw) => {
           const methodName = methodNameRaw as RouterMethod;
           const endpointName = info.methods[methodName]!;
-          const endpointDefinition = this.endpoints[endpointName]!;
+          const endpointDefinition = this._endpoints[endpointName]!;
           return {
             method: methodName,
             endpoint: {
@@ -876,7 +878,7 @@ export class GatewayController {
    *
    * @param options  The information of the request and the reference to the helper.
    */
-  protected reduceEndpointRequest({
+  protected _reduceEndpointRequest({
     helper,
     ...options
   }: GatewayControllerHelperOptions<GatewayHelperServiceRequestReducerOptions>): Promise<GatewayControllerRequest> {
@@ -898,7 +900,7 @@ export class GatewayController {
    *
    * @param options  The information of the response and the reference to the helper.
    */
-  protected reduceEndpointResponse({
+  protected _reduceEndpointResponse({
     helper,
     ...options
   }: GatewayControllerHelperOptions<GatewayHelperServiceResponseReducerOptions>): Promise<HTTPResponse> {
@@ -920,7 +922,7 @@ export class GatewayController {
    *
    * @param options  The information of the response and the reference to the helper.
    */
-  protected shouldStreamEndpointResponse({
+  protected _shouldStreamEndpointResponse({
     helper,
     ...options
   }: GatewayControllerHelperOptions<GatewayHelperServiceResponseReducerOptions>): Promise<boolean> {
@@ -943,7 +945,7 @@ export class GatewayController {
    * @param options  The information of the response and the reference to the helper.
    * @throws If the helper doesn't implement `handleEndpointResponse`.
    */
-  protected handleEndpointResponse({
+  protected _handleEndpointResponse({
     helper,
     ...options
   }: GatewayControllerHelperOptions<GatewayHelperServiceResponseReducerOptions>): Promise<void> {
@@ -965,7 +967,7 @@ export class GatewayController {
    *
    * @param options  The information of the response and the reference to the helper.
    */
-  protected handleEndpointError({
+  protected _handleEndpointError({
     helper,
     ...options
   }: GatewayControllerHelperOptions<GatewayHelperServiceErrorHandlerOptions>): void {
@@ -980,7 +982,7 @@ export class GatewayController {
    *
    * @param options  The options sent to the constructor.
    */
-  protected formatOptions(
+  protected _formatOptions(
     options: GatewayControllerExtraOptions,
   ): GatewayControllerExtraOptions {
     if (options.root) {
@@ -996,7 +998,7 @@ export class GatewayController {
    *
    * @param method  The HTTP method for the endpoint.
    */
-  protected validateHTTPMethod(method: string): RouterMethod {
+  protected _validateHTTPMethod(method: string): RouterMethod {
     const newMethod = method.toLowerCase();
     return [
       'get',
@@ -1015,14 +1017,14 @@ export class GatewayController {
   /**
    * Creates the API client configuration based on the controller routes.
    */
-  protected createAPIConfig(): GatewayControllerAPIConfig {
+  protected _createAPIConfig(): GatewayControllerAPIConfig {
     let endpoints: APIClientOptions['endpoints'];
-    const { root } = this.options;
+    const { root } = this._options;
     if (root) {
-      endpoints = Object.keys(this.endpoints).reduce<
+      endpoints = Object.keys(this._endpoints).reduce<
         Record<string, GatewayConfigEndpointDefinition>
       >((acc, name) => {
-        const endpoint = this.endpoints[name]!;
+        const endpoint = this._endpoints[name]!;
         let newEndpoint;
         if (typeof endpoint === 'string') {
           newEndpoint = removeSlashes(endpoint);
@@ -1039,11 +1041,11 @@ export class GatewayController {
         return acc;
       }, {});
     } else {
-      endpoints = this.endpoints;
+      endpoints = this._endpoints;
     }
 
     return {
-      url: `/${this.route}`,
+      url: `/${this._route}`,
       endpoints: unflat({ target: endpoints }),
     };
   }

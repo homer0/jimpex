@@ -13,7 +13,7 @@ describe('middlewares/common:forceHTTPS', () => {
       const sut = new ForceHTTPS();
       // Then
       expect(sut).toBeInstanceOf(ForceHTTPS);
-      expect(sut.getOptions()).toEqual({
+      expect(sut.options).toEqual({
         ignoredRoutes: expect.arrayContaining([expect.any(RegExp)]),
       });
     });
@@ -27,7 +27,7 @@ describe('middlewares/common:forceHTTPS', () => {
       // When
       const sut = new ForceHTTPS(options);
       // Then
-      expect(sut.getOptions()).toEqual({
+      expect(sut.options).toEqual({
         ignoredRoutes,
       });
     });
@@ -54,7 +54,7 @@ describe('middlewares/common:forceHTTPS', () => {
         const next = jest.fn();
         // When
         const sut = new ForceHTTPS();
-        sut.middleware()(request, response, next);
+        sut.getMiddleware()(request, response, next);
         // Then
         expect(requestGet).toHaveBeenCalledTimes(2);
         expect(requestGet).toHaveBeenNthCalledWith(1, 'X-Forwarded-Proto');
@@ -87,7 +87,7 @@ describe('middlewares/common:forceHTTPS', () => {
         const next = jest.fn();
         // When
         const sut = new ForceHTTPS();
-        sut.middleware()(request, response, next);
+        sut.getMiddleware()(request, response, next);
         // Then
         expect(requestGet).toHaveBeenCalledTimes(0);
         expect(redirect).toHaveBeenCalledTimes(0);
@@ -118,7 +118,7 @@ describe('middlewares/common:forceHTTPS', () => {
         const sut = new ForceHTTPS({
           ignoredRoutes,
         });
-        sut.middleware()(request, response, next);
+        sut.getMiddleware()(request, response, next);
         // Then
         expect(redirect).toHaveBeenCalledTimes(0);
         expect(next).toHaveBeenCalledTimes(1);
@@ -160,7 +160,7 @@ describe('middlewares/common:forceHTTPS', () => {
       const sut = forceHTTPSMiddleware.connect(container);
       const toCompare = new ForceHTTPS();
       // Then
-      expect(sut!.toString()).toBe(toCompare.middleware().toString());
+      expect(sut!.toString()).toBe(toCompare.getMiddleware().toString());
     });
   });
 });

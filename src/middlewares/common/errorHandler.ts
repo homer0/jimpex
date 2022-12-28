@@ -80,23 +80,23 @@ export class ErrorHandler {
   /**
    * The service that will log the messages in the console.
    */
-  protected readonly logger: SimpleLogger;
+  protected readonly _logger: SimpleLogger;
   /**
    * The service to generate the responses.
    */
-  protected readonly responsesBuilder: ResponsesBuilder;
+  protected readonly _responsesBuilder: ResponsesBuilder;
   /**
    * The uility service to get HTTP status codes.
    */
-  protected readonly statuses: Statuses;
+  protected readonly _statuses: Statuses;
   /**
    * The Error class used by the "known errors".
    */
-  protected readonly HTTPError: HTTPErrorClass;
+  protected readonly _HTTPError: HTTPErrorClass;
   /**
    * The customization options.
    */
-  protected readonly options: ErrorHandlerOptions;
+  protected readonly _options: ErrorHandlerOptions;
   /**
    * @param options  The options to construct the class.
    */
@@ -104,31 +104,25 @@ export class ErrorHandler {
     inject: { logger, responsesBuilder, statuses, HTTPError },
     ...options
   }: ErrorHandlerConstructorOptions) {
-    this.logger = logger;
-    this.responsesBuilder = responsesBuilder;
-    this.statuses = statuses;
-    this.HTTPError = HTTPError;
-    this.options = deepAssignWithOverwrite(
+    this._logger = logger;
+    this._responsesBuilder = responsesBuilder;
+    this._statuses = statuses;
+    this._HTTPError = HTTPError;
+    this._options = deepAssignWithOverwrite(
       {
         showErrors: false,
         response: {
           message: 'Unexpected error',
-          status: this.statuses('internal server error'),
+          status: this._statuses('internal server error'),
         },
       },
       options,
     );
   }
   /**
-   * Gets the customization options.
-   */
-  getOptions(): Readonly<ErrorHandlerOptions> {
-    return deepAssignWithOverwrite({}, this.options);
-  }
-  /**
    * Generates the middleware that handles the errors.
    */
-  middleware(): ExpressErrorHandler {
+  getMiddleware(): ExpressErrorHandler {
     return (err, _, res, next) => {
       // If there wasn't any error, continue the execution.
       if (!err) {
@@ -136,7 +130,7 @@ export class ErrorHandler {
         return;
       }
 
-      const { response, showErrors } = this.options;
+      const { response, showErrors } = this._options;
 
       // Define the base status and response.
       let { status } = response;
@@ -161,7 +155,7 @@ export class ErrorHandler {
             ...data,
             ...err.getResponse(),
           };
-          status = err.status || (this.statuses('bad request') as number);
+          status = err.status || (this._statuses('bad request') as number);
         }
         /**
          * If the flag is set to `true`, and it's a "valid error", try to extract the
@@ -171,17 +165,23 @@ export class ErrorHandler {
           const stack = err.stack.split('\n').map((line) => line.trim());
           data.stack = stack;
           stack.splice(0, 1);
-          this.logger.error(`ERROR: ${err.message}`);
-          this.logger.info(stack);
+          this._logger.error(`ERROR: ${err.message}`);
+          this._logger.info(stack);
         }
       }
 
-      this.responsesBuilder.json({
+      this._responsesBuilder.json({
         res,
         data,
         status,
       });
     };
+  }
+  /**
+   * The handler customization options.
+   */
+  get options(): Readonly<ErrorHandlerOptions> {
+    return deepAssignWithOverwrite({}, this._options);
   }
 }
 /**
@@ -206,6 +206,6 @@ export const errorHandlerMiddleware = middlewareCreator(
         },
         showErrors,
         ...options,
-      }).middleware();
+      }).getMiddleware();
     },
 );

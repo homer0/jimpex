@@ -66,27 +66,27 @@ export class Jimpex extends Jimple {
   /**
    * The customization settings for the application.
    */
-  protected options: JimpexOptions;
+  protected _options: JimpexOptions;
   /**
    * The Express application Jimpex uses under the hood.
    */
-  protected express: Express;
+  protected _express: Express;
   /**
    * Since the configuration service has an async initialization, the class uses this flag
    * internally to validate if the configuration has been initialized or not.
    */
-  protected configReady: boolean = false;
+  protected _configReady: boolean = false;
   /**
    * A reference to the actuall HTTP the application will use. This can vary depending on
    * whether HTTPS, or HTTP2 are enabled. If HTTPS is not enabled, it will be the same as
    * the `express` property; if HTTPS is enabled, it will be an `https` server; and if
    * HTTP2 is enabled, it will be an `spdy` server.
    */
-  protected server?: JimpexServer;
+  protected _server?: JimpexServer;
   /**
    * The instance of the server that is listening for requests.
    */
-  protected instance?: JimpexServerInstance;
+  protected _instance?: JimpexServerInstance;
   /**
    * A list of functions that implement controllers and middlewares. When the application
    * starts, the queue will be processed and those controllers and middlewares will be
@@ -95,12 +95,12 @@ export class Jimpex extends Jimple {
    * adding middlewares and controllers as they come could cause errors if they depend on
    * services that are not yet registered.
    */
-  protected mountQueue: Array<(server: Express) => void> = [];
+  protected _mountQueue: Array<(server: Express) => void> = [];
   /**
    * A list with all the top routes controlled by the application. Every time a controller
    * is mounted, its route will be added here.
    */
-  protected controlledRoutes: string[] = [];
+  protected _controlledRoutes: string[] = [];
   /**
    * @param options  Preferences to customize the application.
    * @param config   The default settings for the configuration service. It's a
@@ -109,7 +109,7 @@ export class Jimpex extends Jimple {
   constructor(options: DeepPartial<JimpexOptions> = {}, config: unknown = {}) {
     super();
 
-    this.options = deepAssignWithOverwrite(
+    this._options = deepAssignWithOverwrite(
       {
         version: '0.0.0',
         filesizeLimit: '15MB',
@@ -152,17 +152,17 @@ export class Jimpex extends Jimple {
         healthCheck: () => Promise.resolve(true),
       },
       options,
-      this.initOptions(),
+      this._initOptions(),
     );
 
-    this.express = express();
+    this._express = express();
 
-    this.setupCoreServices();
-    this.setupExpress();
-    this.configurePath();
+    this._setupCoreServices();
+    this._setupExpress();
+    this._configurePath();
 
-    this.init();
-    if (this.options.boot) {
+    this._init();
+    if (this._options.boot) {
       this.boot();
     }
   }
@@ -176,7 +176,7 @@ export class Jimpex extends Jimple {
   disableTLSValidation() {
     // eslint-disable-next-line no-process-env, dot-notation
     process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0';
-    this.getLogger().warn('TLS validation has been disabled');
+    this.logger.warn('TLS validation has been disabled');
   }
   /**
    * Starts the app server.
@@ -185,26 +185,26 @@ export class Jimpex extends Jimple {
    * @returns The server instance.
    */
   async start(onStart?: JimpexStartCallback): Promise<JimpexServerInstance> {
-    await this.setupConfig();
+    await this._setupConfig();
     const config = this.getConfig();
     const port = config.get<number | undefined>('port');
     if (!port) {
       throw new Error('No port configured');
     }
-    this.emitEvent('beforeStart', { app: this });
-    this.server = await this.createServer();
-    this.instance = this.server!.listen(port, () => {
-      this.emitEvent('start', { app: this });
-      this.mountResources();
-      this.getLogger().success(`Starting on port ${port}`);
-      this.emitEvent('afterStart', { app: this });
+    this._emitEvent('beforeStart', { app: this });
+    this._server = await this._createServer();
+    this._instance = this._server!.listen(port, () => {
+      this._emitEvent('start', { app: this });
+      this._mountResources();
+      this.logger.success(`Starting on port ${port}`);
+      this._emitEvent('afterStart', { app: this });
       if (onStart) {
         onStart(config);
       }
-      this.emitEvent('afterStartCallback', { app: this });
+      this._emitEvent('afterStartCallback', { app: this });
     });
 
-    return this.instance!;
+    return this._instance!;
   }
   /**
    * This is an alias of `start`. The idea is for it to be used on serverless platforms,
@@ -222,7 +222,7 @@ export class Jimpex extends Jimple {
     onStart?: JimpexStartCallback,
   ): Promise<JimpexServerInstance> {
     if (port) {
-      await this.setupConfig();
+      await this._setupConfig();
       const config = this.getConfig();
       config.set('port', port);
     }
@@ -233,11 +233,11 @@ export class Jimpex extends Jimple {
    * Stops the server instance.
    */
   stop(): void {
-    if (!this.instance) return;
-    this.emitEvent('beforeStop', { app: this });
-    this.instance.close();
-    this.instance = undefined;
-    this.emitEvent('afterStop', { app: this });
+    if (!this._instance) return;
+    this._emitEvent('beforeStop', { app: this });
+    this._instance.close();
+    this._instance = undefined;
+    this._emitEvent('afterStop', { app: this });
   }
   /**
    * Mounts a route controller or a middleware into a server routes.
@@ -267,17 +267,17 @@ export class Jimpex extends Jimple {
       };
     }
 
-    this.mountQueue.push((server) => {
+    this._mountQueue.push((server) => {
       const connected = useController.connect(this, route);
       if (!connected) return;
-      const router = this.reduceWithEvent('controllerWillBeMounted', connected, {
+      const router = this._reduceWithEvent('controllerWillBeMounted', connected, {
         route,
         controller: useController,
         app: this,
       });
       server.use(route, router);
-      this.emitEvent('routeAdded', { route, app: this });
-      this.controlledRoutes.push(route);
+      this._emitEvent('routeAdded', { route, app: this });
+      this._controlledRoutes.push(route);
     });
   }
   /**
@@ -290,12 +290,12 @@ export class Jimpex extends Jimple {
       'register' in middleware && typeof middleware.register === 'function'
         ? (middleware as MiddlewareProvider).register(this)
         : (middleware as Middleware | ExpressMiddlewareLike);
-    this.mountQueue.push((server) => {
+    this._mountQueue.push((server) => {
       if ('connect' in useMiddleware && typeof useMiddleware.connect === 'function') {
         const handler = useMiddleware.connect(this);
         if (handler) {
           server.use(
-            this.reduceWithEvent('middlewareWillBeUsed', handler, { app: this }),
+            this._reduceWithEvent('middlewareWillBeUsed', handler, { app: this }),
           );
         }
 
@@ -303,7 +303,7 @@ export class Jimpex extends Jimple {
       }
 
       server.use(
-        this.reduceWithEvent(
+        this._reduceWithEvent(
           'middlewareWillBeUsed',
           useMiddleware as ExpressMiddlewareLike,
           { app: this },
@@ -338,40 +338,40 @@ export class Jimpex extends Jimple {
     return config.get<T>(setting, asArray);
   }
   /**
-   * Gets the logger service.
+   * The logger service.
    */
-  getLogger(): SimpleLogger {
+  get logger(): SimpleLogger {
     return this.get<SimpleLogger>('logger');
   }
   /**
-   * Gets the Express application Jimpex uses under the hood.
+   * The Express application Jimpex uses under the hood.
    */
-  getExpress(): Express {
-    return this.express;
+  get express(): Express {
+    return this._express;
   }
   /**
-   * If the application is running, it will return the server instance.
+   * The server instance that gets created when the app is started.
    */
-  getInstance(): JimpexServerInstance | undefined {
-    return this.instance;
+  get instance(): JimpexServerInstance | undefined {
+    return this._instance;
   }
   /**
-   * Gets the application customization options.
+   * The application customization options.
    */
-  getOptions(): DeepReadonly<JimpexOptions> {
-    return deepAssignWithOverwrite({}, this.options);
+  get options(): DeepReadonly<JimpexOptions> {
+    return deepAssignWithOverwrite({}, this._options);
   }
   /**
    * Gets the events service.
    */
-  getEventsHub(): EventsHub {
+  get eventsHub(): EventsHub {
     return this.get<EventsHub>('events');
   }
   /**
-   * Gets a list of the routes that have controllers mounted on them.
+   * A list of the routes that have controllers mounted on them.
    */
-  getRoutes(): string[] {
-    return this.controlledRoutes.slice();
+  get routes(): string[] {
+    return this._controlledRoutes.slice();
   }
   /**
    * Adds a listener for an application event.
@@ -386,7 +386,7 @@ export class Jimpex extends Jimple {
     eventName: EventName,
     listener: JimpexEventListener<EventName>,
   ): () => boolean {
-    return this.getEventsHub().on(eventName, listener);
+    return this.eventsHub.on(eventName, listener);
   }
   /**
    * Adds a listener for an application event that will only be execuded once: the first
@@ -402,14 +402,14 @@ export class Jimpex extends Jimple {
     eventName: EventName,
     listener: JimpexEventListener<EventName>,
   ): () => boolean {
-    return this.getEventsHub().once(eventName, listener);
+    return this.eventsHub.once(eventName, listener);
   }
   /**
    * Based on the application options, it returns wheter the application is healthy or
    * not.
    */
   isHealthy(): ReturnType<JimpexHealthCheckFn> {
-    return this.options.healthCheck(this);
+    return this._options.healthCheck(this);
   }
   /**
    * This method is like a "lifecycle method", it gets executed on the constructor right
@@ -420,7 +420,7 @@ export class Jimpex extends Jimple {
    * it needs, and then call `boot()`. That would be impossible for an application without
    * overwriting the constructor and the boot functionality.
    */
-  protected init(): void {}
+  protected _init(): void {}
   /**
    * It generates overwrites for the application options when it gets created. This method
    * is a helper for when the application is defined by subclassing {@link Jimpex}: It's
@@ -431,13 +431,13 @@ export class Jimpex extends Jimple {
    * necessary: when creating the `options`, the constructor will merge the result of this
    * method on top of the default ones.
    */
-  protected initOptions(): DeepPartial<JimpexOptions> {
+  protected _initOptions(): DeepPartial<JimpexOptions> {
     return {};
   }
   /**
    * Registers the "core services" on the container: logger, events, utils, etc.
    */
-  protected setupCoreServices(): void {
+  protected _setupCoreServices(): void {
     this.register(
       appLoggerProvider({
         serviceName: 'logger',
@@ -447,7 +447,7 @@ export class Jimpex extends Jimple {
     this.register(packageInfoProvider);
     this.register(pathUtilsProvider);
     this.register(rootFileProvider);
-    const { services: enabledServices } = this.options;
+    const { services: enabledServices } = this._options;
     if (enabledServices.common) this.register(commonServicesProvider);
     if (enabledServices.http) this.register(httpServicesProvider);
     if (enabledServices.utils) this.register(utilsServicesProvider);
@@ -458,31 +458,31 @@ export class Jimpex extends Jimple {
   /**
    * Configures the Express application based on the class options.
    */
-  protected setupExpress(): void {
-    const { statics, filesizeLimit, express: expressOptions } = this.options;
+  protected _setupExpress(): void {
+    const { statics, filesizeLimit, express: expressOptions } = this._options;
     if (expressOptions.trustProxy) {
-      this.express.enable('trust proxy');
+      this._express.enable('trust proxy');
     }
 
     if (expressOptions.disableXPoweredBy) {
-      this.express.disable('x-powered-by');
+      this._express.disable('x-powered-by');
     }
 
     if (expressOptions.compression) {
-      this.express.use(compression());
+      this._express.use(compression());
     }
 
     if (statics.enabled) {
-      this.addStaticsFolder(statics.route, statics.folder, statics.onHome);
+      this._addStaticsFolder(statics.route, statics.folder, statics.onHome);
     }
 
     if (expressOptions.bodyParser) {
-      this.express.use(
+      this._express.use(
         bodyParser.json({
           limit: filesizeLimit,
         }),
       );
-      this.express.use(
+      this._express.use(
         bodyParser.urlencoded({
           extended: true,
           limit: filesizeLimit,
@@ -491,7 +491,7 @@ export class Jimpex extends Jimple {
     }
 
     if (expressOptions.multer) {
-      this.express.use(multer().any());
+      this._express.use(multer().any());
     }
 
     this.set(
@@ -511,7 +511,7 @@ export class Jimpex extends Jimple {
    *                root. If `false`, it will be relative to where the application
    *                executable is located.
    */
-  protected addStaticsFolder(
+  protected _addStaticsFolder(
     route: string,
     folder: string = '',
     onHome: boolean = false,
@@ -535,11 +535,11 @@ export class Jimpex extends Jimple {
    * @throws If the method should use the path from the parent module, but can't find
    *         it.
    */
-  protected configurePath(): void {
+  protected _configurePath(): void {
     const pathUtils = this.get<PathUtils>('pathUtils');
     const {
       path: { appPath, useParentPath },
-    } = this.options;
+    } = this._options;
     if (appPath) {
       pathUtils.addLocation('app', appPath);
       return;
@@ -569,10 +569,10 @@ export class Jimpex extends Jimple {
    * so it can't be instantiated as the other services.
    * This method is called just before starting the application.
    */
-  protected async setupConfig(): Promise<void> {
-    if (this.configReady) return;
-    this.configReady = true;
-    const { config: options } = this.options;
+  protected async _setupConfig(): Promise<void> {
+    if (this._configReady) return;
+    this._configReady = true;
+    const { config: options } = this._options;
 
     let configsPath = options.path.replace(/\/$/, '');
     if (options.hasFolder) {
@@ -608,9 +608,9 @@ export class Jimpex extends Jimple {
    * Processes the resources from the mount queue (added with {@link Jimpex.mount} and
    * {@link Jimpex.use}), and adds them to the Express application.
    */
-  protected mountResources(): void {
-    this.mountQueue.forEach((mount) => mount(this.express));
-    this.mountQueue.length = 0;
+  protected _mountResources(): void {
+    this._mountQueue.forEach((mount) => mount(this._express));
+    this._mountQueue.length = 0;
   }
   /**
    * Emits an event using the `events` service.
@@ -619,11 +619,11 @@ export class Jimpex extends Jimple {
    * @param payload  The event payload.
    * @template EventName  The literal name of the event, to type the event payload.
    */
-  protected emitEvent<EventName extends JimpexEventName>(
+  protected _emitEvent<EventName extends JimpexEventName>(
     name: EventName,
     payload: JimpexEventPayload<EventName>,
   ): void {
-    this.getEventsHub().emit(name, payload);
+    this.eventsHub.emit(name, payload);
   }
   /**
    * Sends a target object to a list of reducer events so they can modify or replace it.
@@ -632,12 +632,12 @@ export class Jimpex extends Jimple {
    * @param target   The object to reduce with the event.
    * @param payload  Extra context for the listeners.
    */
-  protected reduceWithEvent<EventName extends JimpexReducerEventName>(
+  protected _reduceWithEvent<EventName extends JimpexReducerEventName>(
     name: EventName,
     target: JimpexReducerEventTarget<EventName>,
     payload: JimpexReducerEventPayload<EventName>,
   ): JimpexReducerEventTarget<EventName> {
-    return this.getEventsHub().reduceSync(name, target, payload);
+    return this.eventsHub.reduceSync(name, target, payload);
   }
   /**
    * Loads the contents of a dictionary of credentials files that need to be used to
@@ -651,7 +651,7 @@ export class Jimpex extends Jimple {
    *                         to where the application executable is located.
    * @returns
    */
-  protected async loadCredentials(
+  protected async _loadCredentials(
     credentialsInfo: JimpexHTTPSCredentials,
     onHome: boolean = true,
   ): Promise<JimpexHTTPSCredentials> {
@@ -690,13 +690,13 @@ export class Jimpex extends Jimple {
    * @access protected
    * @ignore
    */
-  protected async createServer(): Promise<JimpexServer> {
+  protected async _createServer(): Promise<JimpexServer> {
     const [http2Config = {}, httpsConfig = {}] = this.getConfig<
       [JimpexHTTP2Options, JimpexHTTPSOptions]
     >(['http2', 'https'], true);
 
     if (!http2Config.enabled && !httpsConfig.enabled) {
-      return this.express;
+      return this._express;
     }
 
     if (http2Config.enabled && !httpsConfig.enabled) {
@@ -707,7 +707,7 @@ export class Jimpex extends Jimple {
       throw new Error('The `credentials` object on the HTTPS settings is missing');
     }
 
-    const credentials = await this.loadCredentials(
+    const credentials = await this._loadCredentials(
       httpsConfig.credentials,
       httpsConfig.credentials.onHome,
     );
@@ -722,10 +722,10 @@ export class Jimpex extends Jimple {
         spdy: http2Config.spdy,
       };
 
-      return createSpdyServer(serverOptions, this.express);
+      return createSpdyServer(serverOptions, this._express);
     }
 
-    return createHTTPSServer(credentials, this.express);
+    return createHTTPSServer(credentials, this._express);
   }
 }
 /**

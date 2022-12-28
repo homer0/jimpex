@@ -82,11 +82,11 @@ export class EnsureBearerToken {
   /**
    * To generate the errors when the validation fails.
    */
-  protected readonly HTTPError: HTTPErrorClass;
+  protected readonly _HTTPError: HTTPErrorClass;
   /**
    * The customization options for the service.
    */
-  protected readonly options: EnsureBearerTokenOptions;
+  protected readonly _options: EnsureBearerTokenOptions;
   /**
    * @param options  The options to construct the class.
    */
@@ -94,8 +94,8 @@ export class EnsureBearerToken {
     inject: { HTTPError, statuses },
     ...options
   }: EnsureBearerConstructorOptions) {
-    this.HTTPError = HTTPError;
-    this.options = deepAssignWithOverwrite(
+    this._HTTPError = HTTPError;
+    this._options = deepAssignWithOverwrite(
       {
         error: {
           message: 'Unauthorized',
@@ -109,26 +109,20 @@ export class EnsureBearerToken {
     );
   }
   /**
-   * Gets the customization options.
-   */
-  getOptions(): Readonly<EnsureBearerTokenOptions> {
-    return deepAssignWithOverwrite({}, this.options);
-  }
-  /**
    * Generates the middleware that verifies if a request has an `Authorization` header
    * with a bearer token.
    */
-  middleware(): ExpressMiddleware {
+  getMiddleware(): ExpressMiddleware {
     return (req, res, next) => {
       let unauthorized = true;
       const {
         headers: { authorization },
       } = req;
       if (authorization) {
-        const matches = this.options.expression.exec(authorization);
+        const matches = this._options.expression.exec(authorization);
         if (matches) {
           const [, token] = matches;
-          res.locals[this.options.local] = token;
+          res.locals[this._options.local] = token;
           unauthorized = false;
         }
       }
@@ -136,9 +130,9 @@ export class EnsureBearerToken {
       if (unauthorized) {
         const {
           error: { message, status, response },
-        } = this.options;
+        } = this._options;
         next(
-          new this.HTTPError(message, status, {
+          new this._HTTPError(message, status, {
             response,
           }),
         );
@@ -146,6 +140,12 @@ export class EnsureBearerToken {
         next();
       }
     };
+  }
+  /**
+   * The customization options.
+   */
+  get options(): Readonly<EnsureBearerTokenOptions> {
+    return deepAssignWithOverwrite({}, this._options);
   }
 }
 /**
@@ -196,7 +196,7 @@ export const ensureBearerTokenProvider = providerCreator(
             statuses: app.get('statuses'),
           },
           ...rest,
-        }).middleware(),
+        }).getMiddleware(),
       );
     },
 );

@@ -32,17 +32,17 @@ export class ConfigController {
   /**
    * The service in charge or building the responses.
    */
-  protected readonly responsesBuilder: ResponsesBuilder;
+  protected readonly _responsesBuilder: ResponsesBuilder;
   /**
    * The service in charge of the configuration.
    */
-  protected readonly config: SimpleConfig;
+  protected readonly _config: SimpleConfig;
   /**
    * @param options  The options to construct the controller.
    */
   constructor({ inject }: ConfigControllerOptions) {
-    this.responsesBuilder = inject.responsesBuilder;
-    this.config = inject.config;
+    this._responsesBuilder = inject.responsesBuilder;
+    this._config = inject.config;
   }
   /**
    * Creates the middleware the shows the current configuration.
@@ -58,13 +58,13 @@ export class ConfigController {
   switchConfig(): AsyncExpressMiddleware {
     return async (req, res, next) => {
       const { name } = req.params;
-      if (!name || !this.config.canSwitchConfigs()) {
+      if (!name || !this._config.canSwitchConfigs()) {
         next();
         return;
       }
 
       try {
-        await this.config.switch(name);
+        await this._config.switch(name);
         this.respondWithConfig(res);
       } catch (error) {
         next(error);
@@ -75,13 +75,13 @@ export class ConfigController {
    * Utility to respond with the current configuration.
    */
   protected respondWithConfig(res: Response): void {
-    const name = this.config.get<string>('name');
+    const name = this._config.get<string>('name');
     const data = {
       name,
-      ...this.config.getConfig<Record<string, unknown>>(),
+      ...this._config.getConfig<Record<string, unknown>>(),
     };
 
-    this.responsesBuilder.json({
+    this._responsesBuilder.json({
       res,
       data,
     });

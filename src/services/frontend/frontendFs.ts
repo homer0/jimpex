@@ -32,12 +32,12 @@ export class FrontendFs {
   /**
    * The service that generates the relative paths.
    */
-  protected readonly pathUtils: PathUtils;
+  protected readonly _pathUtils: PathUtils;
   /**
    * @param options  The options to construct the service.
    */
   constructor({ inject: { pathUtils } }: FrontendFsOptions) {
-    this.pathUtils = pathUtils;
+    this._pathUtils = pathUtils;
   }
   /**
    * Deletes a file from the file system.
@@ -71,7 +71,7 @@ export class FrontendFs {
    * @param filepath  The path to the file.
    */
   protected getAppPath(filepath: string): string {
-    return this.pathUtils.joinFrom('app', filepath);
+    return this._pathUtils.joinFrom('app', filepath);
   }
 }
 /**

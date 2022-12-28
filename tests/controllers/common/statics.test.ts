@@ -28,7 +28,7 @@ describe('controllers/common:statics', () => {
       const sut = new StaticsController(options);
       // Then
       expect(sut).toBeInstanceOf(StaticsController);
-      expect(sut.getOptions()).toEqual({
+      expect(sut.options).toEqual({
         files: ['favicon.ico', 'index.html'],
         methods: {
           all: false,
@@ -64,7 +64,7 @@ describe('controllers/common:statics', () => {
       const sut = new StaticsController(options);
       // Then
       expect(sut).toBeInstanceOf(StaticsController);
-      expect(sut.getOptions()).toEqual(baseOptions);
+      expect(sut.options).toEqual(baseOptions);
     });
 
     it('should throw an error when instantiated without files', () => {

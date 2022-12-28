@@ -29,7 +29,7 @@ describe('services/http:http', () => {
       const sut = new HTTP(options);
       // Then
       expect(sut).toBeInstanceOf(HTTP);
-      expect(sut.getOptions()).toEqual({
+      expect(sut.options).toEqual({
         logRequests: false,
       });
     });
@@ -386,7 +386,7 @@ describe('services/http:http', () => {
       const result = lazy();
       // Then
       expect(result).toBeInstanceOf(HTTP);
-      expect(result.getOptions().logRequests).toBe(false);
+      expect(result.options.logRequests).toBe(false);
       expect(mocks.set).toHaveBeenCalledTimes(1);
       expect(mocks.set).toHaveBeenCalledWith('http', expect.any(Function));
       expect(mocks.get).toHaveBeenCalledTimes(2);
@@ -409,7 +409,7 @@ describe('services/http:http', () => {
       const [[, lazy]] = mocks.set.mock.calls as [[string, () => HTTP]];
       const result = lazy();
       // Then
-      expect(result.getOptions().logRequests).toBe(true);
+      expect(result.options.logRequests).toBe(true);
     });
   });
 });

@@ -27,7 +27,7 @@ describe('middlewares/utils:versionValidator', () => {
       const sut = new VersionValidator(options);
       // Then
       expect(sut).toBeInstanceOf(VersionValidator);
-      expect(sut.getOptions()).toEqual({
+      expect(sut.options).toEqual({
         error: "The application version doesn't match",
         latest: {
           allow: true,
@@ -71,7 +71,7 @@ describe('middlewares/utils:versionValidator', () => {
       // When
       const sut = new VersionValidator(options);
       // Then
-      expect(sut.getOptions()).toEqual(customOptions);
+      expect(sut.options).toEqual(customOptions);
     });
 
     it('should be throw an error if the version is falsy', () => {
@@ -117,7 +117,7 @@ describe('middlewares/utils:versionValidator', () => {
         const next = jest.fn();
         // When
         const sut = new VersionValidator(options);
-        sut.middleware()(request, response, next);
+        sut.getMiddleware()(request, response, next);
         // Then
         expect(next).toHaveBeenCalledTimes(1);
         expect(next).toHaveBeenCalledWith();
@@ -146,7 +146,7 @@ describe('middlewares/utils:versionValidator', () => {
         const next = jest.fn();
         // When
         const sut = new VersionValidator(options);
-        sut.middleware()(request, response, next);
+        sut.getMiddleware()(request, response, next);
         // Then
         expect(next).toHaveBeenCalledTimes(1);
         expect(next).toHaveBeenCalledWith();
@@ -175,7 +175,7 @@ describe('middlewares/utils:versionValidator', () => {
         const next = jest.fn();
         // When
         const sut = new VersionValidator(options);
-        sut.middleware()(request, response, next);
+        sut.getMiddleware()(request, response, next);
         // Then
         expect(next).toHaveBeenCalledTimes(1);
         expect(next).toHaveBeenCalledWith();
@@ -207,7 +207,7 @@ describe('middlewares/utils:versionValidator', () => {
         const next = jest.fn();
         // When
         const sut = new VersionValidator(options);
-        sut.middleware()(request, response, next);
+        sut.getMiddleware()(request, response, next);
         // Then
         expect(next).toHaveBeenCalledTimes(1);
         expect(next).toHaveBeenCalledWith();
@@ -238,11 +238,11 @@ describe('middlewares/utils:versionValidator', () => {
         const next = jest.fn();
         // When
         const sut = new VersionValidator(options);
-        sut.middleware()(request, response, next);
+        sut.getMiddleware()(request, response, next);
         const [[error]] = next.mock.calls as [[HTTPError]];
         // Then
         expect(next).toHaveBeenCalledTimes(1);
-        expect(error.message).toBe(sut.getOptions().error);
+        expect(error.message).toBe(sut.options.error);
         expect(error.status).toBe(status);
         expect(error.getResponse()).toEqual({
           validation: true,
@@ -277,11 +277,11 @@ describe('middlewares/utils:versionValidator', () => {
         const next = jest.fn();
         // When
         const sut = new VersionValidator(options);
-        sut.middleware()(request, response, next);
+        sut.getMiddleware()(request, response, next);
         const [[error]] = next.mock.calls as [[HTTPError]];
         // Then
         expect(next).toHaveBeenCalledTimes(1);
-        expect(error.message).toBe(sut.getOptions().error);
+        expect(error.message).toBe(sut.options.error);
         expect(error.status).toBe(status);
         expect(error.getResponse()).toEqual({
           validation: true,
@@ -316,11 +316,11 @@ describe('middlewares/utils:versionValidator', () => {
         const next = jest.fn();
         // When
         const sut = new VersionValidator(options);
-        sut.middleware()(request, response, next);
+        sut.getMiddleware()(request, response, next);
         const [[error]] = next.mock.calls as [[HTTPError]];
         // Then
         expect(next).toHaveBeenCalledTimes(1);
-        expect(error.message).toBe(sut.getOptions().error);
+        expect(error.message).toBe(sut.options.error);
         expect(error.status).toBe(status);
         expect(error.getResponse()).toEqual({
           validation: true,
@@ -362,7 +362,7 @@ describe('middlewares/utils:versionValidator', () => {
         const next = jest.fn();
         // When
         const sut = new VersionValidator(options);
-        sut.middleware()(request, response, next);
+        sut.getMiddleware()(request, response, next);
         // Then
         expect(next).toHaveBeenCalledTimes(0);
         expect(responsesBuilder.htmlPostMessage).toHaveBeenCalledTimes(1);

@@ -25,7 +25,7 @@ describe('middlewares/html:fastHTML', () => {
       const sut = new FastHTML(options);
       // Then
       expect(sut).toBeInstanceOf(FastHTML);
-      expect(sut.getOptions()).toEqual({
+      expect(sut.options).toEqual({
         file: 'index.html',
         ignoredRoutes: [/\.ico$/i],
         useAppRoutes: true,
@@ -55,7 +55,7 @@ describe('middlewares/html:fastHTML', () => {
       const sut = new FastHTML(options);
       // Then
       expect(sut).toBeInstanceOf(FastHTML);
-      expect(sut.getOptions()).toEqual(baseOptions);
+      expect(sut.options).toEqual(baseOptions);
       expect(events.once).toHaveBeenCalledTimes(0);
     });
 
@@ -95,7 +95,7 @@ describe('middlewares/html:fastHTML', () => {
         const next = jest.fn();
         // When
         const sut = new FastHTML(options);
-        await sut.middleware()(request, response, next);
+        await sut.getMiddleware()(request, response, next);
         // Then
         expect(next).toHaveBeenCalledTimes(1);
       });
@@ -104,7 +104,7 @@ describe('middlewares/html:fastHTML', () => {
         // Given
         const routes = ['services/:name/status', '/'];
         const app = {
-          getRoutes: jest.fn(() => routes),
+          routes,
         };
         let listener: (arg: { app: typeof app }) => void = () => {};
         const events = {
@@ -132,7 +132,7 @@ describe('middlewares/html:fastHTML', () => {
         // When
         const sut = new FastHTML(options);
         listener({ app });
-        await sut.middleware()(request, response, next);
+        await sut.getMiddleware()(request, response, next);
         // Then
         expect(next).toHaveBeenCalledTimes(1);
       });
@@ -159,7 +159,7 @@ describe('middlewares/html:fastHTML', () => {
         const next = jest.fn();
         // When
         const sut = new FastHTML(options);
-        await sut.middleware()(request, response, next);
+        await sut.getMiddleware()(request, response, next);
         // Then
         expect(sendFile).toHaveBeenCalledTimes(1);
         expect(sendFile).toHaveBeenCalledWith({
@@ -178,9 +178,9 @@ describe('middlewares/html:fastHTML', () => {
         const htmlGeneratorFile = 'charo.html';
         const htmlGenerator = {
           whenReady: jest.fn(() => Promise.resolve()),
-          getOptions: jest.fn(() => ({
+          options: {
             file: htmlGeneratorFile,
-          })),
+          },
         };
         const getHTMLGenerator = jest.fn(() => htmlGenerator as unknown as HTMLGenerator);
         const options: FastHTMLConstructorOptions = {
@@ -203,8 +203,8 @@ describe('middlewares/html:fastHTML', () => {
         const next = jest.fn();
         // When
         const sut = new FastHTML(options);
-        await sut.middleware()(request, response, next);
-        await sut.middleware()(request, response, next);
+        await sut.getMiddleware()(request, response, next);
+        await sut.getMiddleware()(request, response, next);
         // Then
         expect(sendFile).toHaveBeenCalledTimes(2);
         expect(sendFile).toHaveBeenNthCalledWith(1, {
@@ -219,7 +219,6 @@ describe('middlewares/html:fastHTML', () => {
         });
         expect(getHTMLGenerator).toHaveBeenCalledTimes(1);
         expect(htmlGenerator.whenReady).toHaveBeenCalledTimes(1);
-        expect(htmlGenerator.getOptions).toHaveBeenCalledTimes(1);
         expect(next).toHaveBeenCalledTimes(0);
       });
 
@@ -249,7 +248,7 @@ describe('middlewares/html:fastHTML', () => {
         const next = jest.fn();
         // When
         const sut = new FastHTML(options);
-        await sut.middleware()(request, response, next);
+        await sut.getMiddleware()(request, response, next);
         // Then
         expect(next).toHaveBeenCalledTimes(1);
         expect(next).toHaveBeenCalledWith(htmlGeneratorError);
@@ -307,9 +306,9 @@ describe('middlewares/html:fastHTML', () => {
       const htmlGeneratorFile = 'charo.html';
       const htmlGenerator = {
         whenReady: jest.fn(() => Promise.resolve()),
-        getOptions: jest.fn(() => ({
+        options: {
           file: htmlGeneratorFile,
-        })),
+        },
       };
       const htmlGeneratorName = 'myHtmlGenerator';
       const { container, containerMocks: mocks } = getJimpexMock({
@@ -338,7 +337,6 @@ describe('middlewares/html:fastHTML', () => {
       expect(mocks.try).toHaveBeenCalledTimes(1);
       expect(mocks.try).toHaveBeenCalledWith(htmlGeneratorName);
       expect(htmlGenerator.whenReady).toHaveBeenCalledTimes(1);
-      expect(htmlGenerator.getOptions).toHaveBeenCalledTimes(1);
       expect(sendFile).toHaveBeenCalledTimes(1);
       expect(sendFile).toHaveBeenCalledWith({
         res: response,

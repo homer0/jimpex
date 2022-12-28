@@ -50,7 +50,7 @@ describe('controllers/utils:gateway', () => {
       const sut = new GatewayController(options);
       // Then
       expect(sut).toBeInstanceOf(GatewayController);
-      expect(sut.getOptions()).toEqual({
+      expect(sut.options).toEqual({
         root: '',
         apiConfigSetting: 'api',
         headers: {
@@ -60,7 +60,7 @@ describe('controllers/utils:gateway', () => {
           remove: ['server', 'x-powered-by', 'content-encoding'],
         },
       });
-      expect(sut.getGatewayConfig()).toEqual(options.gatewayConfig);
+      expect(sut.gatewayConfig).toEqual(options.gatewayConfig);
     });
 
     it('should be instantiated with custom options', () => {
@@ -92,7 +92,7 @@ describe('controllers/utils:gateway', () => {
       const sut = new GatewayController(options);
       // Then
       expect(sut).toBeInstanceOf(GatewayController);
-      expect(sut.getOptions()).toEqual(extraOptions);
+      expect(sut.options).toEqual(extraOptions);
     });
 
     it('should throw an error when two endpoints share the same path and method', () => {

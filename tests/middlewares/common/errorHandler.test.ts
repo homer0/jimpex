@@ -28,7 +28,7 @@ describe('middlewares/common:errorHandler', () => {
       const sut = new ErrorHandler(options);
       // Then
       expect(sut).toBeInstanceOf(ErrorHandler);
-      expect(sut.getOptions()).toEqual({
+      expect(sut.options).toEqual({
         showErrors: false,
         response: {
           message: 'Unexpected error',
@@ -64,7 +64,7 @@ describe('middlewares/common:errorHandler', () => {
       const sut = new ErrorHandler(options);
       // Then
       expect(sut).toBeInstanceOf(ErrorHandler);
-      expect(sut.getOptions()).toEqual(customOptions);
+      expect(sut.options).toEqual(customOptions);
     });
 
     describe('middleware', () => {
@@ -98,7 +98,7 @@ describe('middlewares/common:errorHandler', () => {
         const next = jest.fn();
         // When
         const sut = new ErrorHandler(options);
-        sut.middleware()(error, request, response, next);
+        sut.getMiddleware()(error, request, response, next);
         // Then
         expect(responsesBuilder.json).toHaveBeenCalledTimes(0);
         expect(next).toHaveBeenCalledTimes(1);
@@ -135,7 +135,7 @@ describe('middlewares/common:errorHandler', () => {
         const next = jest.fn();
         // When
         const sut = new ErrorHandler(options);
-        sut.middleware()(error, request, response, next);
+        sut.getMiddleware()(error, request, response, next);
         // Then
         expect(responsesBuilder.json).toHaveBeenCalledTimes(1);
         expect(responsesBuilder.json).toHaveBeenCalledWith({
@@ -179,7 +179,7 @@ describe('middlewares/common:errorHandler', () => {
         const next = jest.fn();
         // When
         const sut = new ErrorHandler(options);
-        sut.middleware()(error, request, response, next);
+        sut.getMiddleware()(error, request, response, next);
         // Then
         expect(responsesBuilder.json).toHaveBeenCalledTimes(1);
         expect(responsesBuilder.json).toHaveBeenCalledWith({
@@ -225,7 +225,7 @@ describe('middlewares/common:errorHandler', () => {
         const next = jest.fn();
         // When
         const sut = new ErrorHandler(options);
-        sut.middleware()(error, request, response, next);
+        sut.getMiddleware()(error, request, response, next);
         // Then
         expect(responsesBuilder.json).toHaveBeenCalledTimes(1);
         expect(responsesBuilder.json).toHaveBeenCalledWith({
@@ -269,7 +269,7 @@ describe('middlewares/common:errorHandler', () => {
         const next = jest.fn();
         // When
         const sut = new ErrorHandler(options);
-        sut.middleware()(error, request, response, next);
+        sut.getMiddleware()(error, request, response, next);
         // Then
         expect(responsesBuilder.json).toHaveBeenCalledTimes(1);
         expect(responsesBuilder.json).toHaveBeenCalledWith({
