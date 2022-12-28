@@ -1,4 +1,4 @@
-import collection from '@src/services/utils';
+import { utilsServicesProvider as collection } from '@src/services/utils';
 
 const SERVICES = ['ensureBearerToken'];
 

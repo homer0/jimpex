@@ -1,3 +1,3 @@
-export * as common from './common';
-export * as html from './html';
-export * as utils from './utils';
+export * from './common';
+export * from './html';
+export * from './utils';

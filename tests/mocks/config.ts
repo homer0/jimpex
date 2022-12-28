@@ -1,10 +1,13 @@
-import { SimpleConfig } from '@homer0/simple-config';
+import type { SimpleConfig } from '@homer0/simple-config';
 
 export type ConfigMockMocks = {
   get: jest.Mock<unknown, Parameters<SimpleConfig['get']>>;
+  set: jest.Mock<unknown, Parameters<SimpleConfig['set']>>;
   getConfig: jest.Mock<unknown>;
   canSwitchConfigs: jest.Mock<boolean>;
   switch: jest.Mock<unknown, Parameters<SimpleConfig['switch']>>;
+  loadFromFile: jest.Mock<unknown, Parameters<SimpleConfig['loadFromFile']>>;
+  loadFromEnv: jest.Mock<unknown, Parameters<SimpleConfig['loadFromEnv']>>;
 };
 
 export type ConfigMockResult = {
@@ -14,30 +17,44 @@ export type ConfigMockResult = {
 
 export const getConfigMock = (): ConfigMockResult => {
   const mocks = {
+    set: jest.fn(),
     get: jest.fn(),
     getConfig: jest.fn(),
     canSwitchConfigs: jest.fn(),
     switch: jest.fn(),
+    loadFromFile: jest.fn(),
+    loadFromEnv: jest.fn(),
   };
-  class MockedConfig extends SimpleConfig {
-    override get<T = unknown>(...args: Parameters<SimpleConfig['get']>): T {
+  class MockedConfig {
+    get<T = unknown>(...args: Parameters<SimpleConfig['get']>): T {
       return mocks.get(...args) as T;
     }
-    override getConfig<T = unknown>(): T {
+    set<T = unknown>(...args: Parameters<SimpleConfig['set']>): T {
+      return mocks.set(...args) as T;
+    }
+    getConfig<T = unknown>(): T {
       return mocks.getConfig() as T;
     }
-    override canSwitchConfigs(): boolean {
+    canSwitchConfigs(): boolean {
       return mocks.canSwitchConfigs();
     }
-    override switch<T = unknown>(
-      ...args: Parameters<SimpleConfig['switch']>
-    ): Promise<T> {
+    switch<T = unknown>(...args: Parameters<SimpleConfig['switch']>): Promise<T> {
       return mocks.switch(...args);
+    }
+    loadFromFile<T = unknown>(
+      ...args: Parameters<SimpleConfig['loadFromFile']>
+    ): Promise<T> {
+      return mocks.loadFromFile(...args);
+    }
+    loadFromEnv<T = unknown>(
+      ...args: Parameters<SimpleConfig['loadFromEnv']>
+    ): Promise<T> {
+      return mocks.loadFromEnv(...args);
     }
   }
 
   return {
-    config: new MockedConfig(),
+    config: new MockedConfig() as SimpleConfig,
     configMocks: mocks,
   };
 };

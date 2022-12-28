@@ -3,7 +3,7 @@ import { apiClientProvider } from './apiClient';
 import { httpProvider } from './http';
 import { responsesBuilderProvider } from './responsesBuilder';
 
-export default providers({
+export const httpServicesProvider = providers({
   apiClientProvider,
   httpProvider,
   responsesBuilderProvider,

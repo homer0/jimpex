@@ -3,7 +3,7 @@ import { appErrorProvider } from './appError';
 import { httpErrorProvider } from './httpError';
 import { sendFileProvider } from './sendFile';
 
-export default providers({
+export const commonServicesProvider = providers({
   appErrorProvider,
   httpErrorProvider,
   sendFileProvider,

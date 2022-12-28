@@ -1,4 +1,3 @@
-import { Jimpex } from '@src/app/jimpex';
 import {
   controller,
   controllerCreator,
@@ -9,25 +8,26 @@ import {
   middlewareProvider,
   middlewareProviderCreator,
 } from '@src/utils/wrappers';
+import { getJimpexMock } from '@tests/mocks';
 
-describe('app:resources', () => {
+describe('app:wrappers', () => {
   describe('controllers', () => {
     it('should generate an object with a `connect` function', () => {
       // Given
       const handler = () => {};
       const connect = jest.fn(() => handler);
-      const jimpex = new Jimpex();
+      const { container } = getJimpexMock();
       const route = '/some/path';
       // When
       const sut = controller(connect);
-      const result = sut.connect(jimpex, route);
+      const result = sut.connect(container, route);
       // Then
       expect(sut).toEqual({
         controller: true,
         connect: expect.any(Function),
       });
       expect(result).toBe(handler);
-      expect(connect).toHaveBeenCalledWith(jimpex, route);
+      expect(connect).toHaveBeenCalledWith(container, route);
     });
 
     it('should generate a controller creator', () => {
@@ -35,13 +35,13 @@ describe('app:resources', () => {
       const handler = () => {};
       const connect = jest.fn(() => handler);
       const creator = jest.fn(() => connect);
-      const jimpex = new Jimpex();
+      const { container } = getJimpexMock();
       const route = '/some/path';
       // When
       const sut = controllerCreator(creator);
       const result = sut();
-      const resultFromCreator = result.connect(jimpex, route);
-      const resultAsController = sut.connect(jimpex, route);
+      const resultFromCreator = result.connect(container, route);
+      const resultAsController = sut.connect(container, route);
       // Then
       expect(sut).toEqual(expect.any(Function));
       expect(sut.controller).toBe(true);
@@ -49,7 +49,7 @@ describe('app:resources', () => {
       expect(resultFromCreator).toBe(handler);
       expect(resultAsController).toBe(handler);
       expect(creator).toHaveBeenCalledTimes(2);
-      expect(connect).toHaveBeenCalledWith(jimpex, route);
+      expect(connect).toHaveBeenCalledWith(container, route);
     });
 
     it('should generate a controller provider', () => {
@@ -57,12 +57,12 @@ describe('app:resources', () => {
       const handler = () => {};
       const connect = jest.fn(() => handler);
       const register = jest.fn(() => controller(connect));
-      const jimpex = new Jimpex();
+      const { container } = getJimpexMock();
       const route = '/some/path';
       // When
       const sut = controllerProvider(register);
-      const result = sut.register(jimpex, route);
-      const connectResult = result.connect(jimpex, route);
+      const result = sut.register(container, route);
+      const connectResult = result.connect(container, route);
       // Then
       expect(sut).toEqual({
         provider: true,
@@ -81,14 +81,14 @@ describe('app:resources', () => {
       const connect = jest.fn(() => handler);
       const register = jest.fn(() => controller(connect));
       const creator = jest.fn(() => register);
-      const jimpex = new Jimpex();
+      const { container } = getJimpexMock();
       const route = '/some/path';
       // When
       const sut = controllerProviderCreator(creator);
-      const resultFromCreator = sut().register(jimpex, route);
-      const resultAsProvider = sut.register(jimpex, route);
-      const connectResultFromCreator = resultFromCreator.connect(jimpex, route);
-      const connectResultAsProvider = resultAsProvider.connect(jimpex, route);
+      const resultFromCreator = sut().register(container, route);
+      const resultAsProvider = sut.register(container, route);
+      const connectResultFromCreator = resultFromCreator.connect(container, route);
+      const connectResultAsProvider = resultAsProvider.connect(container, route);
       // Then
       expect(sut).toEqual(expect.any(Function));
       expect(sut.provider).toBe(true);
@@ -111,17 +111,17 @@ describe('app:resources', () => {
       // Given
       const handler = () => {};
       const connect = jest.fn(() => handler);
-      const jimpex = new Jimpex();
+      const { container } = getJimpexMock();
       // When
       const sut = middleware(connect);
-      const result = sut.connect(jimpex);
+      const result = sut.connect(container);
       // Then
       expect(sut).toEqual({
         middleware: true,
         connect: expect.any(Function),
       });
       expect(result).toBe(handler);
-      expect(connect).toHaveBeenCalledWith(jimpex);
+      expect(connect).toHaveBeenCalledWith(container);
     });
 
     it('should generate a middleware creator', () => {
@@ -129,12 +129,12 @@ describe('app:resources', () => {
       const handler = () => {};
       const connect = jest.fn(() => handler);
       const creator = jest.fn(() => connect);
-      const jimpex = new Jimpex();
+      const { container } = getJimpexMock();
       // When
       const sut = middlewareCreator(creator);
       const result = sut();
-      const resultFromCreator = result.connect(jimpex);
-      const resultAsMiddleware = sut.connect(jimpex);
+      const resultFromCreator = result.connect(container);
+      const resultAsMiddleware = sut.connect(container);
       // Then
       expect(sut).toEqual(expect.any(Function));
       expect(sut.middleware).toBe(true);
@@ -142,7 +142,7 @@ describe('app:resources', () => {
       expect(resultFromCreator).toBe(handler);
       expect(resultAsMiddleware).toBe(handler);
       expect(creator).toHaveBeenCalledTimes(2);
-      expect(connect).toHaveBeenCalledWith(jimpex);
+      expect(connect).toHaveBeenCalledWith(container);
     });
 
     it('should generate a middleware provider', () => {
@@ -150,11 +150,11 @@ describe('app:resources', () => {
       const handler = () => {};
       const connect = jest.fn(() => handler);
       const register = jest.fn(() => middleware(connect));
-      const jimpex = new Jimpex();
+      const { container } = getJimpexMock();
       // When
       const sut = middlewareProvider(register);
-      const result = sut.register(jimpex);
-      const connectResult = result.connect(jimpex);
+      const result = sut.register(container);
+      const connectResult = result.connect(container);
       // Then
       expect(sut).toEqual({
         provider: true,
@@ -173,13 +173,13 @@ describe('app:resources', () => {
       const connect = jest.fn(() => handler);
       const register = jest.fn(() => middleware(connect));
       const creator = jest.fn(() => register);
-      const jimpex = new Jimpex();
+      const { container } = getJimpexMock();
       // When
       const sut = middlewareProviderCreator(creator);
-      const resultFromCreator = sut().register(jimpex);
-      const resultAsProvider = sut.register(jimpex);
-      const connectResultFromCreator = resultFromCreator.connect(jimpex);
-      const connectResultAsProvider = resultAsProvider.connect(jimpex);
+      const resultFromCreator = sut().register(container);
+      const resultAsProvider = sut.register(container);
+      const connectResultFromCreator = resultFromCreator.connect(container);
+      const connectResultAsProvider = resultAsProvider.connect(container);
       // Then
       expect(sut).toEqual(expect.any(Function));
       expect(sut.provider).toBe(true);

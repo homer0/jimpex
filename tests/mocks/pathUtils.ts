@@ -1,4 +1,4 @@
-import { PathUtils } from '@homer0/path-utils';
+import type { PathUtils } from '@homer0/path-utils';
 
 type JoinFromMock = jest.Mock<string, [string, string]>;
 
@@ -8,6 +8,7 @@ export type PathUtilsMockOptions = {
 
 export type PathUtilsMockMocks = {
   joinFrom: JoinFromMock;
+  addLocation: jest.Mock<string, string[]>;
 };
 
 export type PathUtilsMockResult = {
@@ -21,15 +22,20 @@ export const getPathUtilsMock = (
   const { joinFrom = jest.fn() } = options;
   const mocks = {
     joinFrom,
+    addLocation: jest.fn(),
   };
-  class MockedPathUtils extends PathUtils {
-    override joinFrom(from: string, filepath: string): string {
+  class MockedPathUtils {
+    joinFrom(from: string, filepath: string): string {
       mocks.joinFrom(from, filepath);
       return filepath;
     }
+
+    addLocation(...args: Parameters<PathUtils['addLocation']>): void {
+      return mocks.addLocation(...args);
+    }
   }
   return {
-    pathUtils: new MockedPathUtils(),
+    pathUtils: new MockedPathUtils() as PathUtils,
     pathUtilsMocks: mocks,
   };
 };

@@ -1,4 +1,4 @@
-import collection from '@src/services/frontend';
+import { frontendServicesProvider as collection } from '@src/services/frontend';
 
 const SERVICES = ['frontendFs'];
 

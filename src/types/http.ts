@@ -5,6 +5,7 @@ import type { Express } from './express';
 
 export type { Response as HTTPResponse } from 'node-fetch';
 
+export type { HTTPSServer, HTTPServer };
 export type JimpexServer = Express | HTTPSServer;
 export type JimpexServerInstance = HTTPServer | HTTPSServer;
 

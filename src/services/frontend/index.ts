@@ -1,7 +1,7 @@
 import { providers } from '../../utils';
 import { frontendFsProvider } from './frontendFs';
 
-export default providers({
+export const frontendServicesProvider = providers({
   frontendFsProvider,
 });
 

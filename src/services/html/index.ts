@@ -1,7 +1,7 @@
 import { providers } from '../../utils';
 import { htmlGeneratorProvider } from './htmlGenerator';
 
-export default providers({
+export const htmlServicesProvider = providers({
   htmlGeneratorProvider,
 });
 

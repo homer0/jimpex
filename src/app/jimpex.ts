@@ -1,5 +1,5 @@
 import * as path from 'path';
-import * as fs from 'fs/promises';
+import fs from 'fs/promises';
 import { createServer as createHTTPSServer } from 'https';
 import { Jimple } from '@homer0/jimple';
 import { deepAssignWithOverwrite } from '@homer0/deep-assign';
@@ -18,7 +18,19 @@ import {
   type ServerOptions as SpdyServerOptions,
 } from 'spdy';
 import express from 'express';
-import { statuses } from '../utils';
+import {
+  commonServicesProvider,
+  httpServicesProvider,
+  utilsServicesProvider,
+} from '../services';
+import {
+  statuses,
+  type Controller,
+  type ControllerLike,
+  type MiddlewareLike,
+  type MiddlewareProvider,
+  type Middleware,
+} from '../utils';
 import type {
   DeepPartial,
   Express,
@@ -43,13 +55,6 @@ import type {
   JimpexEventListener,
   JimpexHealthCheckFn,
 } from '../types';
-import type {
-  Controller,
-  ControllerLike,
-  MiddlewareLike,
-  MiddlewareProvider,
-  Middleware,
-} from '../utils';
 
 export class Jimpex extends Jimple {
   protected options: JimpexOptions;
@@ -73,7 +78,7 @@ export class Jimpex extends Jimple {
           useParentPath: true,
         },
         configuration: {
-          default: configuration,
+          default: options?.configuration?.default || configuration,
           name: 'app',
           path: 'config/',
           hasFolder: true,
@@ -95,7 +100,7 @@ export class Jimpex extends Jimple {
           bodyParser: true,
           multer: true,
         },
-        defaultServices: {
+        services: {
           common: true,
           http: true,
           utils: true,
@@ -109,6 +114,7 @@ export class Jimpex extends Jimple {
     this.express = express();
 
     this.setupCoreServices();
+    this.setupExpress();
     this.configurePath();
 
     this.init();
@@ -130,7 +136,7 @@ export class Jimpex extends Jimple {
     const config = this.getConfig();
     const port = config.get<number | undefined>('port');
     if (!port) {
-      throw new Error('Port is not defined');
+      throw new Error('No port configured');
     }
     this.emitEvent('beforeStart', { app: this });
     this.server = await this.createServer();
@@ -238,7 +244,10 @@ export class Jimpex extends Jimple {
     setting?: string | string[],
     asArray: boolean = false,
   ): SimpleConfig | T {
-    const config = this.get<SimpleConfig>('config');
+    const config = this.try<SimpleConfig>('config');
+    if (!config) {
+      throw new Error('The config service is not available until the app starts');
+    }
     if (typeof setting === 'undefined') {
       return config;
     }
@@ -304,28 +313,13 @@ export class Jimpex extends Jimple {
     this.register(packageInfoProvider);
     this.register(pathUtilsProvider);
     this.register(rootFileProvider);
+    const { services: enabledServices } = this.options;
+    if (enabledServices.common) this.register(commonServicesProvider);
+    if (enabledServices.http) this.register(httpServicesProvider);
+    if (enabledServices.utils) this.register(utilsServicesProvider);
+
     this.set('events', () => new EventsHub());
     this.set('statuses', () => statuses);
-  }
-
-  protected configurePath(): void {
-    const pathUtils = this.get<PathUtils>('pathUtils');
-    const {
-      path: { appPath, useParentPath },
-    } = this.options;
-    if (appPath) {
-      pathUtils.addLocation('app', appPath);
-      return;
-    }
-    if (!useParentPath) return;
-    const { stack = '' } = new Error();
-    const parentFromStack = stack.split('\n')[2];
-    if (parentFromStack) {
-      const parentFile = parentFromStack.replace(/^.*?\s\(([^\s]+):\d+:\d+\)/, '$1');
-      if (parentFile !== parentFromStack) {
-        pathUtils.addLocation('app', parentFile);
-      }
-    }
   }
 
   protected setupExpress(): void {
@@ -383,6 +377,35 @@ export class Jimpex extends Jimple {
       connect: () => express.static(staticFolder),
       controller: true,
     });
+  }
+
+  protected configurePath(): void {
+    const pathUtils = this.get<PathUtils>('pathUtils');
+    const {
+      path: { appPath, useParentPath },
+    } = this.options;
+    if (appPath) {
+      pathUtils.addLocation('app', appPath);
+      return;
+    }
+    let foundPath = false;
+    if (useParentPath) {
+      const stack = new Error().stack!;
+      const parentFromStack = stack.split('\n')[2];
+      if (parentFromStack) {
+        const parentFile = parentFromStack.replace(/^.*?\s\(([^\s]+):\d+:\d+\)/, '$1');
+        if (parentFile !== parentFromStack) {
+          foundPath = true;
+          pathUtils.addLocation('app', parentFile);
+        }
+      }
+    }
+
+    if (!foundPath) {
+      throw new Error(
+        'The app location cannot be determined. Please specify the appPath option.',
+      );
+    }
   }
 
   protected async setupConfiguration(): Promise<void> {
