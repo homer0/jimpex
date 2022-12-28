@@ -2,7 +2,7 @@
   "name": "jimpex",
   "description": "Express as dependency injection container.",
   "homepage": "https://homer0.github.io/jimpex/",
-  "version": "7.0.2",
+  "version": "8.0.0",
   "repository": "homer0/jimpex",
   "author": "Leonardo Apiwan (@homer0) <me@homer0.com>",
   "license": "MIT",
