@@ -1,3 +1,16 @@
+# [9.0.0](https://github.com/homer0/jimpex/compare/8.0.0...9.0.0) (2023-10-02)
+
+
+### Bug Fixes
+
+* drop Node 16 support ([5e81112](https://github.com/homer0/jimpex/commit/5e81112bacea1f74f5250c6b12c6f1f94badee7f))
+* update dependencies ([543e232](https://github.com/homer0/jimpex/commit/543e232bad8a13f67f380997209140c65b6292c4))
+
+
+### BREAKING CHANGES
+
+* Node 16 is not longer supported. Node 18.17 is the minimum required version now.
+
 # [8.0.0](https://github.com/homer0/jimpex/compare/7.0.2...8.0.0) (2022-12-28)
 
 
