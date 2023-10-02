@@ -1,8 +1,8 @@
 # Jimpex
 
-[![GitHub Workflow Status (main)](https://img.shields.io/github/workflow/status/homer0/jimpex/Test/main?style=flat-square)](https://github.com/homer0/jimpex/actions?query=workflow%3ATest)
+[![GitHub Workflow Status (main)](https://img.shields.io/github/actions/workflow/status/homer0/jimpex/test.yml?branch=main&style=flat-square)](https://github.com/homer0/jimpex/actions/workflows/test.yml?query=branch%3Amain)
 [![Coveralls GitHub](https://img.shields.io/coveralls/github/homer0/jimpex.svg?style=flat-square)](https://coveralls.io/github/homer0/jimpex?branch=main)
-![Libraries.io dependency status for latest release](https://img.shields.io/librariesio/release/npm/jimpex)
+![Libraries.io dependency status for latest release](https://img.shields.io/librariesio/release/npm/jimpex?style=flat-square)
 
 Express as dependency injection container.
 
