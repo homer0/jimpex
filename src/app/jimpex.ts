@@ -181,7 +181,7 @@ export class Jimpex extends Jimple {
    * @returns The server instance.
    */
   async start(onStart?: JimpexStartCallback): Promise<JimpexServerInstance> {
-    await this._setupConfig();
+    await Promise.all([this._setupConfig(), this._loadESMModules()]);
     const config = this.getConfig();
     const port = config.get<number | undefined>('port');
     if (!port) {
@@ -218,7 +218,7 @@ export class Jimpex extends Jimple {
     onStart?: JimpexStartCallback,
   ): Promise<JimpexServerInstance> {
     if (port) {
-      await this._setupConfig();
+      await Promise.all([this._setupConfig(), this._loadESMModules()]);
       const config = this.getConfig();
       config.set('port', port);
     }
@@ -607,6 +607,17 @@ export class Jimpex extends Jimple {
     if (options.loadFromEnvironment) {
       await config.loadFromEnv();
     }
+  }
+  /**
+   * Loads the ESM modules that are needed by Jimpex. This is called just before the starting
+   * the application so they'll be available for all the services.
+   */
+  protected async _loadESMModules(): Promise<void> {
+    const { default: nodeFetch } = await import('node-fetch');
+    const { default: mime } = await import('mime');
+
+    this.set('node-fetch', () => nodeFetch);
+    this.set('mime', () => mime);
   }
   /**
    * Processes the resources from the mount queue (added with {@link Jimpex.mount} and
