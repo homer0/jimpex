@@ -14,11 +14,13 @@ jobs:
       - name: Node.js
         uses: actions/setup-node@v3
         with:
-          node-version-file: '.nvmrc'
+          node-version: '20.8.1'
       - name: Install dependencies
         env:
           HUSKY_SKIP_INSTALL: 1
         run: npm ci
+      - name: Install semantic-release
+        run: npm install semantic-release@^23.0.7 @semantic-release/changelog@^6.0.3 @semantic-release/git@^10.0.1
       - run: npx semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
