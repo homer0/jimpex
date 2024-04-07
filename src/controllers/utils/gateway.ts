@@ -737,6 +737,10 @@ export class GatewayController {
         });
 
         if (shouldStream) {
+          if (response.body === null) {
+            throw new Error('The response body is null');
+          }
+
           /**
            * If the response should be streamed, set the status, remove unwanted headers,
            * and pipe it to the application response object.
