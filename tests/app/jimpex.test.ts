@@ -1,8 +1,8 @@
 /* eslint-disable no-process-env, dot-notation */
-jest.mock('node-fetch', () => 'node-fetch');
-jest.mock('mime', () => 'mime');
+jest.mock('@homer0/ts-async-import');
 import fs from 'fs/promises';
 import * as path from 'path';
+import { tsAsyncImport } from '@homer0/ts-async-import';
 import {
   https,
   spdy,
@@ -28,7 +28,14 @@ import type {
   ExpressMiddleware,
 } from '@src/types';
 
+const tsAsyncImportMock = tsAsyncImport as jest.MockedFunction<typeof tsAsyncImport>;
+
 describe('Jimpex', () => {
+  beforeEach(() => {
+    tsAsyncImportMock.mockClear();
+    tsAsyncImportMock.mockImplementation((name) => Promise.resolve({ default: name }));
+  });
+
   describe('class', () => {
     beforeEach(() => {
       delete process.env['NODE_TLS_REJECT_UNAUTHORIZED'];
