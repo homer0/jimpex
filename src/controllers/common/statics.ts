@@ -1,5 +1,5 @@
 import * as path from 'path';
-import * as mime from 'mime';
+import type mime from 'mime';
 import { deepAssignWithOverwrite } from '@homer0/deep-assign';
 import {
   controllerCreator,
@@ -10,6 +10,9 @@ import {
 import type { SendFile } from '../../services';
 import type { Jimpex } from '../../app';
 import type { DeepPartial, ExpressMiddleware, Router, RouterMethod } from '../../types';
+
+type Mime = typeof mime;
+
 /**
  * The definition for each file the controller handles.
  *
@@ -84,6 +87,7 @@ export type StaticsControllerConstructorOptions =
      */
     inject: {
       sendFile: SendFile;
+      mime: Mime;
     };
   };
 /**
@@ -148,6 +152,11 @@ export class StaticsController {
    */
   protected readonly _sendFile: SendFile;
   /**
+   * The MIME type library. Since it's an ESM only module, Jimpex loads it on boot and makes
+   * it available on the container.
+   */
+  protected readonly _mime: Mime;
+  /**
    * The controller customization options.
    */
   protected _options: StaticsControllerOptions;
@@ -161,6 +170,7 @@ export class StaticsController {
    */
   constructor({ inject, ...options }: StaticsControllerConstructorOptions) {
     this._sendFile = inject.sendFile;
+    this._mime = inject.mime;
     this._options = this._validateOptions(
       deepAssignWithOverwrite(
         {
@@ -224,7 +234,7 @@ export class StaticsController {
     return (_, res, next) => {
       const extension = path.parse(file.path).ext.substring(1);
       const headers = {
-        'Content-Type': mime.getType(extension) || 'text/html',
+        'Content-Type': this._mime.getType(extension) || 'text/html',
         ...file.headers,
       };
 
@@ -358,6 +368,7 @@ export const staticsController = controllerCreator(
       const ctrl = new StaticsController({
         inject: {
           sendFile: app.get('sendFile'),
+          mime: app.get('mime'),
         },
         ...options,
       });
