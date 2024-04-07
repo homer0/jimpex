@@ -1,3 +1,23 @@
+# [10.0.0](https://github.com/homer0/jimpex/compare/9.0.0...10.0.0) (2024-04-07)
+
+
+### Bug Fixes
+
+* load node-fetch and mime on start ([01a39dd](https://github.com/homer0/jimpex/commit/01a39dd9f0e5a6300fda79ca85b771c2762470f3))
+* throw if the gateway response body is null ([32bcd95](https://github.com/homer0/jimpex/commit/32bcd95c56f236dd13e32b5025b2b02ff8fbe2c1))
+* update all dependencies ([7b833ff](https://github.com/homer0/jimpex/commit/7b833fff52971a254f25f45374373c2ec514936b))
+* use mime from the container in the statics controller ([033b15c](https://github.com/homer0/jimpex/commit/033b15cb08209b9353aa467cfdbd72fd729c491f))
+* use node-fetch from the container in the http service ([f8237e4](https://github.com/homer0/jimpex/commit/f8237e4f85490b2a473c23c591e2a9d4ae77b7f8))
+* use ts-async-import ([95cf29b](https://github.com/homer0/jimpex/commit/95cf29bc4ac80cbf7e2946c8f0d760a36c4e6bf3))
+
+
+### BREAKING CHANGES
+
+* The HTTP service change its 'inject' options in order to
+include 'node-fetch'.
+* StaticsController changed its 'inject' options in order to
+include 'mime'.
+
 # [9.0.0](https://github.com/homer0/jimpex/compare/8.0.0...9.0.0) (2023-10-02)
 
 
