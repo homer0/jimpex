@@ -23,11 +23,13 @@ jobs:
           HUSKY_SKIP_INSTALL: 1
         run: pnpm install --frozen-lockfile
       - name: Install semantic-release
-        run: pnpm add semantic-release@^23.0.7 @semantic-release/changelog@^6.0.3 @semantic-release/git@^10.0.1
-      - run: pnpm exec semantic-release
+        run: pnpm add -g semantic-release@^23.0.7 @semantic-release/changelog@^6.0.3 @semantic-release/git@^10.0.1
+      - run: semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Remove semantic-release
+        run: pnpm remove semantic-release @semantic-release/changelog @semantic-release/git
       - name: Generate documentation
         run: pnpm run docs
       - name: Deploy documentation
