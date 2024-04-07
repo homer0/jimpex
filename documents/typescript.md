@@ -12,6 +12,8 @@ Unfortunately, since Express doesn't ship their own types, you'll need to instal
 
 ```bash
 npm install --save-dev @types/express
+# or
+pnpm add --save-dev @types/express
 ```
 
 ## Middlewares
