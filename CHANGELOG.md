@@ -1,3 +1,10 @@
+## [10.0.1](https://github.com/homer0/jimpex/compare/10.0.0...10.0.1) (2024-04-07)
+
+
+### Bug Fixes
+
+* remove semantic-release from prod deps ([b7f9bdc](https://github.com/homer0/jimpex/commit/b7f9bdcfacdc6c447c154a92f782b9ce9e598101))
+
 # [10.0.0](https://github.com/homer0/jimpex/compare/9.0.0...10.0.0) (2024-04-07)
 
 
