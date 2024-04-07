@@ -1,4 +1,6 @@
 /* eslint-disable no-process-env, dot-notation */
+jest.mock('node-fetch', () => 'node-fetch');
+jest.mock('mime', () => 'mime');
 import fs from 'fs/promises';
 import * as path from 'path';
 import {
@@ -437,6 +439,26 @@ describe('Jimpex', () => {
               path: `config${path.sep}app${path.sep}`,
             }),
           );
+        });
+
+        it('should load the ESM modules', async () => {
+          // Given
+          const {
+            wootils: { configMocks },
+          } = setupCase();
+          const port = 2509;
+          configMocks.get.mockImplementationOnce(() => port);
+          configMocks.get.mockImplementationOnce(() => []);
+          // When
+          const sut = new Jimpex({
+            config: {
+              hasFolder: true,
+            },
+          });
+          await sut.start();
+          // Then
+          expect(sut.get('node-fetch')).toBe('node-fetch');
+          expect(sut.get('mime')).toBe('mime');
         });
 
         it('should invoke a callback when starting', async () => {
