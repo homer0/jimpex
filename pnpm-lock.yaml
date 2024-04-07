@@ -97,9 +97,15 @@ devDependencies:
   '@types/express':
     specifier: ^4.17.21
     version: 4.17.21
+  '@types/jest':
+    specifier: ^29.5.12
+    version: 29.5.12
   '@types/multer':
     specifier: ^1.4.11
     version: 1.4.11
+  '@types/node':
+    specifier: ^20.12.5
+    version: 20.12.5
   '@types/spdy':
     specifier: ^3.4.9
     version: 3.4.9
