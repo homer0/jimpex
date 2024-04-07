@@ -1,8 +1,9 @@
-import fetch, { type RequestInit, type BodyInit } from 'node-fetch';
 import urijs from 'urijs';
+import type { RequestInit, BodyInit } from 'node-fetch';
 import { deepAssignWithOverwrite } from '@homer0/deep-assign';
 import { provider } from '../../utils';
-import { Logger, Request, HTTPResponse } from '../../types';
+import { Logger, Request, HTTPResponse, NodeFetch } from '../../types';
+
 /**
  * The options to customize the service.
  *
@@ -25,6 +26,7 @@ export type HTTPContructorOptions = Partial<HTTPOptions> & {
    */
   inject: {
     logger: Logger;
+    nodeFetch: NodeFetch;
   };
 };
 /**
@@ -90,14 +92,20 @@ export class HTTP {
    */
   protected readonly _logger: Logger;
   /**
+   * The node-fetch library. Since it's an ESM only module, Jimpex loads it on boot and makes
+   * it available on the container.
+   */
+  protected readonly _nodeFetch: NodeFetch;
+  /**
    * The service customization options.
    */
   protected readonly _options: HTTPOptions;
   /**
    * @param options  The options to construct the class.
    */
-  constructor({ inject: { logger }, ...options }: HTTPContructorOptions) {
+  constructor({ inject: { logger, nodeFetch }, ...options }: HTTPContructorOptions) {
     this._logger = logger;
+    this._nodeFetch = nodeFetch;
     this._options = deepAssignWithOverwrite(
       {
         logRequests: false,
@@ -146,7 +154,7 @@ export class HTTP {
       this._logRequest(useURL, fetchOptions);
     }
 
-    const response = await fetch(useURL, fetchOptions);
+    const response = await this._nodeFetch(useURL, fetchOptions);
     if (logRequests) {
       this._logResponse(response);
     }
@@ -279,6 +287,7 @@ export const httpProvider = provider((app) => {
     return new HTTP({
       inject: {
         logger: app.get('logger'),
+        nodeFetch: app.get('node-fetch'),
       },
       logRequests,
     });

@@ -8,6 +8,7 @@ import { envUtilsProvider } from '@homer0/env-utils';
 import { packageInfoProvider } from '@homer0/package-info';
 import { pathUtilsProvider } from '@homer0/path-utils';
 import { rootFileProvider } from '@homer0/root-file';
+import { tsAsyncImport } from '@homer0/ts-async-import';
 import { EventsHub } from '@homer0/events-hub';
 import { simpleConfigProvider } from '@homer0/simple-config';
 import compression from 'compression';
@@ -181,7 +182,7 @@ export class Jimpex extends Jimple {
    * @returns The server instance.
    */
   async start(onStart?: JimpexStartCallback): Promise<JimpexServerInstance> {
-    await this._setupConfig();
+    await Promise.all([this._setupConfig(), this._loadESMModules()]);
     const config = this.getConfig();
     const port = config.get<number | undefined>('port');
     if (!port) {
@@ -218,7 +219,7 @@ export class Jimpex extends Jimple {
     onStart?: JimpexStartCallback,
   ): Promise<JimpexServerInstance> {
     if (port) {
-      await this._setupConfig();
+      await Promise.all([this._setupConfig(), this._loadESMModules()]);
       const config = this.getConfig();
       config.set('port', port);
     }
@@ -607,6 +608,18 @@ export class Jimpex extends Jimple {
     if (options.loadFromEnvironment) {
       await config.loadFromEnv();
     }
+  }
+  /**
+   * Loads the ESM modules that are needed by Jimpex. This is called just before the starting
+   * the application so they'll be available for all the services.
+   */
+  protected async _loadESMModules(): Promise<void> {
+    const { default: nodeFetch } =
+      await tsAsyncImport<typeof import('node-fetch')>('node-fetch');
+    const { default: mime } = await tsAsyncImport<typeof import('mime')>('mime');
+
+    this.set('node-fetch', () => nodeFetch);
+    this.set('mime', () => mime);
   }
   /**
    * Processes the resources from the mount queue (added with {@link Jimpex.mount} and

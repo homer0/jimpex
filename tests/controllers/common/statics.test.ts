@@ -1,6 +1,4 @@
-jest.mock('mime');
-
-import * as originalMime from 'mime';
+import type mime from 'mime';
 import {
   StaticsController,
   staticsController,
@@ -12,8 +10,7 @@ import type { MiddlewareLike } from '@src/utils';
 import type { ExpressMiddleware, Request, Response, RouterMethod } from '@src/types';
 import { getJimpexMock, getRouterMock } from '@tests/mocks';
 
-type MimeType = typeof originalMime;
-const mime = originalMime as unknown as jest.Mocked<MimeType>;
+type Mime = typeof mime;
 
 describe('controllers/common:statics', () => {
   describe('class', () => {
@@ -22,6 +19,7 @@ describe('controllers/common:statics', () => {
       const options: StaticsControllerConstructorOptions = {
         inject: {
           sendFile: {} as SendFile,
+          mime: {} as Mime,
         },
       };
       // When
@@ -57,6 +55,7 @@ describe('controllers/common:statics', () => {
       const options: StaticsControllerConstructorOptions = {
         inject: {
           sendFile: {} as SendFile,
+          mime: {} as Mime,
         },
         ...baseOptions,
       };
@@ -72,6 +71,7 @@ describe('controllers/common:statics', () => {
       const options: StaticsControllerConstructorOptions = {
         inject: {
           sendFile: {} as SendFile,
+          mime: {} as Mime,
         },
         files: [],
       };
@@ -86,6 +86,7 @@ describe('controllers/common:statics', () => {
       const options: StaticsControllerConstructorOptions = {
         inject: {
           sendFile: {} as SendFile,
+          mime: {} as Mime,
         },
         // @ts-expect-error - Testing if no methods are provided.
         methods: null,
@@ -101,6 +102,7 @@ describe('controllers/common:statics', () => {
       const options: StaticsControllerConstructorOptions = {
         inject: {
           sendFile: {} as SendFile,
+          mime: {} as Mime,
         },
         methods: {
           get: false,
@@ -117,6 +119,7 @@ describe('controllers/common:statics', () => {
       const options: StaticsControllerConstructorOptions = {
         inject: {
           sendFile: {} as SendFile,
+          mime: {} as Mime,
         },
         methods: {
           get: true,
@@ -135,6 +138,7 @@ describe('controllers/common:statics', () => {
         const options: StaticsControllerConstructorOptions = {
           inject: {
             sendFile: {} as SendFile,
+            mime: {} as Mime,
           },
           files,
         };
@@ -165,6 +169,7 @@ describe('controllers/common:statics', () => {
         const options: StaticsControllerConstructorOptions = {
           inject: {
             sendFile: {} as SendFile,
+            mime: {} as Mime,
           },
           files,
         };
@@ -187,6 +192,7 @@ describe('controllers/common:statics', () => {
         const options: StaticsControllerConstructorOptions = {
           inject: {
             sendFile: {} as SendFile,
+            mime: {} as Mime,
           },
           files,
           methods: {
@@ -214,14 +220,18 @@ describe('controllers/common:statics', () => {
         const options: StaticsControllerConstructorOptions = {
           inject: {
             sendFile: {} as SendFile,
+            mime: {} as Mime,
           },
           files,
           methods: {
             get: false,
-            ...methods.reduce((acc, method) => {
-              acc[method] = true;
-              return acc;
-            }, {} as Partial<Record<RouterMethod, boolean>>),
+            ...methods.reduce(
+              (acc, method) => {
+                acc[method] = true;
+                return acc;
+              },
+              {} as Partial<Record<RouterMethod, boolean>>,
+            ),
           },
         };
         const { router, routerMocks } = getRouterMock();
@@ -247,6 +257,7 @@ describe('controllers/common:statics', () => {
         const options: StaticsControllerConstructorOptions = {
           inject: {
             sendFile: {} as SendFile,
+            mime: {} as Mime,
           },
           files,
           methods: {
@@ -269,19 +280,18 @@ describe('controllers/common:statics', () => {
     });
 
     describe('middleware', () => {
-      beforeEach(() => {
-        mime.getType.mockClear();
-      });
-
       it('should serve a file', () => {
         // Given
         const file = 'charo.jpg';
         const header = 'image/jpg';
-        mime.getType.mockReturnValueOnce(header);
+        const mimeFn = {
+          getType: jest.fn(() => header),
+        };
         const sendFile = jest.fn();
         const options: StaticsControllerConstructorOptions = {
           inject: {
             sendFile: sendFile as SendFile,
+            mime: mimeFn as unknown as Mime,
           },
           files: [file],
         };
@@ -316,11 +326,14 @@ describe('controllers/common:statics', () => {
       it("should use text/html if the content-type can't be inferred", () => {
         // Given
         const file = 'charo.jpg';
-        mime.getType.mockReturnValueOnce('');
+        const mimeFn = {
+          getType: jest.fn(() => ''),
+        };
         const sendFile = jest.fn();
         const options: StaticsControllerConstructorOptions = {
           inject: {
             sendFile: sendFile as SendFile,
+            mime: mimeFn as unknown as Mime,
           },
           files: [file],
         };
@@ -350,11 +363,14 @@ describe('controllers/common:statics', () => {
         const fileRoute = '/daughters/charo.jpg';
         const filePath = '../images/daughters/charo.jpg';
         const header = 'image/jpg';
-        mime.getType.mockReturnValueOnce(header);
+        const mimeFn = {
+          getType: jest.fn(() => header),
+        };
         const sendFile = jest.fn();
         const options: StaticsControllerConstructorOptions = {
           inject: {
             sendFile: sendFile as SendFile,
+            mime: mimeFn as unknown as Mime,
           },
           files: [
             {
@@ -408,9 +424,10 @@ describe('controllers/common:statics', () => {
       const result = staticsController.connect(container, '/');
       // Then
       expect(result).toBe(router);
-      expect(mocks.get).toHaveBeenCalledTimes(2);
+      expect(mocks.get).toHaveBeenCalledTimes(3);
       expect(mocks.get).toHaveBeenNthCalledWith(1, 'router');
       expect(mocks.get).toHaveBeenNthCalledWith(2, 'sendFile');
+      expect(mocks.get).toHaveBeenNthCalledWith(3, 'mime');
       expect(routerMocks.get).toHaveBeenCalledTimes(defaultFiles.length);
       defaultFiles.forEach((file) => {
         expect(routerMocks.get).toHaveBeenCalledWith(`/${file}`, [expect.any(Function)]);
@@ -447,9 +464,10 @@ describe('controllers/common:statics', () => {
       // Then
       expect(getMiddlewares).toHaveBeenCalledTimes(1);
       expect(getMiddlewares).toHaveBeenCalledWith(container);
-      expect(mocks.get).toHaveBeenCalledTimes(2);
+      expect(mocks.get).toHaveBeenCalledTimes(3);
       expect(mocks.get).toHaveBeenNthCalledWith(1, 'router');
       expect(mocks.get).toHaveBeenNthCalledWith(2, 'sendFile');
+      expect(mocks.get).toHaveBeenNthCalledWith(3, 'mime');
       expect(routerMocks.get).toHaveBeenCalledTimes(defaultFiles.length);
       defaultFiles.forEach((file) => {
         expect(routerMocks.get).toHaveBeenCalledWith(`/${file}`, [

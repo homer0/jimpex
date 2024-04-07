@@ -834,6 +834,64 @@ describe('controllers/utils:gateway', () => {
         expect(next).toHaveBeenCalledTimes(1);
         expect(next).toHaveBeenCalledWith(error);
       });
+
+      it('should call the next middleware if the body is null', async () => {
+        // Given
+        const gatewayConfig = {
+          url: 'http://my-api.com',
+          gateway: {
+            endpointOne: 'my-path-one',
+          },
+        };
+        const httpResponseStatus = statuses('ok');
+        const httpResponse: Omit<FakeHTTPResponse, 'body'> & { body: null } = {
+          status: httpResponseStatus,
+          body: null,
+          headers: ['content-type', 'server'],
+        };
+        const http = {
+          fetch: jest.fn(() => Promise.resolve(httpResponse)),
+          getIPFromRequest: jest.fn(() => ''),
+          getCustomHeadersFromRequest: jest.fn(() => ({})),
+        };
+        const route = '/my-gateway';
+        const options: GatewayControllerConstructorOptions = {
+          inject: {
+            http: http as unknown as HTTP,
+          },
+          route,
+          gatewayConfig,
+        };
+        const request = {
+          originalUrl: `${route}/${gatewayConfig.gateway.endpointOne}`,
+          method: 'GET',
+          headers: {},
+        };
+        const response = {
+          status: jest.fn(),
+          setHeader: jest.fn(),
+        };
+        const next = jest.fn();
+        const { router, routerMocks } = getRouterMock();
+        // When
+        const sut = new GatewayController(options);
+        sut.addRoutes(router);
+        const [[, [middleware]]] = routerMocks.all.mock.calls as unknown as [
+          [string, [AsyncExpressMiddleware]],
+        ];
+        await middleware(
+          request as unknown as Request,
+          response as unknown as Response,
+          next,
+        );
+        // Then
+        expect(next).toHaveBeenCalledTimes(1);
+        expect(next).toHaveBeenCalledWith(
+          expect.objectContaining({
+            message: 'The response body is null',
+          }),
+        );
+      });
     });
 
     describe('middleware with helper', () => {
