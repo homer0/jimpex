@@ -84,7 +84,7 @@
     "docs": "./utils/scripts/docs",
     "todo": "./utils/scripts/todo",
     "example": "./utils/scripts/example",
-    "prepublishOnly": "npm run build",
+    "prepublishOnly": "pnpm run build",
     "prepare": "./utils/scripts/prepare"
   }
 }
