@@ -1,3 +1,12 @@
+## [10.0.2](https://github.com/homer0/jimpex/compare/10.0.1...10.0.2) (2024-11-09)
+
+
+### Bug Fixes
+
+* add support for Node v22 and set v20 for dev ([743f987](https://github.com/homer0/jimpex/commit/743f987c19a5ef93329a05b633eadf82ed52859d))
+* get rid of unused variable ([09c92b5](https://github.com/homer0/jimpex/commit/09c92b5aadff5fb914c4ebdff8159472a1b04d05))
+* update dependencies ([e7ed985](https://github.com/homer0/jimpex/commit/e7ed9855b12743686f5ba64965f86241e0025db6))
+
 ## [10.0.1](https://github.com/homer0/jimpex/compare/10.0.0...10.0.1) (2024-04-07)
 
 
