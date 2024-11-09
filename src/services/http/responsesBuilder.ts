@@ -230,7 +230,7 @@ export class ResponsesBuilder {
         this._statuses(status);
         useStatus = status;
       }
-    } catch (_) {
+    } catch {
       useStatus = this._statuses('ok') as number;
     }
 
