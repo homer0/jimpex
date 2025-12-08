@@ -1,4 +1,4 @@
-import { HTTP, httpProvider, HTTPContructorOptions } from '@src/services/http/http.js';
+import { HTTP, httpProvider, HTTPConstructorOptions } from '@src/services/http/http.js';
 import { getJimpexMock, getLoggerMock } from '@tests/mocks/index.js';
 import type { Request, HTTPResponse } from '@src/types/index.js';
 
@@ -7,7 +7,7 @@ describe('services/http:http', () => {
     it('should be instantiated', () => {
       // Given
       const { logger } = getLoggerMock();
-      const options: HTTPContructorOptions = {
+      const options: HTTPConstructorOptions = {
         inject: {
           logger,
           nodeFetch: jest.fn(),
@@ -54,7 +54,7 @@ describe('services/http:http', () => {
       };
       const casesNames = Object.keys(cases);
       const { logger } = getLoggerMock();
-      const options: HTTPContructorOptions = {
+      const options: HTTPConstructorOptions = {
         inject: {
           logger,
           nodeFetch: jest.fn(),
@@ -92,7 +92,7 @@ describe('services/http:http', () => {
         headers,
       } as unknown as Request;
       const { logger } = getLoggerMock();
-      const options: HTTPContructorOptions = {
+      const options: HTTPConstructorOptions = {
         inject: {
           logger,
           nodeFetch: jest.fn(),
@@ -119,7 +119,7 @@ describe('services/http:http', () => {
       const fetch = jest.fn();
       fetch.mockResolvedValueOnce(response);
       const { logger } = getLoggerMock();
-      const options: HTTPContructorOptions = {
+      const options: HTTPConstructorOptions = {
         inject: {
           logger,
           nodeFetch: fetch,
@@ -148,7 +148,7 @@ describe('services/http:http', () => {
         [qsVariable]: qsValue,
       };
       const { logger } = getLoggerMock();
-      const options: HTTPContructorOptions = {
+      const options: HTTPConstructorOptions = {
         inject: {
           logger,
           nodeFetch: fetch,
@@ -176,7 +176,7 @@ describe('services/http:http', () => {
       const fetch = jest.fn();
       fetch.mockResolvedValueOnce(response);
       const { logger } = getLoggerMock();
-      const options: HTTPContructorOptions = {
+      const options: HTTPConstructorOptions = {
         inject: {
           logger,
           nodeFetch: fetch,
@@ -210,7 +210,7 @@ describe('services/http:http', () => {
         },
       } as unknown as Request;
       const { logger } = getLoggerMock();
-      const options: HTTPContructorOptions = {
+      const options: HTTPConstructorOptions = {
         inject: {
           logger,
           nodeFetch: fetch,
@@ -245,7 +245,7 @@ describe('services/http:http', () => {
         },
       } as unknown as Request;
       const { logger } = getLoggerMock();
-      const options: HTTPContructorOptions = {
+      const options: HTTPConstructorOptions = {
         inject: {
           logger,
           nodeFetch: fetch,
@@ -278,7 +278,7 @@ describe('services/http:http', () => {
       const fetch = jest.fn();
       fetch.mockResolvedValueOnce(response);
       const { logger, loggerMocks } = getLoggerMock();
-      const options: HTTPContructorOptions = {
+      const options: HTTPConstructorOptions = {
         inject: {
           logger,
           nodeFetch: fetch,
@@ -329,7 +329,7 @@ describe('services/http:http', () => {
         'x-forwarded-for': 'X-Forwarded-For',
       };
       const { logger, loggerMocks } = getLoggerMock();
-      const options: HTTPContructorOptions = {
+      const options: HTTPConstructorOptions = {
         inject: {
           logger,
           nodeFetch: fetch,

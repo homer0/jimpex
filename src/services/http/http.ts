@@ -20,7 +20,7 @@ export type HTTPOptions = {
  *
  * @group Services/HTTP
  */
-export type HTTPContructorOptions = Partial<HTTPOptions> & {
+export type HTTPConstructorOptions = Partial<HTTPOptions> & {
   /**
    * A dictionary with the dependencies to inject.
    */
@@ -103,7 +103,7 @@ export class HTTP {
   /**
    * @param options  The options to construct the class.
    */
-  constructor({ inject: { logger, nodeFetch }, ...options }: HTTPContructorOptions) {
+  constructor({ inject: { logger, nodeFetch }, ...options }: HTTPConstructorOptions) {
     this._logger = logger;
     this._nodeFetch = nodeFetch;
     this._options = deepAssignWithOverwrite(
