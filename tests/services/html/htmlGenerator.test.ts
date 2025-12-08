@@ -58,7 +58,7 @@ describe('services/html:htmlGenerator', () => {
               valuesService,
             },
           }),
-      ).toThrowError('The HTMLGenerator values service must have a `getValues` method');
+      ).toThrow('The HTMLGenerator values service must have a `getValues` method');
     });
 
     it('should generate the HTML', async () => {
@@ -157,8 +157,8 @@ describe('services/html:htmlGenerator', () => {
       // When/Then
       const sut = new HTMLGenerator(options);
       await Promise.all([
-        expect(sut.generateHTML()).rejects.toThrowError(errorMessage),
-        expect(sut.whenReady()).rejects.toThrowError(errorMessage),
+        expect(sut.generateHTML()).rejects.toThrow(errorMessage),
+        expect(sut.whenReady()).rejects.toThrow(errorMessage),
       ]);
       expect(loggerMocks.error).toHaveBeenCalledTimes(1);
       expect(loggerMocks.error).toHaveBeenCalledWith(
@@ -195,8 +195,8 @@ describe('services/html:htmlGenerator', () => {
       // When/Then
       const sut = new HTMLGenerator(options);
       await Promise.all([
-        expect(sut.generateHTML()).rejects.toThrowError(errorMessage),
-        expect(sut.whenReady()).rejects.toThrowError(errorMessage),
+        expect(sut.generateHTML()).rejects.toThrow(errorMessage),
+        expect(sut.whenReady()).rejects.toThrow(errorMessage),
       ]);
       expect(loggerMocks.error).toHaveBeenCalledTimes(0);
     });
