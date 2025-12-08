@@ -1,7 +1,7 @@
-import { jimpex, healthController, fastHTMLMiddleware } from '../../src';
-import { dateServiceProvider } from './service';
-import { dateMiddleware } from './middleware';
-import { dateController } from './controller';
+import { jimpex, healthController, fastHTMLMiddleware } from '../../src/index.js';
+import { dateServiceProvider } from './service.js';
+import { dateMiddleware } from './middleware.js';
+import { dateController } from './controller.js';
 
 const app = jimpex();
 app.register(dateServiceProvider);

@@ -1,4 +1,4 @@
-import { provider } from '../../src';
+import { provider } from '../../src/index.js';
 
 export class DateService {
   now(): Date {

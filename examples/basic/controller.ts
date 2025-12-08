@@ -3,8 +3,8 @@ import {
   type ExpressMiddleware,
   type ResponsesBuilder,
   type Router,
-} from '../../src';
-import type { DateService } from './service';
+} from '../../src/index.js';
+import type { DateService } from './service.js';
 
 class DateController {
   constructor(
