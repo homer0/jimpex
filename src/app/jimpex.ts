@@ -551,8 +551,10 @@ export class Jimpex extends Jimple {
       const stackList = stack.split('\n');
       stackList.shift();
       const parentFromStack = stackList.find((line) => !line.includes(__filename));
+      /* istanbul ignore else  */
       if (parentFromStack) {
         const parentFile = parentFromStack.replace(/^.*?\s\(?([^\s]+):\d+:\d+\)?/, '$1');
+        /* istanbul ignore else  */
         if (parentFile !== parentFromStack) {
           foundPath = true;
           pathUtils.addLocation('app', path.dirname(parentFile));
