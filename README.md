@@ -96,7 +96,7 @@ app.set('message', 'Hello Pili!');
 app.boot();
 ```
 
-Now, this may look like an unnecessary feature, but if you consider the possiblity of different entry points based on environment, maybe to enable debugging tools on dev, this becomes really useful.
+Now, this may look like an unnecessary feature, but if you consider the possibility of different entry points based on environment, maybe to enable debugging tools on dev, this becomes really useful.
 
 ### ⚙️ Options and configuration
 
@@ -356,7 +356,7 @@ Jimpex already comes with a few built-in service providers ready to be used, and
 
 ##### Configurable services
 
-Since the version of Jimple that Jimpex uses under the hood is [`@homer0/jimple`](https://www.npmjs.com/package/@homer0/jimple), my custom "fork", you can also create "configureable providers":
+Since the version of Jimple that Jimpex uses under the hood is [`@homer0/jimple`](https://www.npmjs.com/package/@homer0/jimple), my custom "fork", you can also create "configurable providers":
 
 ```ts
 // src/my-service.js
@@ -502,7 +502,7 @@ class MyApp extends Jimpex {
 
 #### Controllers with services
 
-If for some reason, your controller needs to register a service that the rest of the container needs to have access to, and you plan to do it on the `controller`/`controllerCreator` callback, you could end up messing with the _lazyness_ of the container: If a middleware or another controller tries to access the service and the controller that registers it is mounted after it, it will get an error as the service _doesn't exist yet_.
+If for some reason, your controller needs to register a service that the rest of the container needs to have access to, and you plan to do it on the `controller`/`controllerCreator` callback, you could end up messing with the _laziness_ of the container: If a middleware or another controller tries to access the service and the controller that registers it is mounted after it, it will get an error as the service _doesn't exist yet_.
 
 A way to solve this issue would be with a `provider`/`providerCreator`, mounting the controller:
 
@@ -623,7 +623,7 @@ Just like the `controllerCreator` wrapper, you can also use the `middlewareCreat
 
 ```ts
 // my-middleware.js
-import { middlwareCreator } from 'jimpex';
+import { middlewareCreator } from 'jimpex';
 
 // Define your middleware function (or class if it gets more complex)
 export const greetingsMiddleware = (message) => (req, res, next) => {
@@ -743,15 +743,13 @@ The configuration for `semantic-release` is on `./releaserc` and the workflow fo
 
 ### Testing
 
-I use [Jest](https://jestjs.io) to test the project.
+I use [Vitest](https://vitest.dev) to test the project.
 
 The configuration file is on `./.jestrc.js`, the tests are on `./tests` and the script that runs it is on `./utils/scripts/test`.
 
 ### Code linting and formatting
 
-For linting, I use [ESlint](https://eslint.org) with [my own custom configuration](https://npmjs.com/package/@homer0/eslint-plugin).
-
-There are two configuration files, `./.eslintrc` for the source and the tooling, and `./tests/.eslintrc`, and there's also a `./.eslintignore` to exclude some files.
+For linting, I use [ESlint](https://eslint.org) with [my own custom configuration](https://npmjs.com/package/@homer0/eslint-plugin). The configuration file is `./eslint.config.js`.
 
 For formatting, I use [Prettier](https://prettier.io) with [my JSDoc plugin](https://npmjs.com/package/@homer0/prettier-plugin-jsdoc) and [my own custom configuration](https://npmjs.com/package/@homer0/prettier-config). The configuration file is `./.prettierrc`.
 
@@ -767,4 +765,4 @@ The configuration file is `./.typedoc.json` and the script that runs it is on `.
 
 A friend, who's also web developer, brought the idea of start using a dependency injection container on Node, and how Jimple was a great tool for it; from the moment I tried Jimple, I could never think of starting another project without it: It not only allows you to implement dependency injection on a simple and clean way, but it also kind of forces you to have a really good organization of your code.
 
-A couple of months after that, the same friend told me that we should do something similar to [Silex](https://github.com/silexphp/Silex), which is based on Pimple, butwith Express. I ran with the idea and... this project is what I think a mix of Jimple and Express would look like. To be clear, **this is not a port of Silex**.
+A couple of months after that, the same friend told me that we should do something similar to [Silex](https://github.com/silexphp/Silex), which is based on Pimple, but with Express. I ran with the idea and... this project is what I think a mix of Jimple and Express would look like. To be clear, **this is not a port of Silex**.
