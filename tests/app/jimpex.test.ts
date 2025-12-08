@@ -512,6 +512,37 @@ describe('Jimpex', () => {
           // Then
           expect(onBeforeStop).toHaveBeenCalledTimes(0);
         });
+
+        it('should start without checking for an env config', async () => {
+          // Given
+          const {
+            wootils: { configMocks, loggerMocks },
+          } = setupCase();
+          const port = 2509;
+          configMocks.get.mockImplementationOnce(() => port);
+          configMocks.get.mockImplementationOnce(() => []);
+          // When
+          const sut = new Jimpex({
+            config: {
+              loadFromEnvironment: false,
+            },
+          });
+          await sut.start();
+          // Then
+          expect(loggerMocks.success).toHaveBeenCalledWith(`Starting on port ${port}`);
+          expect(configMocks.loadFromFile).toHaveBeenCalledTimes(1);
+          expect(configMocks.loadFromFile).toHaveBeenCalledWith('', true, false);
+          expect(configMocks.loadFromEnv).not.toHaveBeenCalled();
+          expect(simpleConfigProvider).toHaveBeenCalledTimes(1);
+          expect(simpleConfigProvider).toHaveBeenCalledWith({
+            name: 'app',
+            defaultConfig: {},
+            defaultConfigFilename: 'app.config.js',
+            envVarName: 'CONFIG',
+            path: `config`,
+            filenameFormat: 'app.[name].config.js',
+          });
+        });
       });
 
       describe('statics', () => {
