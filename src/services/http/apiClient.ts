@@ -7,7 +7,7 @@ import {
 import { deepAssignWithOverwrite } from '@homer0/deep-assign';
 import { providerCreator } from '../../utils/index.js';
 import type { HTTP } from './http.js';
-import type { HTTPErrorClass } from '../common.js';
+import type { HTTPErrorClass } from '../common/index.js';
 
 export type { ErrorResponse };
 /**
