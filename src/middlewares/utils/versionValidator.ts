@@ -30,7 +30,7 @@ export type VersionValidatorLatestOptions = {
  */
 export type VersionValidatorPopupOptions = {
   /**
-   * The name of the query string variable the middleware will check in order to indentify
+   * The name of the query string variable the middleware will check in order to identify
    * whether the request comes from a popup or not. The variable must have `'true'` as its
    * value.
    *
@@ -146,7 +146,7 @@ export class VersionValidator {
    */
   protected readonly _responsesBuilder: ResponsesBuilder;
   /**
-   * The uility service to get HTTP status codes.
+   * The utility service to get HTTP status codes.
    */
   protected readonly _statuses: Statuses;
   /**

@@ -200,7 +200,7 @@ export class HTTP {
    * It takes a dictionary of headers and normalize the names so each word will start with
    * an upper case character. This is helpful in case you added custom headers and didn't
    * care about the casing, or when copying headers from a server request, as they all
-   * come tranformed into lower case.
+   * come transformed into lower case.
    *
    * @param headers  The dictionary of headers to normalize.
    */

@@ -392,7 +392,7 @@ export class Jimpex extends Jimple {
     return this.eventsHub.on(eventName, listener);
   }
   /**
-   * Adds a listener for an application event that will only be execuded once: the first
+   * Adds a listener for an application event that will only be executed once: the first
    * time the event is triggered.
    *
    * @param eventName  The name of the event to listen for.
@@ -408,7 +408,7 @@ export class Jimpex extends Jimple {
     return this.eventsHub.once(eventName, listener);
   }
   /**
-   * Based on the application options, it returns wheter the application is healthy or
+   * Based on the application options, it returns whether the application is healthy or
    * not.
    */
   isHealthy(): ReturnType<JimpexHealthCheckFn> {
@@ -417,7 +417,7 @@ export class Jimpex extends Jimple {
   /**
    * This method is like a "lifecycle method", it gets executed on the constructor right
    * before the "boot step". The idea is for the method to be a helper when the
-   * application is defined by subclassing {@link Jimpex}: the application could register
+   * application is defined by sub-classing {@link Jimpex}: the application could register
    * all important services here and the routes on boot, then, if the implementation needs
    * to access or overwrite a something, it can send `boot: false`, access/register what
    * it needs, and then call `boot()`. That would be impossible for an application without
@@ -426,7 +426,7 @@ export class Jimpex extends Jimple {
   protected _init(): void {}
   /**
    * It generates overwrites for the application options when it gets created. This method
-   * is a helper for when the application is defined by subclassing {@link Jimpex}: It's
+   * is a helper for when the application is defined by sub-classing {@link Jimpex}: It's
    * highly probable that if the application needs to change the default options, it would
    * want to do it right from the class, instead of having to do it on every
    * implementation. A way to do it would be overwriting the constructor and calling
@@ -532,7 +532,7 @@ export class Jimpex extends Jimple {
    * This helper method validates the `path` options in order to register the `app`
    * location in the `pathUtils` service. The `app` location should be the path to where
    * the application executable is located, but due to how ESM works, we can't infer it
-   * from the `module` object, so we need either recieved as the `appPath` setting, or try
+   * from the `module` object, so we need either received as the `appPath` setting, or try
    * to get it from the parent module.
    *
    * @throws If the method should use the path from the parent module, but can't find
@@ -703,7 +703,7 @@ export class Jimpex extends Jimple {
    * @returns {Server}
    * @throws {Error} If HTTP2 is enabled but HTTPS is not.
    * @throws {Error} If HTTPS is enabled but there's no `https.credentials` object.
-   * @throws {Error} If HTTPS is enabled and no creadentials are found.
+   * @throws {Error} If HTTPS is enabled and no credentials are found.
    * @access protected
    * @ignore
    */

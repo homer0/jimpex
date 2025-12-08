@@ -3,7 +3,7 @@ import { providerCreator, type Statuses } from '../../utils/index.js';
 import type { HTTPErrorClass } from '../common/index.js';
 import type { DeepPartial, ExpressMiddleware } from '../../types/index.js';
 /**
- * The options for the error the middleare can generate.
+ * The options for the error the middleware can generate.
  *
  * @group Services/EnsureBearerToken
  */

@@ -18,7 +18,7 @@ import type {
 export type FastHTMLOptions = {
   /**
    * The name of the file the middleware will serve. If the {@link HTMLGenerator} service
-   * is available, it will be overriden by the service.
+   * is available, it will be overridden by the service.
    *
    * @default 'index.html'
    */
@@ -98,7 +98,7 @@ export class FastHTML {
    */
   protected readonly _sendFile: SendFile;
   /**
-   * The application envent bus, to listen and get the list of "controlled routes" after
+   * The application event bus, to listen and get the list of "controlled routes" after
    * the application is started.
    */
   protected readonly _events: Events;

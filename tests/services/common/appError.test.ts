@@ -92,7 +92,7 @@ describe('services/common:appError', () => {
       expect(sut.status).toBe(context.status);
     });
 
-    it('should use `captureStackTrace` when avaiable', () => {
+    it('should use `captureStackTrace` when available', () => {
       // Given
       const captureStackTrace = jest.fn();
       Error.captureStackTrace = captureStackTrace;

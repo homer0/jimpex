@@ -12,7 +12,7 @@ import type {
  */
 export type GetHealthStatus = () => Promise<JimpexHealthStatus>;
 /**
- * The options to contruct a {@link HealthController}.
+ * The options to construct a {@link HealthController}.
  *
  * @group Controllers/Health
  */
@@ -48,7 +48,7 @@ export class HealthController {
    */
   protected readonly _config: Config;
   /**
-   * The uility service to get HTTP status codes.
+   * The utility service to get HTTP status codes.
    */
   protected readonly _statuses: Statuses;
   /**

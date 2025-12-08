@@ -13,7 +13,7 @@ import type {
 export type ShowHTMLOptions = {
   /**
    * The name of the file the middleware will serve. If the {@link HTMLGenerator} service
-   * is available, it will be overriden by the service.
+   * is available, it will be overridden by the service.
    *
    * @default 'index.html'
    */

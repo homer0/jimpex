@@ -96,7 +96,7 @@ export type StaticsControllerConstructorOptions =
     };
   };
 /**
- * A function to generate a list of middlewares that can be executed before the tontroller
+ * A function to generate a list of middlewares that can be executed before the controller
  * main middleware.
  *
  * @group Controllers/Statics
@@ -110,7 +110,7 @@ export type StaticsControllerGetMiddlewaresFn = (app: Jimpex) => MiddlewareLike[
 export type StaticsControllerCreatorOptions = DeepPartial<StaticsControllerOptions> & {
   /**
    * A function to generate a list of middlewares that can be executed before the
-   * tontroller main middleware.
+   * controller main middleware.
    */
   getMiddlewares?: StaticsControllerGetMiddlewaresFn;
 };

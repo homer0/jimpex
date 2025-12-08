@@ -7,7 +7,7 @@ jest.mock('@src/utils/index.js', () => ({
 import * as services from '@src/services/index.js';
 
 describe('services', () => {
-  it('should export all the app sevices', () => {
+  it('should export all the app services', () => {
     // Given/When/Then
     expect(services).toEqual(
       expect.objectContaining({
