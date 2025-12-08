@@ -286,6 +286,50 @@ describe('middlewares/common:errorHandler', () => {
         expect(statuses).toHaveBeenNthCalledWith(1, 'internal server error');
         expect(statuses).toHaveBeenNthCalledWith(2, 'bad request');
       });
+
+      it('should not format an unknown error', () => {
+        // Given
+        const error = {
+          message: 'Nop!',
+        };
+        const status = realStatuses('bad request');
+        const statuses = vi.fn(() => status);
+        const { logger } = getLoggerMock();
+        const responsesBuilder = {
+          json: vi.fn(),
+        } as unknown as ResponsesBuilder;
+        const options: ErrorHandlerConstructorOptions = {
+          inject: {
+            logger,
+            responsesBuilder,
+            HTTPError,
+            statuses: statuses as unknown as Statuses,
+          },
+          showErrors: true,
+        };
+        const response = {
+          response: true,
+        } as unknown as Response;
+        const request = {
+          request: true,
+        } as unknown as Request;
+        const next = vi.fn();
+        // When
+        const sut = new ErrorHandler(options);
+        sut.getMiddleware()(error, request, response, next);
+        // Then
+        expect(responsesBuilder.json).toHaveBeenCalledTimes(1);
+        expect(responsesBuilder.json).toHaveBeenCalledWith({
+          res: response,
+          status,
+          data: {
+            error: true,
+            message: error.message,
+          },
+        });
+        expect(statuses).toHaveBeenCalledTimes(1);
+        expect(statuses).toHaveBeenNthCalledWith(1, 'internal server error');
+      });
     });
   });
 
