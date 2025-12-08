@@ -3,5 +3,11 @@
   "compilerOptions": {
     "outDir": "dist"
   },
-  "include": ["src/**/*.ts", "examples/**/*.ts", "tsup.config.ts"]
+  "include": [
+    "src/**/*.ts",
+    "examples/**/*.ts",
+    "tsup.config.ts",
+    ".prettierrc.js",
+    "eslint.config.js"
+  ]
 }

@@ -79,7 +79,7 @@ export class Jimpex extends Jimple {
    */
   protected _configReady: boolean = false;
   /**
-   * A reference to the actuall HTTP the application will use. This can vary depending on
+   * A reference to the actual HTTP the application will use. This can vary depending on
    * whether HTTPS, or HTTP2 are enabled. If HTTPS is not enabled, it will be the same as
    * the `express` property; if HTTPS is enabled, it will be an `https` server; and if
    * HTTP2 is enabled, it will be an `spdy` server.
@@ -106,7 +106,7 @@ export class Jimpex extends Jimple {
   /**
    * @param options  Preferences to customize the application.
    * @param config   The default settings for the configuration service. It's a
-   *                 shortcuit for `options.config.default`
+   *                 short-circuit for `options.config.default`
    */
   constructor(options: DeepPartial<JimpexOptions> = {}, config: unknown = {}) {
     super();
@@ -171,7 +171,7 @@ export class Jimpex extends Jimple {
    * Disables the server TLS validation. Meant to be used for development purposes.
    */
   disableTLSValidation() {
-    // eslint-disable-next-line no-process-env, dot-notation
+    // eslint-disable-next-line n/no-process-env
     process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0';
     this.logger.warn('TLS validation has been disabled');
   }

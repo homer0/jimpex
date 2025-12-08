@@ -303,9 +303,9 @@ export type ControllerProviderCreator = ReturnType<typeof controllerProviderCrea
  *
  * @param container  The reference to the Jimpex container.
  * @param route      This is optional because the implementation can use it as a
- *                   "global widdleware", or for a specific route.
- * @returns The resource can choose to be enabled or not by returning the function, or
- *          `undefined`.
+ *                   "global middleware", or for a specific route.
+ * @returns The resource can choose to be enabled or not by returning the function,
+ *          or `undefined`.
  * @group Wrappers
  */
 export type MiddlewareConnectFn = <ContainerType extends Jimpex = Jimpex>(
@@ -399,7 +399,7 @@ export type MiddlewareCreator = ReturnType<typeof middlewareCreator>;
 
 // --
 /**
- * The function a middelware provider uses to configure/extend the container before
+ * The function a middleware provider uses to configure/extend the container before
  * returning an actual middleware.
  *
  * @param container  The reference to the Jimpex container.

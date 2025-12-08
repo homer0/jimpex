@@ -1,4 +1,3 @@
-/* eslint-disable dot-notation */
 import {
   EnsureBearerToken,
   ensureBearerTokenProvider,

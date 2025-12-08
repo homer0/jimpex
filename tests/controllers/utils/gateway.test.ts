@@ -1338,7 +1338,6 @@ describe('controllers/utils:gateway', () => {
       const result = gatewayController
         .register(container, route)
         .connect(container, route);
-      // eslint-disable-next-line dot-notation
       const service = resources['apiGateway'];
       // Then
       expect(result).toBe(router);
@@ -1387,7 +1386,6 @@ describe('controllers/utils:gateway', () => {
       const expectedName = `${options.serviceName}Gateway`;
       // When
       gatewayController(options).register(container, route).connect(container, route);
-      // eslint-disable-next-line dot-notation
       const service = resources[expectedName];
       // Then
       expect(service).toBeInstanceOf(GatewayController);
