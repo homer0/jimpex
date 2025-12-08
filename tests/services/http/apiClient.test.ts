@@ -122,10 +122,20 @@ describe('services/html:apiClient', () => {
         return sut.getError(res, errorStatus);
       }, {});
       const invalidResult = sut.getError({} as unknown as ErrorResponse, errorStatus);
+      const unknownResult = sut.getError(
+        {
+          data: {
+            unknown: 'value',
+          },
+        } as unknown as ErrorResponse,
+        errorStatus,
+      );
+      // Then
       expect(results).toEqual(
         new Array(casesNames.length).fill(new HTTPError(errorMessage, errorStatus)),
       );
       expect(invalidResult).toEqual(new HTTPError('Unexpected error', errorStatus));
+      expect(unknownResult).toEqual(new HTTPError('Unexpected error', errorStatus));
     });
   });
 
