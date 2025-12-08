@@ -65,9 +65,16 @@
   "engines": {
     "node": ">=20"
   },
+  "type": "module",
   "main": "./dist/index.js",
-  "module": "./dist/esm/index.js",
   "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./package.json": "./package.json"
+  },
   "lint-staged": {
     "*.{ts,tsx,js,json,css,scss,md}": [
       "prettier --write"
