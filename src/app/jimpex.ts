@@ -14,10 +14,7 @@ import { simpleConfigProvider } from '@homer0/simple-config';
 import compression from 'compression';
 import bodyParser from 'body-parser';
 import multer from 'multer';
-import {
-  createServer as createSpdyServer,
-  type ServerOptions as SpdyServerOptions,
-} from 'spdy';
+import spdy, { type ServerOptions as SpdyServerOptions } from 'spdy';
 import express from 'express';
 import {
   commonServicesProvider,
@@ -57,6 +54,9 @@ import type {
   JimpexHealthCheckFn,
   Router,
 } from '../types/index.js';
+
+const { createServer: createSpdyServer } = spdy;
+
 /**
  * Jimpex is a mix of Jimple, a Javascript port of Pimple dependency injection container,
  * and Express, one of the most popular web frameworks for Node.
