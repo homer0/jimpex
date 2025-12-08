@@ -18,6 +18,7 @@ export default defineConfig({
       provider: 'istanbul',
       reportsDirectory: resolve('./coverage'),
       reporter: ['text', 'lcov'],
+      exclude: ['tests/mocks/**', 'utils/scripts/**'],
     },
   },
 });
