@@ -1,4 +1,4 @@
-import fs from 'fs/promises';
+import fs from 'node:fs/promises';
 import { provider } from '../../utils/index.js';
 import type { PathUtils } from '../../types/index.js';
 /**

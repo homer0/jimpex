@@ -1,4 +1,4 @@
-import * as path from 'path';
+import * as path from 'node:path';
 import type mime from 'mime';
 import { deepAssignWithOverwrite } from '@homer0/deep-assign';
 import {

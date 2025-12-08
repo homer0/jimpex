@@ -1,5 +1,5 @@
-import * as path from 'path';
-import fs from 'fs/promises';
+import * as path from 'node:path';
+import fs from 'node:fs/promises';
 import { createServer as createHTTPSServer } from 'https';
 import { Jimple } from '@homer0/jimple';
 import { deepAssignWithOverwrite } from '@homer0/deep-assign';
