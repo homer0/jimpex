@@ -8,9 +8,9 @@ import {
   removeSlashes,
   notUndefined,
   type MiddlewareLike,
-} from '../../utils';
-import type { HTTP, HTTPFetchOptions } from '../../services';
-import type { Jimpex } from '../../app';
+} from '../../utils/index.js';
+import type { HTTP, HTTPFetchOptions } from '../../services/index.js';
+import type { Jimpex } from '../../app/index.js';
 import {
   RouterMethod,
   DeepPartial,
@@ -21,7 +21,7 @@ import {
   Router,
   ExpressMiddleware,
   AsyncExpressMiddleware,
-} from '../../types';
+} from '../../types/index.js';
 /**
  * The extended definition for endpoints.
  *

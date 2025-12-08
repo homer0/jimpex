@@ -6,10 +6,15 @@ import {
   removeSlashes,
   notUndefined,
   type MiddlewareLike,
-} from '../../utils';
-import type { SendFile } from '../../services';
-import type { Jimpex } from '../../app';
-import type { DeepPartial, ExpressMiddleware, Router, RouterMethod } from '../../types';
+} from '../../utils/index.js';
+import type { SendFile } from '../../services/index.js';
+import type { Jimpex } from '../../app/index.js';
+import type {
+  DeepPartial,
+  ExpressMiddleware,
+  Router,
+  RouterMethod,
+} from '../../types/index.js';
 
 type Mime = typeof mime;
 

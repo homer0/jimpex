@@ -1,5 +1,5 @@
-import type { Config } from './wootils';
-import type { Jimpex } from '../app';
+import type { Config } from './wootils.js';
+import type { Jimpex } from '../app/index.js';
 /**
  * The options for the application's configuration service.
  *

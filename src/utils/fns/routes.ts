@@ -1,4 +1,4 @@
-import { escapeForRegExp } from './text';
+import { escapeForRegExp } from './text.js';
 
 /**
  * Removes any leading slash from a URL.

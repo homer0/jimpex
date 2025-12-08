@@ -1,7 +1,11 @@
 import { deepAssignWithOverwrite } from '@homer0/deep-assign';
-import { middlewareCreator, type Statuses } from '../../utils';
-import type { DeepPartial, Logger, ExpressErrorHandler } from '../../types';
-import { AppError, type HTTPErrorClass, type ResponsesBuilder } from '../../services';
+import { middlewareCreator, type Statuses } from '../../utils/index.js';
+import type { DeepPartial, Logger, ExpressErrorHandler } from '../../types/index.js';
+import {
+  AppError,
+  type HTTPErrorClass,
+  type ResponsesBuilder,
+} from '../../services/index.js';
 /**
  * The options for the responses the middleware will create.
  *

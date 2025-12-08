@@ -1,9 +1,9 @@
 import { get } from '@homer0/object-utils';
 import { deepAssignWithOverwrite } from '@homer0/deep-assign';
 import { deferred, type DeferredPromise } from '@homer0/deferred';
-import { providerCreator } from '../../utils';
-import type { Config, Logger } from '../../types';
-import type { FrontendFs } from '../frontend';
+import { providerCreator } from '../../utils/index.js';
+import type { Config, Logger } from '../../types/index.js';
+import type { FrontendFs } from '../frontend/index.js';
 /**
  * The options to customize a {@link HTMLGenerator} instance.
  *

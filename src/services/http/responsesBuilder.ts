@@ -1,5 +1,5 @@
-import type { Config, Response } from '../../types';
-import { provider, type Statuses } from '../../utils';
+import type { Config, Response } from '../../types/index.js';
+import { provider, type Statuses } from '../../utils/index.js';
 /**
  * The options to construct a {@link ResponsesBuilder}.
  *

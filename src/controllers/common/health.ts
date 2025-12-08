@@ -1,6 +1,10 @@
-import { controller, type Statuses } from '../../utils';
-import type { ResponsesBuilder } from '../../services';
-import type { JimpexHealthStatus, Config, AsyncExpressMiddleware } from '../../types';
+import { controller, type Statuses } from '../../utils/index.js';
+import type { ResponsesBuilder } from '../../services/index.js';
+import type {
+  JimpexHealthStatus,
+  Config,
+  AsyncExpressMiddleware,
+} from '../../types/index.js';
 /**
  * A function that will return the health status of the application.
  *

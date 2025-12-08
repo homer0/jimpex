@@ -1,5 +1,5 @@
-import { middlewareCreator } from '../../utils';
-import { ExpressMiddleware } from '../../types';
+import { middlewareCreator } from '../../utils/index.js';
+import { ExpressMiddleware } from '../../types/index.js';
 /**
  * The options to customize the HSTS header value.
  *

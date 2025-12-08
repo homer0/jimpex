@@ -1,7 +1,7 @@
-import { providers } from '../../utils';
-import { appErrorProvider } from './appError';
-import { httpErrorProvider } from './httpError';
-import { sendFileProvider } from './sendFile';
+import { providers } from '../../utils/index.js';
+import { appErrorProvider } from './appError.js';
+import { httpErrorProvider } from './httpError.js';
+import { sendFileProvider } from './sendFile.js';
 /**
  * Registers all the common services on the container.
  *
@@ -24,6 +24,6 @@ export const commonServicesProvider = providers({
   sendFileProvider,
 });
 
-export * from './appError';
-export * from './httpError';
-export * from './sendFile';
+export * from './appError.js';
+export * from './httpError.js';
+export * from './sendFile.js';

@@ -1,5 +1,5 @@
-import { provider, statuses as statusesFn, type Statuses } from '../../utils';
-import { AppError, type AppErrorContext } from './appError';
+import { provider, statuses as statusesFn, type Statuses } from '../../utils/index.js';
+import { AppError, type AppErrorContext } from './appError.js';
 /**
  * A type of error to be used on HTTP requests. This is the most common type of error used
  * by Jimpex.

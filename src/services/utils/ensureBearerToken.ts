@@ -1,7 +1,7 @@
 import { deepAssignWithOverwrite } from '@homer0/deep-assign';
-import { providerCreator, type Statuses } from '../../utils';
-import type { HTTPErrorClass } from '../common';
-import type { DeepPartial, ExpressMiddleware } from '../../types';
+import { providerCreator, type Statuses } from '../../utils/index.js';
+import type { HTTPErrorClass } from '../common/index.js';
+import type { DeepPartial, ExpressMiddleware } from '../../types/index.js';
 /**
  * The options for the error the middleare can generate.
  *

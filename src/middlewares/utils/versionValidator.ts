@@ -1,7 +1,7 @@
 import { deepAssignWithOverwrite } from '@homer0/deep-assign';
-import { middlewareCreator, type Statuses } from '../../utils';
-import { DeepPartial, Request, ExpressMiddleware } from '../../types';
-import type { HTTPErrorClass, ResponsesBuilder } from '../../services';
+import { middlewareCreator, type Statuses } from '../../utils/index.js';
+import { DeepPartial, Request, ExpressMiddleware } from '../../types/index.js';
+import type { HTTPErrorClass, ResponsesBuilder } from '../../services/index.js';
 /**
  * The options for how the middleware should behave if the requested version is `latest`.
  *

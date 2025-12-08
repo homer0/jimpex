@@ -1,6 +1,10 @@
-import { middlewareCreator } from '../../utils';
-import type { HTMLGenerator, SendFile } from '../../services';
-import type { AsyncExpressMiddleware, Response, NextFunction } from '../../types';
+import { middlewareCreator } from '../../utils/index.js';
+import type { HTMLGenerator, SendFile } from '../../services/index.js';
+import type {
+  AsyncExpressMiddleware,
+  Response,
+  NextFunction,
+} from '../../types/index.js';
 /**
  * The options to customize the behavior of the middleware.
  *

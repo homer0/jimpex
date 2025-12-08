@@ -5,9 +5,9 @@ import {
   type FetchClient,
 } from '@homer0/api-utils';
 import { deepAssignWithOverwrite } from '@homer0/deep-assign';
-import { providerCreator } from '../../utils';
-import type { HTTP } from './http';
-import type { HTTPErrorClass } from '../common';
+import { providerCreator } from '../../utils/index.js';
+import type { HTTP } from './http.js';
+import type { HTTPErrorClass } from '../common.js';
 
 export type { ErrorResponse };
 /**

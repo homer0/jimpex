@@ -1,8 +1,8 @@
 import urijs from 'urijs';
 import type { RequestInit, BodyInit } from 'node-fetch';
 import { deepAssignWithOverwrite } from '@homer0/deep-assign';
-import { provider } from '../../utils';
-import { Logger, Request, HTTPResponse, NodeFetch } from '../../types';
+import { provider } from '../../utils/index.js';
+import { Logger, Request, HTTPResponse, NodeFetch } from '../../types/index.js';
 
 /**
  * The options to customize the service.

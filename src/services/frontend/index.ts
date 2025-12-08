@@ -1,5 +1,5 @@
-import { providers } from '../../utils';
-import { frontendFsProvider } from './frontendFs';
+import { providers } from '../../utils/index.js';
+import { frontendFsProvider } from './frontendFs.js';
 /**
  * Registers all the frontend services on the container.
  *
@@ -18,4 +18,4 @@ export const frontendServicesProvider = providers({
   frontendFsProvider,
 });
 
-export * from './frontendFs';
+export * from './frontendFs.js';

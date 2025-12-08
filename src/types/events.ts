@@ -1,6 +1,6 @@
-import type { Router, ExpressMiddlewareLike } from './express';
-import type { Controller, Middleware } from '../utils';
-import type { Jimpex } from '../app/jimpex';
+import type { Router, ExpressMiddlewareLike } from './express.js';
+import type { Controller, Middleware } from '../utils/index.js';
+import type { Jimpex } from '../app/jimpex.js';
 /**
  * The base payload the events emitted by the application send.
  *
@@ -145,11 +145,11 @@ export type JimpexEventListener<EventName extends JimpexEventNameLike> =
   EventName extends JimpexEventName
     ? (payload: JimpexEventPayload<EventName>) => void
     : EventName extends JimpexReducerEventName
-    ? (
-        target: JimpexReducerEventTarget<EventName>,
-        payload: JimpexReducerEventPayload<EventName>,
-      ) => JimpexReducerEventTarget<EventName>
-    : never;
+      ? (
+          target: JimpexReducerEventTarget<EventName>,
+          payload: JimpexReducerEventPayload<EventName>,
+        ) => JimpexReducerEventTarget<EventName>
+      : never;
 /**
  * The `events` service Jimpex uses.
  * This is an alternative declaration of the `EventsHub` class that uses the interfaces

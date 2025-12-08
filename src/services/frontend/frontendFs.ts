@@ -1,6 +1,6 @@
 import fs from 'fs/promises';
-import { provider } from '../../utils';
-import type { PathUtils } from '../../types';
+import { provider } from '../../utils/index.js';
+import type { PathUtils } from '../../types/index.js';
 /**
  * The options to construct a {@link FrontendFs}.
  *

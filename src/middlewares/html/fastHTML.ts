@@ -1,6 +1,15 @@
-import { createRouteExpression, middlewareCreator, removeSlashes } from '../../utils';
-import type { HTMLGenerator, SendFile } from '../../services';
-import type { AsyncExpressMiddleware, Response, NextFunction, Events } from '../../types';
+import {
+  createRouteExpression,
+  middlewareCreator,
+  removeSlashes,
+} from '../../utils/index.js';
+import type { HTMLGenerator, SendFile } from '../../services/index.js';
+import type {
+  AsyncExpressMiddleware,
+  Response,
+  NextFunction,
+  Events,
+} from '../../types/index.js';
 /**
  * The options to customize the behavior of the middleware.
  *

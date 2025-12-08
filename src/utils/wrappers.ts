@@ -7,8 +7,8 @@ import {
   type GenericCurriedFn,
   resourceCreatorFactory,
 } from '@homer0/jimple';
-import type { Jimpex } from '../app';
-import type { Router, ExpressMiddlewareLike, NoStringIndex } from '../types';
+import type { Jimpex } from '../app/index.js';
+import type { Router, ExpressMiddlewareLike, NoStringIndex } from '../types/index.js';
 /**
  * The function a provider uses to configure a resource in the container.
  *

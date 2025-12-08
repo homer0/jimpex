@@ -23,7 +23,7 @@ import {
   commonServicesProvider,
   httpServicesProvider,
   utilsServicesProvider,
-} from '../services';
+} from '../services/index.js';
 import {
   statuses,
   type Controller,
@@ -31,7 +31,7 @@ import {
   type MiddlewareLike,
   type MiddlewareProvider,
   type Middleware,
-} from '../utils';
+} from '../utils/index.js';
 import type {
   DeepPartial,
   Express,
@@ -56,7 +56,7 @@ import type {
   JimpexEventListener,
   JimpexHealthCheckFn,
   Router,
-} from '../types';
+} from '../types/index.js';
 /**
  * Jimpex is a mix of Jimple, a Javascript port of Pimple dependency injection container,
  * and Express, one of the most popular web frameworks for Node.

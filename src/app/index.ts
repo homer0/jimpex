@@ -1,1 +1,1 @@
-export * from './jimpex';
+export * from './jimpex.js';
