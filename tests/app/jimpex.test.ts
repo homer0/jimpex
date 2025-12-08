@@ -6,7 +6,6 @@ import { vi, describe, beforeEach, it, expect, type Mock } from 'vitest';
 import { tsAsyncImport } from '@homer0/ts-async-import';
 import {
   https,
-  spdy,
   express,
   resetDependencies,
   setupCase,
@@ -32,9 +31,24 @@ import type {
 const tsAsyncImportMock = tsAsyncImport as Mock<typeof tsAsyncImport>;
 
 describe('Jimpex', () => {
+  const spdyCreateServerMock = vi.fn();
+  const tsAsyncModules: Record<string, unknown> = {
+    spdy: {
+      default: {
+        createServer: spdyCreateServerMock,
+      },
+    },
+  };
+
   beforeEach(() => {
     tsAsyncImportMock.mockClear();
-    tsAsyncImportMock.mockImplementation((name) => Promise.resolve({ default: name }));
+    tsAsyncImportMock.mockImplementation((name) => {
+      if (tsAsyncModules[name]) {
+        return Promise.resolve(tsAsyncModules[name]);
+      }
+
+      return Promise.resolve({ default: name });
+    });
   });
 
   describe('class', () => {
@@ -874,7 +888,9 @@ describe('Jimpex', () => {
           vi.spyOn(fs, 'readFile')
             .mockResolvedValueOnce(caFile)
             .mockResolvedValueOnce(certFile);
-          spdy.createServer.mockReturnValueOnce(expressMocks as unknown as HTTPSServer);
+          spdyCreateServerMock.mockReturnValueOnce(
+            expressMocks as unknown as HTTPSServer,
+          );
           // When
           const sut = new Jimpex();
           await sut.start();
@@ -887,8 +903,8 @@ describe('Jimpex', () => {
           expect(pathUtilsMocks.joinFrom).toHaveBeenNthCalledWith(1, 'app', 'statics');
           expect(pathUtilsMocks.joinFrom).toHaveBeenNthCalledWith(2, 'home', caPath);
           expect(pathUtilsMocks.joinFrom).toHaveBeenNthCalledWith(3, 'home', certPath);
-          expect(spdy.createServer).toHaveBeenCalledTimes(1);
-          expect(spdy.createServer).toHaveBeenCalledWith(
+          expect(spdyCreateServerMock).toHaveBeenCalledTimes(1);
+          expect(spdyCreateServerMock).toHaveBeenCalledWith(
             {
               ca: caFile,
               cert: certFile,

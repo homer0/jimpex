@@ -1,5 +1,4 @@
 vi.mock('https');
-vi.mock('spdy');
 vi.mock('express');
 vi.mock('compression');
 vi.mock('body-parser', () => ({
@@ -38,7 +37,6 @@ vi.mock('@homer0/root-file', () => ({
 
 import { vi } from 'vitest';
 import originalHTTPS from 'https';
-import originalSpdy from 'spdy';
 import originalExpress from 'express';
 import originalCompression from 'compression';
 import originalBodyParser from 'body-parser';
@@ -69,7 +67,6 @@ import { getLoggerMock, type LoggerMockMocks } from './logger.js';
 import { getConfigMock, type ConfigMockMocks } from './config.js';
 
 export const https = originalHTTPS as unknown as MockedObject<typeof originalHTTPS>;
-export const spdy = originalSpdy as unknown as MockedObject<typeof originalSpdy>;
 
 export const express = originalExpress as unknown as MockInstance<
   typeof originalExpress
