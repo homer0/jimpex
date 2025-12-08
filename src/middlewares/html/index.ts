@@ -1,2 +1,2 @@
-export * from './fastHTML';
-export * from './showHTML';
+export * from './fastHTML.js';
+export * from './showHTML.js';

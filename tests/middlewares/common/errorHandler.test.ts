@@ -1,19 +1,20 @@
+import { vi, describe, it, expect } from 'vitest';
 import {
   ErrorHandler,
   errorHandlerMiddleware,
   type ErrorHandlerConstructorOptions,
-} from '@src/middlewares/common/errorHandler';
-import { AppError, HTTPError, ResponsesBuilder } from '@src/services';
-import type { ExpressErrorHandler, Request, Response } from '@src/types';
-import { statuses as realStatuses, type Statuses } from '@src/utils';
-import { getJimpexMock, getLoggerMock } from '@tests/mocks';
+} from '@src/middlewares/common/errorHandler.js';
+import { AppError, HTTPError, ResponsesBuilder } from '@src/services/index.js';
+import type { ExpressErrorHandler, Request, Response } from '@src/types/index.js';
+import { statuses as realStatuses, type Statuses } from '@src/utils/index.js';
+import { getJimpexMock, getLoggerMock } from '@tests/mocks/index.js';
 
 describe('middlewares/common:errorHandler', () => {
   describe('class', () => {
     it('should be instantiated', () => {
       // Given
       const status = realStatuses('internal server error');
-      const statuses = jest.fn(() => status);
+      const statuses = vi.fn(() => status);
       const { logger } = getLoggerMock();
       const responsesBuilder = {} as ResponsesBuilder;
       const options: ErrorHandlerConstructorOptions = {
@@ -41,7 +42,7 @@ describe('middlewares/common:errorHandler', () => {
 
     it('should be instantiated with custom options', () => {
       // Given
-      const statuses = jest.fn();
+      const statuses = vi.fn();
       const { logger } = getLoggerMock();
       const responsesBuilder = {} as ResponsesBuilder;
       const customOptions = {
@@ -72,11 +73,11 @@ describe('middlewares/common:errorHandler', () => {
         // Given
         const error = null;
         const status = realStatuses('internal server error');
-        const statuses = jest.fn(() => status);
+        const statuses = vi.fn(() => status);
         const defaultMessage = 'Unexpected error';
         const { logger } = getLoggerMock();
         const responsesBuilder = {
-          json: jest.fn(),
+          json: vi.fn(),
         } as unknown as ResponsesBuilder;
         const options: ErrorHandlerConstructorOptions = {
           inject: {
@@ -95,7 +96,7 @@ describe('middlewares/common:errorHandler', () => {
         const request = {
           request: true,
         } as unknown as Request;
-        const next = jest.fn();
+        const next = vi.fn();
         // When
         const sut = new ErrorHandler(options);
         sut.getMiddleware()(error, request, response, next);
@@ -109,11 +110,11 @@ describe('middlewares/common:errorHandler', () => {
         // Given
         const error = new Error('Nop!');
         const status = realStatuses('internal server error');
-        const statuses = jest.fn(() => status);
+        const statuses = vi.fn(() => status);
         const defaultMessage = 'Unexpected error';
         const { logger } = getLoggerMock();
         const responsesBuilder = {
-          json: jest.fn(),
+          json: vi.fn(),
         } as unknown as ResponsesBuilder;
         const options: ErrorHandlerConstructorOptions = {
           inject: {
@@ -132,7 +133,7 @@ describe('middlewares/common:errorHandler', () => {
         const request = {
           request: true,
         } as unknown as Request;
-        const next = jest.fn();
+        const next = vi.fn();
         // When
         const sut = new ErrorHandler(options);
         sut.getMiddleware()(error, request, response, next);
@@ -152,11 +153,11 @@ describe('middlewares/common:errorHandler', () => {
         // Given
         const error = new Error('Nop!');
         const status = realStatuses('internal server error');
-        const statuses = jest.fn(() => status);
+        const statuses = vi.fn(() => status);
         const defaultMessage = 'Unexpected error';
         const { logger } = getLoggerMock();
         const responsesBuilder = {
-          json: jest.fn(),
+          json: vi.fn(),
         } as unknown as ResponsesBuilder;
         const options: ErrorHandlerConstructorOptions = {
           inject: {
@@ -176,7 +177,7 @@ describe('middlewares/common:errorHandler', () => {
         const request = {
           request: true,
         } as unknown as Request;
-        const next = jest.fn();
+        const next = vi.fn();
         // When
         const sut = new ErrorHandler(options);
         sut.getMiddleware()(error, request, response, next);
@@ -202,10 +203,10 @@ describe('middlewares/common:errorHandler', () => {
         const error = new HTTPError('Nop!', status, {
           response: errorResponse,
         });
-        const statuses = jest.fn();
+        const statuses = vi.fn();
         const { logger } = getLoggerMock();
         const responsesBuilder = {
-          json: jest.fn(),
+          json: vi.fn(),
         } as unknown as ResponsesBuilder;
         const options: ErrorHandlerConstructorOptions = {
           inject: {
@@ -222,7 +223,7 @@ describe('middlewares/common:errorHandler', () => {
         const request = {
           request: true,
         } as unknown as Request;
-        const next = jest.fn();
+        const next = vi.fn();
         // When
         const sut = new ErrorHandler(options);
         sut.getMiddleware()(error, request, response, next);
@@ -246,10 +247,10 @@ describe('middlewares/common:errorHandler', () => {
           status: 0,
         });
         const status = realStatuses('bad request');
-        const statuses = jest.fn(() => status);
+        const statuses = vi.fn(() => status);
         const { logger } = getLoggerMock();
         const responsesBuilder = {
-          json: jest.fn(),
+          json: vi.fn(),
         } as unknown as ResponsesBuilder;
         const options: ErrorHandlerConstructorOptions = {
           inject: {
@@ -266,7 +267,7 @@ describe('middlewares/common:errorHandler', () => {
         const request = {
           request: true,
         } as unknown as Request;
-        const next = jest.fn();
+        const next = vi.fn();
         // When
         const sut = new ErrorHandler(options);
         sut.getMiddleware()(error, request, response, next);
@@ -285,6 +286,50 @@ describe('middlewares/common:errorHandler', () => {
         expect(statuses).toHaveBeenNthCalledWith(1, 'internal server error');
         expect(statuses).toHaveBeenNthCalledWith(2, 'bad request');
       });
+
+      it('should not format an unknown error', () => {
+        // Given
+        const error = {
+          message: 'Nop!',
+        };
+        const status = realStatuses('bad request');
+        const statuses = vi.fn(() => status);
+        const { logger } = getLoggerMock();
+        const responsesBuilder = {
+          json: vi.fn(),
+        } as unknown as ResponsesBuilder;
+        const options: ErrorHandlerConstructorOptions = {
+          inject: {
+            logger,
+            responsesBuilder,
+            HTTPError,
+            statuses: statuses as unknown as Statuses,
+          },
+          showErrors: true,
+        };
+        const response = {
+          response: true,
+        } as unknown as Response;
+        const request = {
+          request: true,
+        } as unknown as Request;
+        const next = vi.fn();
+        // When
+        const sut = new ErrorHandler(options);
+        sut.getMiddleware()(error, request, response, next);
+        // Then
+        expect(responsesBuilder.json).toHaveBeenCalledTimes(1);
+        expect(responsesBuilder.json).toHaveBeenCalledWith({
+          res: response,
+          status,
+          data: {
+            error: true,
+            message: error.message,
+          },
+        });
+        expect(statuses).toHaveBeenCalledTimes(1);
+        expect(statuses).toHaveBeenNthCalledWith(1, 'internal server error');
+      });
     });
   });
 
@@ -293,13 +338,13 @@ describe('middlewares/common:errorHandler', () => {
       // Given
       const error = new Error('Nop!');
       const config = {
-        get: jest.fn(),
+        get: vi.fn(),
       };
       const status = realStatuses('unauthorized');
-      const statuses = jest.fn(() => status);
+      const statuses = vi.fn(() => status);
       const { logger } = getLoggerMock();
       const responsesBuilder = {
-        json: jest.fn(),
+        json: vi.fn(),
       };
       const { container, containerMocks: mocks } = getJimpexMock({
         resources: {
@@ -315,7 +360,7 @@ describe('middlewares/common:errorHandler', () => {
       const request = {
         request: true,
       } as unknown as Request;
-      const next = jest.fn();
+      const next = vi.fn();
       // When
       const sut = errorHandlerMiddleware.connect(container);
       (sut as ExpressErrorHandler)(error, request, response, next);
@@ -342,13 +387,13 @@ describe('middlewares/common:errorHandler', () => {
       // Given
       const error = new Error('Nop!');
       const config = {
-        get: jest.fn(() => true),
+        get: vi.fn(() => true),
       };
       const status = realStatuses('unauthorized');
-      const statuses = jest.fn(() => status);
+      const statuses = vi.fn(() => status);
       const { logger } = getLoggerMock();
       const responsesBuilder = {
-        json: jest.fn(),
+        json: vi.fn(),
       };
       const { container, containerMocks: mocks } = getJimpexMock({
         resources: {
@@ -364,7 +409,7 @@ describe('middlewares/common:errorHandler', () => {
       const request = {
         request: true,
       } as unknown as Request;
-      const next = jest.fn();
+      const next = vi.fn();
       // When
       const sut = errorHandlerMiddleware.connect(container);
       (sut as ExpressErrorHandler)(error, request, response, next);

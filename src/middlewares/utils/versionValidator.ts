@@ -1,7 +1,7 @@
 import { deepAssignWithOverwrite } from '@homer0/deep-assign';
-import { middlewareCreator, type Statuses } from '../../utils';
-import { DeepPartial, Request, ExpressMiddleware } from '../../types';
-import type { HTTPErrorClass, ResponsesBuilder } from '../../services';
+import { middlewareCreator, type Statuses } from '../../utils/index.js';
+import { DeepPartial, Request, ExpressMiddleware } from '../../types/index.js';
+import type { HTTPErrorClass, ResponsesBuilder } from '../../services/index.js';
 /**
  * The options for how the middleware should behave if the requested version is `latest`.
  *
@@ -30,7 +30,7 @@ export type VersionValidatorLatestOptions = {
  */
 export type VersionValidatorPopupOptions = {
   /**
-   * The name of the query string variable the middleware will check in order to indentify
+   * The name of the query string variable the middleware will check in order to identify
    * whether the request comes from a popup or not. The variable must have `'true'` as its
    * value.
    *
@@ -146,7 +146,7 @@ export class VersionValidator {
    */
   protected readonly _responsesBuilder: ResponsesBuilder;
   /**
-   * The uility service to get HTTP status codes.
+   * The utility service to get HTTP status codes.
    */
   protected readonly _statuses: Statuses;
   /**
@@ -171,7 +171,7 @@ export class VersionValidator {
         popup: {
           variable: 'popup',
           title: 'Conflict',
-          message: 'vesion:conflict',
+          message: 'version:conflict',
         },
         version,
       },

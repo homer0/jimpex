@@ -1,3 +1,3 @@
-export * from './errorHandler';
-export * from './forceHTTPS';
-export * from './hsts';
+export * from './errorHandler.js';
+export * from './forceHTTPS.js';
+export * from './hsts.js';

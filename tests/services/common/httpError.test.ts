@@ -1,10 +1,11 @@
-import { statuses } from '@src/utils/fns/statuses';
+import { describe, it, expect } from 'vitest';
+import { statuses } from '@src/utils/fns/statuses.js';
 import {
   HTTPError,
   createHTTPError,
   httpErrorProvider,
-} from '@src/services/common/httpError';
-import { getJimpexMock } from '@tests/mocks';
+} from '@src/services/common/httpError.js';
+import { getJimpexMock } from '@tests/mocks/index.js';
 
 describe('services/common:appError', () => {
   describe('class', () => {

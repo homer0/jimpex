@@ -1,5 +1,5 @@
-import { providers } from '../../utils';
-import { htmlGeneratorProvider } from './htmlGenerator';
+import { providers } from '../../utils/index.js';
+import { htmlGeneratorProvider } from './htmlGenerator.js';
 /**
  * Registers all the HTML services on the container.
  *
@@ -18,4 +18,4 @@ export const htmlServicesProvider = providers({
   htmlGeneratorProvider,
 });
 
-export * from './htmlGenerator';
+export * from './htmlGenerator.js';

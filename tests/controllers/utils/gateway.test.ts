@@ -1,5 +1,6 @@
-jest.mock('mime');
-
+vi.mock('mime');
+import { vi, describe, it, expect } from 'vitest';
+import type { Mock } from 'vitest';
 import {
   GatewayController,
   gatewayController,
@@ -9,23 +10,22 @@ import {
   type GatewayHelperServiceResponseReducerOptions,
   type GatewayControllerConstructorOptions,
   type GatewayControllerCreatorOptions,
-} from '@src/controllers/utils/gateway';
-import { statuses, type MiddlewareLike } from '@src/utils';
-import type { HTTP } from '@src/services';
-// import type { MiddlewareLike } from '@src/utils';
+} from '@src/controllers/utils/gateway.js';
+import { statuses, type MiddlewareLike } from '@src/utils/index.js';
+import type { HTTP } from '@src/services/index.js';
 import type {
   AsyncExpressMiddleware,
   ExpressMiddleware,
   Request,
   Response,
-} from '@src/types';
-import { getRouterMock, getJimpexMock, getConfigMock } from '@tests/mocks';
+} from '@src/types/index.js';
+import { getRouterMock, getJimpexMock, getConfigMock } from '@tests/mocks/index.js';
 
 type FakeHTTPResponse = {
   status: number | string;
   body: {
-    pipe: jest.Mock<FakeHTTPResponse['body'], []>;
-    on: jest.Mock;
+    pipe: Mock<() => FakeHTTPResponse['body']>;
+    on: Mock;
   };
   headers: string[];
 };
@@ -414,8 +414,8 @@ describe('controllers/utils:gateway', () => {
         const httpResponse: FakeHTTPResponse = {
           status: httpResponseStatus,
           body: {
-            pipe: jest.fn(() => httpResponse.body),
-            on: jest.fn(),
+            pipe: vi.fn(() => httpResponse.body),
+            on: vi.fn(),
           },
           headers: ['content-type', 'server'],
         };
@@ -423,9 +423,9 @@ describe('controllers/utils:gateway', () => {
         const customHeaderName = 'x-custom-header';
         const customHeaderValue = 'my-custom-header-value';
         const http = {
-          fetch: jest.fn(() => Promise.resolve(httpResponse)),
-          getIPFromRequest: jest.fn(() => ip),
-          getCustomHeadersFromRequest: jest.fn(() => ({
+          fetch: vi.fn(() => Promise.resolve(httpResponse)),
+          getIPFromRequest: vi.fn(() => ip),
+          getCustomHeadersFromRequest: vi.fn(() => ({
             [customHeaderName]: customHeaderValue,
           })),
         };
@@ -451,10 +451,10 @@ describe('controllers/utils:gateway', () => {
           },
         };
         const response = {
-          status: jest.fn(),
-          setHeader: jest.fn(),
+          status: vi.fn(),
+          setHeader: vi.fn(),
         };
-        const next = jest.fn();
+        const next = vi.fn();
         const { router, routerMocks } = getRouterMock();
         // When
         const sut = new GatewayController(options);
@@ -506,15 +506,15 @@ describe('controllers/utils:gateway', () => {
         const httpResponse: FakeHTTPResponse = {
           status: httpResponseStatus,
           body: {
-            pipe: jest.fn(() => httpResponse.body),
-            on: jest.fn(),
+            pipe: vi.fn(() => httpResponse.body),
+            on: vi.fn(),
           },
           headers: ['content-type', 'server'],
         };
         const http = {
-          fetch: jest.fn(() => Promise.resolve(httpResponse)),
-          getIPFromRequest: jest.fn(),
-          getCustomHeadersFromRequest: jest.fn(),
+          fetch: vi.fn(() => Promise.resolve(httpResponse)),
+          getIPFromRequest: vi.fn(),
+          getCustomHeadersFromRequest: vi.fn(),
         };
         const route = '/my-gateway';
         const options: GatewayControllerConstructorOptions = {
@@ -534,10 +534,10 @@ describe('controllers/utils:gateway', () => {
           headers: {},
         };
         const response = {
-          status: jest.fn(),
-          setHeader: jest.fn(),
+          status: vi.fn(),
+          setHeader: vi.fn(),
         };
-        const next = jest.fn();
+        const next = vi.fn();
         const { router, routerMocks } = getRouterMock();
         // When
         const sut = new GatewayController(options);
@@ -575,13 +575,13 @@ describe('controllers/utils:gateway', () => {
         const httpResponse: FakeHTTPResponse = {
           status: httpResponseStatus,
           body: {
-            pipe: jest.fn(() => httpResponse.body),
-            on: jest.fn(),
+            pipe: vi.fn(() => httpResponse.body),
+            on: vi.fn(),
           },
           headers: [],
         };
         const http = {
-          fetch: jest.fn(() => Promise.resolve(httpResponse)),
+          fetch: vi.fn(() => Promise.resolve(httpResponse)),
         };
         const route = '/my-gateway';
         const options: GatewayControllerConstructorOptions = {
@@ -608,9 +608,9 @@ describe('controllers/utils:gateway', () => {
           },
         };
         const response = {
-          status: jest.fn(),
+          status: vi.fn(),
         };
-        const next = jest.fn();
+        const next = vi.fn();
         const { router, routerMocks } = getRouterMock();
         // When
         const sut = new GatewayController(options);
@@ -649,13 +649,13 @@ describe('controllers/utils:gateway', () => {
         const httpResponse: FakeHTTPResponse = {
           status: httpResponseStatus,
           body: {
-            pipe: jest.fn(() => httpResponse.body),
-            on: jest.fn(),
+            pipe: vi.fn(() => httpResponse.body),
+            on: vi.fn(),
           },
           headers: [],
         };
         const http = {
-          fetch: jest.fn(() => Promise.resolve(httpResponse)),
+          fetch: vi.fn(() => Promise.resolve(httpResponse)),
         };
         const route = '/my-gateway';
         const options: GatewayControllerConstructorOptions = {
@@ -678,9 +678,9 @@ describe('controllers/utils:gateway', () => {
           },
         };
         const response = {
-          status: jest.fn(),
+          status: vi.fn(),
         };
-        const next = jest.fn();
+        const next = vi.fn();
         const { router, routerMocks } = getRouterMock();
         // When
         const sut = new GatewayController(options);
@@ -719,13 +719,13 @@ describe('controllers/utils:gateway', () => {
         const httpResponse: FakeHTTPResponse = {
           status: httpResponseStatus,
           body: {
-            pipe: jest.fn(() => httpResponse.body),
-            on: jest.fn(),
+            pipe: vi.fn(() => httpResponse.body),
+            on: vi.fn(),
           },
           headers: [],
         };
         const http = {
-          fetch: jest.fn(() => Promise.resolve(httpResponse)),
+          fetch: vi.fn(() => Promise.resolve(httpResponse)),
         };
         const route = '/my-gateway';
         const options: GatewayControllerConstructorOptions = {
@@ -748,9 +748,9 @@ describe('controllers/utils:gateway', () => {
           },
         };
         const response = {
-          status: jest.fn(),
+          status: vi.fn(),
         };
-        const next = jest.fn();
+        const next = vi.fn();
         const { router, routerMocks } = getRouterMock();
         const error = new Error('MyError');
         // When
@@ -785,14 +785,14 @@ describe('controllers/utils:gateway', () => {
         const httpResponse: FakeHTTPResponse = {
           status: httpResponseStatus,
           body: {
-            pipe: jest.fn(() => httpResponse.body),
-            on: jest.fn(),
+            pipe: vi.fn(() => httpResponse.body),
+            on: vi.fn(),
           },
           headers: [],
         };
         const error = new Error('MyError');
         const http = {
-          fetch: jest.fn(() => Promise.reject(error)),
+          fetch: vi.fn(() => Promise.reject(error)),
         };
         const route = '/my-gateway';
         const options: GatewayControllerConstructorOptions = {
@@ -815,9 +815,9 @@ describe('controllers/utils:gateway', () => {
           },
         };
         const response = {
-          status: jest.fn(),
+          status: vi.fn(),
         };
-        const next = jest.fn();
+        const next = vi.fn();
         const { router, routerMocks } = getRouterMock();
         // When
         const sut = new GatewayController(options);
@@ -850,9 +850,9 @@ describe('controllers/utils:gateway', () => {
           headers: ['content-type', 'server'],
         };
         const http = {
-          fetch: jest.fn(() => Promise.resolve(httpResponse)),
-          getIPFromRequest: jest.fn(() => ''),
-          getCustomHeadersFromRequest: jest.fn(() => ({})),
+          fetch: vi.fn(() => Promise.resolve(httpResponse)),
+          getIPFromRequest: vi.fn(() => ''),
+          getCustomHeadersFromRequest: vi.fn(() => ({})),
         };
         const route = '/my-gateway';
         const options: GatewayControllerConstructorOptions = {
@@ -868,10 +868,10 @@ describe('controllers/utils:gateway', () => {
           headers: {},
         };
         const response = {
-          status: jest.fn(),
-          setHeader: jest.fn(),
+          status: vi.fn(),
+          setHeader: vi.fn(),
         };
-        const next = jest.fn();
+        const next = vi.fn();
         const { router, routerMocks } = getRouterMock();
         // When
         const sut = new GatewayController(options);
@@ -906,8 +906,8 @@ describe('controllers/utils:gateway', () => {
         const httpResponse: FakeHTTPResponse = {
           status: statuses('ok'),
           body: {
-            pipe: jest.fn(() => httpResponse.body),
-            on: jest.fn(),
+            pipe: vi.fn(() => httpResponse.body),
+            on: vi.fn(),
           },
           headers: ['content-type', 'server'],
         };
@@ -915,15 +915,15 @@ describe('controllers/utils:gateway', () => {
         const customHeaderName = 'x-custom-header';
         const customHeaderValue = 'my-custom-header-value';
         const http = {
-          fetch: jest.fn(() => Promise.resolve(httpResponse)),
-          getIPFromRequest: jest.fn(() => ip),
-          getCustomHeadersFromRequest: jest.fn(() => ({
+          fetch: vi.fn(() => Promise.resolve(httpResponse)),
+          getIPFromRequest: vi.fn(() => ip),
+          getCustomHeadersFromRequest: vi.fn(() => ({
             [customHeaderName]: customHeaderValue,
           })),
         };
         const route = '/my-gateway';
         const helper = {
-          reduceEndpointRequest: jest.fn(
+          reduceEndpointRequest: vi.fn(
             (reqOptions: GatewayHelperServiceRequestReducerOptions) =>
               Promise.resolve({
                 ...reqOptions.endpointReq,
@@ -934,7 +934,7 @@ describe('controllers/utils:gateway', () => {
         const options: GatewayControllerConstructorOptions = {
           inject: {
             http: http as unknown as HTTP,
-            getHelperService: jest.fn(() => helper as unknown as GatewayHelperService),
+            getHelperService: vi.fn(() => helper as unknown as GatewayHelperService),
           },
           route,
           gatewayConfig,
@@ -953,10 +953,10 @@ describe('controllers/utils:gateway', () => {
           },
         };
         const response = {
-          status: jest.fn(),
-          setHeader: jest.fn(),
+          status: vi.fn(),
+          setHeader: vi.fn(),
         };
-        const next = jest.fn();
+        const next = vi.fn();
         const { router, routerMocks } = getRouterMock();
         // When
         const sut = new GatewayController(options);
@@ -1017,18 +1017,18 @@ describe('controllers/utils:gateway', () => {
         const httpResponse: FakeHTTPResponse = {
           status: statuses('ok'),
           body: {
-            pipe: jest.fn(() => httpResponse.body),
-            on: jest.fn(),
+            pipe: vi.fn(() => httpResponse.body),
+            on: vi.fn(),
           },
           headers: ['content-type', 'server'],
         };
         const http = {
-          fetch: jest.fn(() => Promise.resolve(httpResponse)),
+          fetch: vi.fn(() => Promise.resolve(httpResponse)),
         };
         const route = '/my-gateway';
         const status = statuses('conflict');
         const helper = {
-          reduceEndpointResponse: jest.fn(
+          reduceEndpointResponse: vi.fn(
             (resOptions: GatewayHelperServiceResponseReducerOptions) =>
               Promise.resolve({
                 ...resOptions.endpointRes,
@@ -1039,7 +1039,7 @@ describe('controllers/utils:gateway', () => {
         const options: GatewayControllerConstructorOptions = {
           inject: {
             http: http as unknown as HTTP,
-            getHelperService: jest.fn(() => helper as unknown as GatewayHelperService),
+            getHelperService: vi.fn(() => helper as unknown as GatewayHelperService),
           },
           route,
           gatewayConfig,
@@ -1054,10 +1054,10 @@ describe('controllers/utils:gateway', () => {
           headers: {},
         };
         const response = {
-          status: jest.fn(),
-          setHeader: jest.fn(),
+          status: vi.fn(),
+          setHeader: vi.fn(),
         };
-        const next = jest.fn();
+        const next = vi.fn();
         const { router, routerMocks } = getRouterMock();
         // When
         const sut = new GatewayController(options);
@@ -1097,23 +1097,23 @@ describe('controllers/utils:gateway', () => {
         const httpResponse: FakeHTTPResponse = {
           status: statuses('ok'),
           body: {
-            pipe: jest.fn(() => httpResponse.body),
-            on: jest.fn(),
+            pipe: vi.fn(() => httpResponse.body),
+            on: vi.fn(),
           },
           headers: ['content-type', 'server'],
         };
         const http = {
-          fetch: jest.fn(() => Promise.resolve(httpResponse)),
+          fetch: vi.fn(() => Promise.resolve(httpResponse)),
         };
         const route = '/my-gateway';
         const helper = {
-          shouldStreamEndpointResponse: jest.fn(() => Promise.resolve(false)),
-          handleEndpointResponse: jest.fn(),
+          shouldStreamEndpointResponse: vi.fn(() => Promise.resolve(false)),
+          handleEndpointResponse: vi.fn(),
         };
         const options: GatewayControllerConstructorOptions = {
           inject: {
             http: http as unknown as HTTP,
-            getHelperService: jest.fn(() => helper as unknown as GatewayHelperService),
+            getHelperService: vi.fn(() => helper as unknown as GatewayHelperService),
           },
           route,
           gatewayConfig,
@@ -1128,10 +1128,10 @@ describe('controllers/utils:gateway', () => {
           headers: {},
         };
         const response = {
-          status: jest.fn(),
-          setHeader: jest.fn(),
+          status: vi.fn(),
+          setHeader: vi.fn(),
         };
-        const next = jest.fn();
+        const next = vi.fn();
         const { router, routerMocks } = getRouterMock();
         // When
         const sut = new GatewayController(options);
@@ -1180,22 +1180,22 @@ describe('controllers/utils:gateway', () => {
         const httpResponse: FakeHTTPResponse = {
           status: statuses('ok'),
           body: {
-            pipe: jest.fn(() => httpResponse.body),
-            on: jest.fn(),
+            pipe: vi.fn(() => httpResponse.body),
+            on: vi.fn(),
           },
           headers: ['content-type', 'server'],
         };
         const http = {
-          fetch: jest.fn(() => Promise.resolve(httpResponse)),
+          fetch: vi.fn(() => Promise.resolve(httpResponse)),
         };
         const route = '/my-gateway';
         const helper = {
-          shouldStreamEndpointResponse: jest.fn(() => Promise.resolve(false)),
+          shouldStreamEndpointResponse: vi.fn(() => Promise.resolve(false)),
         };
         const options: GatewayControllerConstructorOptions = {
           inject: {
             http: http as unknown as HTTP,
-            getHelperService: jest.fn(() => helper as unknown as GatewayHelperService),
+            getHelperService: vi.fn(() => helper as unknown as GatewayHelperService),
           },
           route,
           gatewayConfig,
@@ -1210,10 +1210,10 @@ describe('controllers/utils:gateway', () => {
           headers: {},
         };
         const response = {
-          status: jest.fn(),
-          setHeader: jest.fn(),
+          status: vi.fn(),
+          setHeader: vi.fn(),
         };
-        const next = jest.fn();
+        const next = vi.fn();
         const { router, routerMocks } = getRouterMock();
         // When
         const sut = new GatewayController(options);
@@ -1246,23 +1246,23 @@ describe('controllers/utils:gateway', () => {
         const httpResponse: FakeHTTPResponse = {
           status: statuses('ok'),
           body: {
-            pipe: jest.fn(() => httpResponse.body),
-            on: jest.fn(),
+            pipe: vi.fn(() => httpResponse.body),
+            on: vi.fn(),
           },
           headers: ['content-type', 'server'],
         };
         const error = new Error('MyError');
         const http = {
-          fetch: jest.fn(() => Promise.reject(error)),
+          fetch: vi.fn(() => Promise.reject(error)),
         };
         const route = '/my-gateway';
         const helper = {
-          handleEndpointError: jest.fn(),
+          handleEndpointError: vi.fn(),
         };
         const options: GatewayControllerConstructorOptions = {
           inject: {
             http: http as unknown as HTTP,
-            getHelperService: jest.fn(() => helper as unknown as GatewayHelperService),
+            getHelperService: vi.fn(() => helper as unknown as GatewayHelperService),
           },
           route,
           gatewayConfig,
@@ -1280,9 +1280,9 @@ describe('controllers/utils:gateway', () => {
           },
         };
         const response = {
-          status: jest.fn(),
+          status: vi.fn(),
         };
-        const next = jest.fn();
+        const next = vi.fn();
         const { router, routerMocks } = getRouterMock();
         // When
         const sut = new GatewayController(options);
@@ -1339,7 +1339,6 @@ describe('controllers/utils:gateway', () => {
       const result = gatewayController
         .register(container, route)
         .connect(container, route);
-      // eslint-disable-next-line dot-notation
       const service = resources['apiGateway'];
       // Then
       expect(result).toBe(router);
@@ -1388,7 +1387,6 @@ describe('controllers/utils:gateway', () => {
       const expectedName = `${options.serviceName}Gateway`;
       // When
       gatewayController(options).register(container, route).connect(container, route);
-      // eslint-disable-next-line dot-notation
       const service = resources[expectedName];
       // Then
       expect(service).toBeInstanceOf(GatewayController);
@@ -1414,17 +1412,17 @@ describe('controllers/utils:gateway', () => {
       const httpResponse: FakeHTTPResponse = {
         status: statuses('ok'),
         body: {
-          pipe: jest.fn(() => httpResponse.body),
-          on: jest.fn(),
+          pipe: vi.fn(() => httpResponse.body),
+          on: vi.fn(),
         },
         headers: [],
       };
       const http = {
-        fetch: jest.fn(() => Promise.resolve(httpResponse)),
+        fetch: vi.fn(() => Promise.resolve(httpResponse)),
       };
       const helperServiceName = 'myGatewayHelper';
       const helper = {
-        reduceEndpointRequest: jest.fn(
+        reduceEndpointRequest: vi.fn(
           (reqOptions: GatewayHelperServiceRequestReducerOptions) =>
             Promise.resolve({
               ...reqOptions.endpointReq,
@@ -1458,10 +1456,10 @@ describe('controllers/utils:gateway', () => {
         headers: {},
       };
       const response = {
-        status: jest.fn(),
-        setHeader: jest.fn(),
+        status: vi.fn(),
+        setHeader: vi.fn(),
       };
-      const next = jest.fn();
+      const next = vi.fn();
       // When
       gatewayController(options).register(container, route).connect(container, route);
       const [[, [middleware]]] = routerMocks.all.mock.calls as unknown as [
@@ -1532,14 +1530,14 @@ describe('controllers/utils:gateway', () => {
       const middlewareTwoStr = 'middlewareTwo';
       const middlewareTwo = {
         middleware: true,
-        connect: jest.fn(() => middlewareTwoStr),
+        connect: vi.fn(() => middlewareTwoStr),
       };
       const middlewareThree = {
         middleware: true,
-        connect: jest.fn(),
+        connect: vi.fn(),
       };
       const middlewares = [middlewareOne, middlewareTwo, middlewareThree];
-      const getMiddlewares = jest.fn(() => middlewares as unknown as MiddlewareLike[]);
+      const getMiddlewares = vi.fn(() => middlewares as unknown as MiddlewareLike[]);
       const options: GatewayControllerCreatorOptions = {
         serviceName: 'myService',
         getMiddlewares,

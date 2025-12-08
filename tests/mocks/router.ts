@@ -1,10 +1,11 @@
-import type { Router, RouterMethod } from '@src/types';
+import { vi, type Mock } from 'vitest';
+import type { Router, RouterMethod } from '@src/types/index.js';
 
 type RouteParams = Parameters<Router['get']>;
 
 export type RouterMockMocks = Record<
   RouterMethod,
-  jest.Mock<RouterMockMocks, RouteParams>
+  Mock<(...args: RouteParams) => RouterMockMocks>
 >;
 
 export type RouterMockResult = {
@@ -26,7 +27,7 @@ export const getRouterMock = (): RouterMockResult => {
     'trace',
   ];
   const router = methods.reduce((acc, method) => {
-    acc[method] = jest.fn<RouterMockMocks, RouteParams>(() => router);
+    acc[method] = vi.fn<(...args: RouteParams) => RouterMockMocks>(() => router);
     return acc;
   }, {} as RouterMockMocks);
 

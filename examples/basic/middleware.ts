@@ -1,5 +1,5 @@
-import { middleware, type ExpressMiddleware, type Logger } from '../../src';
-import type { DateService } from './service';
+import { middleware, type ExpressMiddleware, type Logger } from '../../src/index.js';
+import type { DateService } from './service.js';
 
 export const dateMiddleware = middleware((app) => {
   const logger = app.get<Logger>('logger');

@@ -1,5 +1,5 @@
-import { providers } from '../../utils';
-import { ensureBearerTokenProvider } from './ensureBearerToken';
+import { providers } from '../../utils/index.js';
+import { ensureBearerTokenProvider } from './ensureBearerToken.js';
 /**
  * Registers all the utility services on the container.
  *
@@ -18,4 +18,4 @@ export const utilsServicesProvider = providers({
   ensureBearerTokenProvider,
 });
 
-export * from './ensureBearerToken';
+export * from './ensureBearerToken.js';

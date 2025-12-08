@@ -1,45 +1,47 @@
-jest.mock('https');
-jest.mock('spdy');
-jest.mock('express');
-jest.mock('compression');
-jest.mock('body-parser', () => ({
-  json: jest.fn(),
-  urlencoded: jest.fn(),
+vi.mock('https');
+vi.mock('express');
+vi.mock('compression');
+vi.mock('body-parser', () => ({
+  default: {
+    json: vi.fn(),
+    urlencoded: vi.fn(),
+  },
 }));
-jest.mock('multer');
-jest.mock('@homer0/simple-logger');
-jest.mock('@homer0/path-utils', () => ({
+vi.mock('multer');
+vi.mock('@homer0/simple-logger');
+vi.mock('@homer0/path-utils', () => ({
   pathUtilsProvider: {
-    register: jest.fn(),
+    register: vi.fn(),
     provider: true,
   },
 }));
-jest.mock('@homer0/simple-config');
-jest.mock('@homer0/env-utils', () => ({
+vi.mock('@homer0/simple-config');
+vi.mock('@homer0/env-utils', () => ({
   envUtilsProvider: {
-    register: jest.fn(),
+    register: vi.fn(),
     provider: true,
   },
 }));
-jest.mock('@homer0/package-info', () => ({
+vi.mock('@homer0/package-info', () => ({
   packageInfoProvider: {
-    register: jest.fn(),
+    register: vi.fn(),
     provider: true,
   },
 }));
-jest.mock('@homer0/root-file', () => ({
+vi.mock('@homer0/root-file', () => ({
   rootFileProvider: {
-    register: jest.fn(),
+    register: vi.fn(),
     provider: true,
   },
 }));
 
+import { vi } from 'vitest';
 import originalHTTPS from 'https';
-import originalSpdy from 'spdy';
 import originalExpress from 'express';
 import originalCompression from 'compression';
 import originalBodyParser from 'body-parser';
 import originalMulter from 'multer';
+import type { Mock, MockedObject, MockInstance } from 'vitest';
 import { appLoggerProvider as originalAppLoggerProvider } from '@homer0/simple-logger';
 import { envUtilsProvider as originalEnvUtilsProvider } from '@homer0/env-utils';
 import { packageInfoProvider as originalPackageInfoProvider } from '@homer0/package-info';
@@ -49,72 +51,63 @@ import {
   SimpleConfig,
   simpleConfigProvider as originalSimpleConfigProvider,
 } from '@homer0/simple-config';
-import type { Express, ExpressMiddleware, Router } from '@src/types';
-import type { Jimpex } from '@src/app/jimpex';
+import type { Express, ExpressMiddleware, Router } from '@src/types/index.js';
+import type { Jimpex } from '@src/app/jimpex.js';
 import {
   commonServicesProvider,
   httpServicesProvider,
   utilsServicesProvider,
-} from '@src/services';
+} from '@src/services/index.js';
 import {
   getPathUtilsMock,
   type PathUtilsMockOptions,
   type PathUtilsMockMocks,
-} from './pathUtils';
-import { getLoggerMock, type LoggerMockMocks } from './logger';
-import { getConfigMock, type ConfigMockMocks } from './config';
+} from './pathUtils.js';
+import { getLoggerMock, type LoggerMockMocks } from './logger.js';
+import { getConfigMock, type ConfigMockMocks } from './config.js';
 
-export const https = originalHTTPS as unknown as jest.Mocked<typeof originalHTTPS>;
-export const spdy = originalSpdy as unknown as jest.Mocked<typeof originalSpdy>;
+export const https = originalHTTPS as unknown as MockedObject<typeof originalHTTPS>;
 
-export const express = originalExpress as unknown as jest.MockInstance<
-  ReturnType<typeof originalExpress>,
-  jest.ArgsType<typeof originalExpress>
+export const express = originalExpress as unknown as MockInstance<
+  typeof originalExpress
 > & {
-  Router: jest.Mock<Router, []>;
-  static: jest.Mock<unknown, [string]>;
+  Router: Mock<() => Router>;
+  static: Mock<(a: string) => unknown>;
 };
 
-export const compression = originalCompression as unknown as jest.MockInstance<
-  ReturnType<typeof originalCompression>,
-  jest.ArgsType<typeof originalCompression>
+export const compression = originalCompression as unknown as MockInstance<
+  typeof originalCompression
 >;
 export const bodyParser = originalBodyParser as unknown as {
-  json: jest.Mock;
-  urlencoded: jest.Mock;
+  json: Mock;
+  urlencoded: Mock;
 };
 
-export const multer = originalMulter as unknown as jest.MockInstance<
-  ReturnType<typeof originalMulter>,
-  jest.ArgsType<typeof originalMulter>
+export const multer = originalMulter as unknown as MockInstance<typeof originalMulter>;
+
+export const appLoggerProvider = originalAppLoggerProvider as unknown as MockInstance<
+  typeof originalAppLoggerProvider
 >;
 
-export const appLoggerProvider =
-  originalAppLoggerProvider as unknown as jest.MockInstance<
-    ReturnType<typeof originalAppLoggerProvider>,
-    jest.ArgsType<typeof originalAppLoggerProvider>
-  >;
-
 export const pathUtilsProvider = originalPathUtilsProvider as unknown as {
-  register: jest.Mock<void, [Jimpex]>;
+  register: Mock<(a: Jimpex) => void>;
 };
 
 export const envUtilsProvider = originalEnvUtilsProvider as unknown as {
-  register: jest.Mock<void, [Jimpex]>;
+  register: Mock<(a: Jimpex) => void>;
 };
 
 export const packageInfoProvider = originalPackageInfoProvider as unknown as {
-  register: jest.Mock<void, [Jimpex]>;
+  register: Mock<(a: Jimpex) => void>;
 };
 
 export const rootFileProvider = originalRootFileProvider as unknown as {
-  register: jest.Mock<void, [Jimpex]>;
+  register: Mock<(a: Jimpex) => void>;
 };
 
 export const simpleConfigProvider =
-  originalSimpleConfigProvider as unknown as jest.MockInstance<
-    ReturnType<typeof originalSimpleConfigProvider>,
-    jest.ArgsType<typeof originalSimpleConfigProvider>
+  originalSimpleConfigProvider as unknown as MockInstance<
+    typeof originalSimpleConfigProvider
   >;
 
 export const resetDependencies = (): void => {
@@ -136,42 +129,39 @@ export const resetDependencies = (): void => {
 
 export type SetupExpressResult = {
   expressMocks: {
-    enable: jest.Mock<void, []>;
-    disable: jest.Mock<void, []>;
-    use: jest.Mock<void, [ExpressMiddleware]>;
-    listen: jest.Mock<{ close: jest.Mock<void, []> }, [number, () => void]>;
+    enable: Mock<() => void>;
+    disable: Mock<() => void>;
+    use: Mock<(a: ExpressMiddleware) => void>;
+    listen: Mock<(a: number, b: () => void) => { close: Mock<() => void> }>;
   };
   instanceMock: {
-    close: jest.Mock<void, []>;
+    close: Mock<() => void>;
   };
-  routerMock: jest.Mock<
-    ReturnType<typeof originalExpress.Router>,
-    Parameters<typeof originalExpress.Router>
-  >;
-  staticMock: jest.Mock<unknown, [string]>;
+  routerMock: Mock<typeof originalExpress.Router>;
+  staticMock: Mock<(a: string) => unknown>;
   compressionMock: typeof compression;
   multerMocks: {
     multer: typeof multer;
-    any: jest.Mock<{ multerAny: boolean }, []>;
+    any: Mock<() => { multerAny: boolean }>;
   };
   bodyParserMocks: {
-    json: jest.Mock<void, []>;
-    urlencoded: jest.Mock<void, []>;
+    json: Mock<() => void>;
+    urlencoded: Mock<() => void>;
   };
 };
 
 export const setupExpress = (): SetupExpressResult => {
-  const close = jest.fn();
+  const close = vi.fn();
   const instanceMock = {
     express: true,
     close,
   };
   const expressMocks = {
     express: true,
-    enable: jest.fn(),
-    disable: jest.fn(),
-    use: jest.fn(),
-    listen: jest.fn((_: number, cb: () => void) => {
+    enable: vi.fn(),
+    disable: vi.fn(),
+    use: vi.fn(),
+    listen: vi.fn((_: number, cb: () => void) => {
       cb();
       return instanceMock;
     }),
@@ -203,7 +193,7 @@ export const setupExpress = (): SetupExpressResult => {
     multerAny: true,
   };
   const multerInstance = {
-    any: jest.fn(() => multerAnyInstance),
+    any: vi.fn(() => multerAnyInstance),
   };
   multer.mockReturnValueOnce(
     multerInstance as unknown as ReturnType<typeof originalMulter>,
@@ -269,9 +259,9 @@ export type SetupServicesOptions = {
 };
 
 export type SetupServices = {
-  commonServices: jest.SpyInstance<void, [Jimpex]>;
-  httpServices: jest.SpyInstance<void, [Jimpex]>;
-  utilsServices: jest.SpyInstance<void, [Jimpex]>;
+  commonServices: Mock<(a: Jimpex) => void>;
+  httpServices: Mock<(a: Jimpex) => void>;
+  utilsServices: Mock<(a: Jimpex) => void>;
 };
 
 export const setupServices = (options: SetupServicesOptions = {}): SetupServices => {
@@ -281,15 +271,15 @@ export const setupServices = (options: SetupServicesOptions = {}): SetupServices
     utilsServicesRegister = () => {},
   } = options;
   const mocks = {
-    commonServices: jest
+    commonServices: vi
       .spyOn(commonServicesProvider, 'register')
       .mockClear()
       .mockImplementationOnce(commonServicesRegister),
-    httpServices: jest
+    httpServices: vi
       .spyOn(httpServicesProvider, 'register')
       .mockClear()
       .mockImplementationOnce(httpServicesRegister),
-    utilsServices: jest
+    utilsServices: vi
       .spyOn(utilsServicesProvider, 'register')
       .mockClear()
       .mockImplementationOnce(utilsServicesRegister),

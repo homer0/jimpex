@@ -1,5 +1,5 @@
-import * as path from 'path';
-import fs from 'fs/promises';
+import * as path from 'node:path';
+import fs from 'node:fs/promises';
 import { createServer as createHTTPSServer } from 'https';
 import { Jimple } from '@homer0/jimple';
 import { deepAssignWithOverwrite } from '@homer0/deep-assign';
@@ -14,16 +14,13 @@ import { simpleConfigProvider } from '@homer0/simple-config';
 import compression from 'compression';
 import bodyParser from 'body-parser';
 import multer from 'multer';
-import {
-  createServer as createSpdyServer,
-  type ServerOptions as SpdyServerOptions,
-} from 'spdy';
+import type { ServerOptions as SpdyServerOptions } from 'spdy';
 import express from 'express';
 import {
   commonServicesProvider,
   httpServicesProvider,
   utilsServicesProvider,
-} from '../services';
+} from '../services/index.js';
 import {
   statuses,
   type Controller,
@@ -31,7 +28,7 @@ import {
   type MiddlewareLike,
   type MiddlewareProvider,
   type Middleware,
-} from '../utils';
+} from '../utils/index.js';
 import type {
   DeepPartial,
   Express,
@@ -56,7 +53,8 @@ import type {
   JimpexEventListener,
   JimpexHealthCheckFn,
   Router,
-} from '../types';
+} from '../types/index.js';
+
 /**
  * Jimpex is a mix of Jimple, a Javascript port of Pimple dependency injection container,
  * and Express, one of the most popular web frameworks for Node.
@@ -79,7 +77,7 @@ export class Jimpex extends Jimple {
    */
   protected _configReady: boolean = false;
   /**
-   * A reference to the actuall HTTP the application will use. This can vary depending on
+   * A reference to the actual HTTP the application will use. This can vary depending on
    * whether HTTPS, or HTTP2 are enabled. If HTTPS is not enabled, it will be the same as
    * the `express` property; if HTTPS is enabled, it will be an `https` server; and if
    * HTTP2 is enabled, it will be an `spdy` server.
@@ -106,7 +104,7 @@ export class Jimpex extends Jimple {
   /**
    * @param options  Preferences to customize the application.
    * @param config   The default settings for the configuration service. It's a
-   *                 shortcuit for `options.config.default`
+   *                 short-circuit for `options.config.default`
    */
   constructor(options: DeepPartial<JimpexOptions> = {}, config: unknown = {}) {
     super();
@@ -171,7 +169,7 @@ export class Jimpex extends Jimple {
    * Disables the server TLS validation. Meant to be used for development purposes.
    */
   disableTLSValidation() {
-    // eslint-disable-next-line no-process-env, dot-notation
+    // eslint-disable-next-line n/no-process-env
     process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0';
     this.logger.warn('TLS validation has been disabled');
   }
@@ -392,7 +390,7 @@ export class Jimpex extends Jimple {
     return this.eventsHub.on(eventName, listener);
   }
   /**
-   * Adds a listener for an application event that will only be execuded once: the first
+   * Adds a listener for an application event that will only be executed once: the first
    * time the event is triggered.
    *
    * @param eventName  The name of the event to listen for.
@@ -408,7 +406,7 @@ export class Jimpex extends Jimple {
     return this.eventsHub.once(eventName, listener);
   }
   /**
-   * Based on the application options, it returns wheter the application is healthy or
+   * Based on the application options, it returns whether the application is healthy or
    * not.
    */
   isHealthy(): ReturnType<JimpexHealthCheckFn> {
@@ -417,7 +415,7 @@ export class Jimpex extends Jimple {
   /**
    * This method is like a "lifecycle method", it gets executed on the constructor right
    * before the "boot step". The idea is for the method to be a helper when the
-   * application is defined by subclassing {@link Jimpex}: the application could register
+   * application is defined by sub-classing {@link Jimpex}: the application could register
    * all important services here and the routes on boot, then, if the implementation needs
    * to access or overwrite a something, it can send `boot: false`, access/register what
    * it needs, and then call `boot()`. That would be impossible for an application without
@@ -426,7 +424,7 @@ export class Jimpex extends Jimple {
   protected _init(): void {}
   /**
    * It generates overwrites for the application options when it gets created. This method
-   * is a helper for when the application is defined by subclassing {@link Jimpex}: It's
+   * is a helper for when the application is defined by sub-classing {@link Jimpex}: It's
    * highly probable that if the application needs to change the default options, it would
    * want to do it right from the class, instead of having to do it on every
    * implementation. A way to do it would be overwriting the constructor and calling
@@ -532,7 +530,7 @@ export class Jimpex extends Jimple {
    * This helper method validates the `path` options in order to register the `app`
    * location in the `pathUtils` service. The `app` location should be the path to where
    * the application executable is located, but due to how ESM works, we can't infer it
-   * from the `module` object, so we need either recieved as the `appPath` setting, or try
+   * from the `module` object, so we need either received as the `appPath` setting, or try
    * to get it from the parent module.
    *
    * @throws If the method should use the path from the parent module, but can't find
@@ -553,8 +551,10 @@ export class Jimpex extends Jimple {
       const stackList = stack.split('\n');
       stackList.shift();
       const parentFromStack = stackList.find((line) => !line.includes(__filename));
+      /* istanbul ignore else  */
       if (parentFromStack) {
-        const parentFile = parentFromStack.replace(/^.*?\s\(([^\s]+):\d+:\d+\)/, '$1');
+        const parentFile = parentFromStack.replace(/^.*?\s\(?([^\s]+):\d+:\d+\)?/, '$1');
+        /* istanbul ignore else  */
         if (parentFile !== parentFromStack) {
           foundPath = true;
           pathUtils.addLocation('app', path.dirname(parentFile));
@@ -703,7 +703,7 @@ export class Jimpex extends Jimple {
    * @returns {Server}
    * @throws {Error} If HTTP2 is enabled but HTTPS is not.
    * @throws {Error} If HTTPS is enabled but there's no `https.credentials` object.
-   * @throws {Error} If HTTPS is enabled and no creadentials are found.
+   * @throws {Error} If HTTPS is enabled and no credentials are found.
    * @access protected
    * @ignore
    */
@@ -739,7 +739,10 @@ export class Jimpex extends Jimple {
         spdy: http2Config.spdy,
       };
 
-      return createSpdyServer(serverOptions, this._express);
+      const spdyModule = await tsAsyncImport<{
+        default: { createServer: (typeof import('spdy'))['createServer'] };
+      }>('spdy');
+      return spdyModule.default.createServer(serverOptions, this._express);
     }
 
     return createHTTPSServer(credentials, this._express);

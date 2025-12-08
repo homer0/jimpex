@@ -1,18 +1,19 @@
+import { vi, describe, it, expect } from 'vitest';
 import {
   HealthController,
   healthController,
   type HealthControllerOptions,
   type GetHealthStatus,
-} from '@src/controllers/common/health';
-import { type Statuses } from '@src/utils';
-import type { ResponsesBuilder } from '@src/services';
+} from '@src/controllers/common/health.js';
+import { type Statuses } from '@src/utils/index.js';
+import type { ResponsesBuilder } from '@src/services/index.js';
 import type {
   ExpressMiddleware,
   JimpexHealthStatus,
   Request,
   Response,
-} from '@src/types';
-import { getJimpexMock, getConfigMock, getRouterMock } from '@tests/mocks';
+} from '@src/types/index.js';
+import { getJimpexMock, getConfigMock, getRouterMock } from '@tests/mocks/index.js';
 
 describe('controllers/common:health', () => {
   describe('class', () => {
@@ -44,11 +45,11 @@ describe('controllers/common:health', () => {
           version: configVersion,
         });
         const status = 200;
-        const statuses = jest.fn(() => status);
+        const statuses = vi.fn(() => status);
         const responsesBuilder = {
-          json: jest.fn(),
+          json: vi.fn(),
         };
-        const getHealthStatus = jest.fn().mockResolvedValueOnce(true);
+        const getHealthStatus = vi.fn().mockResolvedValueOnce(true);
         const options: HealthControllerOptions = {
           inject: {
             config,
@@ -63,7 +64,7 @@ describe('controllers/common:health', () => {
         const request = {
           request: true,
         } as unknown as Request;
-        const next = jest.fn();
+        const next = vi.fn();
         // When
         const sut = new HealthController(options);
         await sut.showHealth()(request, response, next);
@@ -96,9 +97,9 @@ describe('controllers/common:health', () => {
           version: configVersion,
         });
         const status = 200;
-        const statuses = jest.fn(() => status);
+        const statuses = vi.fn(() => status);
         const responsesBuilder = {
-          json: jest.fn(),
+          json: vi.fn(),
         };
         const healthStatus: JimpexHealthStatus = {
           isHealthy: true,
@@ -107,7 +108,7 @@ describe('controllers/common:health', () => {
             mongo: true,
           },
         };
-        const getHealthStatus = jest.fn().mockResolvedValueOnce(healthStatus);
+        const getHealthStatus = vi.fn().mockResolvedValueOnce(healthStatus);
         const options: HealthControllerOptions = {
           inject: {
             config,
@@ -122,7 +123,7 @@ describe('controllers/common:health', () => {
         const request = {
           request: true,
         } as unknown as Request;
-        const next = jest.fn();
+        const next = vi.fn();
         // When
         const sut = new HealthController(options);
         await sut.showHealth()(request, response, next);
@@ -153,9 +154,9 @@ describe('controllers/common:health', () => {
           version: configVersion,
         });
         const status = 503;
-        const statuses = jest.fn(() => status);
+        const statuses = vi.fn(() => status);
         const responsesBuilder = {
-          json: jest.fn(),
+          json: vi.fn(),
         };
         const healthStatus: JimpexHealthStatus = {
           services: {
@@ -163,7 +164,7 @@ describe('controllers/common:health', () => {
             mongo: false,
           },
         };
-        const getHealthStatus = jest.fn().mockResolvedValueOnce(healthStatus);
+        const getHealthStatus = vi.fn().mockResolvedValueOnce(healthStatus);
         const options: HealthControllerOptions = {
           inject: {
             config,
@@ -178,7 +179,7 @@ describe('controllers/common:health', () => {
         const request = {
           request: true,
         } as unknown as Request;
-        const next = jest.fn();
+        const next = vi.fn();
         // When
         const sut = new HealthController(options);
         await sut.showHealth()(request, response, next);
@@ -209,11 +210,11 @@ describe('controllers/common:health', () => {
           version: configVersion,
         });
         const status = 200;
-        const statuses = jest.fn(() => status);
+        const statuses = vi.fn(() => status);
         const responsesBuilder = {
-          json: jest.fn(),
+          json: vi.fn(),
         };
-        const getHealthStatus = jest.fn().mockResolvedValueOnce({});
+        const getHealthStatus = vi.fn().mockResolvedValueOnce({});
         const options: HealthControllerOptions = {
           inject: {
             config,
@@ -228,7 +229,7 @@ describe('controllers/common:health', () => {
         const request = {
           request: true,
         } as unknown as Request;
-        const next = jest.fn();
+        const next = vi.fn();
         // When
         const sut = new HealthController(options);
         await sut.showHealth()(request, response, next);
@@ -258,11 +259,11 @@ describe('controllers/common:health', () => {
           version: configVersion,
         });
         const status = 503;
-        const statuses = jest.fn(() => status);
+        const statuses = vi.fn(() => status);
         const responsesBuilder = {
-          json: jest.fn(),
+          json: vi.fn(),
         };
-        const getHealthStatus = jest.fn().mockResolvedValueOnce(false);
+        const getHealthStatus = vi.fn().mockResolvedValueOnce(false);
         const options: HealthControllerOptions = {
           inject: {
             config,
@@ -277,7 +278,7 @@ describe('controllers/common:health', () => {
         const request = {
           request: true,
         } as unknown as Request;
-        const next = jest.fn();
+        const next = vi.fn();
         // When
         const sut = new HealthController(options);
         await sut.showHealth()(request, response, next);

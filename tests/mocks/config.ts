@@ -1,13 +1,14 @@
+import { vi, type Mock } from 'vitest';
 import type { SimpleConfig } from '@homer0/simple-config';
 
 export type ConfigMockMocks = {
-  get: jest.Mock<unknown, Parameters<SimpleConfig['get']>>;
-  set: jest.Mock<unknown, Parameters<SimpleConfig['set']>>;
-  getConfig: jest.Mock<unknown>;
-  canSwitchConfigs: jest.Mock<boolean>;
-  switch: jest.Mock<unknown, Parameters<SimpleConfig['switch']>>;
-  loadFromFile: jest.Mock<unknown, Parameters<SimpleConfig['loadFromFile']>>;
-  loadFromEnv: jest.Mock<unknown, Parameters<SimpleConfig['loadFromEnv']>>;
+  get: Mock<(...args: Parameters<SimpleConfig['get']>) => unknown>;
+  set: Mock<(...args: Parameters<SimpleConfig['set']>) => unknown>;
+  getConfig: Mock<() => unknown>;
+  canSwitchConfigs: Mock<() => boolean>;
+  switch: Mock<(...args: Parameters<SimpleConfig['switch']>) => unknown>;
+  loadFromFile: Mock<(...args: Parameters<SimpleConfig['loadFromFile']>) => unknown>;
+  loadFromEnv: Mock<(...args: Parameters<SimpleConfig['loadFromEnv']>) => unknown>;
 };
 
 export type ConfigMockResult = {
@@ -17,13 +18,13 @@ export type ConfigMockResult = {
 
 export const getConfigMock = (): ConfigMockResult => {
   const mocks = {
-    set: jest.fn(),
-    get: jest.fn(),
-    getConfig: jest.fn(),
-    canSwitchConfigs: jest.fn(),
-    switch: jest.fn(),
-    loadFromFile: jest.fn(),
-    loadFromEnv: jest.fn(),
+    set: vi.fn(),
+    get: vi.fn(),
+    getConfig: vi.fn(),
+    canSwitchConfigs: vi.fn(),
+    switch: vi.fn(),
+    loadFromFile: vi.fn(),
+    loadFromEnv: vi.fn(),
   };
   class MockedConfig {
     get<T = unknown>(...args: Parameters<SimpleConfig['get']>): T {

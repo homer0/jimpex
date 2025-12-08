@@ -1,4 +1,4 @@
-import { provider, statuses as statusesFn, type Statuses } from '../../utils';
+import { provider, statuses as statusesFn, type Statuses } from '../../utils/index.js';
 /**
  * A dictionary with some context information that can be provided to {@link AppError}.
  *

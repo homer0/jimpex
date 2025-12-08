@@ -1,13 +1,15 @@
-jest.mock('@src/utils', () => ({
-  provider: jest.fn(() => 'provider'),
-  providerCreator: jest.fn(() => 'providerCreator'),
-  providers: jest.fn(() => 'providers'),
+import { vi, describe, it, expect } from 'vitest';
+
+vi.mock('@src/utils/index.js', () => ({
+  provider: vi.fn(() => 'provider'),
+  providerCreator: vi.fn(() => 'providerCreator'),
+  providers: vi.fn(() => 'providers'),
 }));
 
-import * as services from '@src/services';
+import * as services from '@src/services/index.js';
 
 describe('services', () => {
-  it('should export all the app sevices', () => {
+  it('should export all the app services', () => {
     // Given/When/Then
     expect(services).toEqual(
       expect.objectContaining({

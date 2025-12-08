@@ -1,7 +1,7 @@
-import { providers } from '../../utils';
-import { apiClientProvider } from './apiClient';
-import { httpProvider } from './http';
-import { responsesBuilderProvider } from './responsesBuilder';
+import { providers } from '../../utils/index.js';
+import { apiClientProvider } from './apiClient.js';
+import { httpProvider } from './http.js';
+import { responsesBuilderProvider } from './responsesBuilder.js';
 /**
  * Registers all the HTTP services on the container.
  *
@@ -24,6 +24,6 @@ export const httpServicesProvider = providers({
   responsesBuilderProvider,
 });
 
-export * from './apiClient';
-export * from './http';
-export * from './responsesBuilder';
+export * from './apiClient.js';
+export * from './http.js';
+export * from './responsesBuilder.js';

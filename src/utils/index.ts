@@ -1,2 +1,2 @@
-export * from './fns';
-export * from './wrappers';
+export * from './fns/index.js';
+export * from './wrappers.js';

@@ -1,14 +1,15 @@
+import { vi, type Mock } from 'vitest';
 import { pathUtils } from '@homer0/path-utils';
-import { FrontendFs } from '@src/services/frontend/frontendFs';
+import { FrontendFs } from '@src/services/frontend/frontendFs.js';
 
 export type FrontendFsMockOptions = {
   values?: Record<string, string>;
 };
 
 export type FrontendFsMockMocks = {
-  read: jest.Mock<Promise<string>, Parameters<FrontendFs['read']>>;
-  write: jest.Mock<Promise<void>, Parameters<FrontendFs['write']>>;
-  delete: jest.Mock<Promise<void>, Parameters<FrontendFs['delete']>>;
+  read: Mock<(...args: Parameters<FrontendFs['read']>) => Promise<string>>;
+  write: Mock<(...args: Parameters<FrontendFs['write']>) => Promise<void>>;
+  delete: Mock<(...args: Parameters<FrontendFs['delete']>) => Promise<void>>;
 };
 
 export type FrontendFsMockResult = {
@@ -22,9 +23,9 @@ export const getFrontendFsMock = (
   const { values = {} } = options;
 
   const mocks = {
-    read: jest.fn(),
-    write: jest.fn(),
-    delete: jest.fn(),
+    read: vi.fn(),
+    write: vi.fn(),
+    delete: vi.fn(),
   };
   class MockedFrontendFs extends FrontendFs {
     override read(

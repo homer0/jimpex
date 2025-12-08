@@ -1,5 +1,5 @@
-import { provider } from '../../utils';
-import type { Response, NextFunction, PathUtils } from '../../types';
+import { provider } from '../../utils/index.js';
+import type { Response, NextFunction, PathUtils } from '../../types/index.js';
 /**
  * The options to create a {@link SendFile} function.
  *

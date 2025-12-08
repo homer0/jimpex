@@ -1,8 +1,8 @@
 import urijs from 'urijs';
 import type { RequestInit, BodyInit } from 'node-fetch';
 import { deepAssignWithOverwrite } from '@homer0/deep-assign';
-import { provider } from '../../utils';
-import { Logger, Request, HTTPResponse, NodeFetch } from '../../types';
+import { provider } from '../../utils/index.js';
+import { Logger, Request, HTTPResponse, NodeFetch } from '../../types/index.js';
 
 /**
  * The options to customize the service.
@@ -20,7 +20,7 @@ export type HTTPOptions = {
  *
  * @group Services/HTTP
  */
-export type HTTPContructorOptions = Partial<HTTPOptions> & {
+export type HTTPConstructorOptions = Partial<HTTPOptions> & {
   /**
    * A dictionary with the dependencies to inject.
    */
@@ -103,7 +103,7 @@ export class HTTP {
   /**
    * @param options  The options to construct the class.
    */
-  constructor({ inject: { logger, nodeFetch }, ...options }: HTTPContructorOptions) {
+  constructor({ inject: { logger, nodeFetch }, ...options }: HTTPConstructorOptions) {
     this._logger = logger;
     this._nodeFetch = nodeFetch;
     this._options = deepAssignWithOverwrite(
@@ -200,7 +200,7 @@ export class HTTP {
    * It takes a dictionary of headers and normalize the names so each word will start with
    * an upper case character. This is helpful in case you added custom headers and didn't
    * care about the casing, or when copying headers from a server request, as they all
-   * come tranformed into lower case.
+   * come transformed into lower case.
    *
    * @param headers  The dictionary of headers to normalize.
    */

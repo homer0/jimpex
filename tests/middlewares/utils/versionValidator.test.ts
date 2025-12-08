@@ -1,18 +1,19 @@
+import { vi, describe, it, expect } from 'vitest';
 import {
   VersionValidator,
   versionValidatorMiddleware,
   type VersionValidatorConstructorOptions,
-} from '@src/middlewares/utils/versionValidator';
-import { HTTPError, ResponsesBuilder } from '@src/services';
-import type { ExpressMiddleware, Request, Response } from '@src/types';
-import { statuses as realStatuses, type Statuses } from '@src/utils';
-import { getJimpexMock } from '@tests/mocks';
+} from '@src/middlewares/utils/versionValidator.js';
+import { HTTPError, ResponsesBuilder } from '@src/services/index.js';
+import type { ExpressMiddleware, Request, Response } from '@src/types/index.js';
+import { statuses as realStatuses, type Statuses } from '@src/utils/index.js';
+import { getJimpexMock } from '@tests/mocks/index.js';
 
 describe('middlewares/utils:versionValidator', () => {
   describe('class', () => {
     it('should be instantiated', () => {
       // Given
-      const statuses = jest.fn();
+      const statuses = vi.fn();
       const responsesBuilder = {} as ResponsesBuilder;
       const version = 'abc';
       const options: VersionValidatorConstructorOptions = {
@@ -36,7 +37,7 @@ describe('middlewares/utils:versionValidator', () => {
         popup: {
           variable: 'popup',
           title: 'Conflict',
-          message: 'vesion:conflict',
+          message: 'version:conflict',
         },
         version,
       });
@@ -44,7 +45,7 @@ describe('middlewares/utils:versionValidator', () => {
 
     it('should be instantiated with custom options', () => {
       // Given
-      const statuses = jest.fn();
+      const statuses = vi.fn();
       const responsesBuilder = {} as ResponsesBuilder;
       const version = 'bcd';
       const customOptions = {
@@ -56,7 +57,7 @@ describe('middlewares/utils:versionValidator', () => {
         popup: {
           variable: 'popupWindow',
           title: 'Conflict!!',
-          message: 'vesion:error',
+          message: 'version:error',
         },
         version,
       };
@@ -76,7 +77,7 @@ describe('middlewares/utils:versionValidator', () => {
 
     it('should be throw an error if the version is falsy', () => {
       // Given
-      const statuses = jest.fn();
+      const statuses = vi.fn();
       const responsesBuilder = {} as ResponsesBuilder;
       const version = '';
       const options: VersionValidatorConstructorOptions = {
@@ -96,7 +97,7 @@ describe('middlewares/utils:versionValidator', () => {
     describe('middleware', () => {
       it("should skip the validation if there's no `version` param", () => {
         // Given
-        const statuses = jest.fn();
+        const statuses = vi.fn();
         const responsesBuilder = {} as ResponsesBuilder;
         const version = 'abc';
         const options: VersionValidatorConstructorOptions = {
@@ -114,7 +115,7 @@ describe('middlewares/utils:versionValidator', () => {
           request: true,
           params: {},
         } as unknown as Request;
-        const next = jest.fn();
+        const next = vi.fn();
         // When
         const sut = new VersionValidator(options);
         sut.getMiddleware()(request, response, next);
@@ -125,7 +126,7 @@ describe('middlewares/utils:versionValidator', () => {
 
       it('should allow the current version', () => {
         // Given
-        const statuses = jest.fn();
+        const statuses = vi.fn();
         const responsesBuilder = {} as ResponsesBuilder;
         const version = 'abc';
         const options: VersionValidatorConstructorOptions = {
@@ -143,7 +144,7 @@ describe('middlewares/utils:versionValidator', () => {
           request: true,
           params: { version },
         } as unknown as Request;
-        const next = jest.fn();
+        const next = vi.fn();
         // When
         const sut = new VersionValidator(options);
         sut.getMiddleware()(request, response, next);
@@ -154,7 +155,7 @@ describe('middlewares/utils:versionValidator', () => {
 
       it('should allow the latest version', () => {
         // Given
-        const statuses = jest.fn();
+        const statuses = vi.fn();
         const responsesBuilder = {} as ResponsesBuilder;
         const version = 'latest';
         const options: VersionValidatorConstructorOptions = {
@@ -172,7 +173,7 @@ describe('middlewares/utils:versionValidator', () => {
           request: true,
           params: { version },
         } as unknown as Request;
-        const next = jest.fn();
+        const next = vi.fn();
         // When
         const sut = new VersionValidator(options);
         sut.getMiddleware()(request, response, next);
@@ -183,7 +184,7 @@ describe('middlewares/utils:versionValidator', () => {
 
       it('should allow the latest version with a different name', () => {
         // Given
-        const statuses = jest.fn();
+        const statuses = vi.fn();
         const responsesBuilder = {} as ResponsesBuilder;
         const version = 'newest';
         const options: VersionValidatorConstructorOptions = {
@@ -204,7 +205,7 @@ describe('middlewares/utils:versionValidator', () => {
           request: true,
           params: { version },
         } as unknown as Request;
-        const next = jest.fn();
+        const next = vi.fn();
         // When
         const sut = new VersionValidator(options);
         sut.getMiddleware()(request, response, next);
@@ -216,7 +217,7 @@ describe('middlewares/utils:versionValidator', () => {
       it("should generate an error if the version doesn't match", () => {
         // Given
         const status = realStatuses('conflict');
-        const statuses = jest.fn(() => status);
+        const statuses = vi.fn(() => status);
         const responsesBuilder = {} as ResponsesBuilder;
         const version = 'abc';
         const options: VersionValidatorConstructorOptions = {
@@ -235,7 +236,7 @@ describe('middlewares/utils:versionValidator', () => {
           params: { version },
           query: {},
         } as unknown as Request;
-        const next = jest.fn();
+        const next = vi.fn();
         // When
         const sut = new VersionValidator(options);
         sut.getMiddleware()(request, response, next);
@@ -252,7 +253,7 @@ describe('middlewares/utils:versionValidator', () => {
       it("shouldn't allow the latest version if disabled", () => {
         // Given
         const status = realStatuses('conflict');
-        const statuses = jest.fn(() => status);
+        const statuses = vi.fn(() => status);
         const responsesBuilder = {} as ResponsesBuilder;
         const version = 'latest';
         const options: VersionValidatorConstructorOptions = {
@@ -274,7 +275,7 @@ describe('middlewares/utils:versionValidator', () => {
           params: { version },
           query: {},
         } as unknown as Request;
-        const next = jest.fn();
+        const next = vi.fn();
         // When
         const sut = new VersionValidator(options);
         sut.getMiddleware()(request, response, next);
@@ -291,7 +292,7 @@ describe('middlewares/utils:versionValidator', () => {
       it("shouldn't allow the latest version if the name doesn't match", () => {
         // Given
         const status = realStatuses('conflict');
-        const statuses = jest.fn(() => status);
+        const statuses = vi.fn(() => status);
         const responsesBuilder = {} as ResponsesBuilder;
         const version = 'latest';
         const options: VersionValidatorConstructorOptions = {
@@ -313,7 +314,7 @@ describe('middlewares/utils:versionValidator', () => {
           params: { version },
           query: {},
         } as unknown as Request;
-        const next = jest.fn();
+        const next = vi.fn();
         // When
         const sut = new VersionValidator(options);
         sut.getMiddleware()(request, response, next);
@@ -330,9 +331,9 @@ describe('middlewares/utils:versionValidator', () => {
       it("should generate a post message error if the version doesn't match", () => {
         // Given
         const status = realStatuses('conflict');
-        const statuses = jest.fn(() => status);
+        const statuses = vi.fn(() => status);
         const responsesBuilder = {
-          htmlPostMessage: jest.fn(),
+          htmlPostMessage: vi.fn(),
         } as unknown as ResponsesBuilder;
         const version = 'abc';
         const popupOptions = {
@@ -359,7 +360,7 @@ describe('middlewares/utils:versionValidator', () => {
             [popupOptions.variable]: true,
           },
         } as unknown as Request;
-        const next = jest.fn();
+        const next = vi.fn();
         // When
         const sut = new VersionValidator(options);
         sut.getMiddleware()(request, response, next);
@@ -381,12 +382,12 @@ describe('middlewares/utils:versionValidator', () => {
       // Given
       const version = 'abc';
       const config = {
-        get: jest.fn(() => version),
+        get: vi.fn(() => version),
       };
       const status = realStatuses('unauthorized');
-      const statuses = jest.fn(() => status);
+      const statuses = vi.fn(() => status);
       const responsesBuilder = {
-        json: jest.fn(),
+        json: vi.fn(),
       };
       const { container, containerMocks: mocks } = getJimpexMock({
         resources: {
@@ -402,7 +403,7 @@ describe('middlewares/utils:versionValidator', () => {
         request: true,
         params: {},
       } as unknown as Request;
-      const next = jest.fn();
+      const next = vi.fn();
       // When
       const sut = versionValidatorMiddleware.connect(container);
       (sut as ExpressMiddleware)(request, response, next);
@@ -423,16 +424,16 @@ describe('middlewares/utils:versionValidator', () => {
       // Given
       const version = 'abc';
       const config = {
-        get: jest.fn(),
+        get: vi.fn(),
       };
       const status = realStatuses('unauthorized');
-      const statuses = jest.fn(() => status);
+      const statuses = vi.fn(() => status);
       const responsesBuilder = {
-        json: jest.fn(),
+        json: vi.fn(),
       };
       const routerMessage = 'routerMessage';
       const router = {
-        all: jest.fn(() => routerMessage),
+        all: vi.fn(() => routerMessage),
       };
       const { container } = getJimpexMock({
         resources: {
@@ -451,7 +452,7 @@ describe('middlewares/utils:versionValidator', () => {
           version,
         },
       } as unknown as Request;
-      const next = jest.fn();
+      const next = vi.fn();
       const route = 'some-route';
       // When
       const sut = versionValidatorMiddleware({ version }).connect(container, route);

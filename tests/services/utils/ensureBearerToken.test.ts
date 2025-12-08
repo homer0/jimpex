@@ -1,20 +1,24 @@
-/* eslint-disable dot-notation */
+import { describe, it, expect, vi, afterEach } from 'vitest';
 import {
   EnsureBearerToken,
   ensureBearerTokenProvider,
   type EnsureBearerConstructorOptions,
-} from '@src/services/utils/ensureBearerToken';
-import { HTTPError } from '@src/services/common/httpError';
-import type { Request, Response } from '@src/types';
-import { statuses as realStatuses, type Statuses } from '@src/utils/fns/statuses';
-import { getJimpexMock } from '@tests/mocks';
+} from '@src/services/utils/ensureBearerToken.js';
+import { HTTPError } from '@src/services/common/httpError.js';
+import type { Request, Response } from '@src/types/index.js';
+import { statuses as realStatuses, type Statuses } from '@src/utils/fns/statuses.js';
+import { getJimpexMock } from '@tests/mocks/index.js';
 
 describe('services/utils:ensureBearerToken', () => {
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
   describe('class', () => {
     it('should be instantiated', () => {
       // Given
       const status = 401;
-      const statuses = jest.fn(() => status);
+      const statuses = vi.fn(() => status);
       const options: EnsureBearerConstructorOptions = {
         inject: {
           HTTPError,
@@ -41,7 +45,7 @@ describe('services/utils:ensureBearerToken', () => {
     it('should be instantiated with custom options', () => {
       // Given
       const status = realStatuses('unauthorized');
-      const statuses = jest.fn(() => status);
+      const statuses = vi.fn(() => status);
       const options: EnsureBearerConstructorOptions = {
         inject: {
           HTTPError,
@@ -70,7 +74,7 @@ describe('services/utils:ensureBearerToken', () => {
     describe('middleware', () => {
       it('should authorize a request with a token', () => {
         // Given
-        const statuses = jest.fn();
+        const statuses = vi.fn();
         const options: EnsureBearerConstructorOptions = {
           inject: {
             HTTPError,
@@ -84,7 +88,7 @@ describe('services/utils:ensureBearerToken', () => {
           },
         } as unknown as Request;
         const response = { locals: {} } as unknown as Response;
-        const next = jest.fn();
+        const next = vi.fn();
         // When
         const sut = new EnsureBearerToken(options);
         sut.getMiddleware()(request, response, next);
@@ -96,8 +100,9 @@ describe('services/utils:ensureBearerToken', () => {
 
       it('should send an error when the token is not present', () => {
         // Given
+        vi.useFakeTimers(); // for the errors `_date` property to be consistent
         const status = realStatuses('bad request');
-        const statuses = jest.fn();
+        const statuses = vi.fn();
         const errorOptions = {
           message: 'Nop',
           status: status as number,
@@ -116,7 +121,7 @@ describe('services/utils:ensureBearerToken', () => {
           headers: {},
         } as unknown as Request;
         const response = { locals: {} } as unknown as Response;
-        const next = jest.fn();
+        const next = vi.fn();
         // When
         const sut = new EnsureBearerToken(options);
         sut.getMiddleware()(request, response, next);
@@ -132,8 +137,9 @@ describe('services/utils:ensureBearerToken', () => {
 
       it("should send an error if the header doesn't match the expression", () => {
         // Given
+        vi.useFakeTimers(); // for the errors `_date` property to be consistent
         const status = realStatuses('bad request');
-        const statuses = jest.fn();
+        const statuses = vi.fn();
         const errorOptions = {
           message: 'Nop',
           status: status as number,
@@ -154,7 +160,7 @@ describe('services/utils:ensureBearerToken', () => {
           },
         } as unknown as Request;
         const response = { locals: {} } as unknown as Response;
-        const next = jest.fn();
+        const next = vi.fn();
         // When
         const sut = new EnsureBearerToken(options);
         sut.getMiddleware()(request, response, next);
@@ -173,7 +179,7 @@ describe('services/utils:ensureBearerToken', () => {
   describe('provider', () => {
     it('should register the service', () => {
       // Given
-      const statuses = jest.fn(() => 401);
+      const statuses = vi.fn(() => 401);
       const { container, containerMocks: mocks } = getJimpexMock({
         resources: {
           statuses,
@@ -201,7 +207,7 @@ describe('services/utils:ensureBearerToken', () => {
 
     it('should register the service with custom options', () => {
       // Given
-      const statuses = jest.fn(() => 401);
+      const statuses = vi.fn(() => 401);
       const { container, containerMocks: mocks } = getJimpexMock({
         resources: {
           statuses,

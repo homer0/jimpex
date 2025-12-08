@@ -2,7 +2,7 @@ import type { Server as HTTPSServer } from 'https';
 import type { Server as HTTPServer } from 'http';
 import type { ServerOptions as SpdyServerOptions } from 'spdy';
 import type NodeFetchFn from 'node-fetch';
-import type { Express } from './express';
+import type { Express } from './express.js';
 
 export type { Response as HTTPResponse } from 'node-fetch';
 

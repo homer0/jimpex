@@ -1,14 +1,20 @@
+import { vi, describe, it, expect } from 'vitest';
 import type mime from 'mime';
 import {
   StaticsController,
   staticsController,
   type StaticsControllerOptions,
   type StaticsControllerConstructorOptions,
-} from '@src/controllers/common/statics';
-import type { SendFile } from '@src/services';
-import type { MiddlewareLike } from '@src/utils';
-import type { ExpressMiddleware, Request, Response, RouterMethod } from '@src/types';
-import { getJimpexMock, getRouterMock } from '@tests/mocks';
+} from '@src/controllers/common/statics.js';
+import type { SendFile } from '@src/services/index.js';
+import type { MiddlewareLike } from '@src/utils/index.js';
+import type {
+  ExpressMiddleware,
+  Request,
+  Response,
+  RouterMethod,
+} from '@src/types/index.js';
+import { getJimpexMock, getRouterMock } from '@tests/mocks/index.js';
 
 type Mime = typeof mime;
 
@@ -285,9 +291,9 @@ describe('controllers/common:statics', () => {
         const file = 'charo.jpg';
         const header = 'image/jpg';
         const mimeFn = {
-          getType: jest.fn(() => header),
+          getType: vi.fn(() => header),
         };
-        const sendFile = jest.fn();
+        const sendFile = vi.fn();
         const options: StaticsControllerConstructorOptions = {
           inject: {
             sendFile: sendFile as SendFile,
@@ -296,7 +302,7 @@ describe('controllers/common:statics', () => {
           files: [file],
         };
         const { router, routerMocks } = getRouterMock();
-        const setHeader = jest.fn();
+        const setHeader = vi.fn();
         const response = {
           response: true,
           setHeader,
@@ -304,7 +310,7 @@ describe('controllers/common:statics', () => {
         const request = {
           request: true,
         } as unknown as Request;
-        const next = jest.fn();
+        const next = vi.fn();
         // When
         const sut = new StaticsController(options);
         sut.addRoutes(router);
@@ -327,9 +333,9 @@ describe('controllers/common:statics', () => {
         // Given
         const file = 'charo.jpg';
         const mimeFn = {
-          getType: jest.fn(() => ''),
+          getType: vi.fn(() => ''),
         };
-        const sendFile = jest.fn();
+        const sendFile = vi.fn();
         const options: StaticsControllerConstructorOptions = {
           inject: {
             sendFile: sendFile as SendFile,
@@ -338,7 +344,7 @@ describe('controllers/common:statics', () => {
           files: [file],
         };
         const { router, routerMocks } = getRouterMock();
-        const setHeader = jest.fn();
+        const setHeader = vi.fn();
         const response = {
           response: true,
           setHeader,
@@ -346,7 +352,7 @@ describe('controllers/common:statics', () => {
         const request = {
           request: true,
         } as unknown as Request;
-        const next = jest.fn();
+        const next = vi.fn();
         // When
         const sut = new StaticsController(options);
         sut.addRoutes(router);
@@ -364,9 +370,9 @@ describe('controllers/common:statics', () => {
         const filePath = '../images/daughters/charo.jpg';
         const header = 'image/jpg';
         const mimeFn = {
-          getType: jest.fn(() => header),
+          getType: vi.fn(() => header),
         };
-        const sendFile = jest.fn();
+        const sendFile = vi.fn();
         const options: StaticsControllerConstructorOptions = {
           inject: {
             sendFile: sendFile as SendFile,
@@ -380,7 +386,7 @@ describe('controllers/common:statics', () => {
           ],
         };
         const { router, routerMocks } = getRouterMock();
-        const setHeader = jest.fn();
+        const setHeader = vi.fn();
         const response = {
           response: true,
           setHeader,
@@ -388,7 +394,7 @@ describe('controllers/common:statics', () => {
         const request = {
           request: true,
         } as unknown as Request;
-        const next = jest.fn();
+        const next = vi.fn();
         // When
         const sut = new StaticsController(options);
         sut.addRoutes(router);
@@ -442,14 +448,14 @@ describe('controllers/common:statics', () => {
       const middlewareTwoStr = 'middlewareTwo';
       const middlewareTwo = {
         middleware: true,
-        connect: jest.fn(() => middlewareTwoStr),
+        connect: vi.fn(() => middlewareTwoStr),
       };
       const middlewareThree = {
         middleware: true,
-        connect: jest.fn(),
+        connect: vi.fn(),
       };
       const middlewares = [middlewareOne, middlewareTwo, middlewareThree];
-      const getMiddlewares = jest.fn(() => middlewares as unknown as MiddlewareLike[]);
+      const getMiddlewares = vi.fn(() => middlewares as unknown as MiddlewareLike[]);
       const defaultFiles = ['favicon.ico', 'index.html'];
       const { router, routerMocks } = getRouterMock();
       const { container, containerMocks: mocks } = getJimpexMock({

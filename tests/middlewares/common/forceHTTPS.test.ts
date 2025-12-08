@@ -1,10 +1,11 @@
+import { vi, describe, it, expect } from 'vitest';
 import {
   ForceHTTPS,
   forceHTTPSMiddleware,
   type ForceHTTPSPartialOptions,
-} from '@src/middlewares/common/forceHTTPS';
-import type { Request, Response } from '@src/types';
-import { getJimpexMock } from '@tests/mocks';
+} from '@src/middlewares/common/forceHTTPS.js';
+import type { Request, Response } from '@src/types/index.js';
+import { getJimpexMock } from '@tests/mocks/index.js';
 
 describe('middlewares/common:forceHTTPS', () => {
   describe('class', () => {
@@ -42,16 +43,16 @@ describe('middlewares/common:forceHTTPS', () => {
           url: '/index.html',
           originalUrl: '/index.html',
         };
-        const requestGet = jest.fn((key) => requestInfo[key as keyof typeof requestInfo]);
+        const requestGet = vi.fn((key) => requestInfo[key as keyof typeof requestInfo]);
         const request = {
           ...requestInfo,
           get: requestGet,
         } as unknown as Request;
-        const redirect = jest.fn();
+        const redirect = vi.fn();
         const response = {
           redirect,
         } as unknown as Response;
-        const next = jest.fn();
+        const next = vi.fn();
         // When
         const sut = new ForceHTTPS();
         sut.getMiddleware()(request, response, next);
@@ -75,16 +76,16 @@ describe('middlewares/common:forceHTTPS', () => {
           url: '/index.html',
           originalUrl: '/index.html',
         };
-        const requestGet = jest.fn((key) => requestInfo[key as keyof typeof requestInfo]);
+        const requestGet = vi.fn((key) => requestInfo[key as keyof typeof requestInfo]);
         const request = {
           ...requestInfo,
           get: requestGet,
         } as unknown as Request;
-        const redirect = jest.fn();
+        const redirect = vi.fn();
         const response = {
           redirect,
         } as unknown as Response;
-        const next = jest.fn();
+        const next = vi.fn();
         // When
         const sut = new ForceHTTPS();
         sut.getMiddleware()(request, response, next);
@@ -104,16 +105,16 @@ describe('middlewares/common:forceHTTPS', () => {
           url: '/index.html',
           originalUrl: '/index.html',
         };
-        const requestGet = jest.fn((key) => requestInfo[key as keyof typeof requestInfo]);
+        const requestGet = vi.fn((key) => requestInfo[key as keyof typeof requestInfo]);
         const request = {
           ...requestInfo,
           get: requestGet,
         } as unknown as Request;
-        const redirect = jest.fn();
+        const redirect = vi.fn();
         const response = {
           redirect,
         } as unknown as Response;
-        const next = jest.fn();
+        const next = vi.fn();
         // When
         const sut = new ForceHTTPS({
           ignoredRoutes,
@@ -130,7 +131,7 @@ describe('middlewares/common:forceHTTPS', () => {
     it("shouldn't return anything if not enabled", () => {
       // Given
       const config = {
-        get: jest.fn(),
+        get: vi.fn(),
       };
       const { container, containerMocks: mocks } = getJimpexMock({
         resources: {
@@ -149,7 +150,7 @@ describe('middlewares/common:forceHTTPS', () => {
     it('should return the middleware when enabled', () => {
       // Given
       const config = {
-        get: jest.fn(() => true),
+        get: vi.fn(() => true),
       };
       const { container } = getJimpexMock({
         resources: {

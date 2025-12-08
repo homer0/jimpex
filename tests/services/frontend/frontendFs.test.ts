@@ -1,11 +1,12 @@
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import fs from 'fs/promises';
-import { FrontendFs, frontendFsProvider } from '@src/services/frontend/frontendFs';
-import { getPathUtilsMock, getJimpexMock } from '@tests/mocks';
+import { FrontendFs, frontendFsProvider } from '@src/services/frontend/frontendFs.js';
+import { getPathUtilsMock, getJimpexMock } from '@tests/mocks/index.js';
 
 describe('services/frontend:frontendFs', () => {
   describe('class', () => {
     beforeEach(() => {
-      jest.clearAllMocks();
+      vi.clearAllMocks();
     });
 
     it('should be instantiated', () => {
@@ -21,7 +22,7 @@ describe('services/frontend:frontendFs', () => {
       // Given
       const filepath = 'file.html';
       const contents = '<strong>content</strong>';
-      jest.spyOn(fs, 'readFile').mockResolvedValueOnce(contents);
+      vi.spyOn(fs, 'readFile').mockResolvedValueOnce(contents);
       const { pathUtils, pathUtilsMocks } = getPathUtilsMock();
       // When
       const sut = new FrontendFs({ inject: { pathUtils } });
@@ -39,7 +40,7 @@ describe('services/frontend:frontendFs', () => {
       const filepath = 'file.html';
       const contents = '<strong>content</strong>';
       const encoding = 'utf16le';
-      jest.spyOn(fs, 'readFile').mockResolvedValueOnce(contents);
+      vi.spyOn(fs, 'readFile').mockResolvedValueOnce(contents);
       const { pathUtils } = getPathUtilsMock();
       // When
       const sut = new FrontendFs({ inject: { pathUtils } });
@@ -54,7 +55,7 @@ describe('services/frontend:frontendFs', () => {
       // Given
       const filepath = 'file.html';
       const contents = '<strong>content</strong>';
-      jest.spyOn(fs, 'writeFile').mockResolvedValueOnce();
+      vi.spyOn(fs, 'writeFile').mockResolvedValueOnce();
       const { pathUtils, pathUtilsMocks } = getPathUtilsMock();
       // When
       const sut = new FrontendFs({ inject: { pathUtils } });
@@ -69,7 +70,7 @@ describe('services/frontend:frontendFs', () => {
     it('should delete a file', async () => {
       // Given
       const filepath = 'file.html';
-      jest.spyOn(fs, 'unlink').mockResolvedValueOnce();
+      vi.spyOn(fs, 'unlink').mockResolvedValueOnce();
       const { pathUtils, pathUtilsMocks } = getPathUtilsMock();
       // When
       const sut = new FrontendFs({ inject: { pathUtils } });

@@ -1,15 +1,16 @@
+import { describe, it, expect, vi } from 'vitest';
 import {
   HTMLGenerator,
   HTMLGeneratorConstructorOptions,
   htmlGeneratorProvider,
   type HTMLGeneratorValuesService,
-} from '@src/services/html/htmlGenerator';
+} from '@src/services/html/htmlGenerator.js';
 import {
   getJimpexMock,
   getLoggerMock,
   getConfigMock,
   getFrontendFsMock,
-} from '@tests/mocks';
+} from '@tests/mocks/index.js';
 
 describe('services/html:htmlGenerator', () => {
   describe('class', () => {
@@ -58,7 +59,7 @@ describe('services/html:htmlGenerator', () => {
               valuesService,
             },
           }),
-      ).toThrowError('The HTMLGenerator values service must have a `getValues` method');
+      ).toThrow('The HTMLGenerator values service must have a `getValues` method');
     });
 
     it('should generate the HTML', async () => {
@@ -142,7 +143,7 @@ describe('services/html:htmlGenerator', () => {
       });
       const errorMessage = 'Wooo!';
       const valuesService = {
-        getValues: jest.fn(() => {
+        getValues: vi.fn(() => {
           throw new Error(errorMessage);
         }),
       };
@@ -157,8 +158,8 @@ describe('services/html:htmlGenerator', () => {
       // When/Then
       const sut = new HTMLGenerator(options);
       await Promise.all([
-        expect(sut.generateHTML()).rejects.toThrowError(errorMessage),
-        expect(sut.whenReady()).rejects.toThrowError(errorMessage),
+        expect(sut.generateHTML()).rejects.toThrow(errorMessage),
+        expect(sut.whenReady()).rejects.toThrow(errorMessage),
       ]);
       expect(loggerMocks.error).toHaveBeenCalledTimes(1);
       expect(loggerMocks.error).toHaveBeenCalledWith(
@@ -179,7 +180,7 @@ describe('services/html:htmlGenerator', () => {
       });
       const errorMessage = 'Wooo!';
       const valuesService = {
-        getValues: jest.fn(() => {
+        getValues: vi.fn(() => {
           throw new Error(errorMessage);
         }),
       };
@@ -195,8 +196,8 @@ describe('services/html:htmlGenerator', () => {
       // When/Then
       const sut = new HTMLGenerator(options);
       await Promise.all([
-        expect(sut.generateHTML()).rejects.toThrowError(errorMessage),
-        expect(sut.whenReady()).rejects.toThrowError(errorMessage),
+        expect(sut.generateHTML()).rejects.toThrow(errorMessage),
+        expect(sut.whenReady()).rejects.toThrow(errorMessage),
       ]);
       expect(loggerMocks.error).toHaveBeenCalledTimes(0);
     });
@@ -416,7 +417,7 @@ describe('services/html:htmlGenerator', () => {
       const { logger } = getLoggerMock();
       const { config } = getConfigMock();
       const valuesService = {
-        getValues: jest.fn(() => Promise.resolve(configValues)),
+        getValues: vi.fn(() => Promise.resolve(configValues)),
       };
       const { frontendFs, frontendFsMocks } = getFrontendFsMock({
         values: {
@@ -526,7 +527,7 @@ describe('services/html:htmlGenerator', () => {
     it('should generate the HTML when the app starts', () => {
       // Given
       const fakeHTMLGenerator = {
-        generateHTML: jest.fn(),
+        generateHTML: vi.fn(),
       };
       const { container, containerMocks: mocks } = getJimpexMock({
         resources: {

@@ -1,9 +1,9 @@
 import { get } from '@homer0/object-utils';
 import { deepAssignWithOverwrite } from '@homer0/deep-assign';
 import { deferred, type DeferredPromise } from '@homer0/deferred';
-import { providerCreator } from '../../utils';
-import type { Config, Logger } from '../../types';
-import type { FrontendFs } from '../frontend';
+import { providerCreator } from '../../utils/index.js';
+import type { Config, Logger } from '../../types/index.js';
+import type { FrontendFs } from '../frontend/index.js';
 /**
  * The options to customize a {@link HTMLGenerator} instance.
  *
@@ -29,7 +29,7 @@ export type HTMLGeneratorOptions = {
    */
   silent: boolean;
   /**
-   * Whether or not to delete the tempalte after generating the file.
+   * Whether or not to delete the template after generating the file.
    *
    * @default true
    */
@@ -37,7 +37,7 @@ export type HTMLGeneratorOptions = {
   /**
    * The placeholder string where the information will be written.
    *
-   * @default /\{\{appConfi(?:guration)?\}\}/
+   * @default /\{\{appConfig(?:uration)?\}\}/
    */
   replacePlaceholder: string | RegExp;
   /**
@@ -153,7 +153,7 @@ export class HTMLGenerator {
   protected _fileReady: boolean = false;
   /**
    * A deferred promise to return when another service asks if the file has been
-   * generated. Once this sevice finishes generating the file, the promise will be
+   * generated. Once this service finishes generating the file, the promise will be
    * resolved for all implementations that hold a reference to this deferred.
    */
   protected _fileDeferred?: DeferredPromise<void>;
@@ -279,13 +279,11 @@ export class HTMLGenerator {
     const matches: Array<{ string: string; value: string }> = [];
     let match = placeholderExpression.exec(code);
     while (match) {
-      const [string, value] = match;
-      if (string && value) {
-        matches.push({
-          string,
-          value,
-        });
-      }
+      const [string, value] = match as RegExpExecArray;
+      matches.push({
+        string,
+        value: value!,
+      });
 
       match = placeholderExpression.exec(code);
     }

@@ -1,11 +1,12 @@
+import { vi, describe, it, expect } from 'vitest';
 import {
   ConfigController,
   configController,
   type ConfigControllerOptions,
-} from '@src/controllers/common/config';
-import type { ResponsesBuilder } from '@src/services';
-import type { ExpressMiddleware, Request, Response } from '@src/types';
-import { getJimpexMock, getConfigMock, getRouterMock } from '@tests/mocks';
+} from '@src/controllers/common/config.js';
+import type { ResponsesBuilder } from '@src/services/index.js';
+import type { ExpressMiddleware, Request, Response } from '@src/types/index.js';
+import { getJimpexMock, getConfigMock, getRouterMock } from '@tests/mocks/index.js';
 
 describe('controllers/common:config', () => {
   describe('class', () => {
@@ -35,7 +36,7 @@ describe('controllers/common:config', () => {
         configMocks.get.mockReturnValueOnce(configName);
         configMocks.getConfig.mockReturnValueOnce(configValues);
         const responsesBuilder = {
-          json: jest.fn(),
+          json: vi.fn(),
         };
         const options: ConfigControllerOptions = {
           inject: {
@@ -49,7 +50,7 @@ describe('controllers/common:config', () => {
         const request = {
           request: true,
         } as unknown as Request;
-        const next = jest.fn();
+        const next = vi.fn();
         // When
         const sut = new ConfigController(options);
         sut.showConfig()(request, response, next);
@@ -81,7 +82,7 @@ describe('controllers/common:config', () => {
         configMocks.canSwitchConfigs.mockReturnValueOnce(true);
         configMocks.switch.mockImplementationOnce(() => Promise.resolve());
         const responsesBuilder = {
-          json: jest.fn(),
+          json: vi.fn(),
         };
         const options: ConfigControllerOptions = {
           inject: {
@@ -98,7 +99,7 @@ describe('controllers/common:config', () => {
             name: configName,
           },
         } as unknown as Request;
-        const next = jest.fn();
+        const next = vi.fn();
         // When
         const sut = new ConfigController(options);
         await sut.switchConfig()(request, response, next);
@@ -118,7 +119,7 @@ describe('controllers/common:config', () => {
         // Given
         const { config } = getConfigMock();
         const responsesBuilder = {
-          json: jest.fn(),
+          json: vi.fn(),
         };
         const options: ConfigControllerOptions = {
           inject: {
@@ -133,7 +134,7 @@ describe('controllers/common:config', () => {
           request: true,
           params: {},
         } as unknown as Request;
-        const next = jest.fn();
+        const next = vi.fn();
         // When
         const sut = new ConfigController(options);
         await sut.switchConfig()(request, response, next);
@@ -148,7 +149,7 @@ describe('controllers/common:config', () => {
         const { config, configMocks } = getConfigMock();
         configMocks.canSwitchConfigs.mockReturnValueOnce(false);
         const responsesBuilder = {
-          json: jest.fn(),
+          json: vi.fn(),
         };
         const options: ConfigControllerOptions = {
           inject: {
@@ -165,7 +166,7 @@ describe('controllers/common:config', () => {
             name: 'newConfig',
           },
         } as unknown as Request;
-        const next = jest.fn();
+        const next = vi.fn();
         // When
         const sut = new ConfigController(options);
         await sut.switchConfig()(request, response, next);
@@ -183,7 +184,7 @@ describe('controllers/common:config', () => {
         const switchError = new Error('switch error');
         configMocks.switch.mockImplementationOnce(() => Promise.reject(switchError));
         const responsesBuilder = {
-          json: jest.fn(),
+          json: vi.fn(),
         };
         const options: ConfigControllerOptions = {
           inject: {
@@ -201,7 +202,7 @@ describe('controllers/common:config', () => {
             name: newConfigName,
           },
         } as unknown as Request;
-        const next = jest.fn();
+        const next = vi.fn();
         // When
         const sut = new ConfigController(options);
         await sut.switchConfig()(request, response, next);

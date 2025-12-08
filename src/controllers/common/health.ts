@@ -1,6 +1,10 @@
-import { controller, type Statuses } from '../../utils';
-import type { ResponsesBuilder } from '../../services';
-import type { JimpexHealthStatus, Config, AsyncExpressMiddleware } from '../../types';
+import { controller, type Statuses } from '../../utils/index.js';
+import type { ResponsesBuilder } from '../../services/index.js';
+import type {
+  JimpexHealthStatus,
+  Config,
+  AsyncExpressMiddleware,
+} from '../../types/index.js';
 /**
  * A function that will return the health status of the application.
  *
@@ -8,7 +12,7 @@ import type { JimpexHealthStatus, Config, AsyncExpressMiddleware } from '../../t
  */
 export type GetHealthStatus = () => Promise<JimpexHealthStatus>;
 /**
- * The options to contruct a {@link HealthController}.
+ * The options to construct a {@link HealthController}.
  *
  * @group Controllers/Health
  */
@@ -44,7 +48,7 @@ export class HealthController {
    */
   protected readonly _config: Config;
   /**
-   * The uility service to get HTTP status codes.
+   * The utility service to get HTTP status codes.
    */
   protected readonly _statuses: Statuses;
   /**

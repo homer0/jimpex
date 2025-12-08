@@ -1,13 +1,13 @@
-import { controller } from '../../utils';
-import type { ResponsesBuilder } from '../../services';
+import { controller } from '../../utils/index.js';
+import type { ResponsesBuilder } from '../../services/index.js';
 import type {
   Config,
   Response,
   AsyncExpressMiddleware,
   ExpressMiddleware,
-} from '../../types';
+} from '../../types/index.js';
 /**
- * The options to contruct a {@link ConfigController}.
+ * The options to construct a {@link ConfigController}.
  *
  * @group Controllers/Config
  */

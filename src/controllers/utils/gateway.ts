@@ -8,9 +8,9 @@ import {
   removeSlashes,
   notUndefined,
   type MiddlewareLike,
-} from '../../utils';
-import type { HTTP, HTTPFetchOptions } from '../../services';
-import type { Jimpex } from '../../app';
+} from '../../utils/index.js';
+import type { HTTP, HTTPFetchOptions } from '../../services/index.js';
+import type { Jimpex } from '../../app/index.js';
 import {
   RouterMethod,
   DeepPartial,
@@ -21,7 +21,7 @@ import {
   Router,
   ExpressMiddleware,
   AsyncExpressMiddleware,
-} from '../../types';
+} from '../../types/index.js';
 /**
  * The extended definition for endpoints.
  *
@@ -95,7 +95,7 @@ export type GatewayConfig = {
    */
   url: string;
   /**
-   * The dictionary of enpoints the gateway will make available.
+   * The dictionary of endpoints the gateway will make available.
    */
   gateway: GatewayConfigEndpoints;
 };
@@ -227,7 +227,7 @@ export type GatewayHelperServiceBaseFnOptions = {
    */
   endpoint: GatewayControllerEndpointInfo;
   /**
-   * The request recived by the application.
+   * The request received by the application.
    */
   req: Request;
   /**
@@ -1054,7 +1054,7 @@ export class GatewayController {
   }
 }
 /**
- * A function to generate a list of middlewares that can be executed before the tontroller
+ * A function to generate a list of middlewares that can be executed before the controller
  * main middleware.
  *
  * @group Controllers/Gateway
@@ -1075,7 +1075,7 @@ export type GatewayControllerCreatorOptions =
      * If this is overwritten, the creator will ensure that the name ends with `Gateway`;
      * and if overwritten, but it doesn't include `Gateway` at the end, and no
      * `gatewaySettingName` was defined, the creator will use the custom name (without
-     * `Gatway`) for `gatewaySettingName`.
+     * `Gateway`) for `gatewaySettingName`.
      *
      * @default 'apiGateway'
      */

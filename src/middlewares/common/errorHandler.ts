@@ -1,7 +1,11 @@
 import { deepAssignWithOverwrite } from '@homer0/deep-assign';
-import { middlewareCreator, type Statuses } from '../../utils';
-import type { DeepPartial, Logger, ExpressErrorHandler } from '../../types';
-import { AppError, type HTTPErrorClass, type ResponsesBuilder } from '../../services';
+import { middlewareCreator, type Statuses } from '../../utils/index.js';
+import type { DeepPartial, Logger, ExpressErrorHandler } from '../../types/index.js';
+import {
+  AppError,
+  type HTTPErrorClass,
+  type ResponsesBuilder,
+} from '../../services/index.js';
 /**
  * The options for the responses the middleware will create.
  *
@@ -33,7 +37,7 @@ export type ErrorHandlerOptions = {
    * if `true`, it will not only show all kind of errors but it will also show the error
    * stack.
    *
-   * By "uknown errors", it means that are not `AppError` nor `HTTPError`.
+   * By "unknown errors", it means that are not `AppError` nor `HTTPError`.
    */
   showErrors: boolean;
   /**
@@ -81,7 +85,7 @@ export class ErrorHandler {
    */
   protected readonly _responsesBuilder: ResponsesBuilder;
   /**
-   * The uility service to get HTTP status codes.
+   * The utility service to get HTTP status codes.
    */
   protected readonly _statuses: Statuses;
   /**

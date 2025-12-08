@@ -1,4 +1,4 @@
-import * as path from 'path';
+import * as path from 'node:path';
 import type mime from 'mime';
 import { deepAssignWithOverwrite } from '@homer0/deep-assign';
 import {
@@ -6,10 +6,15 @@ import {
   removeSlashes,
   notUndefined,
   type MiddlewareLike,
-} from '../../utils';
-import type { SendFile } from '../../services';
-import type { Jimpex } from '../../app';
-import type { DeepPartial, ExpressMiddleware, Router, RouterMethod } from '../../types';
+} from '../../utils/index.js';
+import type { SendFile } from '../../services/index.js';
+import type { Jimpex } from '../../app/index.js';
+import type {
+  DeepPartial,
+  ExpressMiddleware,
+  Router,
+  RouterMethod,
+} from '../../types/index.js';
 
 type Mime = typeof mime;
 
@@ -91,7 +96,7 @@ export type StaticsControllerConstructorOptions =
     };
   };
 /**
- * A function to generate a list of middlewares that can be executed before the tontroller
+ * A function to generate a list of middlewares that can be executed before the controller
  * main middleware.
  *
  * @group Controllers/Statics
@@ -105,7 +110,7 @@ export type StaticsControllerGetMiddlewaresFn = (app: Jimpex) => MiddlewareLike[
 export type StaticsControllerCreatorOptions = DeepPartial<StaticsControllerOptions> & {
   /**
    * A function to generate a list of middlewares that can be executed before the
-   * tontroller main middleware.
+   * controller main middleware.
    */
   getMiddlewares?: StaticsControllerGetMiddlewaresFn;
 };

@@ -1,5 +1,5 @@
-import type { Config, Response } from '../../types';
-import { provider, type Statuses } from '../../utils';
+import type { Config, Response } from '../../types/index.js';
+import { provider, type Statuses } from '../../utils/index.js';
 /**
  * The options to construct a {@link ResponsesBuilder}.
  *
@@ -59,7 +59,7 @@ export type HTMLPostMessageResponseOptions = {
   closeDelay?: number;
 };
 /**
- * The options to build a reponse for JSON.
+ * The options to build a response for JSON.
  *
  * @group Services/ResponsesBuilder
  */
@@ -99,7 +99,7 @@ export class ResponsesBuilder {
    */
   protected readonly _config: Config;
   /**
-   * The uility service to get HTTP status codes.
+   * The utility service to get HTTP status codes.
    */
   protected readonly _statuses: Statuses;
   /**
@@ -215,7 +215,7 @@ export class ResponsesBuilder {
     `;
   }
   /**
-   * Utility method used to make sure a recevied status is a valid status code. If the
+   * Utility method used to make sure a received status is a valid status code. If the
    * status is a string, the method will try to find the code from the `statuses` package.
    *
    * @param status  The status to normalize.

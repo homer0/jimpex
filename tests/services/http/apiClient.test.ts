@@ -1,19 +1,24 @@
+import { describe, it, expect, vi, afterEach } from 'vitest';
 import {
   APIClient,
   apiClientProvider,
   type APIClientConstructorOptions,
   type ErrorResponse,
-} from '@src/services/http/apiClient';
-import { HTTPError } from '@src/services/common/httpError';
-import type { HTTP } from '@src/services/http/http';
-import { getJimpexMock } from '@tests/mocks';
+} from '@src/services/http/apiClient.js';
+import { HTTPError } from '@src/services/common/httpError.js';
+import type { HTTP } from '@src/services/http/http.js';
+import { getJimpexMock } from '@tests/mocks/index.js';
 
 describe('services/html:apiClient', () => {
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
   describe('class', () => {
     it('should be instantiated', () => {
       // Given
       const http = {
-        fetch: jest.fn(),
+        fetch: vi.fn(),
       } as unknown as HTTP;
       const apiConfig = {
         url: 'my-api',
@@ -38,7 +43,7 @@ describe('services/html:apiClient', () => {
     it('should be instantiated using `gateway`', () => {
       // Given
       const http = {
-        fetch: jest.fn(),
+        fetch: vi.fn(),
       } as unknown as HTTP;
       const url = 'my-api';
       const endpoints = {
@@ -67,8 +72,9 @@ describe('services/html:apiClient', () => {
 
     it('should format error messages', () => {
       // Given
+      vi.useFakeTimers(); // for the errors `_date` property to be consistent
       const http = {
-        fetch: jest.fn(),
+        fetch: vi.fn(),
       } as unknown as HTTP;
       const apiConfig = {
         url: 'my-api',
@@ -116,10 +122,20 @@ describe('services/html:apiClient', () => {
         return sut.getError(res, errorStatus);
       }, {});
       const invalidResult = sut.getError({} as unknown as ErrorResponse, errorStatus);
+      const unknownResult = sut.getError(
+        {
+          data: {
+            unknown: 'value',
+          },
+        } as unknown as ErrorResponse,
+        errorStatus,
+      );
+      // Then
       expect(results).toEqual(
         new Array(casesNames.length).fill(new HTTPError(errorMessage, errorStatus)),
       );
       expect(invalidResult).toEqual(new HTTPError('Unexpected error', errorStatus));
+      expect(unknownResult).toEqual(new HTTPError('Unexpected error', errorStatus));
     });
   });
 
@@ -133,10 +149,10 @@ describe('services/html:apiClient', () => {
         },
       };
       const config = {
-        get: jest.fn(() => apiConfig),
+        get: vi.fn(() => apiConfig),
       };
       const http = {
-        fetch: jest.fn(),
+        fetch: vi.fn(),
       };
       const { container, containerMocks: mocks } = getJimpexMock({
         resources: {
@@ -170,10 +186,10 @@ describe('services/html:apiClient', () => {
         },
       };
       const config = {
-        get: jest.fn(() => apiConfig),
+        get: vi.fn(() => apiConfig),
       };
       const http = {
-        fetch: jest.fn(),
+        fetch: vi.fn(),
       };
       const { container, containerMocks: mocks } = getJimpexMock({
         resources: {
@@ -203,10 +219,10 @@ describe('services/html:apiClient', () => {
       };
       const apiConfigKey = 'my-api-config';
       const config = {
-        get: jest.fn(() => apiConfig),
+        get: vi.fn(() => apiConfig),
       };
       const http = {
-        fetch: jest.fn(),
+        fetch: vi.fn(),
       };
       const { container, containerMocks: mocks } = getJimpexMock({
         resources: {
@@ -234,10 +250,10 @@ describe('services/html:apiClient', () => {
         },
       };
       const config = {
-        get: jest.fn(() => apiConfig),
+        get: vi.fn(() => apiConfig),
       };
       const http = {
-        fetch: jest.fn(),
+        fetch: vi.fn(),
       };
       const { container, containerMocks: mocks } = getJimpexMock({
         resources: {

@@ -1,10 +1,11 @@
-import { statuses, type Statuses } from '@src/utils/fns/statuses';
+import { describe, it, expect, vi, afterEach } from 'vitest';
+import { statuses, type Statuses } from '@src/utils/fns/statuses.js';
 import {
   AppError,
   createAppError,
   appErrorProvider,
-} from '@src/services/common/appError';
-import { getJimpexMock } from '@tests/mocks';
+} from '@src/services/common/appError.js';
+import { getJimpexMock } from '@tests/mocks/index.js';
 
 const originalCaptureStackTrace = Error.captureStackTrace;
 
@@ -92,9 +93,9 @@ describe('services/common:appError', () => {
       expect(sut.status).toBe(context.status);
     });
 
-    it('should use `captureStackTrace` when avaiable', () => {
+    it('should use `captureStackTrace` when available', () => {
       // Given
-      const captureStackTrace = jest.fn();
+      const captureStackTrace = vi.fn();
       Error.captureStackTrace = captureStackTrace;
       // When
       const sut = new AppError('With stack trace');

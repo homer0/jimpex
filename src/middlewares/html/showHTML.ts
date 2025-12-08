@@ -1,6 +1,10 @@
-import { middlewareCreator } from '../../utils';
-import type { HTMLGenerator, SendFile } from '../../services';
-import type { AsyncExpressMiddleware, Response, NextFunction } from '../../types';
+import { middlewareCreator } from '../../utils/index.js';
+import type { HTMLGenerator, SendFile } from '../../services/index.js';
+import type {
+  AsyncExpressMiddleware,
+  Response,
+  NextFunction,
+} from '../../types/index.js';
 /**
  * The options to customize the behavior of the middleware.
  *
@@ -9,7 +13,7 @@ import type { AsyncExpressMiddleware, Response, NextFunction } from '../../types
 export type ShowHTMLOptions = {
   /**
    * The name of the file the middleware will serve. If the {@link HTMLGenerator} service
-   * is available, it will be overriden by the service.
+   * is available, it will be overridden by the service.
    *
    * @default 'index.html'
    */

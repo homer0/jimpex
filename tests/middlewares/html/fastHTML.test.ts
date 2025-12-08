@@ -1,19 +1,25 @@
+import { vi, describe, it, expect } from 'vitest';
 import {
   FastHTML,
   fastHTMLMiddleware,
   type FastHTMLOptions,
   type FastHTMLConstructorOptions,
-} from '@src/middlewares/html/fastHTML';
-import type { HTMLGenerator, SendFile } from '@src/services';
-import type { AsyncExpressMiddleware, Events, Request, Response } from '@src/types';
-import { getJimpexMock } from '@tests/mocks';
+} from '@src/middlewares/html/fastHTML.js';
+import type { HTMLGenerator, SendFile } from '@src/services/index.js';
+import type {
+  AsyncExpressMiddleware,
+  Events,
+  Request,
+  Response,
+} from '@src/types/index.js';
+import { getJimpexMock } from '@tests/mocks/index.js';
 
 describe('middlewares/html:fastHTML', () => {
   describe('class', () => {
     it('should be instantiated', () => {
       // Given
       const events = {
-        once: jest.fn(),
+        once: vi.fn(),
       };
       const options: FastHTMLConstructorOptions = {
         inject: {
@@ -37,7 +43,7 @@ describe('middlewares/html:fastHTML', () => {
     it('should be instantiated with custom options', () => {
       // Given
       const events = {
-        once: jest.fn(),
+        once: vi.fn(),
       };
       const baseOptions: FastHTMLOptions = {
         file: 'charo.html',
@@ -92,7 +98,7 @@ describe('middlewares/html:fastHTML', () => {
           request: true,
           originalUrl: 'favicon.ico',
         } as unknown as Request;
-        const next = jest.fn();
+        const next = vi.fn();
         // When
         const sut = new FastHTML(options);
         await sut.getMiddleware()(request, response, next);
@@ -108,7 +114,7 @@ describe('middlewares/html:fastHTML', () => {
         };
         let listener: (arg: { app: typeof app }) => void = () => {};
         const events = {
-          once: jest.fn((_: string, cb: typeof listener) => {
+          once: vi.fn((_: string, cb: typeof listener) => {
             listener = cb;
           }),
         };
@@ -119,7 +125,7 @@ describe('middlewares/html:fastHTML', () => {
           },
           ignoredRoutes: [],
         };
-        const setHeader = jest.fn();
+        const setHeader = vi.fn();
         const response = {
           response: true,
           setHeader,
@@ -128,7 +134,7 @@ describe('middlewares/html:fastHTML', () => {
           request: true,
           originalUrl: '/services/health/status',
         } as unknown as Request;
-        const next = jest.fn();
+        const next = vi.fn();
         // When
         const sut = new FastHTML(options);
         listener({ app });
@@ -139,7 +145,7 @@ describe('middlewares/html:fastHTML', () => {
 
       it('should serve an HTML file', async () => {
         // Given
-        const sendFile = jest.fn();
+        const sendFile = vi.fn();
         const options: FastHTMLConstructorOptions = {
           inject: {
             sendFile: sendFile as SendFile,
@@ -147,7 +153,7 @@ describe('middlewares/html:fastHTML', () => {
           },
           useAppRoutes: false,
         };
-        const setHeader = jest.fn();
+        const setHeader = vi.fn();
         const response = {
           response: true,
           setHeader,
@@ -156,7 +162,7 @@ describe('middlewares/html:fastHTML', () => {
           request: true,
           originalUrl: '/',
         } as unknown as Request;
-        const next = jest.fn();
+        const next = vi.fn();
         // When
         const sut = new FastHTML(options);
         await sut.getMiddleware()(request, response, next);
@@ -174,15 +180,15 @@ describe('middlewares/html:fastHTML', () => {
 
       it('should serve an HTML file from the HTMLGenerator', async () => {
         // Given
-        const sendFile = jest.fn();
+        const sendFile = vi.fn();
         const htmlGeneratorFile = 'charo.html';
         const htmlGenerator = {
-          whenReady: jest.fn(() => Promise.resolve()),
+          whenReady: vi.fn(() => Promise.resolve()),
           options: {
             file: htmlGeneratorFile,
           },
         };
-        const getHTMLGenerator = jest.fn(() => htmlGenerator as unknown as HTMLGenerator);
+        const getHTMLGenerator = vi.fn(() => htmlGenerator as unknown as HTMLGenerator);
         const options: FastHTMLConstructorOptions = {
           inject: {
             sendFile: sendFile as SendFile,
@@ -191,7 +197,7 @@ describe('middlewares/html:fastHTML', () => {
           },
           useAppRoutes: false,
         };
-        const setHeader = jest.fn();
+        const setHeader = vi.fn();
         const response = {
           response: true,
           setHeader,
@@ -200,7 +206,7 @@ describe('middlewares/html:fastHTML', () => {
           request: true,
           originalUrl: '/',
         } as unknown as Request;
-        const next = jest.fn();
+        const next = vi.fn();
         // When
         const sut = new FastHTML(options);
         await sut.getMiddleware()(request, response, next);
@@ -224,12 +230,12 @@ describe('middlewares/html:fastHTML', () => {
 
       it('should fail serve an HTML file from the HTMLGenerator', async () => {
         // Given
-        const sendFile = jest.fn();
+        const sendFile = vi.fn();
         const htmlGeneratorError = new Error('htmlGeneratorError');
         const htmlGenerator = {
-          whenReady: jest.fn(() => Promise.reject(htmlGeneratorError)),
+          whenReady: vi.fn(() => Promise.reject(htmlGeneratorError)),
         };
-        const getHTMLGenerator = jest.fn(() => htmlGenerator as unknown as HTMLGenerator);
+        const getHTMLGenerator = vi.fn(() => htmlGenerator as unknown as HTMLGenerator);
         const options: FastHTMLConstructorOptions = {
           inject: {
             sendFile: sendFile as SendFile,
@@ -245,7 +251,7 @@ describe('middlewares/html:fastHTML', () => {
           request: true,
           originalUrl: '/',
         } as unknown as Request;
-        const next = jest.fn();
+        const next = vi.fn();
         // When
         const sut = new FastHTML(options);
         await sut.getMiddleware()(request, response, next);
@@ -259,9 +265,9 @@ describe('middlewares/html:fastHTML', () => {
   describe('middleware', () => {
     it('should configure it for the container and and serve an HTML file', async () => {
       // Given
-      const sendFile = jest.fn();
+      const sendFile = vi.fn();
       const events = {
-        once: jest.fn(),
+        once: vi.fn(),
       };
       const { container, containerMocks: mocks } = getJimpexMock({
         resources: {
@@ -269,7 +275,7 @@ describe('middlewares/html:fastHTML', () => {
           events,
         },
       });
-      const setHeader = jest.fn();
+      const setHeader = vi.fn();
       const response = {
         response: true,
         setHeader,
@@ -278,7 +284,7 @@ describe('middlewares/html:fastHTML', () => {
         request: true,
         originalUrl: '/',
       } as unknown as Request;
-      const next = jest.fn();
+      const next = vi.fn();
       // When
       const sut = fastHTMLMiddleware.connect(container);
       await (sut as AsyncExpressMiddleware)(request, response, next);
@@ -299,13 +305,13 @@ describe('middlewares/html:fastHTML', () => {
 
     it('should configure it for the container and use a custom htmlGenerator', async () => {
       // Given
-      const sendFile = jest.fn();
+      const sendFile = vi.fn();
       const events = {
-        once: jest.fn(),
+        once: vi.fn(),
       };
       const htmlGeneratorFile = 'charo.html';
       const htmlGenerator = {
-        whenReady: jest.fn(() => Promise.resolve()),
+        whenReady: vi.fn(() => Promise.resolve()),
         options: {
           file: htmlGeneratorFile,
         },
@@ -318,7 +324,7 @@ describe('middlewares/html:fastHTML', () => {
           [htmlGeneratorName]: htmlGenerator,
         },
       });
-      const setHeader = jest.fn();
+      const setHeader = vi.fn();
       const response = {
         response: true,
         setHeader,
@@ -327,7 +333,7 @@ describe('middlewares/html:fastHTML', () => {
         request: true,
         originalUrl: '/',
       } as unknown as Request;
-      const next = jest.fn();
+      const next = vi.fn();
       // When
       const sut = fastHTMLMiddleware({
         htmlGeneratorServiceName: htmlGeneratorName,

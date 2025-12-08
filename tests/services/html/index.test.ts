@@ -1,4 +1,5 @@
-import { htmlServicesProvider as collection } from '@src/services/html';
+import { describe, it, expect } from 'vitest';
+import { htmlServicesProvider as collection } from '@src/services/html/index.js';
 
 const SERVICES = ['htmlGenerator'];
 

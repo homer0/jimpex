@@ -1,4 +1,5 @@
-import { Jimpex } from '@src/app';
+import { vi, type Mock } from 'vitest';
+import { Jimpex } from '@src/app/index.js';
 
 export type JimpexMockOptions = {
   resources?: Record<string, unknown>;
@@ -6,11 +7,11 @@ export type JimpexMockOptions = {
 };
 
 export type JimpexMockMocks = {
-  get: jest.Mock<unknown, [string]>;
-  set: jest.Mock<unknown, [string, unknown]>;
-  try: jest.Mock<unknown, [string]>;
-  on: jest.Mock<unknown, [string, (...args: unknown[]) => void]>;
-  once: jest.Mock<unknown, [string, (...args: unknown[]) => void]>;
+  get: Mock<(a: string) => unknown>;
+  set: Mock<(a: string, b: unknown) => unknown>;
+  try: Mock<(a: string) => unknown>;
+  on: Mock<(a: string, b: (...args: unknown[]) => void) => unknown>;
+  once: Mock<(a: string, b: (...args: unknown[]) => void) => unknown>;
 };
 
 export type JimpexMockResult = {
@@ -22,13 +23,13 @@ export type JimpexMockResult = {
 export const getJimpexMock = (options: JimpexMockOptions = {}): JimpexMockResult => {
   const { resources = {}, save = false } = options;
   const mocks = {
-    get: jest.fn(),
-    set: jest.fn(),
-    try: jest.fn(),
-    on: jest.fn(),
-    once: jest.fn(),
-    isHealthy: jest.fn(),
-    getConfig: jest.fn(),
+    get: vi.fn(),
+    set: vi.fn(),
+    try: vi.fn(),
+    on: vi.fn(),
+    once: vi.fn(),
+    isHealthy: vi.fn(),
+    getConfig: vi.fn(),
   };
   class Container {
     set(...args: Parameters<Jimpex['set']>): ReturnType<Jimpex['set']> {

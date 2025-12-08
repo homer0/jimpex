@@ -1,18 +1,19 @@
+import { describe, it, expect, vi } from 'vitest';
 import {
   ResponsesBuilder,
   responsesBuilderProvider,
   type ResponsesBuilderConstructorOptions,
-} from '@src/services/http/responsesBuilder';
-import type { Response } from '@src/types';
-import type { Statuses } from '@src/utils/fns/statuses';
-import { getJimpexMock, getConfigMock } from '@tests/mocks';
+} from '@src/services/http/responsesBuilder.js';
+import type { Response } from '@src/types/index.js';
+import type { Statuses } from '@src/utils/fns/statuses.js';
+import { getJimpexMock, getConfigMock } from '@tests/mocks/index.js';
 
 describe('services/http:responsesBuilder', () => {
   describe('class', () => {
     it('should be instantiated', () => {
       // Given
       const { config } = getConfigMock();
-      const statuses = jest.fn();
+      const statuses = vi.fn();
       const options: ResponsesBuilderConstructorOptions = {
         inject: {
           config,
@@ -31,16 +32,16 @@ describe('services/http:responsesBuilder', () => {
         const title = 'My HTML';
         const message = 'the-message';
         const response = {
-          setHeader: jest.fn(),
-          status: jest.fn(),
-          write: jest.fn(),
-          end: jest.fn(),
+          setHeader: vi.fn(),
+          status: vi.fn(),
+          write: vi.fn(),
+          end: vi.fn(),
         };
         const { config, configMocks } = getConfigMock();
         const postMessagesPrefix = 'prefix';
         configMocks.get.mockReturnValueOnce(postMessagesPrefix);
         const status = 200;
-        const statuses = jest.fn(() => status);
+        const statuses = vi.fn(() => status);
         const options: ResponsesBuilderConstructorOptions = {
           inject: {
             config,
@@ -81,14 +82,14 @@ describe('services/http:responsesBuilder', () => {
         const message = 'the-message';
         const closeDelay = 30000;
         const response = {
-          setHeader: jest.fn(),
-          status: jest.fn(),
-          write: jest.fn(),
-          end: jest.fn(),
+          setHeader: vi.fn(),
+          status: vi.fn(),
+          write: vi.fn(),
+          end: vi.fn(),
         };
         const { config } = getConfigMock();
         const status = 200;
-        const statuses = jest.fn(() => status);
+        const statuses = vi.fn(() => status);
         const options: ResponsesBuilderConstructorOptions = {
           inject: {
             config,
@@ -115,14 +116,14 @@ describe('services/http:responsesBuilder', () => {
         const title = 'My HTML';
         const message = 'the-message';
         const response = {
-          setHeader: jest.fn(),
-          status: jest.fn(),
-          write: jest.fn(),
-          end: jest.fn(),
+          setHeader: vi.fn(),
+          status: vi.fn(),
+          write: vi.fn(),
+          end: vi.fn(),
         };
         const { config } = getConfigMock();
         const status = 200;
-        const statuses = jest.fn(() => status);
+        const statuses = vi.fn(() => status);
         const options: ResponsesBuilderConstructorOptions = {
           inject: {
             config,
@@ -148,15 +149,15 @@ describe('services/http:responsesBuilder', () => {
         const message = 'the-message';
         const target = 'window.opener.parent';
         const response = {
-          setHeader: jest.fn(),
-          status: jest.fn(),
-          write: jest.fn(),
-          end: jest.fn(),
+          setHeader: vi.fn(),
+          status: vi.fn(),
+          write: vi.fn(),
+          end: vi.fn(),
         };
         const { config, configMocks } = getConfigMock();
         configMocks.get.mockReturnValueOnce(undefined);
         const status = 409;
-        const statuses = jest.fn();
+        const statuses = vi.fn();
         const options: ResponsesBuilderConstructorOptions = {
           inject: {
             config,
@@ -188,16 +189,16 @@ describe('services/http:responsesBuilder', () => {
         const message = 'the-message';
         const target = 'window.opener.parent';
         const response = {
-          setHeader: jest.fn(),
-          status: jest.fn(),
-          write: jest.fn(),
-          end: jest.fn(),
+          setHeader: vi.fn(),
+          status: vi.fn(),
+          write: vi.fn(),
+          end: vi.fn(),
         };
         const { config, configMocks } = getConfigMock();
         configMocks.get.mockReturnValueOnce(undefined);
         const status = 12;
         const error = new Error('Invalid status');
-        const statuses = jest.fn();
+        const statuses = vi.fn();
         statuses.mockImplementationOnce(() => {
           throw error;
         });
@@ -231,15 +232,15 @@ describe('services/http:responsesBuilder', () => {
           daughters: ['Charo', 'Pili'],
         };
         const response = {
-          status: jest.fn(),
-          json: jest.fn(),
-          end: jest.fn(),
+          status: vi.fn(),
+          json: vi.fn(),
+          end: vi.fn(),
         };
         const version = 'development';
         const { config, configMocks } = getConfigMock();
         configMocks.get.mockReturnValueOnce(version);
         const status = 200;
-        const statuses = jest.fn(() => status);
+        const statuses = vi.fn(() => status);
         const options: ResponsesBuilderConstructorOptions = {
           inject: {
             config,
@@ -277,15 +278,15 @@ describe('services/http:responsesBuilder', () => {
           ages: [6, 3],
         };
         const response = {
-          status: jest.fn(),
-          json: jest.fn(),
-          end: jest.fn(),
+          status: vi.fn(),
+          json: vi.fn(),
+          end: vi.fn(),
         };
         const version = 'development';
         const { config, configMocks } = getConfigMock();
         configMocks.get.mockReturnValueOnce(version);
         const status = 200;
-        const statuses = jest.fn();
+        const statuses = vi.fn();
         const options: ResponsesBuilderConstructorOptions = {
           inject: {
             config,
@@ -319,16 +320,16 @@ describe('services/http:responsesBuilder', () => {
           daughters: ['Charo', 'Pili'],
         };
         const response = {
-          status: jest.fn(),
-          json: jest.fn(),
-          end: jest.fn(),
+          status: vi.fn(),
+          json: vi.fn(),
+          end: vi.fn(),
         };
         const version = 'development';
         const { config, configMocks } = getConfigMock();
         configMocks.get.mockReturnValueOnce(version);
         const status = 409;
         const statusName = 'conflict';
-        const statuses = jest.fn(() => status);
+        const statuses = vi.fn(() => status);
         const options: ResponsesBuilderConstructorOptions = {
           inject: {
             config,
