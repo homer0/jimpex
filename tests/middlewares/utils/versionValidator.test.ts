@@ -36,7 +36,7 @@ describe('middlewares/utils:versionValidator', () => {
         popup: {
           variable: 'popup',
           title: 'Conflict',
-          message: 'vesion:conflict',
+          message: 'version:conflict',
         },
         version,
       });
@@ -56,7 +56,7 @@ describe('middlewares/utils:versionValidator', () => {
         popup: {
           variable: 'popupWindow',
           title: 'Conflict!!',
-          message: 'vesion:error',
+          message: 'version:error',
         },
         version,
       };

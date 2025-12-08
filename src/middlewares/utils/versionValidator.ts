@@ -171,7 +171,7 @@ export class VersionValidator {
         popup: {
           variable: 'popup',
           title: 'Conflict',
-          message: 'vesion:conflict',
+          message: 'version:conflict',
         },
         version,
       },
