@@ -3,13 +3,13 @@ import {
   HTMLGeneratorConstructorOptions,
   htmlGeneratorProvider,
   type HTMLGeneratorValuesService,
-} from '@src/services/html/htmlGenerator';
+} from '@src/services/html/htmlGenerator.js';
 import {
   getJimpexMock,
   getLoggerMock,
   getConfigMock,
   getFrontendFsMock,
-} from '@tests/mocks';
+} from '@tests/mocks/index.js';
 
 describe('services/html:htmlGenerator', () => {
   describe('class', () => {

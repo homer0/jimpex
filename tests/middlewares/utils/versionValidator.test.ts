@@ -2,11 +2,11 @@ import {
   VersionValidator,
   versionValidatorMiddleware,
   type VersionValidatorConstructorOptions,
-} from '@src/middlewares/utils/versionValidator';
-import { HTTPError, ResponsesBuilder } from '@src/services';
-import type { ExpressMiddleware, Request, Response } from '@src/types';
-import { statuses as realStatuses, type Statuses } from '@src/utils';
-import { getJimpexMock } from '@tests/mocks';
+} from '@src/middlewares/utils/versionValidator.js';
+import { HTTPError, ResponsesBuilder } from '@src/services/index.js';
+import type { ExpressMiddleware, Request, Response } from '@src/types/index.js';
+import { statuses as realStatuses, type Statuses } from '@src/utils/index.js';
+import { getJimpexMock } from '@tests/mocks/index.js';
 
 describe('middlewares/utils:versionValidator', () => {
   describe('class', () => {

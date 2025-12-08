@@ -1,4 +1,4 @@
-import type { Router, RouterMethod } from '@src/types';
+import type { Router, RouterMethod } from '@src/types/index.js';
 
 type RouteParams = Parameters<Router['get']>;
 

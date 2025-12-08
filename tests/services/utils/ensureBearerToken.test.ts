@@ -3,11 +3,11 @@ import {
   EnsureBearerToken,
   ensureBearerTokenProvider,
   type EnsureBearerConstructorOptions,
-} from '@src/services/utils/ensureBearerToken';
-import { HTTPError } from '@src/services/common/httpError';
-import type { Request, Response } from '@src/types';
-import { statuses as realStatuses, type Statuses } from '@src/utils/fns/statuses';
-import { getJimpexMock } from '@tests/mocks';
+} from '@src/services/utils/ensureBearerToken.js';
+import { HTTPError } from '@src/services/common/httpError.js';
+import type { Request, Response } from '@src/types/index.js';
+import { statuses as realStatuses, type Statuses } from '@src/utils/fns/statuses.js';
+import { getJimpexMock } from '@tests/mocks/index.js';
 
 describe('services/utils:ensureBearerToken', () => {
   describe('class', () => {

@@ -1,4 +1,4 @@
-/* eslint-disable no-process-env, dot-notation */
+/* eslint-disable n/no-process-env */
 jest.mock('@homer0/ts-async-import');
 import fs from 'fs/promises';
 import * as path from 'path';
@@ -15,9 +15,9 @@ import {
   packageInfoProvider,
   pathUtilsProvider,
   rootFileProvider,
-} from '@tests/mocks/jimpexSetup';
-import { statuses } from '@src/utils';
-import { Jimpex, jimpex } from '@src/app/jimpex';
+} from '@tests/mocks/jimpexSetup.js';
+import { statuses } from '@src/utils/index.js';
+import { Jimpex, jimpex } from '@src/app/jimpex.js';
 import { EventsHub } from '@homer0/events-hub';
 import { SimpleLogger } from '@homer0/simple-logger';
 import type {
@@ -26,7 +26,7 @@ import type {
   HTTPSServer,
   Router,
   ExpressMiddleware,
-} from '@src/types';
+} from '@src/types/index.js';
 
 const tsAsyncImportMock = tsAsyncImport as jest.MockedFunction<typeof tsAsyncImport>;
 
@@ -312,7 +312,7 @@ describe('Jimpex', () => {
         expect(result).toBe(true);
       });
 
-      it('should be overwriten by the options', async () => {
+      it('should be overridden by the options', async () => {
         // Given
         setupCase();
         const healthStatus = false;

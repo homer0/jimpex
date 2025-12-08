@@ -1,10 +1,10 @@
-jest.mock('@src/utils', () => ({
+jest.mock('@src/utils/index.js', () => ({
   provider: jest.fn(() => 'provider'),
   providerCreator: jest.fn(() => 'providerCreator'),
   providers: jest.fn(() => 'providers'),
 }));
 
-import * as services from '@src/services';
+import * as services from '@src/services/index.js';
 
 describe('services', () => {
   it('should export all the app sevices', () => {

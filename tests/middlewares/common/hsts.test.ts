@@ -2,9 +2,9 @@ import {
   HSTS,
   hstsMiddleware,
   type HSTSMiddlewarePartialOptions,
-} from '@src/middlewares/common/hsts';
-import type { Request, Response } from '@src/types';
-import { getJimpexMock } from '@tests/mocks';
+} from '@src/middlewares/common/hsts.js';
+import type { Request, Response } from '@src/types/index.js';
+import { getJimpexMock } from '@tests/mocks/index.js';
 
 describe('middlewares/common:hsts', () => {
   describe('class', () => {

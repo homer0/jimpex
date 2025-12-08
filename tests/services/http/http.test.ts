@@ -1,6 +1,6 @@
-import { HTTP, httpProvider, HTTPContructorOptions } from '@src/services/http/http';
-import { getJimpexMock, getLoggerMock } from '@tests/mocks';
-import type { Request, HTTPResponse } from '@src/types';
+import { HTTP, httpProvider, HTTPContructorOptions } from '@src/services/http/http.js';
+import { getJimpexMock, getLoggerMock } from '@tests/mocks/index.js';
+import type { Request, HTTPResponse } from '@src/types/index.js';
 
 describe('services/http:http', () => {
   describe('class', () => {

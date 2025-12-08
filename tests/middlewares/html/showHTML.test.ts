@@ -2,10 +2,10 @@ import {
   ShowHTML,
   showHTMLMiddleware,
   type ShowHTMLConstructorOptions,
-} from '@src/middlewares/html/showHTML';
-import type { HTMLGenerator, SendFile } from '@src/services';
-import type { AsyncExpressMiddleware, Request, Response } from '@src/types';
-import { getJimpexMock } from '@tests/mocks';
+} from '@src/middlewares/html/showHTML.js';
+import type { HTMLGenerator, SendFile } from '@src/services/index.js';
+import type { AsyncExpressMiddleware, Request, Response } from '@src/types/index.js';
+import { getJimpexMock } from '@tests/mocks/index.js';
 
 describe('middlewares/html:showHTML', () => {
   describe('class', () => {

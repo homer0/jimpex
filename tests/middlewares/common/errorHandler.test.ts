@@ -2,11 +2,11 @@ import {
   ErrorHandler,
   errorHandlerMiddleware,
   type ErrorHandlerConstructorOptions,
-} from '@src/middlewares/common/errorHandler';
-import { AppError, HTTPError, ResponsesBuilder } from '@src/services';
-import type { ExpressErrorHandler, Request, Response } from '@src/types';
-import { statuses as realStatuses, type Statuses } from '@src/utils';
-import { getJimpexMock, getLoggerMock } from '@tests/mocks';
+} from '@src/middlewares/common/errorHandler.js';
+import { AppError, HTTPError, ResponsesBuilder } from '@src/services/index.js';
+import type { ExpressErrorHandler, Request, Response } from '@src/types/index.js';
+import { statuses as realStatuses, type Statuses } from '@src/utils/index.js';
+import { getJimpexMock, getLoggerMock } from '@tests/mocks/index.js';
 
 describe('middlewares/common:errorHandler', () => {
   describe('class', () => {

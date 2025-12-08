@@ -1,4 +1,4 @@
-import { Jimpex } from '@src/app';
+import { Jimpex } from '@src/app/index.js';
 
 export type JimpexMockOptions = {
   resources?: Record<string, unknown>;

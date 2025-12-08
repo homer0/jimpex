@@ -2,10 +2,10 @@ import {
   ResponsesBuilder,
   responsesBuilderProvider,
   type ResponsesBuilderConstructorOptions,
-} from '@src/services/http/responsesBuilder';
-import type { Response } from '@src/types';
-import type { Statuses } from '@src/utils/fns/statuses';
-import { getJimpexMock, getConfigMock } from '@tests/mocks';
+} from '@src/services/http/responsesBuilder.js';
+import type { Response } from '@src/types/index.js';
+import type { Statuses } from '@src/utils/fns/statuses.js';
+import { getJimpexMock, getConfigMock } from '@tests/mocks/index.js';
 
 describe('services/http:responsesBuilder', () => {
   describe('class', () => {

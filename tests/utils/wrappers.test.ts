@@ -7,8 +7,8 @@ import {
   middlewareCreator,
   middlewareProvider,
   middlewareProviderCreator,
-} from '@src/utils/wrappers';
-import { getJimpexMock } from '@tests/mocks';
+} from '@src/utils/wrappers.js';
+import { getJimpexMock } from '@tests/mocks/index.js';
 
 describe('app:wrappers', () => {
   describe('controllers', () => {

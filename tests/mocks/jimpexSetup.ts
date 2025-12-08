@@ -49,20 +49,20 @@ import {
   SimpleConfig,
   simpleConfigProvider as originalSimpleConfigProvider,
 } from '@homer0/simple-config';
-import type { Express, ExpressMiddleware, Router } from '@src/types';
-import type { Jimpex } from '@src/app/jimpex';
+import type { Express, ExpressMiddleware, Router } from '@src/types/index.js';
+import type { Jimpex } from '@src/app/jimpex.js';
 import {
   commonServicesProvider,
   httpServicesProvider,
   utilsServicesProvider,
-} from '@src/services';
+} from '@src/services/index.js';
 import {
   getPathUtilsMock,
   type PathUtilsMockOptions,
   type PathUtilsMockMocks,
-} from './pathUtils';
-import { getLoggerMock, type LoggerMockMocks } from './logger';
-import { getConfigMock, type ConfigMockMocks } from './config';
+} from './pathUtils.js';
+import { getLoggerMock, type LoggerMockMocks } from './logger.js';
+import { getConfigMock, type ConfigMockMocks } from './config.js';
 
 export const https = originalHTTPS as unknown as jest.Mocked<typeof originalHTTPS>;
 export const spdy = originalSpdy as unknown as jest.Mocked<typeof originalSpdy>;

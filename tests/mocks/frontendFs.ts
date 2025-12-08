@@ -1,5 +1,5 @@
 import { pathUtils } from '@homer0/path-utils';
-import { FrontendFs } from '@src/services/frontend/frontendFs';
+import { FrontendFs } from '@src/services/frontend/frontendFs.js';
 
 export type FrontendFsMockOptions = {
   values?: Record<string, string>;

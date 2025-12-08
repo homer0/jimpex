@@ -4,11 +4,16 @@ import {
   staticsController,
   type StaticsControllerOptions,
   type StaticsControllerConstructorOptions,
-} from '@src/controllers/common/statics';
-import type { SendFile } from '@src/services';
-import type { MiddlewareLike } from '@src/utils';
-import type { ExpressMiddleware, Request, Response, RouterMethod } from '@src/types';
-import { getJimpexMock, getRouterMock } from '@tests/mocks';
+} from '@src/controllers/common/statics.js';
+import type { SendFile } from '@src/services/index.js';
+import type { MiddlewareLike } from '@src/utils/index.js';
+import type {
+  ExpressMiddleware,
+  Request,
+  Response,
+  RouterMethod,
+} from '@src/types/index.js';
+import { getJimpexMock, getRouterMock } from '@tests/mocks/index.js';
 
 type Mime = typeof mime;
 

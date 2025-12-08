@@ -3,10 +3,15 @@ import {
   fastHTMLMiddleware,
   type FastHTMLOptions,
   type FastHTMLConstructorOptions,
-} from '@src/middlewares/html/fastHTML';
-import type { HTMLGenerator, SendFile } from '@src/services';
-import type { AsyncExpressMiddleware, Events, Request, Response } from '@src/types';
-import { getJimpexMock } from '@tests/mocks';
+} from '@src/middlewares/html/fastHTML.js';
+import type { HTMLGenerator, SendFile } from '@src/services/index.js';
+import type {
+  AsyncExpressMiddleware,
+  Events,
+  Request,
+  Response,
+} from '@src/types/index.js';
+import { getJimpexMock } from '@tests/mocks/index.js';
 
 describe('middlewares/html:fastHTML', () => {
   describe('class', () => {

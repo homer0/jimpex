@@ -3,16 +3,16 @@ import {
   healthController,
   type HealthControllerOptions,
   type GetHealthStatus,
-} from '@src/controllers/common/health';
-import { type Statuses } from '@src/utils';
-import type { ResponsesBuilder } from '@src/services';
+} from '@src/controllers/common/health.js';
+import { type Statuses } from '@src/utils/index.js';
+import type { ResponsesBuilder } from '@src/services/index.js';
 import type {
   ExpressMiddleware,
   JimpexHealthStatus,
   Request,
   Response,
-} from '@src/types';
-import { getJimpexMock, getConfigMock, getRouterMock } from '@tests/mocks';
+} from '@src/types/index.js';
+import { getJimpexMock, getConfigMock, getRouterMock } from '@tests/mocks/index.js';
 
 describe('controllers/common:health', () => {
   describe('class', () => {

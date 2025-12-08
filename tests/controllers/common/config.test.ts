@@ -2,10 +2,10 @@ import {
   ConfigController,
   configController,
   type ConfigControllerOptions,
-} from '@src/controllers/common/config';
-import type { ResponsesBuilder } from '@src/services';
-import type { ExpressMiddleware, Request, Response } from '@src/types';
-import { getJimpexMock, getConfigMock, getRouterMock } from '@tests/mocks';
+} from '@src/controllers/common/config.js';
+import type { ResponsesBuilder } from '@src/services/index.js';
+import type { ExpressMiddleware, Request, Response } from '@src/types/index.js';
+import { getJimpexMock, getConfigMock, getRouterMock } from '@tests/mocks/index.js';
 
 describe('controllers/common:config', () => {
   describe('class', () => {

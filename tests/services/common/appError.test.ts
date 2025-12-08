@@ -1,10 +1,10 @@
-import { statuses, type Statuses } from '@src/utils/fns/statuses';
+import { statuses, type Statuses } from '@src/utils/fns/statuses.js';
 import {
   AppError,
   createAppError,
   appErrorProvider,
-} from '@src/services/common/appError';
-import { getJimpexMock } from '@tests/mocks';
+} from '@src/services/common/appError.js';
+import { getJimpexMock } from '@tests/mocks/index.js';
 
 const originalCaptureStackTrace = Error.captureStackTrace;
 

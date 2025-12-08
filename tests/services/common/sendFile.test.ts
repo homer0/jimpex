@@ -1,6 +1,10 @@
-import { sendFile, sendFileProvider, type SendFile } from '@src/services/common/sendFile';
-import type { Response } from '@src/types';
-import { getPathUtilsMock, getJimpexMock } from '@tests/mocks';
+import {
+  sendFile,
+  sendFileProvider,
+  type SendFile,
+} from '@src/services/common/sendFile.js';
+import type { Response } from '@src/types/index.js';
+import { getPathUtilsMock, getJimpexMock } from '@tests/mocks/index.js';
 
 describe('services/common:sendFile', () => {
   describe('function', () => {

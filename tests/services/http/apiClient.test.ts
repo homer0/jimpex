@@ -3,10 +3,10 @@ import {
   apiClientProvider,
   type APIClientConstructorOptions,
   type ErrorResponse,
-} from '@src/services/http/apiClient';
-import { HTTPError } from '@src/services/common/httpError';
-import type { HTTP } from '@src/services/http/http';
-import { getJimpexMock } from '@tests/mocks';
+} from '@src/services/http/apiClient.js';
+import { HTTPError } from '@src/services/common/httpError.js';
+import type { HTTP } from '@src/services/http/http.js';
+import { getJimpexMock } from '@tests/mocks/index.js';
 
 describe('services/html:apiClient', () => {
   describe('class', () => {

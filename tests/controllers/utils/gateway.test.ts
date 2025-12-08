@@ -9,17 +9,16 @@ import {
   type GatewayHelperServiceResponseReducerOptions,
   type GatewayControllerConstructorOptions,
   type GatewayControllerCreatorOptions,
-} from '@src/controllers/utils/gateway';
-import { statuses, type MiddlewareLike } from '@src/utils';
-import type { HTTP } from '@src/services';
-// import type { MiddlewareLike } from '@src/utils';
+} from '@src/controllers/utils/gateway.js';
+import { statuses, type MiddlewareLike } from '@src/utils/index.js';
+import type { HTTP } from '@src/services/index.js';
 import type {
   AsyncExpressMiddleware,
   ExpressMiddleware,
   Request,
   Response,
-} from '@src/types';
-import { getRouterMock, getJimpexMock, getConfigMock } from '@tests/mocks';
+} from '@src/types/index.js';
+import { getRouterMock, getJimpexMock, getConfigMock } from '@tests/mocks/index.js';
 
 type FakeHTTPResponse = {
   status: number | string;

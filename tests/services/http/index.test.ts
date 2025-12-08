@@ -1,4 +1,4 @@
-import { httpServicesProvider as collection } from '@src/services/http';
+import { httpServicesProvider as collection } from '@src/services/http/index.js';
 
 const SERVICES = ['apiClient', 'http', 'responsesBuilder'];
 

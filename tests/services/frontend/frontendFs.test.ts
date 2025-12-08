@@ -1,6 +1,6 @@
 import fs from 'fs/promises';
-import { FrontendFs, frontendFsProvider } from '@src/services/frontend/frontendFs';
-import { getPathUtilsMock, getJimpexMock } from '@tests/mocks';
+import { FrontendFs, frontendFsProvider } from '@src/services/frontend/frontendFs.js';
+import { getPathUtilsMock, getJimpexMock } from '@tests/mocks/index.js';
 
 describe('services/frontend:frontendFs', () => {
   describe('class', () => {
