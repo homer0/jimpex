@@ -1,3 +1,32 @@
+# [11.0.0](https://github.com/homer0/jimpex/compare/10.0.2...11.0.0) (2025-12-08)
+
+
+### Bug Fixes
+
+* add missing extensions for esm ([c08930d](https://github.com/homer0/jimpex/commit/c08930d559f6b656c7fe9aa84b4ab894141439aa))
+* define module exports for the package and set the type to module ([935a9d2](https://github.com/homer0/jimpex/commit/935a9d273f9495f833a0e976e12ffe8d1f4cba3a))
+* drop Node v18 ([46de5f2](https://github.com/homer0/jimpex/commit/46de5f20e185cea701a57de46ed92fb5f8c1c854))
+* import a single obj from spdy ([ee96af3](https://github.com/homer0/jimpex/commit/ee96af3c0a64b4bc1d115a77ef26e635a852a3df))
+* import spdy only when using it ([385b70f](https://github.com/homer0/jimpex/commit/385b70fd14127cbc4510ab2364476d7dad2ba99d))
+* remove unnecessary check ([7530b2b](https://github.com/homer0/jimpex/commit/7530b2b0a16abdddb608c0541a56a765bfc36e35))
+* typo on default value ([9fd84c5](https://github.com/homer0/jimpex/commit/9fd84c5e1ba6ca9908e0e8da45a71b37e8d76206))
+* typo on type name ([c0c3118](https://github.com/homer0/jimpex/commit/c0c311825e9f8895b08b5d8ae09a93111264724c))
+* update dependencies ([8245c8f](https://github.com/homer0/jimpex/commit/8245c8fc11863d27b98652c09b0df9a2345498e3))
+* update regex to cover new stack trace ([c6672ef](https://github.com/homer0/jimpex/commit/c6672ef08c9e4880759fe9a615b5e28419cc0239))
+* use node prefix for importing internals ([ed1df9e](https://github.com/homer0/jimpex/commit/ed1df9e295368a0de417298b38b8fcbd95101492))
+* use the right import path ([7ed1721](https://github.com/homer0/jimpex/commit/7ed1721ddccb170a5ff45e61fee874c040c2d5ad))
+
+
+### BREAKING CHANGES
+
+* The VersionValidator default option for `popup.message`
+was changed from `vesion:conflict` to `version:confict`
+* The type HTTPContructorOptions was renamed to
+HTTPConstructorOptions
+* This package is now esm only
+* Node v18 is not longer supported. Node v20.19 is the minimum
+required version now.
+
 ## [10.0.2](https://github.com/homer0/jimpex/compare/10.0.1...10.0.2) (2024-11-09)
 
 
