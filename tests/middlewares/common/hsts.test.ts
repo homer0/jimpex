@@ -1,3 +1,4 @@
+import { vi, describe, it, expect } from 'vitest';
 import {
   HSTS,
   hstsMiddleware,
@@ -39,11 +40,11 @@ describe('middlewares/common:hsts', () => {
       it('should add the header', () => {
         // Given
         const request = {} as unknown as Request;
-        const setHeader = jest.fn();
+        const setHeader = vi.fn();
         const response = {
           setHeader,
         } as unknown as Response;
-        const next = jest.fn();
+        const next = vi.fn();
         // When
         const sut = new HSTS();
         sut.getMiddleware()(request, response, next);
@@ -63,7 +64,7 @@ describe('middlewares/common:hsts', () => {
     it("shouldn't return anything if not enabled", () => {
       // Given
       const config = {
-        get: jest.fn(),
+        get: vi.fn(),
       };
       const { container, containerMocks: mocks } = getJimpexMock({
         resources: {
@@ -81,7 +82,7 @@ describe('middlewares/common:hsts', () => {
     it('should return the middleware when enabled', () => {
       // Given
       const config = {
-        get: jest.fn(() => ({
+        get: vi.fn(() => ({
           enabled: true,
         })),
       };
@@ -100,7 +101,7 @@ describe('middlewares/common:hsts', () => {
     it('should disable it from the options', () => {
       // Given
       const config = {
-        get: jest.fn(() => ({
+        get: vi.fn(() => ({
           enabled: true,
         })),
       };

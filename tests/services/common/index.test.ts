@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { commonServicesProvider as collection } from '@src/services/common/index.js';
 
 const SERVICES = ['appError', 'httpError', 'sendFile'];

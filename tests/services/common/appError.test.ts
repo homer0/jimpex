@@ -1,3 +1,4 @@
+import { describe, it, expect, vi, afterEach } from 'vitest';
 import { statuses, type Statuses } from '@src/utils/fns/statuses.js';
 import {
   AppError,
@@ -94,7 +95,7 @@ describe('services/common:appError', () => {
 
     it('should use `captureStackTrace` when available', () => {
       // Given
-      const captureStackTrace = jest.fn();
+      const captureStackTrace = vi.fn();
       Error.captureStackTrace = captureStackTrace;
       // When
       const sut = new AppError('With stack trace');

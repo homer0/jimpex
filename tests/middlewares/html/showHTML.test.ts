@@ -1,3 +1,4 @@
+import { vi, describe, it, expect } from 'vitest';
 import {
   ShowHTML,
   showHTMLMiddleware,
@@ -45,13 +46,13 @@ describe('middlewares/html:showHTML', () => {
     describe('middleware', () => {
       it('should serve an HTML file', async () => {
         // Given
-        const sendFile = jest.fn();
+        const sendFile = vi.fn();
         const options: ShowHTMLConstructorOptions = {
           inject: {
             sendFile: sendFile as SendFile,
           },
         };
-        const setHeader = jest.fn();
+        const setHeader = vi.fn();
         const response = {
           response: true,
           setHeader,
@@ -76,22 +77,22 @@ describe('middlewares/html:showHTML', () => {
 
       it('should serve an HTML file from the HTMLGenerator', async () => {
         // Given
-        const sendFile = jest.fn();
+        const sendFile = vi.fn();
         const htmlGeneratorFile = 'charo.html';
         const htmlGenerator = {
-          whenReady: jest.fn(() => Promise.resolve()),
+          whenReady: vi.fn(() => Promise.resolve()),
           options: {
             file: htmlGeneratorFile,
           },
         };
-        const getHTMLGenerator = jest.fn(() => htmlGenerator as unknown as HTMLGenerator);
+        const getHTMLGenerator = vi.fn(() => htmlGenerator as unknown as HTMLGenerator);
         const options: ShowHTMLConstructorOptions = {
           inject: {
             sendFile: sendFile as SendFile,
             getHTMLGenerator,
           },
         };
-        const setHeader = jest.fn();
+        const setHeader = vi.fn();
         const response = {
           response: true,
           setHeader,
@@ -125,19 +126,19 @@ describe('middlewares/html:showHTML', () => {
 
       it('should fail serve an HTML file from the HTMLGenerator', async () => {
         // Given
-        const sendFile = jest.fn();
+        const sendFile = vi.fn();
         const htmlGeneratorError = new Error('htmlGeneratorError');
         const htmlGenerator = {
-          whenReady: jest.fn(() => Promise.reject(htmlGeneratorError)),
+          whenReady: vi.fn(() => Promise.reject(htmlGeneratorError)),
         };
-        const getHTMLGenerator = jest.fn(() => htmlGenerator as unknown as HTMLGenerator);
+        const getHTMLGenerator = vi.fn(() => htmlGenerator as unknown as HTMLGenerator);
         const options: ShowHTMLConstructorOptions = {
           inject: {
             sendFile: sendFile as SendFile,
             getHTMLGenerator,
           },
         };
-        const setHeader = jest.fn();
+        const setHeader = vi.fn();
         const response = {
           response: true,
           setHeader,
@@ -145,7 +146,7 @@ describe('middlewares/html:showHTML', () => {
         const request = {
           request: true,
         } as unknown as Request;
-        const next = jest.fn();
+        const next = vi.fn();
         // When
         const sut = new ShowHTML(options);
         await sut.getMiddleware()(request, response, next);
@@ -159,13 +160,13 @@ describe('middlewares/html:showHTML', () => {
   describe('middleware', () => {
     it('should configure it for the container and and serve an HTML file', async () => {
       // Given
-      const sendFile = jest.fn();
+      const sendFile = vi.fn();
       const { container, containerMocks: mocks } = getJimpexMock({
         resources: {
           sendFile,
         },
       });
-      const setHeader = jest.fn();
+      const setHeader = vi.fn();
       const response = {
         response: true,
         setHeader,
@@ -173,7 +174,7 @@ describe('middlewares/html:showHTML', () => {
       const request = {
         request: true,
       } as unknown as Request;
-      const next = jest.fn();
+      const next = vi.fn();
       // When
       const sut = showHTMLMiddleware.connect(container);
       await (sut as AsyncExpressMiddleware)(request, response, next);
@@ -193,10 +194,10 @@ describe('middlewares/html:showHTML', () => {
 
     it('should configure it for the container and use a custom htmlGenerator', async () => {
       // Given
-      const sendFile = jest.fn();
+      const sendFile = vi.fn();
       const htmlGeneratorFile = 'charo.html';
       const htmlGenerator = {
-        whenReady: jest.fn(() => Promise.resolve()),
+        whenReady: vi.fn(() => Promise.resolve()),
         options: {
           file: htmlGeneratorFile,
         },
@@ -208,7 +209,7 @@ describe('middlewares/html:showHTML', () => {
           [htmlGeneratorName]: htmlGenerator,
         },
       });
-      const setHeader = jest.fn();
+      const setHeader = vi.fn();
       const response = {
         response: true,
         setHeader,
@@ -216,7 +217,7 @@ describe('middlewares/html:showHTML', () => {
       const request = {
         request: true,
       } as unknown as Request;
-      const next = jest.fn();
+      const next = vi.fn();
       // When
       const sut = showHTMLMiddleware({
         htmlGeneratorServiceName: htmlGeneratorName,

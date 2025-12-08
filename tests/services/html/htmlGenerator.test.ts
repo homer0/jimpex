@@ -1,3 +1,4 @@
+import { describe, it, expect, vi } from 'vitest';
 import {
   HTMLGenerator,
   HTMLGeneratorConstructorOptions,
@@ -142,7 +143,7 @@ describe('services/html:htmlGenerator', () => {
       });
       const errorMessage = 'Wooo!';
       const valuesService = {
-        getValues: jest.fn(() => {
+        getValues: vi.fn(() => {
           throw new Error(errorMessage);
         }),
       };
@@ -179,7 +180,7 @@ describe('services/html:htmlGenerator', () => {
       });
       const errorMessage = 'Wooo!';
       const valuesService = {
-        getValues: jest.fn(() => {
+        getValues: vi.fn(() => {
           throw new Error(errorMessage);
         }),
       };
@@ -416,7 +417,7 @@ describe('services/html:htmlGenerator', () => {
       const { logger } = getLoggerMock();
       const { config } = getConfigMock();
       const valuesService = {
-        getValues: jest.fn(() => Promise.resolve(configValues)),
+        getValues: vi.fn(() => Promise.resolve(configValues)),
       };
       const { frontendFs, frontendFsMocks } = getFrontendFsMock({
         values: {
@@ -526,7 +527,7 @@ describe('services/html:htmlGenerator', () => {
     it('should generate the HTML when the app starts', () => {
       // Given
       const fakeHTMLGenerator = {
-        generateHTML: jest.fn(),
+        generateHTML: vi.fn(),
       };
       const { container, containerMocks: mocks } = getJimpexMock({
         resources: {

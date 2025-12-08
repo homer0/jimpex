@@ -1,7 +1,8 @@
 /* eslint-disable n/no-process-env */
-jest.mock('@homer0/ts-async-import');
-import fs from 'fs/promises';
-import * as path from 'path';
+vi.mock('@homer0/ts-async-import');
+import fs from 'node:fs/promises';
+import * as path from 'node:path';
+import { vi, describe, beforeEach, it, expect, type Mock } from 'vitest';
 import { tsAsyncImport } from '@homer0/ts-async-import';
 import {
   https,
@@ -28,7 +29,7 @@ import type {
   ExpressMiddleware,
 } from '@src/types/index.js';
 
-const tsAsyncImportMock = tsAsyncImport as jest.MockedFunction<typeof tsAsyncImport>;
+const tsAsyncImportMock = tsAsyncImport as Mock<typeof tsAsyncImport>;
 
 describe('Jimpex', () => {
   beforeEach(() => {
@@ -143,9 +144,9 @@ describe('Jimpex', () => {
 
     it('should call the basic lifecycle methods', () => {
       // Given
-      const initFn = jest.fn();
-      const initOptionsFn = jest.fn();
-      const bootFn = jest.fn();
+      const initFn = vi.fn();
+      const initOptionsFn = vi.fn();
+      const bootFn = vi.fn();
       class Sut extends Jimpex {
         override boot(): void {
           bootFn();
@@ -170,7 +171,7 @@ describe('Jimpex', () => {
 
     it('should be instantiated with custom options', () => {
       // Given
-      const bootFn = jest.fn();
+      const bootFn = vi.fn();
       class Sut extends Jimpex {
         override boot(): void {
           bootFn();
@@ -316,7 +317,7 @@ describe('Jimpex', () => {
         // Given
         setupCase();
         const healthStatus = false;
-        const healthCheck = jest.fn().mockResolvedValueOnce(healthStatus);
+        const healthCheck = vi.fn().mockResolvedValueOnce(healthStatus);
         const options: DeepPartial<JimpexOptions> = {
           healthCheck,
         };
@@ -336,8 +337,8 @@ describe('Jimpex', () => {
         // Given
         setupCase();
         const events = {
-          on: jest.fn(),
-          once: jest.fn(),
+          on: vi.fn(),
+          once: vi.fn(),
         };
         const onListener = () => {};
         const onceListener = () => {};
@@ -360,11 +361,11 @@ describe('Jimpex', () => {
 
         it('should start and stop the server', async () => {
           // Given
-          const onBeforeStart = jest.fn();
-          const onStart = jest.fn();
-          const onAfterStart = jest.fn();
-          const onBeforeStop = jest.fn();
-          const onAfterStop = jest.fn();
+          const onBeforeStart = vi.fn();
+          const onStart = vi.fn();
+          const onAfterStart = vi.fn();
+          const onBeforeStop = vi.fn();
+          const onAfterStop = vi.fn();
           const {
             wootils: { configMocks, loggerMocks },
             express: { expressMocks, instanceMock },
@@ -432,7 +433,7 @@ describe('Jimpex', () => {
           const port = 2509;
           configMocks.get.mockImplementationOnce(() => port);
           configMocks.get.mockImplementationOnce(() => []);
-          const onStart = jest.fn();
+          const onStart = vi.fn();
           // When
           const sut = new Jimpex({
             config: {
@@ -476,7 +477,7 @@ describe('Jimpex', () => {
           const port = 2509;
           configMocks.get.mockImplementationOnce(() => port);
           configMocks.get.mockImplementationOnce(() => []);
-          const onStart = jest.fn();
+          const onStart = vi.fn();
           // When
           const sut = new Jimpex();
           await sut.start(onStart);
@@ -487,7 +488,7 @@ describe('Jimpex', () => {
 
         it("shouldn't do anything if `stop` is called before `start`", async () => {
           // Given
-          const onBeforeStop = jest.fn();
+          const onBeforeStop = vi.fn();
           setupCase();
           // When
           const sut = new Jimpex();
@@ -511,10 +512,13 @@ describe('Jimpex', () => {
           const port = 2509;
           configMocks.get.mockImplementationOnce(() => port);
           configMocks.get.mockImplementationOnce(() => []);
-          const onControllerWillBeMounted = jest.fn(<T>(target: T): T => target);
+          const onControllerWillBeMounted = vi.fn((target) => target);
           // When
           const sut = new Jimpex();
-          sut.on('controllerWillBeMounted', onControllerWillBeMounted);
+          sut.on(
+            'controllerWillBeMounted',
+            onControllerWillBeMounted as <T>(target: T) => T,
+          );
           await sut.start();
           // Then
           expect(staticMock).toHaveBeenCalledTimes(1);
@@ -668,7 +672,7 @@ describe('Jimpex', () => {
           const port = 2509;
           configMocks.get.mockImplementationOnce(() => port);
           configMocks.get.mockImplementationOnce(() => []);
-          const onStart = jest.fn();
+          const onStart = vi.fn();
           // When
           const sut = new Jimpex();
           await sut.listen(undefined, onStart);
@@ -712,7 +716,7 @@ describe('Jimpex', () => {
       describe('https', () => {
         beforeEach(() => {
           resetDependencies();
-          jest.spyOn(fs, 'readFile').mockReset();
+          vi.spyOn(fs, 'readFile').mockReset();
         });
 
         it('should start a secure server', async () => {
@@ -736,8 +740,7 @@ describe('Jimpex', () => {
           configMocks.get.mockImplementationOnce(() => [undefined, httpsConfig]);
           const caFile = 'ca-file';
           const certFile = 'cert-file';
-          jest
-            .spyOn(fs, 'readFile')
+          vi.spyOn(fs, 'readFile')
             .mockResolvedValueOnce(caFile)
             .mockResolvedValueOnce(certFile);
           https.createServer.mockReturnValueOnce(expressMocks as unknown as HTTPSServer);
@@ -784,8 +787,7 @@ describe('Jimpex', () => {
           configMocks.get.mockImplementationOnce(() => [undefined, httpsConfig]);
           const caFile = 'ca-file';
           const certFile = 'cert-file';
-          jest
-            .spyOn(fs, 'readFile')
+          vi.spyOn(fs, 'readFile')
             .mockResolvedValueOnce(caFile)
             .mockResolvedValueOnce(certFile);
           https.createServer.mockReturnValueOnce(expressMocks as unknown as HTTPSServer);
@@ -841,7 +843,7 @@ describe('Jimpex', () => {
       describe('http2', () => {
         beforeEach(() => {
           resetDependencies();
-          jest.spyOn(fs, 'readFile').mockReset();
+          vi.spyOn(fs, 'readFile').mockReset();
         });
 
         it('should start a spdy server', async () => {
@@ -869,8 +871,7 @@ describe('Jimpex', () => {
           configMocks.get.mockImplementationOnce(() => [http2Config, httpsConfig]);
           const caFile = 'ca-file';
           const certFile = 'cert-file';
-          jest
-            .spyOn(fs, 'readFile')
+          vi.spyOn(fs, 'readFile')
             .mockResolvedValueOnce(caFile)
             .mockResolvedValueOnce(certFile);
           spdy.createServer.mockReturnValueOnce(expressMocks as unknown as HTTPSServer);
@@ -929,19 +930,22 @@ describe('Jimpex', () => {
           const port = 2509;
           configMocks.get.mockImplementationOnce(() => port);
           configMocks.get.mockImplementationOnce(() => []);
-          const onControllerWillBeMounted = jest.fn(<T>(target: T): T => target);
-          const onRouteAdded = jest.fn();
+          const onControllerWillBeMounted = vi.fn((target: unknown) => target);
+          const onRouteAdded = vi.fn();
           const controllerObj = {
             theControllerToMount: true,
           };
           const controller = {
-            connect: jest.fn(() => controllerObj as unknown as Router),
+            connect: vi.fn(() => controllerObj as unknown as Router),
             controller: true as const,
           };
           const route = 'my-route';
           // When
           const sut = new Jimpex();
-          sut.on('controllerWillBeMounted', onControllerWillBeMounted);
+          sut.on(
+            'controllerWillBeMounted',
+            onControllerWillBeMounted as <T>(target: T) => T,
+          );
           sut.on('routeAdded', onRouteAdded);
           sut.mount(route, controller);
           await sut.start();
@@ -972,18 +976,21 @@ describe('Jimpex', () => {
           const port = 2509;
           configMocks.get.mockImplementationOnce(() => port);
           configMocks.get.mockImplementationOnce(() => []);
-          const onControllerWillBeMounted = jest.fn(<T>(target: T): T => target);
+          const onControllerWillBeMounted = vi.fn((target: unknown) => target);
           const middlewareObj = {
             theControllerToMount: true,
           };
           const middleware = {
-            connect: jest.fn(() => middlewareObj as unknown as ExpressMiddleware),
+            connect: vi.fn(() => middlewareObj as unknown as ExpressMiddleware),
             middleware: true as const,
           };
           const route = 'my-route';
           // When
           const sut = new Jimpex();
-          sut.on('controllerWillBeMounted', onControllerWillBeMounted);
+          sut.on(
+            'controllerWillBeMounted',
+            onControllerWillBeMounted as <T>(target: T) => T,
+          );
           sut.mount(route, middleware);
           await sut.start();
           // Then
@@ -1008,15 +1015,18 @@ describe('Jimpex', () => {
           const port = 2509;
           configMocks.get.mockImplementationOnce(() => port);
           configMocks.get.mockImplementationOnce(() => []);
-          const onControllerWillBeMounted = jest.fn(<T>(target: T): T => target);
+          const onControllerWillBeMounted = vi.fn((target: unknown) => target);
           const middleware = {
-            connect: jest.fn(),
+            connect: vi.fn(),
             middleware: true as const,
           };
           const route = 'my-route';
           // When
           const sut = new Jimpex();
-          sut.on('controllerWillBeMounted', onControllerWillBeMounted);
+          sut.on(
+            'controllerWillBeMounted',
+            onControllerWillBeMounted as <T>(target: T) => T,
+          );
           sut.mount(route, middleware);
           await sut.start();
           // Then
@@ -1039,11 +1049,11 @@ describe('Jimpex', () => {
             theControllerToMount: true,
           };
           const controller = {
-            connect: jest.fn(() => controllerObj as unknown as Router),
+            connect: vi.fn(() => controllerObj as unknown as Router),
             controller: true as const,
           };
           const provider = {
-            register: jest.fn(() => controller),
+            register: vi.fn(() => controller),
             provider: true as const,
           };
           const route = 'my-route';
@@ -1093,17 +1103,17 @@ describe('Jimpex', () => {
           const port = 2509;
           configMocks.get.mockImplementationOnce(() => port);
           configMocks.get.mockImplementationOnce(() => []);
-          const onMiddlewareWillBeUsed = jest.fn(<T>(target: T): T => target);
+          const onMiddlewareWillBeUsed = vi.fn((target: unknown) => target);
           const middlewareObj = {
             theControllerToMount: true,
           };
           const middleware = {
-            connect: jest.fn(() => middlewareObj as unknown as ExpressMiddleware),
+            connect: vi.fn(() => middlewareObj as unknown as ExpressMiddleware),
             middleware: true as const,
           };
           // When
           const sut = new Jimpex();
-          sut.on('middlewareWillBeUsed', onMiddlewareWillBeUsed);
+          sut.on('middlewareWillBeUsed', onMiddlewareWillBeUsed as <T>(target: T) => T);
           sut.use(middleware);
           await sut.start();
           // Then
@@ -1126,14 +1136,14 @@ describe('Jimpex', () => {
           const port = 2509;
           configMocks.get.mockImplementationOnce(() => port);
           configMocks.get.mockImplementationOnce(() => []);
-          const onMiddlewareWillBeUsed = jest.fn(<T>(target: T): T => target);
+          const onMiddlewareWillBeUsed = vi.fn((target: unknown) => target);
           const middleware = {
-            connect: jest.fn(),
+            connect: vi.fn(),
             middleware: true as const,
           };
           // When
           const sut = new Jimpex();
-          sut.on('middlewareWillBeUsed', onMiddlewareWillBeUsed);
+          sut.on('middlewareWillBeUsed', onMiddlewareWillBeUsed as <T>(target: T) => T);
           sut.use(middleware);
           await sut.start();
           // Then
@@ -1152,21 +1162,21 @@ describe('Jimpex', () => {
           const port = 2509;
           configMocks.get.mockImplementationOnce(() => port);
           configMocks.get.mockImplementationOnce(() => []);
-          const onMiddlewareWillBeUsed = jest.fn(<T>(target: T): T => target);
+          const onMiddlewareWillBeUsed = vi.fn((target: unknown) => target);
           const middlewareObj = {
             theControllerToMount: true,
           };
           const middleware = {
-            connect: jest.fn(() => middlewareObj as unknown as ExpressMiddleware),
+            connect: vi.fn(() => middlewareObj as unknown as ExpressMiddleware),
             middleware: true as const,
           };
           const provider = {
-            register: jest.fn(() => middleware),
+            register: vi.fn(() => middleware),
             provider: true as const,
           };
           // When
           const sut = new Jimpex();
-          sut.on('middlewareWillBeUsed', onMiddlewareWillBeUsed);
+          sut.on('middlewareWillBeUsed', onMiddlewareWillBeUsed as <T>(target: T) => T);
           sut.use(provider);
           await sut.start();
           // Then
@@ -1191,11 +1201,11 @@ describe('Jimpex', () => {
           const port = 2509;
           configMocks.get.mockImplementationOnce(() => port);
           configMocks.get.mockImplementationOnce(() => []);
-          const onMiddlewareWillBeUsed = jest.fn(<T>(target: T): T => target);
+          const onMiddlewareWillBeUsed = vi.fn((target: unknown) => target);
           const middleware = () => {};
           // When
           const sut = new Jimpex();
-          sut.on('middlewareWillBeUsed', onMiddlewareWillBeUsed);
+          sut.on('middlewareWillBeUsed', onMiddlewareWillBeUsed as <T>(target: T) => T);
           sut.use(middleware);
           await sut.start();
           // Then

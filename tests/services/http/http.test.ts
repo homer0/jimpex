@@ -1,3 +1,4 @@
+import { describe, it, expect, vi } from 'vitest';
 import { HTTP, httpProvider, HTTPConstructorOptions } from '@src/services/http/http.js';
 import { getJimpexMock, getLoggerMock } from '@tests/mocks/index.js';
 import type { Request, HTTPResponse } from '@src/types/index.js';
@@ -10,7 +11,7 @@ describe('services/http:http', () => {
       const options: HTTPConstructorOptions = {
         inject: {
           logger,
-          nodeFetch: jest.fn(),
+          nodeFetch: vi.fn(),
         },
       };
       // When
@@ -57,7 +58,7 @@ describe('services/http:http', () => {
       const options: HTTPConstructorOptions = {
         inject: {
           logger,
-          nodeFetch: jest.fn(),
+          nodeFetch: vi.fn(),
         },
       };
       // When
@@ -95,7 +96,7 @@ describe('services/http:http', () => {
       const options: HTTPConstructorOptions = {
         inject: {
           logger,
-          nodeFetch: jest.fn(),
+          nodeFetch: vi.fn(),
         },
       };
       // When
@@ -116,7 +117,7 @@ describe('services/http:http', () => {
       // Given
       const url = 'https://example.com';
       const response = 'Hello World' as unknown as HTTPResponse;
-      const fetch = jest.fn();
+      const fetch = vi.fn();
       fetch.mockResolvedValueOnce(response);
       const { logger } = getLoggerMock();
       const options: HTTPConstructorOptions = {
@@ -140,7 +141,7 @@ describe('services/http:http', () => {
       // Given
       const url = 'https://example.com/index.html';
       const response = 'Hello World' as unknown as HTTPResponse;
-      const fetch = jest.fn();
+      const fetch = vi.fn();
       fetch.mockResolvedValueOnce(response);
       const qsVariable = 'sort';
       const qsValue = 'date';
@@ -173,7 +174,7 @@ describe('services/http:http', () => {
         bodyProp: 'bodyValue',
       };
       const response = 'Hello World' as unknown as HTTPResponse;
-      const fetch = jest.fn();
+      const fetch = vi.fn();
       fetch.mockResolvedValueOnce(response);
       const { logger } = getLoggerMock();
       const options: HTTPConstructorOptions = {
@@ -201,7 +202,7 @@ describe('services/http:http', () => {
       // Given
       const url = 'https://example.com';
       const response = 'Hello World' as unknown as HTTPResponse;
-      const fetch = jest.fn();
+      const fetch = vi.fn();
       fetch.mockResolvedValueOnce(response);
       const request = {
         headers: {
@@ -235,7 +236,7 @@ describe('services/http:http', () => {
       // Given
       const url = 'https://example.com';
       const response = 'Hello World' as unknown as HTTPResponse;
-      const fetch = jest.fn();
+      const fetch = vi.fn();
       fetch.mockResolvedValueOnce(response);
       const ip = '25.09.2015';
       const request = {
@@ -275,7 +276,7 @@ describe('services/http:http', () => {
         headers: [],
         status,
       } as unknown as HTTPResponse;
-      const fetch = jest.fn();
+      const fetch = vi.fn();
       fetch.mockResolvedValueOnce(response);
       const { logger, loggerMocks } = getLoggerMock();
       const options: HTTPConstructorOptions = {
@@ -322,7 +323,7 @@ describe('services/http:http', () => {
         headers: responseHeaders,
         status,
       } as unknown as HTTPResponse;
-      const fetch = jest.fn();
+      const fetch = vi.fn();
       fetch.mockResolvedValueOnce(response);
       const headersFixedNames = {
         'x-custom-header': 'X-Custom-Header',
@@ -366,7 +367,7 @@ describe('services/http:http', () => {
     it('should register the service', () => {
       // Given
       const config = {
-        get: jest.fn(),
+        get: vi.fn(),
       };
       const { container, containerMocks: mocks } = getJimpexMock({
         resources: {
@@ -391,7 +392,7 @@ describe('services/http:http', () => {
     it('should register the service and enable logging', () => {
       // Given
       const config = {
-        get: jest.fn(() => true),
+        get: vi.fn(() => true),
       };
       const { container, containerMocks: mocks } = getJimpexMock({
         resources: {

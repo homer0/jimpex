@@ -1,3 +1,4 @@
+import { describe, it, expect, vi } from 'vitest';
 import {
   APIClient,
   apiClientProvider,
@@ -13,7 +14,7 @@ describe('services/html:apiClient', () => {
     it('should be instantiated', () => {
       // Given
       const http = {
-        fetch: jest.fn(),
+        fetch: vi.fn(),
       } as unknown as HTTP;
       const apiConfig = {
         url: 'my-api',
@@ -38,7 +39,7 @@ describe('services/html:apiClient', () => {
     it('should be instantiated using `gateway`', () => {
       // Given
       const http = {
-        fetch: jest.fn(),
+        fetch: vi.fn(),
       } as unknown as HTTP;
       const url = 'my-api';
       const endpoints = {
@@ -68,7 +69,7 @@ describe('services/html:apiClient', () => {
     it('should format error messages', () => {
       // Given
       const http = {
-        fetch: jest.fn(),
+        fetch: vi.fn(),
       } as unknown as HTTP;
       const apiConfig = {
         url: 'my-api',
@@ -133,10 +134,10 @@ describe('services/html:apiClient', () => {
         },
       };
       const config = {
-        get: jest.fn(() => apiConfig),
+        get: vi.fn(() => apiConfig),
       };
       const http = {
-        fetch: jest.fn(),
+        fetch: vi.fn(),
       };
       const { container, containerMocks: mocks } = getJimpexMock({
         resources: {
@@ -170,10 +171,10 @@ describe('services/html:apiClient', () => {
         },
       };
       const config = {
-        get: jest.fn(() => apiConfig),
+        get: vi.fn(() => apiConfig),
       };
       const http = {
-        fetch: jest.fn(),
+        fetch: vi.fn(),
       };
       const { container, containerMocks: mocks } = getJimpexMock({
         resources: {
@@ -203,10 +204,10 @@ describe('services/html:apiClient', () => {
       };
       const apiConfigKey = 'my-api-config';
       const config = {
-        get: jest.fn(() => apiConfig),
+        get: vi.fn(() => apiConfig),
       };
       const http = {
-        fetch: jest.fn(),
+        fetch: vi.fn(),
       };
       const { container, containerMocks: mocks } = getJimpexMock({
         resources: {
@@ -234,10 +235,10 @@ describe('services/html:apiClient', () => {
         },
       };
       const config = {
-        get: jest.fn(() => apiConfig),
+        get: vi.fn(() => apiConfig),
       };
       const http = {
-        fetch: jest.fn(),
+        fetch: vi.fn(),
       };
       const { container, containerMocks: mocks } = getJimpexMock({
         resources: {

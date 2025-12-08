@@ -12,5 +12,8 @@ export default defineConfig([
     files: 'all-inside:./tests',
     configs: ['node-ts-tests-with-prettier'],
     tsConfigPath: './tests',
+    rules: {
+      'no-use-before-define': 'off', // for global vi
+    },
   }),
 ]);

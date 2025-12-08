@@ -1,3 +1,4 @@
+import { describe, it, expect, vi } from 'vitest';
 import {
   controller,
   controllerCreator,
@@ -15,7 +16,7 @@ describe('app:wrappers', () => {
     it('should generate an object with a `connect` function', () => {
       // Given
       const handler = () => {};
-      const connect = jest.fn(() => handler);
+      const connect = vi.fn(() => handler);
       const { container } = getJimpexMock();
       const route = '/some/path';
       // When
@@ -33,8 +34,8 @@ describe('app:wrappers', () => {
     it('should generate a controller creator', () => {
       // Given
       const handler = () => {};
-      const connect = jest.fn(() => handler);
-      const creator = jest.fn(() => connect);
+      const connect = vi.fn(() => handler);
+      const creator = vi.fn(() => connect);
       const { container } = getJimpexMock();
       const route = '/some/path';
       // When
@@ -55,8 +56,8 @@ describe('app:wrappers', () => {
     it('should generate a controller provider', () => {
       // Given
       const handler = () => {};
-      const connect = jest.fn(() => handler);
-      const register = jest.fn(() => controller(connect));
+      const connect = vi.fn(() => handler);
+      const register = vi.fn(() => controller(connect));
       const { container } = getJimpexMock();
       const route = '/some/path';
       // When
@@ -78,9 +79,9 @@ describe('app:wrappers', () => {
     it('should generate a controller provider creator', () => {
       // Given
       const handler = () => {};
-      const connect = jest.fn(() => handler);
-      const register = jest.fn(() => controller(connect));
-      const creator = jest.fn(() => register);
+      const connect = vi.fn(() => handler);
+      const register = vi.fn(() => controller(connect));
+      const creator = vi.fn(() => register);
       const { container } = getJimpexMock();
       const route = '/some/path';
       // When
@@ -110,7 +111,7 @@ describe('app:wrappers', () => {
     it('should generate an object with a `connect` function', () => {
       // Given
       const handler = () => {};
-      const connect = jest.fn(() => handler);
+      const connect = vi.fn(() => handler);
       const { container } = getJimpexMock();
       // When
       const sut = middleware(connect);
@@ -127,8 +128,8 @@ describe('app:wrappers', () => {
     it('should generate a middleware creator', () => {
       // Given
       const handler = () => {};
-      const connect = jest.fn(() => handler);
-      const creator = jest.fn(() => connect);
+      const connect = vi.fn(() => handler);
+      const creator = vi.fn(() => connect);
       const { container } = getJimpexMock();
       // When
       const sut = middlewareCreator(creator);
@@ -148,8 +149,8 @@ describe('app:wrappers', () => {
     it('should generate a middleware provider', () => {
       // Given
       const handler = () => {};
-      const connect = jest.fn(() => handler);
-      const register = jest.fn(() => middleware(connect));
+      const connect = vi.fn(() => handler);
+      const register = vi.fn(() => middleware(connect));
       const { container } = getJimpexMock();
       // When
       const sut = middlewareProvider(register);
@@ -170,9 +171,9 @@ describe('app:wrappers', () => {
     it('should generate a middleware provider creator', () => {
       // Given
       const handler = () => {};
-      const connect = jest.fn(() => handler);
-      const register = jest.fn(() => middleware(connect));
-      const creator = jest.fn(() => register);
+      const connect = vi.fn(() => handler);
+      const register = vi.fn(() => middleware(connect));
+      const creator = vi.fn(() => register);
       const { container } = getJimpexMock();
       // When
       const sut = middlewareProviderCreator(creator);

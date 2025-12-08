@@ -1,7 +1,9 @@
-jest.mock('@src/utils/index.js', () => ({
-  provider: jest.fn(() => 'provider'),
-  providerCreator: jest.fn(() => 'providerCreator'),
-  providers: jest.fn(() => 'providers'),
+import { vi, describe, it, expect } from 'vitest';
+
+vi.mock('@src/utils/index.js', () => ({
+  provider: vi.fn(() => 'provider'),
+  providerCreator: vi.fn(() => 'providerCreator'),
+  providers: vi.fn(() => 'providers'),
 }));
 
 import * as services from '@src/services/index.js';

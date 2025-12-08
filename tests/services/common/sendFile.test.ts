@@ -1,3 +1,4 @@
+import { describe, it, expect, vi } from 'vitest';
 import {
   sendFile,
   sendFileProvider,
@@ -23,8 +24,8 @@ describe('services/common:sendFile', () => {
       const file = 'index.html';
       const { pathUtils, pathUtilsMocks } = getPathUtilsMock();
       const response = {
-        sendFile: jest.fn((_, callback) => callback()),
-        end: jest.fn(),
+        sendFile: vi.fn((_, callback) => callback()),
+        end: vi.fn(),
       } as unknown as Response;
       // When
       sendFile({ inject: { pathUtils } })({
@@ -44,8 +45,8 @@ describe('services/common:sendFile', () => {
       const file = 'index.html';
       const { pathUtils, pathUtilsMocks } = getPathUtilsMock();
       const response = {
-        sendFile: jest.fn((_, callback) => callback()),
-        end: jest.fn(),
+        sendFile: vi.fn((_, callback) => callback()),
+        end: vi.fn(),
       } as unknown as Response;
       const location = 'home';
       // When
@@ -65,10 +66,10 @@ describe('services/common:sendFile', () => {
       const file = 'index.html';
       const { pathUtils } = getPathUtilsMock();
       const response = {
-        sendFile: jest.fn((_, callback) => callback(error)),
-        end: jest.fn(),
+        sendFile: vi.fn((_, callback) => callback(error)),
+        end: vi.fn(),
       } as unknown as Response;
-      const next = jest.fn();
+      const next = vi.fn();
       // When
       sendFile({ inject: { pathUtils } })({
         res: response,
@@ -87,8 +88,8 @@ describe('services/common:sendFile', () => {
       const file = 'index.html';
       const { pathUtils } = getPathUtilsMock();
       const response = {
-        sendFile: jest.fn((_, callback) => callback(error)),
-        end: jest.fn(),
+        sendFile: vi.fn((_, callback) => callback(error)),
+        end: vi.fn(),
       } as unknown as Response;
       // When
       sendFile({ inject: { pathUtils } })({

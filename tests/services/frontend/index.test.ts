@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { frontendServicesProvider as collection } from '@src/services/frontend/index.js';
 
 const SERVICES = ['frontendFs'];

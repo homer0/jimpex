@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { statuses } from '@src/utils/fns/statuses.js';
 import {
   HTTPError,

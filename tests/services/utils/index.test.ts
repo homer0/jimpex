@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { utilsServicesProvider as collection } from '@src/services/utils/index.js';
 
 const SERVICES = ['ensureBearerToken'];

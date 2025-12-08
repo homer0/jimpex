@@ -1,6 +1,7 @@
+import { vi, type Mock } from 'vitest';
 import type { PathUtils } from '@homer0/path-utils';
 
-type JoinFromMock = jest.Mock<string, [string, string]>;
+type JoinFromMock = Mock<(a: string, b: string) => string>;
 
 export type PathUtilsMockOptions = {
   joinFrom?: JoinFromMock;
@@ -8,7 +9,7 @@ export type PathUtilsMockOptions = {
 
 export type PathUtilsMockMocks = {
   joinFrom: JoinFromMock;
-  addLocation: jest.Mock<string, string[]>;
+  addLocation: Mock<(...args: string[]) => string>;
 };
 
 export type PathUtilsMockResult = {
@@ -19,10 +20,10 @@ export type PathUtilsMockResult = {
 export const getPathUtilsMock = (
   options: PathUtilsMockOptions = {},
 ): PathUtilsMockResult => {
-  const { joinFrom = jest.fn() } = options;
+  const { joinFrom = vi.fn() } = options;
   const mocks = {
     joinFrom,
-    addLocation: jest.fn(),
+    addLocation: vi.fn(),
   };
   class MockedPathUtils {
     joinFrom(from: string, filepath: string): string {
