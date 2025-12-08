@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, afterEach } from 'vitest';
 import {
   EnsureBearerToken,
   ensureBearerTokenProvider,
@@ -10,6 +10,10 @@ import { statuses as realStatuses, type Statuses } from '@src/utils/fns/statuses
 import { getJimpexMock } from '@tests/mocks/index.js';
 
 describe('services/utils:ensureBearerToken', () => {
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
   describe('class', () => {
     it('should be instantiated', () => {
       // Given
@@ -96,6 +100,7 @@ describe('services/utils:ensureBearerToken', () => {
 
       it('should send an error when the token is not present', () => {
         // Given
+        vi.useFakeTimers(); // for the errors `_date` property to be consistent
         const status = realStatuses('bad request');
         const statuses = vi.fn();
         const errorOptions = {
@@ -132,6 +137,7 @@ describe('services/utils:ensureBearerToken', () => {
 
       it("should send an error if the header doesn't match the expression", () => {
         // Given
+        vi.useFakeTimers(); // for the errors `_date` property to be consistent
         const status = realStatuses('bad request');
         const statuses = vi.fn();
         const errorOptions = {

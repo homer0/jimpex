@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, afterEach } from 'vitest';
 import {
   APIClient,
   apiClientProvider,
@@ -10,6 +10,10 @@ import type { HTTP } from '@src/services/http/http.js';
 import { getJimpexMock } from '@tests/mocks/index.js';
 
 describe('services/html:apiClient', () => {
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
   describe('class', () => {
     it('should be instantiated', () => {
       // Given
@@ -68,6 +72,7 @@ describe('services/html:apiClient', () => {
 
     it('should format error messages', () => {
       // Given
+      vi.useFakeTimers(); // for the errors `_date` property to be consistent
       const http = {
         fetch: vi.fn(),
       } as unknown as HTTP;
