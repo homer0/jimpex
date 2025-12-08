@@ -14,7 +14,7 @@ import { simpleConfigProvider } from '@homer0/simple-config';
 import compression from 'compression';
 import bodyParser from 'body-parser';
 import multer from 'multer';
-import spdy, { type ServerOptions as SpdyServerOptions } from 'spdy';
+import type { ServerOptions as SpdyServerOptions } from 'spdy';
 import express from 'express';
 import {
   commonServicesProvider,
@@ -54,8 +54,6 @@ import type {
   JimpexHealthCheckFn,
   Router,
 } from '../types/index.js';
-
-const { createServer: createSpdyServer } = spdy;
 
 /**
  * Jimpex is a mix of Jimple, a Javascript port of Pimple dependency injection container,
@@ -739,7 +737,10 @@ export class Jimpex extends Jimple {
         spdy: http2Config.spdy,
       };
 
-      return createSpdyServer(serverOptions, this._express);
+      const spdyModule = await tsAsyncImport<{
+        default: { createServer: (typeof import('spdy'))['createServer'] };
+      }>('spdy');
+      return spdyModule.default.createServer(serverOptions, this._express);
     }
 
     return createHTTPSServer(credentials, this._express);
