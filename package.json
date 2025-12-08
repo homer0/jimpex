@@ -3,9 +3,22 @@
   "description": "Express as dependency injection container.",
   "homepage": "https://homer0.github.io/jimpex/",
   "version": "10.0.2",
-  "repository": "homer0/jimpex",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/homer0/jimpex.git"
+  },
   "author": "Leonardo Apiwan (@homer0) <me@homer0.com>",
   "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./package.json": "./package.json"
+  },
   "dependencies": {
     "@homer0/api-utils": "^5.0.7",
     "@homer0/deep-assign": "^5.0.7",
@@ -68,16 +81,6 @@
   "engine-strict": true,
   "engines": {
     "node": ">=20"
-  },
-  "type": "module",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
-  "exports": {
-    ".": {
-      "import": "./dist/index.js",
-      "types": "./dist/index.d.ts"
-    },
-    "./package.json": "./package.json"
   },
   "lint-staged": {
     "*.{ts,tsx,js,json,css,scss,md}": [
