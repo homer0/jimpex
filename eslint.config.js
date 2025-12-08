@@ -4,7 +4,7 @@ import { createConfig } from '@homer0/eslint-plugin/create';
 export default defineConfig([
   createConfig({
     importUrl: import.meta.url,
-    ignores: ['tests/**', '.jestrc.js'],
+    ignores: ['tests/**'],
     configs: ['node-ts-with-prettier'],
   }),
   createConfig({
