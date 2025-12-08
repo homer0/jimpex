@@ -279,13 +279,11 @@ export class HTMLGenerator {
     const matches: Array<{ string: string; value: string }> = [];
     let match = placeholderExpression.exec(code);
     while (match) {
-      const [string, value] = match;
-      if (string && value) {
-        matches.push({
-          string,
-          value,
-        });
-      }
+      const [string, value] = match as RegExpExecArray;
+      matches.push({
+        string,
+        value: value!,
+      });
 
       match = placeholderExpression.exec(code);
     }
