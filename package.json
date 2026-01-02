@@ -2,7 +2,7 @@
   "name": "jimpex",
   "description": "Express as dependency injection container.",
   "homepage": "https://homer0.github.io/jimpex/",
-  "version": "11.0.0",
+  "version": "11.0.1",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/homer0/jimpex.git"
