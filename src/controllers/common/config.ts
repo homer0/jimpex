@@ -57,7 +57,7 @@ export class ConfigController {
   switchConfig(): AsyncExpressMiddleware {
     return async (req, res, next) => {
       const { name } = req.params;
-      if (!name || !this._config.canSwitchConfigs()) {
+      if (!name || typeof name !== 'string' || !this._config.canSwitchConfigs()) {
         next();
         return;
       }
