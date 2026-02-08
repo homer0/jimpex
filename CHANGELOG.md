@@ -1,3 +1,11 @@
+## [11.0.2](https://github.com/homer0/jimpex/compare/11.0.1...11.0.2) (2026-02-08)
+
+
+### Bug Fixes
+
+* improve type check for some string params ([63d0f6d](https://github.com/homer0/jimpex/commit/63d0f6d57e83f91b44aebd876e929504d3d9ed23))
+* update dependencies ([df47178](https://github.com/homer0/jimpex/commit/df4717847b7f01dd8771b889f9df5d5c10525dea))
+
 ## [11.0.1](https://github.com/homer0/jimpex/compare/11.0.0...11.0.1) (2026-01-02)
 
 
