@@ -190,7 +190,7 @@ export class VersionValidator {
       // Get the `version` parameter from the request.
       const { version } = req.params;
       // If no version is present, move on to the next middleware.
-      if (!version) {
+      if (!version || typeof version !== 'string') {
         next();
         return;
       }
