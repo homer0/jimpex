@@ -38,7 +38,7 @@
     "compression": "^1.8.1",
     "express": "^5.2.1",
     "mime": "^4.1.0",
-    "multer": "2.0.2",
+    "multer": "2.1.1",
     "node-fetch": "^3.3.2",
     "spdy": "^4.0.2",
     "statuses": "^2.0.2",
