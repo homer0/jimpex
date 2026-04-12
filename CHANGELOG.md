@@ -1,3 +1,10 @@
+## [11.0.3](https://github.com/homer0/jimpex/compare/11.0.2...11.0.3) (2026-04-12)
+
+
+### Bug Fixes
+
+* update dependencies ([5251981](https://github.com/homer0/jimpex/commit/5251981a84256d081fdcdb97685f0197f08786de))
+
 ## [11.0.2](https://github.com/homer0/jimpex/compare/11.0.1...11.0.2) (2026-02-08)
 
 
